@@ -1,0 +1,42 @@
+{
+  "name": "@axonivy/inscription-standalone",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@axonivy/inscription-core": "~11.1.0-next.272",
+    "@axonivy/inscription-editor": "~11.1.0-next.272",
+    "@axonivy/inscription-protocol": "~11.1.0-next.272",
+    "path-browserify": "^1.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.28.1",
+    "@vitejs/plugin-react": "^3.0.0",
+    "vite": "^4.0.1",
+    "vite-tsconfig-paths": "^4.0.3"
+  },
+  "scripts": {
+    "clean": "rimraf build",
+    "build": "vite build --mode development",
+    "build:clean": "yarn clean && yarn build",
+    "build:production": "vite build",
+    "start": "vite",
+    "start:mock": "MOCK=true vite",
+    "serve": "vite preview",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "watch": "tsc -w",
+    "webtest:ci": "PLAYWRIGHT_JUNIT_OUTPUT_NAME=report.xml yarn playwright test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

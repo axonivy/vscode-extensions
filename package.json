@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "name": "parent",
+  "version": "0.1.0",
+  "engines": {
+    "yarn": ">=1.7.0 <2.x.x",
+    "node": ">=14.18.0"
+  },
+  "scripts": {
+    "prepare": "lerna run prepare",
+    "ci": "yarn install && yarn lint:ci && yarn test:ci && yarn standalone build:production",
+    "clean": "lerna run clean",
+    "build": "lerna run build",
+    "build:clean": "lerna run build:clean",
+    "watch": "lerna run --parallel watch",
+    "lint": "lerna run lint --",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "lint:fix": "lerna run lint:fix --",
+    "standalone": "yarn -s --cwd integrations/standalone",
+    "theia-electron": "yarn -s --cwd integrations/theia-electron",
+    "theia-browser": "yarn -s --cwd integrations/theia-browser",
+    "test": "yarn --cwd packages/editor test",
+    "test:ci": "lerna run test:ci"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.13",
+    "eslint": "^8.29.0",
+    "eslint-config-react-app": "^7.0.1",
+    "lerna": "^6.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.5.5",
+    "ts-node": "^10.9.1"
+  },
+  "resolutions": {
+    "@eclipse-glsp/client": "1.1.0-RC06",
+    "**/sprotty": "0.13.0-next.1c4343c.328"
+  },
+  "workspaces": [
+    "packages/*",
+    "integrations/*",
+    "integrations/vscode/*"
+  ]
+}

@@ -1,0 +1,107 @@
+:root {
+  --editor-bg: var(--vscode-editor-background) !important;
+  --editor-shadow: 0;
+  --seperator-color: var(--theia-sideBarSectionHeader-border);
+  --tab-inactive-border: #a0a0a0;
+
+  --input-bg: var(--vscode-quickInput-background);
+  --input-color: var(--vscode-quickInput-background);
+  --button-bg: var(--vscode-list-inactiveSelectionBackground);
+  --button-color: var(--vscode-list-inactiveSelectionForeground);
+  --text-color: var(--vscode-quickInput-foreground);
+  --table-bg: var(--vscode-quickInput-background);
+  --table-row-bg: var(--vscode-sideBar-background);
+
+  --border-radius: 0;
+  --focus-shadow: 0;
+
+  --error-color: var(--vscode-editorError-foreground);
+  --warning-color: var(--vscode-editorWarning-foreground);
+  --info-color: var(--vscode-editorInfo-foreground);
+}
+
+.vscode-light .input {
+  background-color: var(--table-bg);
+}
+
+.App-header {
+  background-color: var(--vscode-editor-background);
+  align-items: stretch;
+  justify-content: start;
+  min-height: auto;
+}
+
+.editor {
+  padding-top: 0;
+}
+
+.tabs-trigger[data-state='active'] {
+  border-color: unset;
+}
+
+.tabs-trigger[data-state='inactive'] {
+  border-color: var(--vscode-list-inactiveSelectionBackground);
+}
+
+.tabs-trigger .dirty-state {
+  --button-color: #bababa;
+}
+
+.table-cell {
+  padding: 0 5px;
+}
+
+.input,
+.table-cell .input {
+  font-size: 11px;
+  padding: 10px;
+  outline-offset: -1px !important;
+  color: var(--vscode-input-foreground);
+}
+
+.input,
+.table-cell .input:hover,
+.table-cell .input:focus {
+  background-color: var(--vscode-input-background);
+}
+
+.tag,
+.table-root {
+  outline: var(--vscode-dropdown-border) solid 1px;
+  outline-offset: -1px;
+}
+
+.label,
+.table .table-column-header,
+.collapsible-trigger {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.input.code-editor,
+.input.code-editor .monaco-editor-background {
+  background-color: var(--table-bg);
+}
+
+.input.code-editor .monaco-editor .scroll-decoration {
+  box-shadow: none;
+}
+
+.popover-content {
+  --editor-bg: var(--vscode-editor-background);
+  --input-bg: var(--vscode-input-background);
+  --input-color: var(--vscode-sideBarSectionHeader-foreground);
+  --text-color: var(--vscode-foreground);
+  --button-bg: var(--vscode-quickInput-background);
+
+  background-color: var(--vscode-quickInput-background);
+}
+
+.popover-close:hover {
+  cursor: pointer;
+}
+
+.popover-content svg {
+  border-style: unset;
+}

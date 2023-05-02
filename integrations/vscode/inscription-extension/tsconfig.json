@@ -1,0 +1,10 @@
+{
+  "extends": "../../../config/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "module": "commonjs"
+  },
+  "include": ["src"],
+  "types": ["node", "reflect-metadata", "vscode"]
+}

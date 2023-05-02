@@ -1,0 +1,81 @@
+{
+  "name": "vscode-inscription-extension",
+  "private": true,
+  "version": "0.1.0",
+  "publisher": "AxonIvy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/next-gen-inscription.git"
+  },
+  "displayName": "VSCode Inscription Webview",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "dependencies": {
+    "@axonivy/inscription-core": "~11.1.0-next.272",
+    "@axonivy/inscription-editor": "~11.1.0-next.272",
+    "@axonivy/inscription-protocol": "~11.1.0-next.272",
+    "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC06",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-aria": "^3.21.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@eclipse-glsp/vscode-integration": "1.1.0-RC06",
+    "@types/node": "^16.7.13",
+    "@types/vscode": "^1.54.0",
+    "@types/vscode-webview": "^1.54.0",
+    "vsce": "1.79.5",
+    "ts-loader": "^9.4.2"
+  },
+  "scripts": {
+    "prepare": "yarn clean && yarn build",
+    "clean": "rimraf build tsconfig.tsbuildinfo",
+    "build:app": "VSCODE=true yarn --cwd ../../standalone vite build --mode development --manifest build.manifest.json --outDir ../vscode/inscription-extension/dist --emptyOutDir",
+    "build": " yarn build:app && yarn clean && tsc -p ./",
+    "build:clean": "yarn clean && yarn build",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "watch": "tsc -w",
+    "package": "vsce package"
+  },
+  "activationEvents": [
+    "onWebviewPanel:inscriptionEditor"
+  ],
+  "main": "./lib/inscription-extension.js",
+  "files": [
+    "dist",
+    "css",
+    "src",
+    "lib"
+  ],
+  "extensionDependencies": [
+    "ivyteam.vscode-integration"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "inscriptionEditor.open",
+        "title": "Open Inscription Editor",
+        "category": "Inscription Editor"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "inscriptionEditor.open"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "when": "resourceExtname == '.p.json'",
+        "key": "alt+i",
+        "mac": "alt+i",
+        "command": "inscriptionEditor.open"
+      }
+    ]
+  }
+}

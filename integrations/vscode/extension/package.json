@@ -1,0 +1,281 @@
+{
+  "name": "vscode-integration",
+  "private": "true",
+  "version": "11.1.0-next",
+  "description": "VSCode extension to model Axon Ivy Processes and debug them",
+  "displayName": "Axon Ivy Process Editor",
+  "publisher": "ivyteam",
+  "author": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/glsp-editor-client"
+  },
+  "keywords": [
+    "vscode-extension",
+    "glsp",
+    "diagram",
+    "axonivy",
+    "ivyteam",
+    "process",
+    "bpmn"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Debuggers"
+  ],
+  "preview": true,
+  "icon": "assets/ivy-logo.png",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "dependencies": {
+    "@axonivy/vscode-integration-webview": "^11.1.0-next",
+    "@vscode/codicons": "^0.0.25"
+  },
+  "devDependencies": {
+    "@eclipse-glsp/vscode-integration": "1.1.0-RC06",
+    "@types/vscode": "^1.54.0",
+    "path": "^0.12.7",
+    "reflect-metadata": "^0.1.13",
+    "ts-loader": "^6.2.1",
+    "ts-node": "^10.8.2"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "download:Server": "ts-node scripts/download.ts",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
+  },
+  "workspaces": {
+    "nohoist": [
+      "**/@vscode/codicons",
+      "**/@vscode/codicons/**"
+    ]
+  },
+  "files": [
+    "lib",
+    "extension",
+    "server",
+    "webview"
+  ],
+  "main": "./lib/index",
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "ivy.glspDiagram",
+        "displayName": "Axon Ivy Process Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.p.json"
+          }
+        ]
+      }
+    ],
+    "languages": [
+      {
+        "id": "ivy-process",
+        "extensions": [
+          ".p.json"
+        ]
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "ivy-process"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "process",
+        "languages": [
+          "ivy-process"
+        ],
+        "label": "Ivy Process Debug",
+        "configurationAttributes": {
+          "attach": {},
+          "launch": {
+            "properties": {
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch.",
+                "default": true
+              },
+              "serverPort": {
+                "type": "number",
+                "description": "Port of the server to connect to",
+                "default": 4711
+              },
+              "serverHost": {
+                "type": "string",
+                "description": "Host of the server to connect to",
+                "default": "localhost"
+              },
+              "trace": {
+                "type": "boolean",
+                "description": "Enable logging of the Debug Adapter Protocol.",
+                "default": true
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "process",
+            "request": "attach",
+            "name": "Debug Ivy Process"
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "Ivy Process Debug: Attach",
+            "description": "A new configuration for attach a Ivy Process debugger.",
+            "body": {
+              "type": "process",
+              "request": "attach",
+              "name": "Debug Ivy Process"
+            }
+          }
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "workflow.fit",
+        "title": "Fit to Screen",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "command": "workflow.center",
+        "title": "Center selection",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "command": "workflow.layout",
+        "title": "Layout diagram",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "command": "workflow.goToNextNode",
+        "title": "Go to next Node",
+        "category": "Workflow Navigation",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "command": "workflow.goToPreviousNode",
+        "title": "Go to previous Node",
+        "category": "Workflow Navigation",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "command": "workflow.showDocumentation",
+        "title": "Show documentation...",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "command": "workflow.exportAsSVG",
+        "title": "Export as SVG",
+        "category": "Workflow Diagram",
+        "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "workflow.editor.title",
+        "label": "Diagram"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "submenu": "workflow.editor.title",
+          "group": "bookmarks"
+        },
+        {
+          "command": "workflow.goToNextNode",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        },
+        {
+          "command": "workflow.goToPreviousNode",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        },
+        {
+          "command": "workflow.showDocumentation",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+        }
+      ],
+      "workflow.editor.title": [
+        {
+          "command": "workflow.fit",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+        },
+        {
+          "command": "workflow.center",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+        },
+        {
+          "command": "workflow.layout",
+          "group": "navigation",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+        },
+        {
+          "command": "workflow.exportAsSVG",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "key": "alt+f",
+        "mac": "alt+f",
+        "command": "workflow.fit",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "key": "alt+c",
+        "mac": "alt+c",
+        "command": "workflow.center",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "key": "ctrl+a",
+        "mac": "ctrl+a",
+        "command": "workflow.selectAll",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "key": "alt+l",
+        "mac": "alt+l",
+        "command": "workflow.layout",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "key": "Ctrl+4",
+        "mac": "cmd+4",
+        "command": "workflow.goToNextNode",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      },
+      {
+        "key": "Ctrl+3",
+        "mac": "cmd+3",
+        "command": "workflow.goToPreviousNode",
+        "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
+      }
+    ]
+  }
+}

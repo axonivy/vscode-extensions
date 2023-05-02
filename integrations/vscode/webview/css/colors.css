@@ -1,0 +1,26 @@
+body {
+  /* Fixme */
+  --glsp-editor-background: var(--vscode-editor-background);
+  --glsp-editor-foreground: var(--vscode-editor-foreground);
+  --glsp-editor-mouseover: var(--vscode-editorWidget-foreground);
+  --glsp-editor-selected: var(--vscode-menu-selectionBackground);
+  --glsp-foreground: var(--vscode-foreground);
+
+  --glsp-tool-bar-background: var(--vscode-activityBar-background);
+  --glsp-tool-bar-forground: var(--glsp-foreground);
+  --glsp-tool-bar-selection: var(--vscode-editor-selectionBackground);
+  --glsp-tool-bar-hover: var(--vscode-editor-selectionHighlightBackground);
+  --glsp-tool-bar-border: var(--vscode-dropdown-border);
+  --glsp-tool-bar-group-background: var(--vscode-badge-background);
+
+  --glsp-multiselect-box-border: var(--glsp-editor-selected);
+  --glsp-quick-action-background: var(--glsp-tool-bar-background);
+  --glsp-quick-action-hover: var(--glsp-tool-bar-selection);
+
+  --glsp-issue-background: var(--vscode-editor-background);
+  --glsp-error-foreground: var(--vscode-editorError-foreground);
+  --glsp-warning-foreground: var(--vscode-editorWarning-foreground);
+  --glsp-info-foreground: var(--vscode-editorInfo-foreground);
+
+  --glsp-inline-label-background: var(--vscode-textSeparator-foreground);
+}
