@@ -37,3 +37,4 @@ src-gen
 gen-webpack.config.js
 
 *.vsix
+dist/

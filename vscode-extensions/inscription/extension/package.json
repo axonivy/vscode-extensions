@@ -33,7 +33,7 @@
   "scripts": {
     "prepare": "yarn clean && yarn build",
     "clean": "rimraf build tsconfig.tsbuildinfo",
-    "build:app": "yarn --cwd ../../standalone vite build --mode development --manifest build.manifest.json --outDir ../vscode/inscription-extension/dist --emptyOutDir",
+    "build:app": "yarn --cwd ../webview vite build --mode development --manifest build.manifest.json --outDir ../extension/dist --emptyOutDir",
     "build": " yarn build:app && yarn clean && tsc -p ./",
     "build:clean": "yarn clean && yarn build",
     "lint": "eslint --ext .ts,.tsx ./src",
@@ -52,20 +52,20 @@
     "lib"
   ],
   "extensionDependencies": [
-    "ivyteam.vscode-integration"
+    "axonivy.vscode-process-editor-extension"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "inscriptionEditor.open",
-        "title": "Open Inscription Editor",
-        "category": "Inscription Editor"
+        "command": "inscriptionView.open",
+        "title": "Open Inscription View",
+        "category": "Inscription"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "command": "inscriptionEditor.open"
+          "command": "inscriptionView.open"
         }
       ]
     },
@@ -74,7 +74,7 @@
         "when": "resourceExtname == '.p.json'",
         "key": "alt+i",
         "mac": "alt+i",
-        "command": "inscriptionEditor.open"
+        "command": "inscriptionView.open"
       }
     ]
   }
