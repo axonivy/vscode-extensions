@@ -36,5 +36,4 @@ tsconfig.tsbuildinfo
 src-gen
 gen-webpack.config.js
 
-# vscode glsp example server
-server
+*.vsix

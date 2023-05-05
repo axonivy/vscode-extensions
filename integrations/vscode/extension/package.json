@@ -50,6 +50,7 @@
     "download:Server": "ts-node scripts/download.ts",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
+    "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
     "watch": "tsc -w"
   },
