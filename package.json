@@ -4,23 +4,17 @@
   "version": "0.1.0",
   "engines": {
     "yarn": ">=1.7.0 <2.x.x",
-    "node": ">=14.18.0"
+    "node": ">=16.15.0"
   },
   "scripts": {
     "prepare": "lerna run prepare",
-    "ci": "yarn install && yarn lint:ci && yarn test:ci && yarn standalone build:production",
     "clean": "lerna run clean",
     "build": "lerna run build",
     "build:clean": "lerna run build:clean",
     "watch": "lerna run --parallel watch",
     "lint": "lerna run lint --",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "lint:fix": "lerna run lint:fix --",
-    "standalone": "yarn -s --cwd integrations/standalone",
-    "theia-electron": "yarn -s --cwd integrations/theia-electron",
-    "theia-browser": "yarn -s --cwd integrations/theia-browser",
-    "test": "yarn --cwd packages/editor test",
-    "test:ci": "lerna run test:ci"
+    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u"
   },
   "devDependencies": {
     "@types/node": "^16.7.13",

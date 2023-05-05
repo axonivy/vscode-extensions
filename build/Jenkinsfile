@@ -1,0 +1,38 @@
+pipeline {
+  agent {
+    dockerfile {
+      filename 'build/Dockerfile'
+    }
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'yarn update:axonivy:next'
+          sh 'yarn'
+        }
+      }
+    }
+
+    stage('Codechecks (ESLint)') {
+      steps {
+        script {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+            timeout(30) {
+              sh 'yarn lint -o eslint.xml -f checkstyle'
+            }
+          }
+        }
+      }
+    }
+  }
+} 
