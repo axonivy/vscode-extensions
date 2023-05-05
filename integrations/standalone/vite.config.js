@@ -7,7 +7,7 @@ export default defineConfig(() => {
   const config = {
     plugins: [react(), tsconfigPaths()],
     build: { outDir: 'build', chunkSizeWarningLimit: 5000 },
-    server: { port: 3000, open: true },
+    server: { port: 3000, open: false },
     resolve: {
       alias: { path: 'path-browserify' }
     },
@@ -19,9 +19,5 @@ export default defineConfig(() => {
       ]
     }
   };
-  if (process.env.VSCODE) {
-    config.build.rollupOptions = { input: { app: './vscode.html' } };
-    config.server.open = false;
-  }
   return config;
 });
