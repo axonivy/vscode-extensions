@@ -14,6 +14,7 @@
     "watch": "lerna run --parallel watch",
     "lint": "lerna run lint --",
     "lint:fix": "lerna run lint:fix --",
+    "package": "lerna run package",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u"
   },
   "devDependencies": {

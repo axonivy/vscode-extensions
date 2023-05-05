@@ -34,5 +34,14 @@ pipeline {
         }
       }
     }
+
+    stage('Package') {
+      steps {
+        script {
+          sh 'yarn package'
+          archiveArtifacts 'integrations/**/*.vsix'
+        }
+      }
+    }
   }
 } 
