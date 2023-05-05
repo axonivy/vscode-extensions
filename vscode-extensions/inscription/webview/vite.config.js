@@ -6,7 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig(() => {
   const config = {
     plugins: [react(), tsconfigPaths()],
-    build: { outDir: 'build', chunkSizeWarningLimit: 5000 },
+    build: { outDir: 'dist', chunkSizeWarningLimit: 5000 },
     server: { port: 3000, open: false },
     resolve: {
       alias: { path: 'path-browserify' }

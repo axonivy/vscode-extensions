@@ -31,8 +31,7 @@
     "**/sprotty": "0.13.0-next.1c4343c.328"
   },
   "workspaces": [
-    "packages/*",
-    "integrations/*",
-    "integrations/vscode/*"
+    "vscode-extensions/inscription/*",
+    "vscode-extensions/process-editor/*"
   ]
 }

@@ -39,7 +39,7 @@ pipeline {
       steps {
         script {
           sh 'yarn package'
-          archiveArtifacts 'integrations/**/*.vsix'
+          archiveArtifacts 'vscode-extensions/**/*.vsix'
         }
       }
     }

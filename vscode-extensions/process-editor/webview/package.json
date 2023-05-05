@@ -1,5 +1,5 @@
 {
-  "name": "@axonivy/vscode-integration-webview",
+  "name": "@axonivy/vscode-process-editor-webview",
   "private": "true",
   "version": "11.1.0-next",
   "description": "VSCode extension webview for the Axon Ivy (GLSP-based) process editor",
@@ -16,16 +16,15 @@
     "url": "https://github.com/axonivy/glsp-editor-client"
   },
   "dependencies": {
-    "@axonivy/process-editor": "~11.2.0-next.707"
+    "@axonivy/process-editor": "~11.2.0-next.707",
+    "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC06",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@eclipse-glsp-examples/workflow-glsp": "1.1.0-RC06",
-    "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC06",
     "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",
-    "reflect-metadata": "^0.1.13",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
     "ts-loader": "^9.4.2",
