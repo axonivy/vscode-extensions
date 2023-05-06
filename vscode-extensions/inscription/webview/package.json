@@ -15,14 +15,12 @@
   },
   "scripts": {
     "clean": "rimraf build",
-    "build": "vite build --mode development",
+    "build": "vite build --mode development --emptyOutDir",
     "build:clean": "yarn clean && yarn build",
-    "build:production": "vite build",
-    "start": "vite",
-    "serve": "vite preview",
+    "build:production": "vite build --emptyOutDir",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
-    "watch": "tsc -w"
+    "watch": "vite build --mode development --watch --emptyOutDir"
   },
   "browserslist": {
     "production": [
