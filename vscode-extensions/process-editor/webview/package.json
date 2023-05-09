@@ -21,7 +21,6 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",

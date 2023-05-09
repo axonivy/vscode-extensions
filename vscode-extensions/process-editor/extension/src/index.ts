@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import * as vscode from 'vscode';
 
 import { GlspApi, activate as extensionActivate } from './ivy-extension';
