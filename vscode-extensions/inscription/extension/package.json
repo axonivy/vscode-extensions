@@ -7,7 +7,9 @@
     "type": "git",
     "url": "https://github.com/axonivy/next-gen-inscription.git"
   },
-  "displayName": "VSCode Inscription Webview",
+  "displayName": "Axon Ivy Inscription View",
+  "preview": true,
+  "icon": "assets/ivy-logo.png",
   "engines": {
     "vscode": "^1.54.0"
   },
