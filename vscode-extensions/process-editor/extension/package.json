@@ -32,7 +32,7 @@
   "activationEvents": [
     "*"
   ],
-  "main": "./dist/extension",
+  "main": "./dist/extension.js",
   "devDependencies": {
     "@axonivy/vscode-process-editor-webview": "^11.1.0-next",
     "@eclipse-glsp/vscode-integration": "1.1.0-RC06",

@@ -6,10 +6,11 @@ const config = {
 
   entry: path.resolve(__dirname, 'src/index.ts'),
   output: {
-    path: path.resolve(__dirname, 'dist', 'extension'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
-    libraryTarget: 'commonjs2',
-    devtoolModuleFilenameTemplate: '../[resource-path]'
+    library: {
+      type: 'commonjs'
+    }
   },
   devtool: 'eval-source-map',
   mode: 'development',

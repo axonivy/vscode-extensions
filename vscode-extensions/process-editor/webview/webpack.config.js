@@ -1,7 +1,4 @@
-// @ts-check
 const path = require('path');
-
-const outputPath = path.resolve(__dirname, '../extension/pack');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -10,16 +7,18 @@ const config = {
   entry: path.resolve(__dirname, 'src/index.ts'),
   output: {
     filename: 'webview.js',
-    path: outputPath
+    path: path.resolve(__dirname, '../extension/dist/'),
+    library: {
+      type: 'commonjs'
+    }
   },
   devtool: 'eval-source-map',
   mode: 'development',
 
+  externals: {
+    vscode: 'commonjs vscode'
+  },
   resolve: {
-    fallback: {
-      fs: false,
-      net: false
-    },
     extensions: ['.ts', '.tsx', '.js']
   },
   module: {
