@@ -32,6 +32,7 @@
   },
   "scripts": {
     "build": "webpack --mode=development",
+    "build:production": "webpack",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",

@@ -7,15 +7,15 @@
     "node": ">=16.15.0"
   },
   "scripts": {
-    "prepare": "lerna run prepare",
-    "clean": "lerna run clean",
     "build": "lerna run build",
-    "build:clean": "lerna run build:clean",
-    "watch": "lerna run --parallel watch",
+    "build:production": "lerna run build:production",
+    "clean": "lerna run clean",
     "lint": "lerna run lint --",
     "lint:fix": "lerna run lint:fix --",
     "package": "lerna run package",
-    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u"
+    "prepare": "lerna run prepare",
+    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
+    "watch": "lerna run --parallel watch"
   },
   "devDependencies": {
     "@types/node": "^16.7.13",

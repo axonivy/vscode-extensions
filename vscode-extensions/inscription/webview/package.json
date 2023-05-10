@@ -14,12 +14,12 @@
     "vite-tsconfig-paths": "^4.0.3"
   },
   "scripts": {
-    "clean": "rimraf build",
     "build": "vite build --mode development --emptyOutDir",
-    "build:clean": "yarn clean && yarn build",
     "build:production": "vite build --emptyOutDir",
+    "clean": "rimraf build",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "prepare": "yarn clean && yarn build",
     "watch": "vite build --mode development --watch --emptyOutDir"
   },
   "browserslist": {
