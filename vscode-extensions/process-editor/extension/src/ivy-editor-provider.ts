@@ -20,8 +20,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
   ): void {
     const webview = webviewPanel.webview;
     const extensionUri = this.extensionContext.extensionUri;
-    const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'pack', 'webview.js'));
-    const codiconsUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'node_modules', '@vscode/codicons', 'dist', 'codicon.css'));
+    const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
 
     webviewPanel.webview.options = {
       enableScripts: true
@@ -36,7 +35,6 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 					<meta http-equiv="Content-Security-Policy" content="
         default-src http://*.fontawesome.com  ${webview.cspSource} 'unsafe-inline' 'unsafe-eval';
         ">
-				<link href="${codiconsUri}" rel="stylesheet" />
 
         </head>
         <body>

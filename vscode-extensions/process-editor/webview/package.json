@@ -21,7 +21,6 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@vscode/codicons": "^0.0.25",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^6.7.1",
     "ignore-loader": "^0.1.2",
@@ -32,11 +31,11 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
-    "build": "tsc -b && webpack --mode=development",
+    "build": "webpack --mode=development",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
+    "watch": "webpack --watch --mode development"
   }
 }

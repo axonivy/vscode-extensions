@@ -7,7 +7,9 @@
     "type": "git",
     "url": "https://github.com/axonivy/next-gen-inscription.git"
   },
-  "displayName": "VSCode Inscription Webview",
+  "displayName": "Axon Ivy Inscription View",
+  "preview": true,
+  "icon": "assets/ivy-logo.png",
   "engines": {
     "vscode": "^1.54.0"
   },
@@ -19,7 +21,6 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "react": "^18.2.0",
-    "react-aria": "^3.21.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
@@ -27,8 +28,7 @@
     "@types/node": "^16.7.13",
     "@types/vscode": "^1.54.0",
     "@types/vscode-webview": "^1.54.0",
-    "vsce": "1.79.5",
-    "ts-loader": "^9.4.2"
+    "vsce": "1.79.5"
   },
   "scripts": {
     "prepare": "yarn clean && yarn build",
