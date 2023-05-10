@@ -2,7 +2,7 @@ const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
-  target: 'web',
+  target: 'webworker',
 
   entry: path.resolve(__dirname, 'src/index.ts'),
   output: {

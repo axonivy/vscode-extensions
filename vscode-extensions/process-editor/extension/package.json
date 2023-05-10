@@ -44,13 +44,13 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
-    "build": "tsc -b && webpack --mode=development",
+    "build": "webpack --mode=development",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
+    "watch": "webpack --watch --mode development"
   },
   "files": [
     "lib",
