@@ -1,11 +1,11 @@
 {
   "name": "@axonivy/vscode-inscription-webview",
-  "version": "0.1.0",
+  "version": "11.2.0",
   "private": true,
   "dependencies": {
-    "@axonivy/inscription-core": "~11.1.0-next.272",
-    "@axonivy/inscription-editor": "~11.1.0-next.272",
-    "@axonivy/inscription-protocol": "~11.1.0-next.272",
+    "@axonivy/inscription-core": "~11.1.0-next.284",
+    "@axonivy/inscription-editor": "~11.1.0-next.284",
+    "@axonivy/inscription-protocol": "~11.1.0-next.284",
     "path-browserify": "^1.0.1"
   },
   "devDependencies": {

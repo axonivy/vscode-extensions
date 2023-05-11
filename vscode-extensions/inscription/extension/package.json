@@ -1,7 +1,7 @@
 {
   "name": "vscode-inscription-extension",
   "private": true,
-  "version": "0.1.0",
+  "version": "11.2.0",
   "publisher": "AxonIvy",
   "repository": {
     "type": "git",
@@ -14,9 +14,9 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@axonivy/inscription-core": "~11.1.0-next.272",
-    "@axonivy/inscription-editor": "~11.1.0-next.272",
-    "@axonivy/inscription-protocol": "~11.1.0-next.272",
+    "@axonivy/inscription-core": "~11.1.0-next.284",
+    "@axonivy/inscription-editor": "~11.1.0-next.284",
+    "@axonivy/inscription-protocol": "~11.1.0-next.284",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC06",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
