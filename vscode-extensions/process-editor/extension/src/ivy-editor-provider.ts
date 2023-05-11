@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 
 export default class IvyEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
+  static readonly viewType = 'ivy.glspDiagram';
 
   constructor(
     protected readonly extensionContext: vscode.ExtensionContext,
