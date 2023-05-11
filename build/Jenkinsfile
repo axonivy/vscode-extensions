@@ -18,7 +18,8 @@ pipeline {
       steps {
         script {
           sh 'yarn update:axonivy:next'
-          sh 'yarn'
+          sh 'yarn install --ignore-scripts && yarn clean'
+          sh 'yarn build:production'
         }
       }
     }

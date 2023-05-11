@@ -31,13 +31,13 @@
     "vsce": "1.79.5"
   },
   "scripts": {
-    "prepare": "yarn clean && yarn build",
+    "build": "tsc -p ./",
+    "build:production": "yarn build",
     "clean": "rimraf build tsconfig.tsbuildinfo",
-    "build": "yarn clean && tsc -p ./",
-    "build:clean": "yarn clean && yarn build",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
     "package": "vsce package --yarn",
+    "prepare": "yarn clean && yarn build",
     "watch": "tsc -w"
   },
   "activationEvents": [
