@@ -1,5 +1,5 @@
 {
-  "name": "vscode-inscription-extension",
+  "name": "@axonivy/vscode-inscription-extension",
   "private": true,
   "version": "11.2.0",
   "publisher": "AxonIvy",
@@ -51,7 +51,7 @@
     "lib"
   ],
   "extensionDependencies": [
-    "axonivy.vscode-process-editor-extension"
+    "axonivy.@axonivy/vscode-process-editor-extension"
   ],
   "contributes": {
     "commands": [

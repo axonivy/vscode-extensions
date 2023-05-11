@@ -1,5 +1,5 @@
 {
-  "name": "vscode-process-editor-extension",
+  "name": "@axonivy/vscode-process-editor-extension",
   "private": "true",
   "version": "11.2.0",
   "description": "VSCode extension to model Axon Ivy Processes and debug them",

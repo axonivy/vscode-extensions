@@ -2,7 +2,7 @@ import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 import { InscriptionEditorPanel } from './inscription-panel';
 
-const WORKFLOW_EXTENSION_ID = 'axonivy.vscode-process-editor-extension';
+const WORKFLOW_EXTENSION_ID = 'axonivy.@axonivy/vscode-process-editor-extension';
 
 interface GlspApi {
   connector: GlspVscodeConnector & { getActiveSelection(): string[] };
