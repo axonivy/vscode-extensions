@@ -157,24 +157,6 @@
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
-        "command": "workflow.goToNextNode",
-        "title": "Go to next Node",
-        "category": "Workflow Navigation",
-        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-      },
-      {
-        "command": "workflow.goToPreviousNode",
-        "title": "Go to previous Node",
-        "category": "Workflow Navigation",
-        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-      },
-      {
-        "command": "workflow.showDocumentation",
-        "title": "Show documentation...",
-        "category": "Workflow Diagram",
-        "enablement": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-      },
-      {
         "command": "workflow.exportAsSVG",
         "title": "Export as SVG",
         "category": "Workflow Diagram",
@@ -192,21 +174,6 @@
         {
           "submenu": "workflow.editor.title",
           "group": "bookmarks"
-        },
-        {
-          "command": "workflow.goToNextNode",
-          "group": "navigation",
-          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-        },
-        {
-          "command": "workflow.goToPreviousNode",
-          "group": "navigation",
-          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-        },
-        {
-          "command": "workflow.showDocumentation",
-          "group": "navigation",
-          "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
         }
       ],
       "workflow.editor.title": [
@@ -255,18 +222,6 @@
         "mac": "alt+l",
         "command": "workflow.layout",
         "when": "activeCustomEditorId == 'ivy.glspDiagram'"
-      },
-      {
-        "key": "Ctrl+4",
-        "mac": "cmd+4",
-        "command": "workflow.goToNextNode",
-        "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
-      },
-      {
-        "key": "Ctrl+3",
-        "mac": "cmd+3",
-        "command": "workflow.goToPreviousNode",
-        "when": "activeCustomEditorId == 'ivy.glspDiagram' && workflow.editorSelectedElementsAmount == 1"
       }
     ]
   }
