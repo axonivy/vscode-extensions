@@ -1,7 +1,7 @@
 {
   "name": "vscode-process-editor-extension",
   "private": "true",
-  "version": "11.1.0",
+  "version": "11.2.0",
   "description": "VSCode extension to model Axon Ivy Processes and debug them",
   "displayName": "Axon Ivy Process Editor",
   "publisher": "AxonIvy",
@@ -37,7 +37,7 @@
     "@eclipse-glsp/vscode-integration": "1.1.0-RC06"
   },
   "devDependencies": {
-    "@axonivy/vscode-process-editor-webview": "^11.1.0-next",
+    "@axonivy/vscode-process-editor-webview": "~11.2.0-next",
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",
     "ts-loader": "^9.4.2",
