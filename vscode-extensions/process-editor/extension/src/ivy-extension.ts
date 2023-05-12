@@ -1,25 +1,14 @@
-import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import { configureDefaultCommands, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
 import * as process from 'process';
 import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
+import { IvyVscodeConnector } from './ivy-vscode-connector';
 
 const DEFAULT_SERVER_PORT = '5007';
 
 export interface GlspApi {
   connector: IvyVscodeConnector;
-}
-
-export class IvyVscodeConnector extends GlspVscodeConnector {
-  getActiveSelection(): string[] {
-    for (let [id, client] of this.clientMap) {
-      if (client.webviewPanel.active) {
-        return this.clientSelectionMap.get(id) || [];
-      }
-    }
-    return [];
-  }
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<GlspApi> {
@@ -37,7 +26,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<GlspAp
   });
 
   const customEditorProvider = vscode.window.registerCustomEditorProvider(
-    'ivy.glspDiagram',
+    IvyEditorProvider.viewType,
     new IvyEditorProvider(context, ivyVscodeConnector),
     {
       webviewOptions: { retainContextWhenHidden: true },
