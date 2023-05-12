@@ -1,7 +1,7 @@
 {
   "name": "vscode-inscription-extension",
   "private": true,
-  "version": "0.1.0",
+  "version": "11.1.0",
   "publisher": "AxonIvy",
   "repository": {
     "type": "git",
