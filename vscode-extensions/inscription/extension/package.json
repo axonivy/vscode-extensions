@@ -54,27 +54,23 @@
     "axonivy.vscode-process-editor-extension"
   ],
   "contributes": {
-    "commands": [
-      {
-        "command": "inscriptionView.open",
-        "title": "Open Inscription View",
-        "category": "Inscription"
-      }
-    ],
-    "menus": {
-      "commandPalette": [
+    "viewsContainers": {
+      "panel": [
         {
-          "command": "inscriptionView.open"
+          "id": "ivy-view-container",
+          "title": "Ivy",
+          "icon": "assets/ivy-logo.svg"
         }
       ]
     },
-    "keybindings": [
-      {
-        "when": "resourceExtname == '.p.json'",
-        "key": "alt+i",
-        "mac": "alt+i",
-        "command": "inscriptionView.open"
-      }
-    ]
+    "views": {
+      "ivy-view-container": [
+        {
+          "type": "webview",
+          "id": "inscriptionEditor",
+          "name": "Inscription Editor"
+        }
+      ]
+    }
   }
 }
