@@ -10,11 +10,13 @@ import { Container } from 'inversify';
 import { SprottyDiagramIdentifier, VscodeDiagramWidgetFactory, VscodeDiagramWidget, VscodeDiagramServer } from 'sprotty-vscode-webview';
 import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
 import { IvyGLSPVscodeDiagramWidget } from './ivy-vscode-diagram-widget';
+import ivyOpenInscriptionModule from './open-inscription/di.config';
 
 class IvyGLSPStarter extends GLSPStarter {
   createContainer(diagramIdentifier: SprottyDiagramIdentifier): Container {
     const container = createIvyDiagramContainer(diagramIdentifier.clientId);
     container.load(ivyBreakpointModule);
+    container.load(ivyOpenInscriptionModule);
     return container;
   }
 

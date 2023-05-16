@@ -23,6 +23,8 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     const extensionUri = this.extensionContext.extensionUri;
     const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
 
+    this.handleInscriptionEditorFocus(webview);
+
     webviewPanel.webview.options = {
       enableScripts: true
     };
@@ -43,5 +45,15 @@ export default class IvyEditorProvider extends GlspEditorProvider {
           <script src="${webviewScriptSourceUri}"></script>
         </body>
       </html>`;
+  }
+
+  private handleInscriptionEditorFocus(webview: vscode.Webview): void {
+    const focusInscriptionCommand = () => vscode.commands.executeCommand('inscriptionEditor.focus');
+    focusInscriptionCommand();
+    webview.onDidReceiveMessage(message => {
+      if (message?.kind === 'openInscription') {
+        focusInscriptionCommand();
+      }
+    });
   }
 }
