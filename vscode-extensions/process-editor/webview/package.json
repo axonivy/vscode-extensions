@@ -1,5 +1,5 @@
 {
-  "name": "@axonivy/vscode-process-editor-webview",
+  "name": "vscode-process-editor-webview",
   "private": "true",
   "version": "11.2.0",
   "description": "VSCode extension webview for the Axon Ivy (GLSP-based) process editor",

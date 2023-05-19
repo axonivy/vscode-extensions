@@ -1,5 +1,5 @@
 {
-  "name": "@axonivy/vscode-inscription-webview",
+  "name": "vscode-inscription-webview",
   "version": "11.2.0",
   "private": true,
   "dependencies": {

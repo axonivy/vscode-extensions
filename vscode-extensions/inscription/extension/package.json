@@ -24,6 +24,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "vscode-inscription-webview": "11.2.0",
     "@eclipse-glsp/vscode-integration": "1.1.0-RC06",
     "@types/node": "^16.7.13",
     "@types/vscode": "^1.54.0",
