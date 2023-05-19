@@ -14,9 +14,6 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@axonivy/inscription-core": "~11.2.0-next.286",
-    "@axonivy/inscription-editor": "~11.2.0-next.286",
-    "@axonivy/inscription-protocol": "~11.2.0-next.286",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC06",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
