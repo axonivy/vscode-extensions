@@ -13,6 +13,10 @@ pipeline {
     cron '@midnight'
   }
 
+  parameters {
+    string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product/job/XIVY-10877_glsp_socket/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/AxonIvyEngine11.2.0.2305221532_All_x64.zip', description: 'engine that will be packaged')
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -39,6 +43,7 @@ pipeline {
     stage('Package') {
       steps {
         script {
+          sh 'yarn download:engine ' + params.engineDownloadUrl
           sh 'yarn package'
           archiveArtifacts 'vscode-extensions/**/*.vsix'
         }

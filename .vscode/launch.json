@@ -8,7 +8,8 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/inscription/extension",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/process-editor/extension"
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/process-editor/extension",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/engine/extension"
       ],
       "outFiles": ["${workspaceFolder}/vscode-extensions/process-editor/extension/lib/*.js"],
       "sourceMaps": true,

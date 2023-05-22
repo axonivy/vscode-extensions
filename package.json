@@ -8,6 +8,7 @@
   "scripts": {
     "build": "lerna run build",
     "build:production": "lerna run build:production",
+    "download:engine": "yarn --cwd vscode-extensions/engine/extension download:engine",
     "clean": "lerna run clean",
     "lint": "lerna run lint --",
     "lint:fix": "lerna run lint:fix --",
@@ -30,6 +31,7 @@
   },
   "workspaces": [
     "vscode-extensions/inscription/*",
-    "vscode-extensions/process-editor/*"
+    "vscode-extensions/process-editor/*",
+    "vscode-extensions/engine/*"
   ]
 }

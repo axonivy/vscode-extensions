@@ -20,6 +20,9 @@
     "process",
     "bpmn"
   ],
+  "extensionDependencies": [
+    "axonivy.vscode-engine-extension"
+  ],
   "categories": [
     "Programming Languages",
     "Debuggers"

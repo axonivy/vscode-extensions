@@ -10,13 +10,15 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
   private _view?: vscode.WebviewView;
   private _pid?: string;
+  private _port?: string;
 
   public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
     this._view = webviewView;
+    this._port = process.env.ENGINE_PORT;
 
     this._view?.webview.onDidReceiveMessage(message => {
       if (message?.command === 'ready') {
-        this.sendMessageToWebview({ command: 'pid', args: { pid: this._pid } });
+        this.sendMessageToWebview({ command: 'engine_port', args: { port: this._port, pid: this._pid } });
       }
     });
 
@@ -61,7 +63,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
       `script-src 'nonce-${nonce}';` +
       `worker-src ${webview.cspSource};` +
       `font-src ${webview.cspSource};` +
-      `connect-src ${webview.cspSource} ws://localhost:8081/`;
+      `connect-src ${webview.cspSource} ws://localhost:${this._port}/`;
 
     return `<!DOCTYPE html>
               <html lang="en">

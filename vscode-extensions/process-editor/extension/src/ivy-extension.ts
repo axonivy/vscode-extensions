@@ -1,5 +1,4 @@
 import { configureDefaultCommands, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
-import * as process from 'process';
 import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
