@@ -8,7 +8,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   outputChannel.show();
 
   var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'AxonIvyEngine', 'bin', 'launcher.sh').path;
-  child = execFile(engineLauncherScriptPath, ['-Divy.enable.lsp=true', '-Dglsp.test.mode=true']);
+  const env = {
+    env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true' }
+  };
+  child = execFile(engineLauncherScriptPath, env);
 
   await new Promise(resolve => {
     child.stdout?.on('data', function (data: any) {
