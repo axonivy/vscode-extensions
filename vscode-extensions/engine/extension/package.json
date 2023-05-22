@@ -21,6 +21,7 @@
     "engine"
   ],
   "preview": true,
+  "icon": "assets/ivy-logo.png",
   "engines": {
     "vscode": "^1.54.0"
   },
