@@ -1,10 +1,14 @@
 import * as vscode from 'vscode';
-import { execFile } from 'child_process';
+import { ChildProcess, execFile } from 'child_process';
+
+let child: ChildProcess;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'AxonIvyEngine', 'bin', 'launcher.sh').path;
+  const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
+  outputChannel.show();
 
-  var child = execFile(engineLauncherScriptPath, []);
+  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'AxonIvyEngine', 'bin', 'launcher.sh').path;
+  child = execFile(engineLauncherScriptPath, ['-Divy.enable.lsp=true', '-Dglsp.test.mode=true']);
 
   await new Promise(resolve => {
     child.stdout?.on('data', function (data: any) {
@@ -14,7 +18,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         process.env['ENGINE_PORT'] = port;
         resolve(port);
       }
-      console.log(output);
+      outputChannel.append(output);
     });
   });
+}
+
+export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
+  child.kill();
 }
