@@ -7,6 +7,10 @@
   "publisher": "AxonIvy",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/core"
+  },
   "keywords": [
     "vscode-extension",
     "diagram",
