@@ -8,7 +8,7 @@ let child: ChildProcess;
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
   console.log('***** os platform: ' + Os.platform());
-  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).path;
+  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).fsPath;
   console.log('***** executable file: ' + engineLauncherScriptPath.toString());
   console.log('file exists: ' + Fs.existsSync(engineLauncherScriptPath));
 
