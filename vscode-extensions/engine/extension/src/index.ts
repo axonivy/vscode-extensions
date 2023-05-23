@@ -1,33 +1,17 @@
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import * as vscode from 'vscode';
-import Fs from 'fs';
 
 let child: ChildProcess;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-  console.log('***** os platform: ' + Os.platform());
   var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).fsPath;
-  console.log('***** executable file: ' + engineLauncherScriptPath.toString());
-  console.log('file exists: ' + Fs.existsSync(engineLauncherScriptPath));
-
-  Fs.access(engineLauncherScriptPath, Fs.constants.X_OK, err => {
-    console.log(err ? 'cannot execute' : 'can execute');
-  });
 
   const env = {
     env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true' }
   };
   child = execFile(engineLauncherScriptPath, env);
-
-  child.stderr?.on('data', function (data) {
-    console.error('stderr: ' + data.toString());
-  });
-
-  child.on('exit', function (code) {
-    console.log('child process exited with code ' + code?.toString());
-  });
 
   const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
   outputChannel.show();
