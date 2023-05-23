@@ -5,8 +5,6 @@ import * as vscode from 'vscode';
 let child: ChildProcess;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  vscode.workspace.getConfiguration('');
-
   const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
   console.log('***** executable file: ' + executable);
   var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).path;
