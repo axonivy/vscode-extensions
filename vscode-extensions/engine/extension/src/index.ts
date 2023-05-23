@@ -1,7 +1,7 @@
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import * as vscode from 'vscode';
-const Fs = require('fs');
+import Fs from 'fs';
 
 let child: ChildProcess;
 
@@ -11,6 +11,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).path;
   console.log('***** executable file: ' + engineLauncherScriptPath.toString());
   console.log('file exists: ' + Fs.existsSync(engineLauncherScriptPath));
+
+  Fs.access(engineLauncherScriptPath, Fs.constants.X_OK, err => {
+    console.log(err ? 'cannot execute' : 'can execute');
+  });
 
   const env = {
     env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true' }
