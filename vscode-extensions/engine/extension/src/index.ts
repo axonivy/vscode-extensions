@@ -5,8 +5,9 @@ import * as vscode from 'vscode';
 let child: ChildProcess;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  const executable = Os.platform() === 'win32' ? 'AxonIvyEngine.exe' : 'AxonIvyEngine';
-  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).path;
+  const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
+  var engineLauncherScriptPath = vscode.Uri.joinPath(context.extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).fsPath;
+
   const env = {
     env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true' }
   };
