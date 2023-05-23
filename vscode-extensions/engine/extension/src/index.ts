@@ -12,10 +12,14 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const env = {
     env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true' }
   };
-  child = execFile(engineLauncherScriptPath, env, (error, stdout, stderr) => {
-    if (error) {
-      console.error('stderr', stderr);
-    }
+  child = execFile(engineLauncherScriptPath, env);
+
+  child.stderr?.on('data', function (data) {
+    console.error('stderr: ' + data.toString());
+  });
+
+  child.on('exit', function (code) {
+    console.log('child process exited with code ' + code?.toString());
   });
 
   const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
