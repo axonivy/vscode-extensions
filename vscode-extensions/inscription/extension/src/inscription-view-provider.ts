@@ -43,7 +43,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
     // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce();
 
-    const manifest = require(this.getAppUri('build.manifest.json').path);
+    const manifest = require(this.getAppUri('build.manifest.json').fsPath);
     const rootHtmlKey = this.findRootHtmlKey(manifest);
     if (!rootHtmlKey) {
       return '';
