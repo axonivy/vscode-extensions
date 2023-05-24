@@ -25,5 +25,9 @@ export abstract class IvyGLSPVscodeDiagramWidget extends VscodeDiagramWidget {
 }
 
 export function decodeURI(uri: string): string {
-  return decodeURIComponent(uri.replace(/\+/g, ' '));
+  if (uri.replace('file:', '').includes(':')) {
+    const windowsUri = uri.replace('file:///', 'file://');
+    return decodeURIComponent(windowsUri);
+  }
+  return decodeURIComponent(uri);
 }
