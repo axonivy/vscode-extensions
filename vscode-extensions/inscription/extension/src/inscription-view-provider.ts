@@ -6,37 +6,43 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'inscriptionEditor';
   public static readonly TITLE = 'Inscription Editor';
 
-  constructor(private readonly _extensionUri: vscode.Uri) {}
+  private view?: vscode.WebviewView;
+  private pid?: string;
+  private host?: string;
+  private port?: string;
+  private appName?: string;
 
-  private _view?: vscode.WebviewView;
-  private _pid?: string;
-  private _port?: string;
+  constructor(private readonly extensionUri: vscode.Uri) {
+    this.host = process.env.ENGINE_HOST;
+    this.port = process.env.ENGINE_PORT;
+    this.appName = process.env.APP_NAME;
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
-    this._view = webviewView;
-    this._port = process.env.ENGINE_PORT;
+    this.view = webviewView;
 
-    this._view?.webview.onDidReceiveMessage(message => {
-      if (message?.command === 'ready') {
-        this.sendMessageToWebview({ command: 'engine_port', args: { port: this._port, pid: this._pid } });
+    this.view?.webview.onDidReceiveMessage(message => {
+      if (message?.command === 'ready' && this.pid) {
+        this.sendMessageToWebview({ command: 'connect.to.engine', host: this.host, port: this.port, appName: this.appName });
+        this.sendMessageToWebview({ command: 'pid', pid: this.pid });
       }
     });
 
     webviewView.webview.options = {
       enableScripts: true,
-      localResourceRoots: [this._extensionUri]
+      localResourceRoots: [this.extensionUri]
     };
 
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
   }
 
   setPid(pid?: string): void {
-    this._pid = pid;
-    this.sendMessageToWebview({ command: 'pid', args: { pid } });
+    this.pid = pid;
+    this.sendMessageToWebview({ command: 'pid', pid: pid });
   }
 
   async sendMessageToWebview(message: unknown): Promise<void> {
-    this._view?.webview.postMessage(message);
+    this.view?.webview.postMessage(message);
   }
 
   private getWebviewContent(webview: vscode.Webview): string {
@@ -54,7 +60,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
     const relativeCssFilePaths = manifest[rootHtmlKey]['css'] as string[];
     const cssUris = relativeCssFilePaths.map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath)));
-    cssUris.push(webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'css', 'inscription-editor.css')));
+    cssUris.push(webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, 'css', 'inscription-editor.css')));
 
     const contentSecurityPolicy =
       `default-src 'none';` +
@@ -63,7 +69,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
       `script-src 'nonce-${nonce}';` +
       `worker-src ${webview.cspSource};` +
       `font-src ${webview.cspSource};` +
-      `connect-src ${webview.cspSource} ws://localhost:${this._port}/`;
+      `connect-src ${webview.cspSource} ws://${this.host}:${this.port}/`;
 
     return `<!DOCTYPE html>
               <html lang="en">
@@ -83,7 +89,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
   }
 
   private getAppUri(...pathSegments: string[]): vscode.Uri {
-    return vscode.Uri.joinPath(this._extensionUri, APP_DIR, ...pathSegments);
+    return vscode.Uri.joinPath(this.extensionUri, APP_DIR, ...pathSegments);
   }
 
   private findRootHtmlKey(buildManifest: object): string | undefined {
