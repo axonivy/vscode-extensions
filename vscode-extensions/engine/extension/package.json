@@ -51,5 +51,36 @@
   "files": [
     "lib",
     "dist"
-  ]
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "Axon Ivy Engine",
+      "properties": {
+        "runEmbeddedEngine": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start embedded Axon Ivy Engine. If set false you have to define host & port where your Engine runs.",
+          "order": 0
+        },
+        "engineHost": {
+          "type": "string",
+          "default": "localhost",
+          "description": "Host of the Axon Ivy Engine that will be used.",
+          "order": 1
+        },
+        "enginePort": {
+          "type": "string",
+          "default": "8081",
+          "description": "Port of the Axon Ivy Engine that will be used.",
+          "order": 2
+        },
+        "appName": {
+          "type": "string",
+          "default": "designer",
+          "description": "Application name that is used to access language servers",
+          "order": 3
+        }
+      }
+    }
+  }
 }

@@ -7,55 +7,72 @@ import './index.css';
 import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 declare var acquireVsCodeApi: any;
+var vscode = acquireVsCodeApi();
+var client: Promise<InscriptionClient> | undefined;
+var root: ReactDOM.Root;
 
 interface Message {
   command: string;
 }
 
 interface PidMessage extends Message {
-  args: { pid?: string };
+  pid: string;
 }
 
-interface PortMessage extends Message {
-  args: { port?: string } & PidMessage['args'];
+interface ConnectToEngineMessage extends PidMessage {
+  host: string;
+  port: string;
+  appName: string;
 }
 
 export async function start(): Promise<void> {
-  let client: Promise<InscriptionClient>;
-  const root = ReactDOM.createRoot(document.getElementById('root')!);
-
-  window.addEventListener('message', event => {
-    const message = event.data;
-    switch (message?.command) {
-      case 'engine_port':
-        if (!client) {
-          startIvyScriptLSP(message);
-          client = getInscriptionClient(message);
-          client.then(client => root.render(render(client, (message as PortMessage).args.pid)));
-        }
-        break;
-      case 'pid':
-        if (client) {
-          client.then(client => root.render(render(client, (message as PidMessage).args.pid)));
-        } else {
-          const vscode = acquireVsCodeApi();
-          vscode.postMessage({ command: 'ready' });
-        }
-        break;
-    }
-  });
+  root = ReactDOM.createRoot(document.getElementById('root')!);
+  vscode.postMessage({ command: 'ready' });
+  window.addEventListener('message', handleMessages);
 }
 
-function startIvyScriptLSP(message: PortMessage) {
+function handleMessages(event: MessageEvent<any>) {
+  const message = event.data;
+  switch (message?.command) {
+    case 'pid':
+      handlePidCommand(message);
+      break;
+    case 'connect.to.engine':
+      handleConnectToEngineCommand(message);
+      break;
+  }
+}
+
+function handlePidCommand(message: PidMessage) {
+  if (client) {
+    client.then(client => root.render(render(client, message.pid)));
+    return;
+  }
+  vscode.postMessage({ command: 'ready' });
+}
+
+function handleConnectToEngineCommand(message: ConnectToEngineMessage) {
+  if (client) {
+    return;
+  }
+  const url = resolveUrl(message);
+  startIvyScriptLSP(url);
+  startInscriptionClient(url);
+}
+
+function resolveUrl(message: ConnectToEngineMessage) {
+  return `ws://${message.host}:${message.port}/${message.appName}/`;
+}
+
+function startIvyScriptLSP(url: string) {
   MonacoEditorUtil.initMonaco(reactMonaco, 'dark');
   MonacoUtil.initStandalone();
-  IvyScriptLanguage.startWebSocketClient(`ws://localhost:${message.args.port}/web-ide/ivy-script-lsp`);
+  IvyScriptLanguage.startWebSocketClient(url + 'ivy-script-lsp');
 }
 
-async function getInscriptionClient(message: PortMessage) {
-  const client = await InscriptionClientJsonRpc.startWebSocketClient(`ws://localhost:${message.args.port}/web-ide/ivy-inscription-lsp`);
-  await client.initialize();
-  return client;
+function startInscriptionClient(url: string) {
+  client = InscriptionClientJsonRpc.startWebSocketClient(url + 'ivy-inscription-lsp');
+  client.then(cl => cl.initialize());
 }
 
 export function render(inscriptionClient: InscriptionClient, pid: string = ''): React.ReactElement {
