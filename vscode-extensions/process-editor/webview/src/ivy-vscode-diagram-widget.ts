@@ -3,6 +3,8 @@ import { EnableViewportAction } from '@axonivy/process-editor';
 import { injectable } from 'inversify';
 import { VscodeDiagramWidget } from 'sprotty-vscode-webview';
 
+const windowsUriCheck = new RegExp('^file:///.:/');
+
 @injectable()
 export abstract class IvyGLSPVscodeDiagramWidget extends VscodeDiagramWidget {
   protected override initializeSprotty(): void {
@@ -25,7 +27,7 @@ export abstract class IvyGLSPVscodeDiagramWidget extends VscodeDiagramWidget {
 }
 
 export function decodeURI(uri: string): string {
-  if (uri.replace('file:', '').includes(':')) {
+  if (windowsUriCheck.test(uri)) {
     const windowsUri = uri.replace('file:///', 'file://');
     return decodeURIComponent(windowsUri);
   }
