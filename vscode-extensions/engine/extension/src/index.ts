@@ -46,6 +46,6 @@ async function startEmbeddedEngine(extensionUri: vscode.Uri) {
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
   if (child) {
-    child.kill('SIGKILL');
+    child.kill('SIGINT');
   }
 }
