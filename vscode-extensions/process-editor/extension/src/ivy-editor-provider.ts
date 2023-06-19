@@ -48,11 +48,9 @@ export default class IvyEditorProvider extends GlspEditorProvider {
   }
 
   private handleInscriptionEditorFocus(webview: vscode.Webview): void {
-    const focusInscriptionCommand = () => vscode.commands.executeCommand('inscriptionEditor.focus');
-    focusInscriptionCommand();
     webview.onDidReceiveMessage(message => {
       if (message?.kind === 'openInscription') {
-        focusInscriptionCommand();
+        vscode.commands.executeCommand('inscriptionEditor.focus');
       }
     });
   }

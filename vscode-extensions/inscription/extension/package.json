@@ -39,7 +39,7 @@
     "watch": "tsc -w"
   },
   "activationEvents": [
-    "onWebviewPanel:inscriptionEditor"
+    "onStartupFinished"
   ],
   "main": "./lib/inscription-extension.js",
   "files": [
