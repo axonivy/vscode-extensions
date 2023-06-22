@@ -29,7 +29,7 @@ function downloadEngine() {
 function unzipEngine(zipName: string, targetDir: string) {
   const AdmZip = require("adm-zip");
   var zip = new AdmZip(zipName);
-  zip.extractAllTo(targetDir);
+  zip.extractAllTo(targetDir, true, true);
   fs.rmSync(zipName);
 
   fs.readdir(targetDir, function (err, files) {
@@ -37,7 +37,7 @@ function unzipEngine(zipName: string, targetDir: string) {
       if(file.endsWith('.zip')) {
         const nestedZipName = path.join(targetDir, file)
         zip = new AdmZip(nestedZipName);
-        zip.extractAllTo(targetDir);
+        zip.extractAllTo(targetDir, true, true);
         fs.rmSync(nestedZipName)
         return;
       }
