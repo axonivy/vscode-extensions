@@ -2,6 +2,8 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 
+const decompress = require("decompress");
+
 function downloadEngine() {
   const engineDonwloadUrl = process.argv[2]
     ? process.argv[2]
@@ -27,18 +29,17 @@ function downloadEngine() {
 }
 
 function unzipEngine(zipName: string, targetDir: string) {
-  const AdmZip = require("adm-zip");
-  var zip = new AdmZip(zipName);
-  zip.extractAllTo(targetDir);
+  decompress(zipName, targetDir).then(() => unzipNestedEngine(targetDir));
   fs.rmSync(zipName);
+}
 
+function unzipNestedEngine(targetDir: string) {
   fs.readdir(targetDir, function (err, files) {
     files.forEach(file => {
       if(file.endsWith('.zip')) {
-        const nestedZipName = path.join(targetDir, file)
-        zip = new AdmZip(nestedZipName);
-        zip.extractAllTo(targetDir);
-        fs.rmSync(nestedZipName)
+        const nestedZipName = path.join(targetDir, file);
+        decompress(nestedZipName, targetDir);
+        fs.rmSync(nestedZipName);
         return;
       }
     })
