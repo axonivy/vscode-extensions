@@ -1,26 +1,41 @@
 body {
-  /* Fixme */
+  color-scheme: light;
+
   --glsp-editor-background: var(--vscode-editor-background);
   --glsp-editor-foreground: var(--vscode-editor-foreground);
-  --glsp-editor-mouseover: var(--vscode-editorWidget-foreground);
-  --glsp-editor-selected: var(--vscode-menu-selectionBackground);
   --glsp-foreground: var(--vscode-foreground);
 
-  --glsp-tool-bar-background: var(--vscode-activityBar-background);
-  --glsp-tool-bar-forground: var(--glsp-foreground);
-  --glsp-tool-bar-selection: var(--vscode-editor-selectionBackground);
-  --glsp-tool-bar-hover: var(--vscode-editor-selectionHighlightBackground);
-  --glsp-tool-bar-border: var(--vscode-dropdown-border);
-  --glsp-tool-bar-group-background: var(--vscode-badge-background);
-
-  --glsp-multiselect-box-border: var(--glsp-editor-selected);
-  --glsp-quick-action-background: var(--glsp-tool-bar-background);
-  --glsp-quick-action-hover: var(--glsp-tool-bar-selection);
-
-  --glsp-issue-background: var(--vscode-editor-background);
   --glsp-error-foreground: var(--vscode-editorError-foreground);
   --glsp-warning-foreground: var(--vscode-editorWarning-foreground);
   --glsp-info-foreground: var(--vscode-editorInfo-foreground);
 
+  --glsp-breakpoint: var(--vscode-editorError-foreground);
+
+  --glsp-execution-failed: var(--vscode-editorError-foreground);
+
   --glsp-inline-label-background: var(--vscode-textSeparator-foreground);
+}
+
+body.vscode-dark {
+  color-scheme: dark;
+
+  --glsp-grid: #5a5a5a;
+  --glsp-node: #202020;
+  --glsp-lane-bg: rgba(44, 44, 44, 0.5);
+  --glsp-pool-bg: #202020;
+
+  --glsp-tool-bg: #202020;
+  --glsp-tool-bar-bg: #2c2c2c;
+  --glsp-tool-button: #e5e5e5;
+  --glsp-tool-button-active-bg: #2c2c2c;
+  --glsp-tool-bar-button-active-bg: #202020;
+  --glsp-tool-text: #bababa;
+
+  --glsp-bar-menu-bg: #2c2c2c;
+  --glsp-bar-menu-header-bg: #202020;
+  --glsp-bar-menu-triangle: #2c2c2c;
+  --glsp-bar-menu-item: #bababa;
+  --glsp-bar-menu-item-hover: #202020;
+  --glsp-bar-menu-switch: #2c2c2c;
+  --glsp-bar-menu-switch-bg: #202020;
 }
