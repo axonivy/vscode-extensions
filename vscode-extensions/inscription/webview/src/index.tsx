@@ -20,8 +20,7 @@ interface PidMessage extends Message {
 }
 
 interface ConnectToEngineMessage extends PidMessage {
-  host: string;
-  port: string;
+  webSocketUrl: string
   appName: string;
 }
 
@@ -61,7 +60,7 @@ function handleConnectToEngineCommand(message: ConnectToEngineMessage) {
 }
 
 function resolveUrl(message: ConnectToEngineMessage) {
-  return `ws://${message.host}:${message.port}/${message.appName}/`;
+  return `${message.webSocketUrl}${message.appName}/`;
 }
 
 function startIvyScriptLSP(url: string) {

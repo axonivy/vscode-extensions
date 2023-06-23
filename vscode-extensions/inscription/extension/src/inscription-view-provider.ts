@@ -8,13 +8,12 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
   private view?: vscode.WebviewView;
   private pid?: string;
-  private host?: string;
-  private port?: string;
+  private webSocketUrl?: string;
   private appName?: string;
 
   constructor(private readonly extensionUri: vscode.Uri) {
-    this.host = process.env.ENGINE_HOST;
-    this.port = process.env.ENGINE_PORT;
+    const engineUrl = process.env.ENGINE_URL ? process.env.ENGINE_URL: '';
+    this.webSocketUrl = engineUrl.startsWith('https://') ? engineUrl.replace('https', 'wss') : engineUrl.replace('http', 'ws');
     this.appName = process.env.APP_NAME;
   }
 
@@ -23,7 +22,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
     this.view?.webview.onDidReceiveMessage(message => {
       if (message?.command === 'ready' && this.pid) {
-        this.sendMessageToWebview({ command: 'connect.to.engine', host: this.host, port: this.port, appName: this.appName });
+        this.sendMessageToWebview({ command: 'connect.to.engine', webSocketUrl: this.webSocketUrl, appName: this.appName });
         this.sendMessageToWebview({ command: 'pid', pid: this.pid });
       }
     });
@@ -69,7 +68,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
       `script-src 'nonce-${nonce}';` +
       `worker-src ${webview.cspSource};` +
       `font-src ${webview.cspSource};` +
-      `connect-src ${webview.cspSource} ws://${this.host}:${this.port}/`;
+      `connect-src ${webview.cspSource} ${this.webSocketUrl}`;
 
     return `<!DOCTYPE html>
               <html lang="en">

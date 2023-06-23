@@ -64,23 +64,17 @@
           "description": "Start embedded Axon Ivy Engine. If set false you have to define host & port where your Engine runs.",
           "order": 0
         },
-        "engineHost": {
+        "engineUrl": {
           "type": "string",
-          "default": "localhost",
-          "description": "Host of the Axon Ivy Engine that will be used.",
+          "default": "http://localhost:8080/",
+          "description": "Url of the Axon Ivy Engine that will be used.",
           "order": 1
-        },
-        "enginePort": {
-          "type": "string",
-          "default": "8081",
-          "description": "Port of the Axon Ivy Engine that will be used.",
-          "order": 2
         },
         "appName": {
           "type": "string",
-          "default": "designer",
+          "default": "web-ide",
           "description": "Application name that is used to access language servers",
-          "order": 3
+          "order": 2
         }
       }
     }

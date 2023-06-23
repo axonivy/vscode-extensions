@@ -6,18 +6,15 @@ let child: ChildProcess;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
+  process.env['APP_NAME'] = vscode.workspace.getConfiguration().get('appName');
   if (runEmbeddedEngine) {
     await startEmbeddedEngine(context.extensionUri);
     return;
   }
-  process.env['ENGINE_HOST'] = vscode.workspace.getConfiguration().get('engineHost');
-  process.env['ENGINE_PORT'] = vscode.workspace.getConfiguration().get('enginePort');
-  process.env['APP_NAME'] = vscode.workspace.getConfiguration().get('appName');
+  process.env['ENGINE_URL'] = vscode.workspace.getConfiguration().get('engineUrl');
 }
 
 async function startEmbeddedEngine(extensionUri: vscode.Uri) {
-  process.env['ENGINE_HOST'] = 'localhost';
-  process.env['APP_NAME'] = 'web-ide';
   const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
   outputChannel.show();
   const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
@@ -35,9 +32,9 @@ async function startEmbeddedEngine(extensionUri: vscode.Uri) {
     child.stdout?.on('data', function (data: any) {
       const output = data.toString();
       if (output && output.startsWith('Go to http')) {
-        const port = output.split(':')[2].split('/')[0];
-        process.env['ENGINE_PORT'] = port;
-        resolve(port);
+        const engineUrl = output.split('Go to ')[1].split(' to see')[0];
+        process.env['ENGINE_URL'] = engineUrl;
+        resolve(engineUrl);
       }
       outputChannel.append(output);
     });
