@@ -1,5 +1,6 @@
 import '../css/colors.css';
 import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
+import '../css/diagram.css';
 
 import { ivyBreakpointModule, createIvyDiagramContainer } from '@axonivy/process-editor';
 import { DiagramServerProxy, ICopyPasteHandler, TYPES } from '@eclipse-glsp/client';
