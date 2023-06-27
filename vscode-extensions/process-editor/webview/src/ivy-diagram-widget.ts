@@ -1,13 +1,11 @@
 import { DiagramServerProxy, EnableToolPaletteAction, RequestModelAction, RequestTypeHintsAction } from '@eclipse-glsp/client';
+import { GLSPDiagramWidget } from '@eclipse-glsp/vscode-integration-webview';
 import { EnableViewportAction } from '@axonivy/process-editor';
 import { injectable } from 'inversify';
-import { VscodeDiagramWidget } from 'sprotty-vscode-webview';
-
-const windowsUriCheck = new RegExp('^file:///.:/');
 
 @injectable()
-export abstract class IvyGLSPVscodeDiagramWidget extends VscodeDiagramWidget {
-  protected override initializeSprotty(): void {
+export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
+  override dispatchInitialActions(): void {
     if (this.modelSource instanceof DiagramServerProxy) {
       this.modelSource.clientId = this.diagramIdentifier.clientId;
     }
@@ -25,6 +23,8 @@ export abstract class IvyGLSPVscodeDiagramWidget extends VscodeDiagramWidget {
     this.actionDispatcher.dispatch(EnableViewportAction.create());
   }
 }
+
+const windowsUriCheck = new RegExp('^file:///.:/');
 
 export function decodeURI(uri: string): string {
   if (windowsUriCheck.test(uri)) {

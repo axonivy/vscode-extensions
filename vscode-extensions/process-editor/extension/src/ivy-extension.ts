@@ -1,4 +1,4 @@
-import { configureDefaultCommands, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import { configureDefaultCommands, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
@@ -15,7 +15,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<GlspAp
   const workflowServer = new SocketGlspVscodeServer({
     clientId: 'ivy-glsp-process',
     clientName: 'ivy-glsp-process',
-    serverPort: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
+    connectionOptions: {
+      port: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
+    }
   });
 
   // Initialize GLSP-VSCode connector with server wrapper

@@ -14,7 +14,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   getActiveSelection(): string[] {
     for (let [id, client] of this.clientMap) {
       if (client.webviewPanel.active) {
-        return this.clientSelectionMap.get(id) || [];
+        return this.clientSelectionMap.get(id)?.selectedElementsIDs || [];
       }
     }
     return [];

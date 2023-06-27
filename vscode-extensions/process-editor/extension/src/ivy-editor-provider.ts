@@ -1,5 +1,4 @@
-import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
-import { GlspEditorProvider } from '@eclipse-glsp/vscode-integration/lib/quickstart-components';
+import { GlspVscodeConnector, GlspEditorProvider } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
 export default class IvyEditorProvider extends GlspEditorProvider {
