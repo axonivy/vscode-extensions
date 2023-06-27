@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { Action } from '@eclipse-glsp/client';
 import { OpenAction } from 'sprotty-protocol';
-import { VsCodeApi } from 'sprotty-vscode-webview/lib/services';
+import { VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
 
 export function isInvokeOpenAction(action: Action): action is OpenAction {
   return action.kind === OpenInscriptionAction.KIND;

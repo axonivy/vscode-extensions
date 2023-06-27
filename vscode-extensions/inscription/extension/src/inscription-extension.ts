@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
     const currentSelection = glspApi.connector.getActiveSelection();
     provider.setPid(pidOf(currentSelection));
     glspApi.connector.onSelectionUpdate(selection => {
-      provider.setPid(pidOf(selection));
+      provider.setPid(pidOf(selection.selectedElementsIDs));
     });
   }
 }

@@ -1256,39 +1256,39 @@
   resolved "https://npmjs-registry.ivyteam.io/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@eclipse-glsp/client@1.1.0-RC06":
-  version "1.1.0-RC06"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/client/-/client-1.1.0-RC06.tgz#188208069802ea3dee8a77a8e92e58ca5c8fc9dd"
-  integrity sha512-NQGk9J6KGhN9hdNOMGYH11O4vHU0NkNnr/FvZQ0Ule5BEnMnKnH91KgcOpLmc1m1WnhwksWbEAqoVnGX4NdQgw==
+"@eclipse-glsp/client@1.1.0-RC06", "@eclipse-glsp/client@1.1.0-RC09":
+  version "1.1.0-RC09"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/client/-/client-1.1.0-RC09.tgz#df68ddb176657d5b9eda0c9701a26c70595d9143"
+  integrity sha512-JQGNwueTJ5RBHwH7ukkVmZI8cTf2TWLNg9bjdPTP+jRbkWNWf2UlrmJBqqYoqNyqU8Xv+7f3rpk/wwqLu1WxMw==
   dependencies:
-    "@eclipse-glsp/protocol" "1.1.0-RC06"
+    "@eclipse-glsp/protocol" "1.1.0-RC09"
     autocompleter "5.1.0"
     sprotty "0.13.0-next.f4445dd.342"
 
-"@eclipse-glsp/protocol@1.1.0-RC06":
-  version "1.1.0-RC06"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/protocol/-/protocol-1.1.0-RC06.tgz#18b2124359e40d3009a59f49a807fe1bafc8b601"
-  integrity sha512-/z6Daj17F0DL5F3C62Z9dsSVf3YiNlbBeSKQqf0mMn4y40XPKfMtKpP/76SuiGVC5yMNui/XfynWIG9YIjMUzA==
+"@eclipse-glsp/protocol@1.1.0-RC09":
+  version "1.1.0-RC09"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/protocol/-/protocol-1.1.0-RC09.tgz#5985a82c62342bae921a687246e7101595d9d4d2"
+  integrity sha512-mq3qV4LeIAXU+hezGfHibjXqTF6GryK7hjRMajLfGrViJIj2MKza6qC17earWGXEX2qxk8Ha4c6TS6QeYt/5Ag==
   dependencies:
     sprotty-protocol "0.13.0-next.f4445dd.342"
     uuid "7.0.3"
     vscode-jsonrpc "^8.0.2"
 
-"@eclipse-glsp/vscode-integration-webview@1.1.0-RC06":
-  version "1.1.0-RC06"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration-webview/-/vscode-integration-webview-1.1.0-RC06.tgz#b423f4e71d5028c39d59d3093de16baa8ae341bc"
-  integrity sha512-+8/cz/RQHYTsZlohhc+rJqghIPQYbv+Y+Q0SsfChaXUJfZQV6Bj7A77QER4yYu0IoDbNITMEWMcAS4Q3ttK4Ug==
+"@eclipse-glsp/vscode-integration-webview@1.1.0-RC09":
+  version "1.1.0-RC09"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration-webview/-/vscode-integration-webview-1.1.0-RC09.tgz#51c45882f4b42043ed2ae3b7ad0a1e26764070bd"
+  integrity sha512-49jtQZmNAM68u7836Yl3TeenvQDpzq5jI3J8cKX3PJIPQLgZ4lqfhMxevhicGnLvsTLwqPvfAu5rSdZS/LwY/Q==
   dependencies:
-    "@eclipse-glsp/client" "1.1.0-RC06"
-    sprotty-vscode-webview "~0.3.1"
+    "@eclipse-glsp/client" "1.1.0-RC09"
 
-"@eclipse-glsp/vscode-integration@1.1.0-RC06":
-  version "1.1.0-RC06"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration/-/vscode-integration-1.1.0-RC06.tgz#b5eb43bba3863837148de40dbc53125138a9c793"
-  integrity sha512-6hon038A2Kg9BWlJ2AFalHl9PJ1KaCrcxFPpVkiNuiVYY+3M3cvOFRGVdiLN1fpUd2+0nIu67KuvZKlLTRmyhw==
+"@eclipse-glsp/vscode-integration@1.1.0-RC09":
+  version "1.1.0-RC09"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration/-/vscode-integration-1.1.0-RC09.tgz#8ff01e18607e9b83021975f29002836aec0cd1ad"
+  integrity sha512-cf79cza2ziZdwdI/3wmhLv5/0l1DB4KcWH3Jkm/pbCULmWDicUR9ZRIPEOnkjyN6t1QY34BzU12NgXr3cJ+RDA==
   dependencies:
-    "@eclipse-glsp/protocol" "1.1.0-RC06"
+    "@eclipse-glsp/protocol" "1.1.0-RC09"
     vscode-jsonrpc "^8.0.2"
+    ws "^8.13.0"
 
 "@esbuild/android-arm64@0.17.18":
   version "0.17.18"
@@ -9101,30 +9101,7 @@ sprotty-protocol@0.13.0-next.f4445dd.342:
   resolved "https://npmjs-registry.ivyteam.io/sprotty-protocol/-/sprotty-protocol-0.13.0-next.f4445dd.342.tgz#79e39a3427202d59173f61f3f03429dfdec7ab9c"
   integrity sha512-6cNoZrvay1Gk3uk6NqlmraBy68dskvhuDKDiUlpxbzFQ/ZVO4MKY2D41S5AXzjDyOtYQO6tZjlPrNCjmj5Kvrg==
 
-sprotty-protocol@~0.12.0:
-  version "0.12.0"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty-protocol/-/sprotty-protocol-0.12.0.tgz#542eb6396a645f85f8cfc2e7ef1d9b90c7b1980b"
-  integrity sha512-vbov+XfbmSeMYb46vm6dJvK3q7YKUvg0q7JnM6H7Ca5qY8TaZCEZ5Vc8zHKFZGWchcwnQYKqLTzwDItsMikD0A==
-
-sprotty-vscode-protocol@~0.3.0:
-  version "0.3.0"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty-vscode-protocol/-/sprotty-vscode-protocol-0.3.0.tgz#8b3be8945af0cf90eeb0b0556f8de85305948cf7"
-  integrity sha512-p7PguMSJ6HC5Jo2FOdoazH/KbJZzO4Dtob72HCKkR90Wa1/3e57ETMvUCbjOf1xSFlO0OJ4ygjNgOhiJDocIPQ==
-  dependencies:
-    path "^0.12.7"
-    sprotty-protocol "~0.12.0"
-    vscode-languageserver-protocol "^3.16.0"
-
-sprotty-vscode-webview@~0.3.1:
-  version "0.3.1"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty-vscode-webview/-/sprotty-vscode-webview-0.3.1.tgz#4865de05228ff8ec8df6aa94974764f2457471fb"
-  integrity sha512-DoZSFvwxWj70aON/aPu02YM5Qu0PXloBJqKQGt0+jBu9smMQ+cRG8ZpHRS7WSgfvYZhQnx3c3U5W7VMe/BNCVg==
-  dependencies:
-    sprotty "~0.12.0"
-    sprotty-vscode-protocol "~0.3.0"
-    vscode-uri "^3.0.2"
-
-sprotty@0.13.0-next.1c4343c.328, sprotty@0.13.0-next.f4445dd.342, sprotty@~0.12.0:
+sprotty@0.13.0-next.1c4343c.328, sprotty@0.13.0-next.f4445dd.342:
   version "0.13.0-next.1c4343c.328"
   resolved "https://npmjs-registry.ivyteam.io/sprotty/-/sprotty-0.13.0-next.1c4343c.328.tgz#ab943696ebae2be75dedc33e751b2792ec6914c8"
   integrity sha512-6+//jO+c3ix5Sj2JG6lkHlp81PSY1/7ZGIw5DLipLwmZ/VSgFyU4JbOlXdk2FCMqUCgA77QZnU8mMmMwrDDm9A==
@@ -9793,11 +9770,6 @@ vscode-jsonrpc@8.0.2, vscode-jsonrpc@^8.0.2:
   resolved "https://npmjs-registry.ivyteam.io/vscode-jsonrpc/-/vscode-jsonrpc-8.0.2.tgz#f239ed2cd6004021b6550af9fd9d3e47eee3cac9"
   integrity sha512-RY7HwI/ydoC1Wwg4gJ3y6LpU9FJRZAUnTYMXthqhFXXu77ErDd/xkREpGuk4MyYkk4a+XDWAMqe0S3KkelYQEQ==
 
-vscode-jsonrpc@8.1.0:
-  version "8.1.0"
-  resolved "https://npmjs-registry.ivyteam.io/vscode-jsonrpc/-/vscode-jsonrpc-8.1.0.tgz#cb9989c65e219e18533cc38e767611272d274c94"
-  integrity sha512-6TDy/abTQk+zDGYazgbIPc+4JoXdwC8NHU9Pbn4UJP1fehUyZmM4RHp5IthX7A6L5KS30PRui+j+tbbMMMafdw==
-
 vscode-languageclient@8.0.2:
   version "8.0.2"
   resolved "https://npmjs-registry.ivyteam.io/vscode-languageclient/-/vscode-languageclient-8.0.2.tgz#f1f23ce8c8484aa11e4b7dfb24437d3e59bb61c6"
@@ -9815,28 +9787,10 @@ vscode-languageserver-protocol@3.17.2, vscode-languageserver-protocol@^3.17.2:
     vscode-jsonrpc "8.0.2"
     vscode-languageserver-types "3.17.2"
 
-vscode-languageserver-protocol@^3.16.0:
-  version "3.17.3"
-  resolved "https://npmjs-registry.ivyteam.io/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.17.3.tgz#6d0d54da093f0c0ee3060b81612cce0f11060d57"
-  integrity sha512-924/h0AqsMtA5yK22GgMtCYiMdCOtWTSGgUOkgEDX+wk2b0x4sAfLiO4NxBxqbiVtz7K7/1/RgVrVI0NClZwqA==
-  dependencies:
-    vscode-jsonrpc "8.1.0"
-    vscode-languageserver-types "3.17.3"
-
 vscode-languageserver-types@3.17.2:
   version "3.17.2"
   resolved "https://npmjs-registry.ivyteam.io/vscode-languageserver-types/-/vscode-languageserver-types-3.17.2.tgz#b2c2e7de405ad3d73a883e91989b850170ffc4f2"
   integrity sha512-zHhCWatviizPIq9B7Vh9uvrH6x3sK8itC84HkamnBWoDFJtzBf7SWlpLCZUit72b3os45h6RWQNC9xHRDF8dRA==
-
-vscode-languageserver-types@3.17.3:
-  version "3.17.3"
-  resolved "https://npmjs-registry.ivyteam.io/vscode-languageserver-types/-/vscode-languageserver-types-3.17.3.tgz#72d05e47b73be93acb84d6e311b5786390f13f64"
-  integrity sha512-SYU4z1dL0PyIMd4Vj8YOqFvHu7Hz/enbWtpfnVbJHU4Nd1YNYx8u0ennumc6h48GQNeOLxmwySmnADouT/AuZA==
-
-vscode-uri@^3.0.2:
-  version "3.0.7"
-  resolved "https://npmjs-registry.ivyteam.io/vscode-uri/-/vscode-uri-3.0.7.tgz#6d19fef387ee6b46c479e5fb00870e15e58c1eb8"
-  integrity sha512-eOpPHogvorZRobNqJGhapa0JdwaxpjVvyBp0QIUMRMSf8ZAlqOdEquKuRmw9Qwu0qXtJIWqFtMkmvJjUZmMjVA==
 
 vscode-ws-jsonrpc@^2.0.1:
   version "2.0.1"
@@ -10058,6 +10012,11 @@ write-pkg@^4.0.0:
     sort-keys "^2.0.0"
     type-fest "^0.4.1"
     write-json-file "^3.2.0"
+
+ws@^8.13.0:
+  version "8.13.0"
+  resolved "https://npmjs-registry.ivyteam.io/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
+  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
 
 xtend@~4.0.1:
   version "4.0.2"
