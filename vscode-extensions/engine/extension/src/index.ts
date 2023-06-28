@@ -4,6 +4,8 @@ import * as vscode from 'vscode';
 
 let child: ChildProcess;
 
+const webSocketAddressKey = 'WEB_SOCKET_ADDRESS';
+
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
   process.env['APP_NAME'] = vscode.workspace.getConfiguration().get('appName');
@@ -11,7 +13,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     await startEmbeddedEngine(context.extensionUri);
     return;
   }
-  process.env['ENGINE_URL'] = vscode.workspace.getConfiguration().get('engineUrl');
+  const engineUrl = vscode.workspace.getConfiguration().get('engineUrl') as string;
+  process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
 }
 
 async function startEmbeddedEngine(extensionUri: vscode.Uri) {
@@ -33,12 +36,19 @@ async function startEmbeddedEngine(extensionUri: vscode.Uri) {
       const output = data.toString();
       if (output && output.startsWith('Go to http')) {
         const engineUrl = output.split('Go to ')[1].split(' to see')[0];
-        process.env['ENGINE_URL'] = engineUrl;
+        process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
         resolve(engineUrl);
       }
       outputChannel.append(output);
     });
   });
+}
+
+function toWebSocketAddress(engineUrl: string): string {
+  if (engineUrl.startsWith('https://')) {
+    return engineUrl.replace('https', 'wss');
+  }
+  return engineUrl.replace('http', 'ws');
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
