@@ -41,6 +41,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
         </head>
         <body>
           <div id="${clientId}_container" style="height: 100%;"></div>
+          <script>var exports = {};</script>
           <script src="${webviewScriptSourceUri}"></script>
         </body>
       </html>`;

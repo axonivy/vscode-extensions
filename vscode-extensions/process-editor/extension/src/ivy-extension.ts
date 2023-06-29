@@ -4,19 +4,18 @@ import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
 
-const DEFAULT_SERVER_PORT = '5007';
-
 export interface GlspApi {
   connector: IvyVscodeConnector;
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<GlspApi> {
   // Wrap server with quickstart component
+  const webSocketAddress = process.env.WEB_SOCKET_ADDRESS || '';
   const workflowServer = new SocketGlspVscodeServer({
     clientId: 'ivy-glsp-process',
     clientName: 'ivy-glsp-process',
     connectionOptions: {
-      port: JSON.parse(process.env.GLSP_SERVER_PORT || DEFAULT_SERVER_PORT)
+      webSocketAddress: webSocketAddress + 'ivy-glsp-process'
     }
   });
 

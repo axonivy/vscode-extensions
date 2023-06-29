@@ -20,8 +20,7 @@ interface PidMessage extends Message {
 }
 
 interface ConnectToEngineMessage extends PidMessage {
-  webSocketUrl: string
-  appName: string;
+  webSocketAddress: string;
 }
 
 export async function start(): Promise<void> {
@@ -36,8 +35,8 @@ function handleMessages(event: MessageEvent<any>) {
     case 'pid':
       handlePidCommand(message);
       break;
-    case 'connect.to.engine':
-      handleConnectToEngineCommand(message);
+    case 'connect.to.web.sockets':
+      handleConnectToWebSocketsCommand(message);
       break;
   }
 }
@@ -50,27 +49,22 @@ function handlePidCommand(message: PidMessage) {
   vscode.postMessage({ command: 'ready' });
 }
 
-function handleConnectToEngineCommand(message: ConnectToEngineMessage) {
+function handleConnectToWebSocketsCommand(message: ConnectToEngineMessage) {
   if (client) {
     return;
   }
-  const url = resolveUrl(message);
-  startIvyScriptLSP(url);
-  startInscriptionClient(url);
+  startIvyScriptLSP(message.webSocketAddress);
+  startInscriptionClient(message.webSocketAddress);
 }
 
-function resolveUrl(message: ConnectToEngineMessage) {
-  return `${message.webSocketUrl}${message.appName}/`;
-}
-
-function startIvyScriptLSP(url: string) {
+function startIvyScriptLSP(webSocketAddress: string) {
   MonacoEditorUtil.initMonaco(reactMonaco, 'dark');
   MonacoUtil.initStandalone();
-  IvyScriptLanguage.startWebSocketClient(url + 'ivy-script-lsp');
+  IvyScriptLanguage.startWebSocketClient(webSocketAddress + 'ivy-script-lsp');
 }
 
-function startInscriptionClient(url: string) {
-  client = InscriptionClientJsonRpc.startWebSocketClient(url + 'ivy-inscription-lsp');
+function startInscriptionClient(webSocketAddress: string) {
+  client = InscriptionClientJsonRpc.startWebSocketClient(webSocketAddress + 'ivy-inscription-lsp');
   client.then(cl => cl.initialize());
 }
 
