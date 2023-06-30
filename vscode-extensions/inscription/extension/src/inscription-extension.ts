@@ -14,7 +14,11 @@ function pidOf(selection: string[]): string | undefined {
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new InscriptionViewProvider(context.extensionUri);
-  context.subscriptions.push(vscode.window.registerWebviewViewProvider(InscriptionViewProvider.viewType, provider));
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider(InscriptionViewProvider.viewType, provider, {
+      webviewOptions: { retainContextWhenHidden: true }
+    })
+  );
 
   const glspApi = vscode.extensions.getExtension(WORKFLOW_EXTENSION_ID)?.exports as GlspApi | undefined;
   if (!glspApi) {
