@@ -12,10 +12,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<GlspAp
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS || '';
   const workflowServer = new SocketGlspVscodeServer({
-    clientId: 'ivy-glsp-process',
-    clientName: 'ivy-glsp-process',
+    clientId: 'ivy-web-ide-glsp-process',
+    clientName: 'ivy-web-ide-glsp-process',
     connectionOptions: {
-      webSocketAddress: webSocketAddress + 'ivy-glsp-process'
+      webSocketAddress: webSocketAddress + 'ivy-web-ide-glsp-process'
     }
   });
 
