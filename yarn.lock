@@ -18,17 +18,17 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axonivy/editor-icons@11.2.0-next.408+f99614e":
-  version "11.2.0-next.408"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.408.tgz#7ac34b81ae03ff1b046c7f38ce50fc7a3bb0c9a8"
-  integrity sha512-F18GBcLnk0KRfB8B9F0NTr7KRc4VucEVqGHs0XScQ28dIDfBG4FO7P5qge5+aY6QjqxKgOJxkDqm3SBZ+ta9PQ==
+"@axonivy/editor-icons@11.2.0-next.420+0f0f979":
+  version "11.2.0-next.420"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.420.tgz#a3149fac7dd96c0ed5cf40f0f6d40bc9fec9c955"
+  integrity sha512-ST1JbekganvdPoDfz1im6zAEyiMLa1639p/Fxj57+4LTYWX5kxC/4zxZo9zPTnN3HdmJt5er9cjzMo9+0IpAZw==
 
-"@axonivy/inscription-core@~11.2.0-next.408":
-  version "11.2.0-next.408"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.408.tgz#0489a945bb1f1bdb6963f715d3fd3b02ff7fc727"
-  integrity sha512-/6Cea1HIcp/ibZmVViI5TFvtq/8X7mAuywODue8UHWkYEaCxmn4JSz09QlYek4heTn7d/LtV+wxGBd8fc2zmiA==
+"@axonivy/inscription-core@~11.2.0-next.420":
+  version "11.2.0-next.420"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.420.tgz#d70d24a2d67ec79fa5807506bc3ac05a4961775c"
+  integrity sha512-pUQGSRHS1gsNIScnreb+Yax0D/rcX8sY/m1NuBwobQUSSCdsSUNXC9Z6x+8dWg6xjjVQY0OvC1BdAynJeJRN2Q==
   dependencies:
-    "@axonivy/inscription-protocol" "11.2.0-next.408+f99614e"
+    "@axonivy/inscription-protocol" "11.2.0-next.420+0f0f979"
     monaco-editor "^0.34.1"
     monaco-editor-workers "^0.34.2"
     monaco-languageclient "^4.0.3"
@@ -36,13 +36,13 @@
     vscode-languageserver-protocol "^3.17.2"
     vscode-ws-jsonrpc "^2.0.1"
 
-"@axonivy/inscription-editor@~11.2.0-next.408":
-  version "11.2.0-next.408"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.408.tgz#a0292dd6ed1132aa6123f6ced4e3eb614c624386"
-  integrity sha512-uob/k+oN8HGpqL99e1Y1lDDmn4EFUobhgEfNxpl5Vt6IYKv2r6bA6VoeyfHBWnRn+g+ghfajk7imu73OxtLJAQ==
+"@axonivy/inscription-editor@~11.2.0-next.420":
+  version "11.2.0-next.420"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.420.tgz#27abcb631d1c142f7b9acbf6559c2da1c5c438bb"
+  integrity sha512-0NTGFFm0hd84kS7I9ohxYfsIzPDTCErw+MpIScYeFR76pipN3E4f+3Qxx/EBx+JlSmCQGRnXio8hhkWOV3rWrg==
   dependencies:
-    "@axonivy/editor-icons" "11.2.0-next.408+f99614e"
-    "@axonivy/inscription-protocol" "11.2.0-next.408+f99614e"
+    "@axonivy/editor-icons" "11.2.0-next.420+0f0f979"
+    "@axonivy/inscription-protocol" "11.2.0-next.420+0f0f979"
     "@monaco-editor/react" "^4.5.1"
     "@radix-ui/react-accordion" "^1.1.2"
     "@radix-ui/react-checkbox" "^1.0.4"
@@ -60,17 +60,17 @@
     react-aria "^3.25.0"
     react-error-boundary "^4.0.9"
 
-"@axonivy/inscription-protocol@11.2.0-next.408+f99614e", "@axonivy/inscription-protocol@~11.2.0-next.408":
-  version "11.2.0-next.408"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.408.tgz#d13d615b356eebdd8a30ea2c60e9bfed10d28618"
-  integrity sha512-CZ78DCICIMbCPohkozVqcN7P1ixX11iK1l6Hc5d32tAqAFTvlOiF7yMRBi18A7F/pBo1ker+AipvsDtqcv3P3g==
+"@axonivy/inscription-protocol@11.2.0-next.420+0f0f979", "@axonivy/inscription-protocol@~11.2.0-next.420":
+  version "11.2.0-next.420"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.420.tgz#0cb05bc8684bef8fb67945a86350d45d7667bbc1"
+  integrity sha512-ZJEgPwtz64XngEP2tqE0bVmI1vdq1PwCp9CuU/jgvAgeB2qsAlkY2kgHNwDHPD8vDSTPrDOwN/jaOAp8VM5Q5w==
 
-"@axonivy/process-editor@~11.2.0-next.725":
-  version "11.2.0-next.725"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.725.tgz#1f51ed4465bfc70788064285e1ec7ee46eea9d11"
-  integrity sha512-NUxGGVujvGvgi4ukZAJilTQWC7aSZZrqp/ElbD+AGjjsAWugVJXYsC6gdADqiadQvgStt1ChYocyB88onEJF8g==
+"@axonivy/process-editor@~11.2.0-next.726":
+  version "11.2.0-next.726"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.726.tgz#8a6387b3aa416f252652641cc066bac31292cef0"
+  integrity sha512-7onwXX/AEs4eXnM3GgbyDmn4XX16AYaPvF0aSE4JHBK51uyAp2+DqrJnOShJZup8toUD/vTRvFK4icIX5a3FKA==
   dependencies:
-    "@eclipse-glsp/client" "1.1.0-RC06"
+    "@eclipse-glsp/client" "1.1.0-RC10"
     showdown "^2.1.0"
     toastify-js "1.12.0"
 
@@ -1258,37 +1258,38 @@
   resolved "https://npmjs-registry.ivyteam.io/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@eclipse-glsp/client@1.1.0-RC06", "@eclipse-glsp/client@1.1.0-RC09":
-  version "1.1.0-RC09"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/client/-/client-1.1.0-RC09.tgz#df68ddb176657d5b9eda0c9701a26c70595d9143"
-  integrity sha512-JQGNwueTJ5RBHwH7ukkVmZI8cTf2TWLNg9bjdPTP+jRbkWNWf2UlrmJBqqYoqNyqU8Xv+7f3rpk/wwqLu1WxMw==
+"@eclipse-glsp/client@1.1.0-RC10":
+  version "1.1.0-RC10"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/client/-/client-1.1.0-RC10.tgz#c32c91f5c1410f32c97bf506ecf9b97c7dafeb20"
+  integrity sha512-vMdUu5X8waKNXGRU9DEylvTkMfayiCtWRy4e+TWygfiiM7G7wD8AZPL4fGQoDT3h7ulsgpXV+Mcorysp86P6lw==
   dependencies:
-    "@eclipse-glsp/protocol" "1.1.0-RC09"
+    "@eclipse-glsp/protocol" "1.1.0-RC10"
     autocompleter "5.1.0"
-    sprotty "0.13.0-next.f4445dd.342"
+    lodash "4.17.21"
+    sprotty "0.14.0-next.02bbac0.26"
 
-"@eclipse-glsp/protocol@1.1.0-RC09":
-  version "1.1.0-RC09"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/protocol/-/protocol-1.1.0-RC09.tgz#5985a82c62342bae921a687246e7101595d9d4d2"
-  integrity sha512-mq3qV4LeIAXU+hezGfHibjXqTF6GryK7hjRMajLfGrViJIj2MKza6qC17earWGXEX2qxk8Ha4c6TS6QeYt/5Ag==
+"@eclipse-glsp/protocol@1.1.0-RC10":
+  version "1.1.0-RC10"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/protocol/-/protocol-1.1.0-RC10.tgz#123fc350277431ce36a719b582c0cc12746df6a9"
+  integrity sha512-00sT68AbyiiMF63kXdQcQz0vPpf4Nuf1pWoxsJq82npyCIL1PP2rqqE3v+RfQQFic0cmYQObXhJCueK/BjvDaw==
   dependencies:
-    sprotty-protocol "0.13.0-next.f4445dd.342"
+    sprotty-protocol "0.14.0-next.02bbac0.26"
     uuid "7.0.3"
     vscode-jsonrpc "^8.0.2"
 
-"@eclipse-glsp/vscode-integration-webview@1.1.0-RC09":
-  version "1.1.0-RC09"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration-webview/-/vscode-integration-webview-1.1.0-RC09.tgz#51c45882f4b42043ed2ae3b7ad0a1e26764070bd"
-  integrity sha512-49jtQZmNAM68u7836Yl3TeenvQDpzq5jI3J8cKX3PJIPQLgZ4lqfhMxevhicGnLvsTLwqPvfAu5rSdZS/LwY/Q==
+"@eclipse-glsp/vscode-integration-webview@1.1.0-RC10":
+  version "1.1.0-RC10"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration-webview/-/vscode-integration-webview-1.1.0-RC10.tgz#c9502bf74402aada3c847fb2f6ec5e2185aecc4e"
+  integrity sha512-ukgraTQiwVM6j7ewAEFWID1dWk/deXX8YsK8+6lX96HkSbwcm0lnyH0LZLJB+sMP9c1bOAdU3aXjSuMh+sAFwA==
   dependencies:
-    "@eclipse-glsp/client" "1.1.0-RC09"
+    "@eclipse-glsp/client" "1.1.0-RC10"
 
-"@eclipse-glsp/vscode-integration@1.1.0-RC09":
-  version "1.1.0-RC09"
-  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration/-/vscode-integration-1.1.0-RC09.tgz#8ff01e18607e9b83021975f29002836aec0cd1ad"
-  integrity sha512-cf79cza2ziZdwdI/3wmhLv5/0l1DB4KcWH3Jkm/pbCULmWDicUR9ZRIPEOnkjyN6t1QY34BzU12NgXr3cJ+RDA==
+"@eclipse-glsp/vscode-integration@1.1.0-RC10":
+  version "1.1.0-RC10"
+  resolved "https://npmjs-registry.ivyteam.io/@eclipse-glsp/vscode-integration/-/vscode-integration-1.1.0-RC10.tgz#cee207c7c52dd738401dd00a55df0e41f6d2fca8"
+  integrity sha512-qqWPZwMCzOo3k0qqLm5MnQ9hJ/xbqCo8Zyo2B2ryiyHeU0Y3dARmPDFPftBLxoq50OG6keiQIwd6wGjAE4JBAw==
   dependencies:
-    "@eclipse-glsp/protocol" "1.1.0-RC09"
+    "@eclipse-glsp/protocol" "1.1.0-RC10"
     vscode-jsonrpc "^8.0.2"
     ws "^8.13.0"
 
@@ -4697,10 +4698,10 @@ autocompleter@5.1.0:
   resolved "https://npmjs-registry.ivyteam.io/autocompleter/-/autocompleter-5.1.0.tgz#da80488ddf1f1d89b0a8f5d36cab24439de18ab8"
   integrity sha512-xFZla6guwywqFJutoi5xrhAmaKw4/TU8CcLuNep/3OtiUfpNXtgzuBkkXJ6ysJIfG6MEEXFtUBg3PREN6HUVyw==
 
-autocompleter@^5.1.0:
-  version "5.2.0"
-  resolved "https://npmjs-registry.ivyteam.io/autocompleter/-/autocompleter-5.2.0.tgz#9ed3df262614fd557bf4d5bf67ab13cdee008203"
-  integrity sha512-CMYgI+r7RGZFaT0SvXcyBn1hb/Ne6XbjXimWQPc16LcwZgUGFBHg/Pv8honrwkTZE4DbfrD/MzqlG+Bn2u+1ng==
+autocompleter@^7.0.1:
+  version "7.1.0"
+  resolved "https://npmjs-registry.ivyteam.io/autocompleter/-/autocompleter-7.1.0.tgz#f8ff1428ec976eddc3eb8df7a2842c287d9b2bf5"
+  integrity sha512-uCToOnq7eAD/GJAteDbYuQ7ksDtrYWOy5CIAq43wh0dT+5frMpPlyD9tp+y5fz8KIcsP+zR2MjzoTAdW5aJESw==
 
 axe-core@^4.4.3:
   version "4.5.2"
@@ -6180,7 +6181,7 @@ file-entry-cache@^6.0.1:
   dependencies:
     flat-cache "^3.0.4"
 
-file-saver@^2.0.2:
+file-saver@^2.0.5:
   version "2.0.5"
   resolved "https://npmjs-registry.ivyteam.io/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
   integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
@@ -6833,10 +6834,10 @@ invariant@^2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
-inversify@^5.1.1:
-  version "5.1.1"
-  resolved "https://npmjs-registry.ivyteam.io/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
-  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
+inversify@^6.0.1:
+  version "6.0.1"
+  resolved "https://npmjs-registry.ivyteam.io/inversify/-/inversify-6.0.1.tgz#b20d35425d5d8c5cd156120237aad0008d969f02"
+  integrity sha512-B3ex30927698TJENHR++8FfEaJGqoWOgI6ZY5Ht/nLUsFCwHn6akbwtnUAPCgUepAnTpe2qHxhDNjoKLyz6rgQ==
 
 ip@^2.0.0:
   version "2.0.0"
@@ -7356,7 +7357,7 @@ lodash.merge@^4.6.2:
   resolved "https://npmjs-registry.ivyteam.io/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash@^4.17.15, lodash@^4.17.21:
+lodash@4.17.21, lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://npmjs-registry.ivyteam.io/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -9062,7 +9063,7 @@ smart-buffer@^4.2.0:
   resolved "https://npmjs-registry.ivyteam.io/smart-buffer/-/smart-buffer-4.2.0.tgz#6e1d71fa4f18c05f7d0ff216dd16a481d0e8d9ae"
   integrity sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==
 
-snabbdom@^3.0.3:
+snabbdom@^3.5.1:
   version "3.5.1"
   resolved "https://npmjs-registry.ivyteam.io/snabbdom/-/snabbdom-3.5.1.tgz#25f80ef15b194baea703d9d5441892e369de18e1"
   integrity sha512-wHMNIOjkm/YNE5EM3RCbr/+DVgPg6AqQAX1eOxO46zYNvCXjKP5Y865tqQj3EXnaMBjkxmQA5jFuDpDK/dbfiA==
@@ -9170,27 +9171,20 @@ sprintf-js@~1.0.2:
   resolved "https://npmjs-registry.ivyteam.io/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
-sprotty-protocol@0.13.0-next.1c4343c.328+1c4343c:
-  version "0.13.0-next.1c4343c.328"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty-protocol/-/sprotty-protocol-0.13.0-next.1c4343c.328.tgz#3354fbf5eb405b289f0784f70c508cc99d6ef131"
-  integrity sha512-sprFlSDmNBHlgAgAq2vM7hllfvb8GTVAM6u0Ws7tPAnicTAA/ulmiYbeYfvJZH5uuAasSW2B7ieWzg1+kgF/xg==
+sprotty-protocol@0.14.0-next.02bbac0.26, sprotty-protocol@0.14.0-next.02bbac0.26+02bbac0:
+  version "0.14.0-next.02bbac0.26"
+  resolved "https://npmjs-registry.ivyteam.io/sprotty-protocol/-/sprotty-protocol-0.14.0-next.02bbac0.26.tgz#e9bf147aa8e5c8e05f4392339573ee03fa0b3d7f"
+  integrity sha512-a8gbAKjRAIhCV+kM5+E96na7WgWwlqWU/jxhv23w4aLbkurs1gNR6uAF4sm0ahyhXnFxSl7KMUyYJG5km7Iyug==
 
-sprotty-protocol@0.13.0-next.f4445dd.342:
-  version "0.13.0-next.f4445dd.342"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty-protocol/-/sprotty-protocol-0.13.0-next.f4445dd.342.tgz#79e39a3427202d59173f61f3f03429dfdec7ab9c"
-  integrity sha512-6cNoZrvay1Gk3uk6NqlmraBy68dskvhuDKDiUlpxbzFQ/ZVO4MKY2D41S5AXzjDyOtYQO6tZjlPrNCjmj5Kvrg==
-
-sprotty@0.13.0-next.1c4343c.328, sprotty@0.13.0-next.f4445dd.342:
-  version "0.13.0-next.1c4343c.328"
-  resolved "https://npmjs-registry.ivyteam.io/sprotty/-/sprotty-0.13.0-next.1c4343c.328.tgz#ab943696ebae2be75dedc33e751b2792ec6914c8"
-  integrity sha512-6+//jO+c3ix5Sj2JG6lkHlp81PSY1/7ZGIw5DLipLwmZ/VSgFyU4JbOlXdk2FCMqUCgA77QZnU8mMmMwrDDm9A==
+sprotty@0.14.0-next.02bbac0.26:
+  version "0.14.0-next.02bbac0.26"
+  resolved "https://npmjs-registry.ivyteam.io/sprotty/-/sprotty-0.14.0-next.02bbac0.26.tgz#0177e9c31e129fba5a61a358145c7f1861cee28a"
+  integrity sha512-xNheZO66EOrqh6Hh6wt2HB8KvDv5s34hNR6hhQmrE2A+ZziRmDdW116Q/67ZK4mJ0UEsScaLmfNbzjZnwo+mWg==
   dependencies:
-    "@vscode/codicons" "^0.0.25"
-    autocompleter "^5.1.0"
-    file-saver "^2.0.2"
-    inversify "^5.1.1"
-    snabbdom "^3.0.3"
-    sprotty-protocol "0.13.0-next.1c4343c.328+1c4343c"
+    autocompleter "^7.0.1"
+    file-saver "^2.0.5"
+    snabbdom "^3.5.1"
+    sprotty-protocol "0.14.0-next.02bbac0.26+02bbac0"
     tinyqueue "^2.0.3"
 
 ssri@^9.0.0, ssri@^9.0.1:
