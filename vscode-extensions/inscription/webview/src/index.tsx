@@ -1,6 +1,6 @@
 import { InscriptionClientJsonRpc, IvyScriptLanguage, MonacoUtil } from '@axonivy/inscription-core';
 import { InscriptionClient } from '@axonivy/inscription-protocol';
-import { App, ClientContextInstance, MonacoEditorUtil } from '@axonivy/inscription-editor';
+import { App, ClientContextInstance, MonacoEditorUtil, ThemeMode } from '@axonivy/inscription-editor';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -21,6 +21,11 @@ interface PidMessage extends Message {
 
 interface ConnectToEngineMessage extends PidMessage {
   webSocketAddress: string;
+  theme: string;
+}
+
+interface SetMonacoThemeMessage extends Message {
+  theme: string;
 }
 
 export async function start(): Promise<void> {
@@ -37,6 +42,10 @@ function handleMessages(event: MessageEvent<any>) {
       break;
     case 'connect.to.web.sockets':
       handleConnectToWebSocketsCommand(message);
+      break;
+    case 'theme':
+      const themeMessage = message as SetMonacoThemeMessage;
+      reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(themeMessage.theme as ThemeMode));
       break;
   }
 }

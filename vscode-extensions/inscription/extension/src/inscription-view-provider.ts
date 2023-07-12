@@ -21,8 +21,13 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
       if (message?.command === 'ready') {
         this.sendMessageToWebview({ command: 'connect.to.web.sockets', webSocketAddress: this.webSocketAddress });
         this.sendMessageToWebview({ command: 'pid', pid: this.pid });
+        this.sendMessageToWebview({ command: 'theme', theme: this.vsCodeThemeToInscriptionMonacoTheme(vscode.window.activeColorTheme) });
       }
     });
+
+    vscode.window.onDidChangeActiveColorTheme(theme =>
+      this.sendMessageToWebview({ command: 'theme', theme: this.vsCodeThemeToInscriptionMonacoTheme(theme) })
+    );
 
     webviewView.webview.options = {
       enableScripts: true,
@@ -39,6 +44,13 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
   async sendMessageToWebview(message: unknown): Promise<void> {
     this.view?.webview.postMessage(message);
+  }
+
+  private vsCodeThemeToInscriptionMonacoTheme(theme: vscode.ColorTheme): string {
+    if (theme.kind === vscode.ColorThemeKind.Dark || theme.kind === vscode.ColorThemeKind.HighContrast) {
+      return 'dark';
+    }
+    return 'light';
   }
 
   private getWebviewContent(webview: vscode.Webview): string {
