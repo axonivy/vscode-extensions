@@ -16,7 +16,7 @@ body {
   --glsp-inline-label-background: var(--vscode-textSeparator-foreground);
 }
 
-body.vscode-dark {
+body:where(.vscode-dark, .vscode-high-contrast:not(.vscode-high-contrast-light)) {
   color-scheme: dark;
 
   --glsp-grid: #5a5a5a;
