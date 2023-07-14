@@ -25,12 +25,13 @@ async function startEmbeddedEngine(extensionUri: vscode.Uri) {
   const env = {
     env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Divy.enable.lsp=true -Dglsp.test.mode=true -Divy.engine.testheadless=true' }
   };
-
+  console.log('Start ' + engineLauncherScriptPath);
   child = execFile(engineLauncherScriptPath, env);
   child.on('error', function (error: any) {
     outputChannel.append(error);
     throw new Error(error);
   });
+
   return new Promise(resolve => {
     child.stdout?.on('data', function (data: any) {
       const output = data.toString();
@@ -53,6 +54,20 @@ function toWebSocketAddress(engineUrl: string): string {
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
   if (child) {
-    child.kill('SIGINT');
+    console.log("Send 'shutdown' to Axon Ivy Engine");
+    const shutdown = new Promise<void>(resolve => {
+      child.on('exit', function (code: number) {
+        console.log('Axon Ivy Engine has shutdown with exit code ' + code);
+        resolve();
+      });
+    });
+    if (Os.platform() === 'win32') {
+      child.stdin?.write('shutdown\n');
+    } else {
+      child.kill('SIGINT');
+    }
+    console.log('Waiting for shutdown of Axon Ivy Engine');
+    await shutdown;
+    console.log('End waiting for Axon Ivy Engine shutdown');
   }
 }
