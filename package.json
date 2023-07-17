@@ -28,6 +28,7 @@
   "workspaces": [
     "vscode-extensions/inscription/*",
     "vscode-extensions/process-editor/*",
-    "vscode-extensions/engine/*"
+    "vscode-extensions/engine/*",
+    "vscode-extensions/config-editor/*"
   ]
 }
