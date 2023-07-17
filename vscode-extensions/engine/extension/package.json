@@ -1,6 +1,6 @@
 {
   "name": "vscode-engine-extension",
-  "private": "true",
+  "private": true,
   "version": "11.2.0",
   "description": "VSCode extension that runs Axon Ivy Engine",
   "displayName": "Axon Ivy Engine",
@@ -29,7 +29,6 @@
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
-  "dependencies": {},
   "devDependencies": {
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",
@@ -45,7 +44,6 @@
     "download:engine": "ts-node scripts/download-engine.ts",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
     "watch": "webpack --watch --mode development"

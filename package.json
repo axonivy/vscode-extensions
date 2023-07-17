@@ -11,7 +11,6 @@
     "download:engine": "yarn --cwd vscode-extensions/engine/extension download:engine",
     "clean": "lerna run clean",
     "lint": "lerna run lint --",
-    "lint:fix": "lerna run lint:fix --",
     "package": "lerna run package",
     "prepare": "lerna run prepare",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
