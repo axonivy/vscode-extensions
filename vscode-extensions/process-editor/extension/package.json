@@ -1,6 +1,6 @@
 {
   "name": "vscode-process-editor-extension",
-  "private": "true",
+  "private": true,
   "version": "11.2.0",
   "description": "VSCode extension to model Axon Ivy Processes and debug them",
   "displayName": "Axon Ivy Process Editor",
@@ -53,7 +53,6 @@
     "build:production": "webpack --mode=production",
     "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:ci": "yarn lint -o eslint.xml -f checkstyle",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
     "watch": "webpack --watch --mode development"

@@ -15,7 +15,6 @@
     "vscode": "^1.54.0"
   },
   "devDependencies": {
-    "@types/node": "^16.7.13",
     "@types/vscode": "^1.54.0",
     "vsce": "1.79.5"
   },
@@ -39,7 +38,7 @@
         "displayName": "Variables Editor",
         "selector": [
           {
-            "filenamePattern": "variables.yaml"
+            "filenamePattern": "*.yaml"
           }
         ]
       }
