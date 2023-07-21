@@ -1,16 +1,6 @@
-import { GlspVscodeConnector } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 import { InscriptionViewProvider } from './inscription-view-provider';
-
-const WORKFLOW_EXTENSION_ID = 'axonivy.vscode-process-editor-extension';
-
-interface GlspApi {
-  connector: GlspVscodeConnector & { getActiveSelection(): string[] };
-}
-
-function pidOf(selection: string[]): string | undefined {
-  return selection.length > 0 ? selection[0] : undefined;
-}
+import { PROCESS_EDITOR_EXTENSION_ID, ProcessEditorExtension } from 'vscode-base';
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new InscriptionViewProvider(context.extensionUri);
@@ -20,14 +10,14 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  const glspApi = vscode.extensions.getExtension(WORKFLOW_EXTENSION_ID)?.exports as GlspApi | undefined;
-  if (!glspApi) {
-    console.warn(`Extension with Id '${WORKFLOW_EXTENSION_ID}' not found.`);
+  const processEditor = vscode.extensions.getExtension(PROCESS_EDITOR_EXTENSION_ID)?.exports as ProcessEditorExtension | undefined;
+  if (!processEditor) {
+    console.warn(`Extension with Id '${PROCESS_EDITOR_EXTENSION_ID}' not found.`);
   } else {
-    const currentSelection = glspApi.connector.getActiveSelection();
-    provider.setPid(pidOf(currentSelection));
-    glspApi.connector.onSelectionUpdate(selection => {
-      provider.setPid(pidOf(selection.selectedElementsIDs));
+    const currentSelection = processEditor.connector.getSelectedElement();
+    provider.setSelectedElement(currentSelection);
+    processEditor.connector.onSelectedElement(selection => {
+      provider.setSelectedElement(selection);
     });
   }
 }

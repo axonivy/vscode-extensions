@@ -5,6 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { SelectedElement } from 'vscode-base';
 
 declare var acquireVsCodeApi: any;
 var vscode = acquireVsCodeApi();
@@ -15,13 +16,12 @@ interface Message {
   command: string;
 }
 
-interface PidMessage extends Message {
-  pid: string;
+interface SelectedElementMessage extends Message {
+  selectedElement: SelectedElement;
 }
 
-interface ConnectToEngineMessage extends PidMessage {
+interface ConnectToEngineMessage extends Message {
   webSocketAddress: string;
-  theme: string;
 }
 
 interface SetMonacoThemeMessage extends Message {
@@ -37,8 +37,8 @@ export async function start(): Promise<void> {
 function handleMessages(event: MessageEvent<any>) {
   const message = event.data;
   switch (message?.command) {
-    case 'pid':
-      handlePidCommand(message);
+    case 'selectedElement':
+      handleSelectedElementCommand(message);
       break;
     case 'connect.to.web.sockets':
       handleConnectToWebSocketsCommand(message);
@@ -50,9 +50,9 @@ function handleMessages(event: MessageEvent<any>) {
   }
 }
 
-function handlePidCommand(message: PidMessage) {
+function handleSelectedElementCommand(message: SelectedElementMessage) {
   if (client) {
-    client.then(client => root.render(render(client, message.pid)));
+    client.then(client => root.render(render(client, message.selectedElement)));
     return;
   }
   vscode.postMessage({ command: 'ready' });
@@ -77,11 +77,11 @@ function startInscriptionClient(webSocketAddress: string) {
   client.then(cl => cl.initialize());
 }
 
-export function render(inscriptionClient: InscriptionClient, pid: string = ''): React.ReactElement {
+export function render(inscriptionClient: InscriptionClient, selectedElement: SelectedElement = undefined): React.ReactElement {
   return (
     <React.StrictMode>
       <ClientContextInstance.Provider value={{ client: inscriptionClient }}>
-        <App pid={pid} />
+        <App pid={selectedElement ? selectedElement.pid : ''} />
       </ClientContextInstance.Provider>
     </React.StrictMode>
   );

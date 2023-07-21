@@ -3,12 +3,9 @@ import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
+import { ProcessEditorExtension } from 'vscode-base';
 
-export interface GlspApi {
-  connector: IvyVscodeConnector;
-}
-
-export async function activate(context: vscode.ExtensionContext): Promise<GlspApi> {
+export async function activate(context: vscode.ExtensionContext): Promise<ProcessEditorExtension> {
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS || '';
   const workflowServer = new SocketGlspVscodeServer({

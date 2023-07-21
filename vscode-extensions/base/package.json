@@ -1,0 +1,27 @@
+{
+  "name": "vscode-base",
+  "private": true,
+  "version": "11.2.0",
+  "publisher": "AxonIvy",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/next-gen-inscription.git"
+  },
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "build:production": "yarn build",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
+  },
+  "main": "./lib/index.js",
+  "files": [
+    "src",
+    "lib"
+  ]
+}

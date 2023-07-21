@@ -3,21 +3,73 @@ import {
   Args,
   GlspVscodeClient,
   GlspVscodeConnector,
+  GlspVscodeConnectorOptions,
   MessageOrigin,
   MessageProcessingResult,
-  NavigateToExternalTargetAction
+  NavigateToExternalTargetAction,
+  SModelRootSchema,
+  SelectionState
 } from '@eclipse-glsp/vscode-integration';
+import { SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
+import { ProcessEditorConnector, SelectedElement } from 'vscode-base';
 
-export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
-  getActiveSelection(): string[] {
+type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
+
+export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument>
+  extends GlspVscodeConnector
+  implements ProcessEditorConnector
+{
+  private readonly emitter = new vscode.EventEmitter<SelectedElement>();
+  private readonly onSelectedElementUpdate = this.emitter.event;
+
+  constructor(options: GlspVscodeConnectorOptions) {
+    super(options);
+
+    this.onSelectionUpdate(selection => this.selectionChange(selection));
+  }
+
+  onSelectedElement(listener: (selectedElement: SelectedElement) => any): void {
+    this.onSelectedElementUpdate(listener);
+  }
+
+  getSelectedElement(): SelectedElement {
     for (let [id, client] of this.clientMap) {
       if (client.webviewPanel.active) {
-        return this.clientSelectionMap.get(id)?.selectedElementsIDs || [];
+        const pids = this.clientSelectionMap.get(id)?.selectedElementsIDs || [];
+        const ivyClient = client as IvyGlspClient;
+        if (pids.length > 0) {
+          return this.newSelectedElement(ivyClient, pids[0]);
+        }
       }
     }
-    return [];
+    return undefined;
+  }
+
+  private newSelectedElement(client: IvyGlspClient, pid: string): SelectedElement {
+    return {
+      app: client.app,
+      pmv: client.pmv,
+      pid: pid
+    };
+  }
+
+  private selectionChange(selection: SelectionState) {
+    const selectedElement = this.toSelectedElement(selection.selectedElementsIDs);
+    this.emitter.fire(selectedElement);
+  }
+
+  private toSelectedElement(pids: string[]): SelectedElement {
+    for (let [_, client] of this.clientMap) {
+      if (client.webviewPanel.active) {
+        const ivyClient = client as IvyGlspClient;
+        if (pids.length > 0) {
+          return this.newSelectedElement(ivyClient, pids[0]);
+        }
+      }
+    }
+    return undefined;
   }
 
   protected override handleNavigateToExternalTargetAction(
@@ -56,5 +108,19 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
       () => undefined, // onFulfilled: Do nothing.
       () => undefined // onRejected: Do nothing - This is needed as error handling in case the navigationTarget does not exist.
     );
+  }
+
+  protected override processMessage(message: unknown, origin: MessageOrigin): MessageProcessingResult {
+    if (ActionMessage.is(message)) {
+      if (SetModelAction.is(message.action)) {
+        const action = message.action;
+        const client = this.clientMap.get(message.clientId);
+        const ivyClient = client as IvyGlspClient;
+        const newRoot = action.newRoot as SModelRootSchema & { args: { app: string; pmv: string } };
+        ivyClient.app = newRoot.args.app;
+        ivyClient.pmv = newRoot.args.pmv;
+      }
+    }
+    return super.processMessage(message, origin);
   }
 }
