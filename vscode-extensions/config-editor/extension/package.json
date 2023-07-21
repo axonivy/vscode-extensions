@@ -38,7 +38,7 @@
         "displayName": "Variables Editor",
         "selector": [
           {
-            "filenamePattern": "*.yaml"
+            "filenamePattern": "variables.yaml"
           }
         ]
       }
