@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { SelectedElement } from 'vscode-base';
 
 export const APP_DIR = 'dist';
 
@@ -7,7 +8,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
   public static readonly TITLE = 'Inscription Editor';
 
   private view?: vscode.WebviewView;
-  private pid?: string;
+  private selectedElement: SelectedElement;
   private webSocketAddress?: string;
 
   constructor(private readonly extensionUri: vscode.Uri) {
@@ -20,7 +21,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
     this.view?.webview.onDidReceiveMessage(message => {
       if (message?.command === 'ready') {
         this.sendMessageToWebview({ command: 'connect.to.web.sockets', webSocketAddress: this.webSocketAddress });
-        this.sendMessageToWebview({ command: 'pid', pid: this.pid });
+        this.sendMessageToWebview({ command: 'selectedElement', selectedElement: this.selectedElement });
         this.sendMessageToWebview({ command: 'theme', theme: this.vsCodeThemeToInscriptionMonacoTheme(vscode.window.activeColorTheme) });
       }
     });
@@ -37,9 +38,9 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
   }
 
-  setPid(pid?: string): void {
-    this.pid = pid;
-    this.sendMessageToWebview({ command: 'pid', pid: pid });
+  setSelectedElement(selectedElement: SelectedElement): void {
+    this.selectedElement = selectedElement;
+    this.sendMessageToWebview({ command: 'selectedElement', selectedElement: selectedElement });
   }
 
   async sendMessageToWebview(message: unknown): Promise<void> {

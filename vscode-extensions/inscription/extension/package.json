@@ -14,7 +14,8 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@eclipse-glsp/vscode-integration": "1.1.0-RC10"
+    "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
+    "vscode-base": "11.2.0"
   },
   "devDependencies": {
     "vscode-inscription-webview": "11.2.0",

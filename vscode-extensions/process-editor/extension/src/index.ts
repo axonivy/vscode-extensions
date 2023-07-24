@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import * as vscode from 'vscode';
 
-import { GlspApi, activate as extensionActivate } from './ivy-extension';
+import { activate as extensionActivate } from './ivy-extension';
+import { ProcessEditorExtension } from 'vscode-base';
 
-export function activate(context: vscode.ExtensionContext): Promise<GlspApi> {
+export function activate(context: vscode.ExtensionContext): Promise<ProcessEditorExtension> {
   return extensionActivate(context);
 }

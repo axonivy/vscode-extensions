@@ -37,7 +37,8 @@
   ],
   "main": "./dist/extension.js",
   "dependencies": {
-    "@eclipse-glsp/vscode-integration": "1.1.0-RC10"
+    "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
+    "vscode-base": "11.2.0"
   },
   "devDependencies": {
     "vscode-process-editor-webview": "11.2.0",
