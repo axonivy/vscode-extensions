@@ -13,7 +13,7 @@ import {
 import { SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
-import { ProcessEditorConnector, SelectedElement } from 'vscode-base';
+import { ProcessEditorConnector, SelectedElement } from '@axonivy/vscode-base';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 
