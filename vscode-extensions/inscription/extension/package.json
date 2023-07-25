@@ -14,8 +14,7 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
-    "vscode-base": "11.2.0"
+    "@axonivy/vscode-base": "11.2.0"
   },
   "devDependencies": {
     "vscode-inscription-webview": "11.2.0",
@@ -24,13 +23,13 @@
     "vsce": "1.79.5"
   },
   "scripts": {
-    "build": "tsc -p ./",
-    "build:production": "yarn build",
-    "clean": "rimraf build tsconfig.tsbuildinfo",
+    "build": "webpack --mode=development",
+    "build:production": "webpack --mode=production",
+    "clean": "rimraf lib tsconfig.tsbuildinfo ",
     "lint": "eslint --ext .ts,.tsx ./src",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
-    "watch": "tsc -w"
+    "watch": "webpack --watch --mode development"
   },
   "activationEvents": [
     "onStartupFinished"

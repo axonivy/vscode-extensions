@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { InscriptionViewProvider } from './inscription-view-provider';
-import { PROCESS_EDITOR_EXTENSION_ID, ProcessEditorExtension } from 'vscode-base';
+import { PROCESS_EDITOR_EXTENSION_ID, ProcessEditorExtension } from '@axonivy/vscode-base';
 
 export function activate(context: vscode.ExtensionContext) {
   const provider = new InscriptionViewProvider(context.extensionUri);

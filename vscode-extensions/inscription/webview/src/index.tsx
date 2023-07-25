@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { SelectedElement } from 'vscode-base';
+import { SelectedElement } from '@axonivy/vscode-base';
 
 declare var acquireVsCodeApi: any;
 var vscode = acquireVsCodeApi();

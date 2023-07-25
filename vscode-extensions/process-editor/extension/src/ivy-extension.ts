@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
-import { ProcessEditorExtension } from 'vscode-base';
+import { ProcessEditorExtension } from '@axonivy/vscode-base';
 
 export async function activate(context: vscode.ExtensionContext): Promise<ProcessEditorExtension> {
   // Wrap server with quickstart component

@@ -6,6 +6,6 @@
     "resolveJsonModule": true,
     "module": "commonjs"
   },
-  "include": ["src", "pack"],
+  "include": ["src"],
   "types": ["node", "vscode"]
 }
