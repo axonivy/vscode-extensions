@@ -14,7 +14,8 @@
     "vscode": "^1.54.0"
   },
   "dependencies": {
-    "@axonivy/vscode-base": "11.2.0"
+    "@axonivy/vscode-base": "11.2.0",
+    "@tanstack/react-query": "^4.32.0"
   },
   "devDependencies": {
     "vscode-inscription-webview": "11.2.0",
