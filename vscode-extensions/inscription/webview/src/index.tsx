@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { SelectedElement } from '@axonivy/vscode-base';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 declare var acquireVsCodeApi: any;
 var vscode = acquireVsCodeApi();
@@ -78,13 +79,21 @@ function startInscriptionClient(webSocketAddress: string) {
 }
 
 export function render(inscriptionClient: InscriptionClient, selectedElement: SelectedElement = undefined): React.ReactElement {
+  const queryClient = new QueryClient();
   return (
     <React.StrictMode>
       <ClientContextInstance.Provider value={{ client: inscriptionClient }}>
-        <App pid={selectedElement ? selectedElement.pid : ''} />
+        <QueryClientProvider client={queryClient}>{renderApp(selectedElement)}</QueryClientProvider>
       </ClientContextInstance.Provider>
     </React.StrictMode>
   );
+
+  function renderApp(selectedElement: SelectedElement): React.ReactElement {
+    if (selectedElement) {
+      return <App app={selectedElement.app} pmv={selectedElement.pmv} pid={selectedElement.pid} />;
+    }
+    return <App app='' pmv='' pid='' />;
+  }
 }
 
 start();
