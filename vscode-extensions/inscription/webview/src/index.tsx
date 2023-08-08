@@ -78,8 +78,9 @@ function startInscriptionClient(webSocketAddress: string) {
   client.then(cl => cl.initialize());
 }
 
+const queryClient = new QueryClient();
+
 export function render(inscriptionClient: InscriptionClient, selectedElement: SelectedElement = undefined): React.ReactElement {
-  const queryClient = new QueryClient();
   return (
     <React.StrictMode>
       <ClientContextInstance.Provider value={{ client: inscriptionClient }}>
