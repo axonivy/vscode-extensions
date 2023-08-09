@@ -1,10 +1,10 @@
 export const PROCESS_EDITOR_EXTENSION_ID = 'axonivy.vscode-process-editor-extension';
 
-export interface ElementId {
+export type ElementId = {
   app: string;
   pmv: string;
   pid: string;
-}
+};
 
 export type SelectedElement = ElementId | undefined;
 
