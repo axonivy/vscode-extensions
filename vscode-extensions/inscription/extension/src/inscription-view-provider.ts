@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { SelectedElement } from '@axonivy/vscode-base';
+import { Message } from './message';
 
 export const APP_DIR = 'dist';
 
@@ -20,9 +21,11 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
 
     this.view?.webview.onDidReceiveMessage(message => {
       if (message?.command === 'ready') {
-        this.sendMessageToWebview({ command: 'connect.to.web.sockets', webSocketAddress: this.webSocketAddress });
-        this.sendMessageToWebview({ command: 'selectedElement', selectedElement: this.selectedElement });
+        this.sendMessageToWebview({ command: 'connect.to.web.sockets', webSocketAddress: this.webSocketAddress ?? '' });
         this.sendMessageToWebview({ command: 'theme', theme: this.vsCodeThemeToInscriptionMonacoTheme(vscode.window.activeColorTheme) });
+      }
+      if (message?.command === 'connected') {
+        this.sendMessageToWebview({ command: 'selectedElement', selectedElement: this.selectedElement });
       }
     });
 
@@ -38,23 +41,23 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
   }
 
-  setSelectedElement(selectedElement: SelectedElement): void {
+  setSelectedElement(selectedElement: SelectedElement) {
     this.selectedElement = selectedElement;
     this.sendMessageToWebview({ command: 'selectedElement', selectedElement: selectedElement });
   }
 
-  async sendMessageToWebview(message: unknown): Promise<void> {
+  async sendMessageToWebview(message: Message): Promise<void> {
     this.view?.webview.postMessage(message);
   }
 
-  private vsCodeThemeToInscriptionMonacoTheme(theme: vscode.ColorTheme): string {
+  private vsCodeThemeToInscriptionMonacoTheme(theme: vscode.ColorTheme) {
     if (theme.kind === vscode.ColorThemeKind.Dark || theme.kind === vscode.ColorThemeKind.HighContrast) {
       return 'dark';
     }
     return 'light';
   }
 
-  private getWebviewContent(webview: vscode.Webview): string {
+  private getWebviewContent(webview: vscode.Webview) {
     // Use a nonce to only allow specific scripts to be run
     const nonce = getNonce();
 
@@ -99,11 +102,11 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
               </html>`;
   }
 
-  private getAppUri(...pathSegments: string[]): vscode.Uri {
+  private getAppUri(...pathSegments: string[]) {
     return vscode.Uri.joinPath(this.extensionUri, APP_DIR, ...pathSegments);
   }
 
-  private findRootHtmlKey(buildManifest: object): string | undefined {
+  private findRootHtmlKey(buildManifest: object) {
     return Object.keys(buildManifest).filter(key => key.endsWith('.html'))[0];
   }
 }
