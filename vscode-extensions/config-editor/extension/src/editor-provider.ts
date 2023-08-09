@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { getNonce, getUri } from './util';
+import * as fs from 'fs';
 
 export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
-  private static newFileId = 1;
   private static readonly viewType = 'yaml-variables-editor';
+  private static readonly fileName = 'variables.yaml';
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -11,15 +12,21 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     vscode.commands.registerCommand('yaml-variables-editor.new', () => {
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) {
-        vscode.window.showErrorMessage('Creating new YAML files currently requires opening a workspace');
+        vscode.window.showErrorMessage('No workspace found');
         return;
       }
-
-      const uri = vscode.Uri.joinPath(workspaceFolders[0].uri, `variables-${YamlEditorProvider.newFileId++}.yaml`).with({
-        scheme: 'untitled'
-      });
-
-      vscode.commands.executeCommand('vscode.openWith', uri, YamlEditorProvider.viewType);
+      const configPath = vscode.Uri.joinPath(workspaceFolders[0].uri, 'config');
+      if (!fs.existsSync(configPath.fsPath)) {
+        vscode.window.showErrorMessage(`No config directory found in the workspace`);
+        return;
+      }
+      const variablesPath = vscode.Uri.joinPath(configPath, this.fileName);
+      if (fs.existsSync(variablesPath.fsPath)) {
+        vscode.window.showErrorMessage(`${this.fileName} file already exists`);
+        return;
+      }
+      vscode.workspace.fs.writeFile(variablesPath, new TextEncoder().encode('Variables:'));
+      vscode.commands.executeCommand('vscode.openWith', variablesPath, YamlEditorProvider.viewType);
     });
 
     const provider = new YamlEditorProvider(context);

@@ -50,14 +50,6 @@
         "category": "YAML",
         "icon": "$(add)"
       }
-    ],
-    "menus": {
-      "view/title": [
-        {
-          "command": "yaml-variables-editor.new",
-          "group": "navigation@1"
-        }
-      ]
-    }
+    ]
   }
 }
