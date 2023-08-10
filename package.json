@@ -29,6 +29,7 @@
     "vscode-extensions/inscription/*",
     "vscode-extensions/process-editor/*",
     "vscode-extensions/engine/*",
-    "vscode-extensions/config-editor/*"
+    "vscode-extensions/config-editor/*",
+    "vscode-extensions/project-explorer/*"
   ]
 }

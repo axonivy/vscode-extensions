@@ -10,7 +10,8 @@
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/config-editor/extension",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/inscription/extension",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/process-editor/extension",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/engine/extension"
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/engine/extension",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-extensions/project-explorer/extension"
       ],
       "outFiles": ["${workspaceFolder}/vscode-extensions/process-editor/extension/lib/*.js"],
       "sourceMaps": true
