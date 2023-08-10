@@ -2,14 +2,14 @@
   "name": "vscode-project-explorer-extension",
   "private": true,
   "version": "11.2.0",
-  "description": "VSCode extension that provides the Axon Ivy project explorer",
+  "description": "The Axon Ivy Project Explorer is meticulously designed to seamlessly integrate Axon Ivy projects into your development workflow.",
   "displayName": "Axon Ivy Project Explorer",
   "publisher": "AxonIvy",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/axonivy/core"
+    "url": "https://github.com/axonivy/vscode-extensions"
   },
   "keywords": [
     "vscode-extension",
