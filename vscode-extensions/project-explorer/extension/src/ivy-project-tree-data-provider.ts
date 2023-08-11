@@ -6,18 +6,25 @@ import { FileStat } from './file-stat';
 interface Entry {
   uri: vscode.Uri;
   type: vscode.FileType;
+  iconPath?: string;
 }
+
+export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
 
 export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry> {
   private ivyProjectFiles: Promise<vscode.Uri[]>;
+  private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | null | void> = new vscode.EventEmitter<
+    Entry | undefined | null | void
+  >();
+  readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
 
   constructor() {
     this.ivyProjectFiles = this.searchIvyProjectFiles();
   }
 
   private async searchIvyProjectFiles(): Promise<vscode.Uri[]> {
-    const projectFiles = await vscode.workspace.findFiles('**/.project');
-    const ivyProjectFiles = projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath));
+    const projectFiles = await vscode.workspace.findFiles(IVY_RPOJECT_FILE_PATTERN);
+    const ivyProjectFiles = projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath)).sort();
     return ivyProjectFiles;
   }
 
@@ -26,8 +33,13 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return contents.includes('<nature>ch.ivyteam.ivy.project.IvyProjectNature</nature>');
   }
 
-  async hasIvyProjcts(): Promise<boolean> {
+  async hasIvyProjects(): Promise<boolean> {
     return (await this.ivyProjectFiles).length > 0;
+  }
+
+  refresh(): void {
+    this.ivyProjectFiles = this.searchIvyProjectFiles();
+    this._onDidChangeTreeData.fire();
   }
 
   getTreeItem(element: Entry): vscode.TreeItem {
@@ -39,6 +51,9 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       treeItem.command = { command: 'vscode.open', title: 'Open File', arguments: [element.uri] };
       treeItem.contextValue = 'file';
     }
+    if (element.iconPath) {
+      treeItem.iconPath = element.iconPath;
+    }
     return treeItem;
   }
 
@@ -49,7 +64,11 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     }
     return (await this.ivyProjectFiles)
       .map(project => path.dirname(project.fsPath))
-      .map(dir => ({ uri: vscode.Uri.file(dir), type: vscode.FileType.Directory }));
+      .map(dir => ({
+        uri: vscode.Uri.file(dir),
+        type: vscode.FileType.Directory,
+        iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg')
+      }));
   }
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
