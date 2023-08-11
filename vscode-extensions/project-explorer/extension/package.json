@@ -51,6 +51,25 @@
           "when": "ivy:hasIvyProjects"
         }
       ]
-    }
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "ivyProjects.refreshEntry",
+          "when": "view == ivyProjects",
+          "group": "navigation"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "ivyProjects.refreshEntry",
+        "title": "Refresh",
+        "icon": {
+          "light": "assets/light/refresh.svg",
+          "dark": "assets/dark/refresh.svg"
+        }
+      }
+    ]
   }
 }

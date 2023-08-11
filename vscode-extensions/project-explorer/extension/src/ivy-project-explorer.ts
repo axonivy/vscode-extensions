@@ -1,26 +1,40 @@
 import * as vscode from 'vscode';
-import { IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
+import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN } from './ivy-project-tree-data-provider';
 
 export const VIEW_ID = 'ivyProjects';
 
 export class IvyProjectExplorer {
+  private treeDataProvider: IvyProjectTreeDataProvider;
+
   constructor(context: vscode.ExtensionContext) {
-    const treeDataProvider = new IvyProjectTreeDataProvider();
-    context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider }));
-    treeDataProvider.hasIvyProjcts().then(hasIvyProjcts => this.notify(hasIvyProjcts));
+    this.treeDataProvider = new IvyProjectTreeDataProvider();
+    context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider }));
+    vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
+    projectFileWatcher.onDidChange(() => this.refresh());
+    this.hasIvyProjectsAndNotify();
   }
 
-  notify(hasIvyProjcts: boolean) {
-    this.setHasIvyProjectsToContext(hasIvyProjcts);
-    this.activateEngineExtension(hasIvyProjcts);
+  refresh(): void {
+    this.treeDataProvider.refresh();
+    this.hasIvyProjectsAndNotify();
   }
 
-  setHasIvyProjectsToContext(hasIvyProjcts: boolean) {
-    vscode.commands.executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjcts);
+  hasIvyProjectsAndNotify(): void {
+    this.treeDataProvider.hasIvyProjects().then(hasIvyProjects => this.notify(hasIvyProjects));
   }
 
-  activateEngineExtension(hasIvyProjcts: boolean) {
-    if (hasIvyProjcts) {
+  notify(hasIvyProjects: boolean) {
+    this.setHasIvyProjectsToContext(hasIvyProjects);
+    this.activateEngineExtension(hasIvyProjects);
+  }
+
+  setHasIvyProjectsToContext(hasIvyProjects: boolean): void {
+    vscode.commands.executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
+  }
+
+  activateEngineExtension(hasIvyProjects: boolean): void {
+    if (hasIvyProjects) {
       vscode.commands.executeCommand('activateIvyEngine');
     }
   }
