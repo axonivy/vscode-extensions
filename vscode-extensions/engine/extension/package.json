@@ -25,8 +25,11 @@
   "engines": {
     "vscode": "^1.54.0"
   },
+  "extensionDependencies": [
+    "axonivy.vscode-project-explorer-extension"
+  ],
   "activationEvents": [
-    "onStartupFinished"
+    "onCommand:activateIvyEngine"
   ],
   "main": "./dist/extension.js",
   "devDependencies": {
