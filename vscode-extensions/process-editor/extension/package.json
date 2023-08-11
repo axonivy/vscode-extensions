@@ -33,7 +33,7 @@
     "vscode": "^1.54.0"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onCommand:activateIvyEngine"
   ],
   "main": "./dist/extension.js",
   "dependencies": {

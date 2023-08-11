@@ -33,7 +33,7 @@
     "watch": "webpack --watch --mode development"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onCommand:activateIvyEngine"
   ],
   "main": "./lib/inscription-extension.js",
   "files": [
