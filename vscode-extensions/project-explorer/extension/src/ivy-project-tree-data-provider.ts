@@ -15,7 +15,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       element.type === vscode.FileType.Directory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None
     );
     if (element.type === vscode.FileType.File) {
-      treeItem.command = { command: 'ivyProjects.openFile', title: 'Open File', arguments: [element.uri] };
+      treeItem.command = { command: 'vscode.open', title: 'Open File', arguments: [element.uri] };
       treeItem.contextValue = 'file';
     }
     return treeItem;
@@ -26,10 +26,20 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       const children = await this.readDirectory(element.uri);
       return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type }));
     }
-    const ivyProjectFiles = await vscode.workspace.findFiles('**/.project');
+    const ivyProjectFiles = await this.searchIvyProjectFiles();
     return ivyProjectFiles
       .map(project => path.dirname(project.fsPath))
       .map(dir => ({ uri: vscode.Uri.file(dir), type: vscode.FileType.Directory }));
+  }
+
+  async searchIvyProjectFiles() {
+    const projectFiles = await vscode.workspace.findFiles('**/.project');
+    return projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath));
+  }
+
+  containsIvyProjectNature(path: string) {
+    const contents = fs.readFileSync(path, 'utf-8');
+    return contents.includes('<nature>ch.ivyteam.ivy.project.IvyProjectNature</nature>');
   }
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
