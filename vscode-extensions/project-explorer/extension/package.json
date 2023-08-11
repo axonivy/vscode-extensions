@@ -47,7 +47,8 @@
       "explorer": [
         {
           "id": "ivyProjects",
-          "name": "Axon Ivy Projects"
+          "name": "Axon Ivy Projects",
+          "when": "ivy:hasIvyProjects"
         }
       ]
     }

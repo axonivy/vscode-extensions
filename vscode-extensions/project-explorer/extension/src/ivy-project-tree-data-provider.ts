@@ -9,6 +9,27 @@ interface Entry {
 }
 
 export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry> {
+  private ivyProjectFiles: Promise<vscode.Uri[]>;
+
+  constructor() {
+    this.ivyProjectFiles = this.searchIvyProjectFiles();
+  }
+
+  private async searchIvyProjectFiles(): Promise<vscode.Uri[]> {
+    const projectFiles = await vscode.workspace.findFiles('**/.project');
+    const ivyProjectFiles = projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath));
+    return ivyProjectFiles;
+  }
+
+  private containsIvyProjectNature(path: string) {
+    const contents = fs.readFileSync(path, 'utf-8');
+    return contents.includes('<nature>ch.ivyteam.ivy.project.IvyProjectNature</nature>');
+  }
+
+  async hasIvyProjcts(): Promise<boolean> {
+    return (await this.ivyProjectFiles).length > 0;
+  }
+
   getTreeItem(element: Entry): vscode.TreeItem {
     const treeItem = new vscode.TreeItem(
       element.uri,
@@ -26,20 +47,9 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       const children = await this.readDirectory(element.uri);
       return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type }));
     }
-    const ivyProjectFiles = await this.searchIvyProjectFiles();
-    return ivyProjectFiles
+    return (await this.ivyProjectFiles)
       .map(project => path.dirname(project.fsPath))
       .map(dir => ({ uri: vscode.Uri.file(dir), type: vscode.FileType.Directory }));
-  }
-
-  async searchIvyProjectFiles() {
-    const projectFiles = await vscode.workspace.findFiles('**/.project');
-    return projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath));
-  }
-
-  containsIvyProjectNature(path: string) {
-    const contents = fs.readFileSync(path, 'utf-8');
-    return contents.includes('<nature>ch.ivyteam.ivy.project.IvyProjectNature</nature>');
   }
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
