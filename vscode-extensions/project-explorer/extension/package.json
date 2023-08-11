@@ -1,0 +1,56 @@
+{
+  "name": "vscode-project-explorer-extension",
+  "private": true,
+  "version": "11.2.0",
+  "description": "The Axon Ivy Project Explorer is meticulously designed to seamlessly integrate Axon Ivy projects into your development workflow.",
+  "displayName": "Axon Ivy Project Explorer",
+  "publisher": "AxonIvy",
+  "author": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/vscode-extensions"
+  },
+  "keywords": [
+    "vscode-extension",
+    "diagram",
+    "axonivy",
+    "ivyteam",
+    "process",
+    "bpmn",
+    "engine"
+  ],
+  "preview": true,
+  "icon": "assets/ivy-logo.png",
+  "engines": {
+    "vscode": "^1.54.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./lib/extension.js",
+  "devDependencies": {
+    "@types/vscode": "^1.54.0",
+    "ts-loader": "^9.4.2"
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "build:production": "yarn build",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "package": "vsce package --yarn",
+    "prepare": "yarn clean && yarn build",
+    "watch": "tsc -w"
+  },
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "ivyProjects",
+          "name": "Axon Ivy Projects",
+          "when": "ivy:hasIvyProjects"
+        }
+      ]
+    }
+  }
+}
