@@ -77,6 +77,10 @@
     "languages": [
       {
         "id": "ivy-process",
+        "icon": {
+          "light": "./assets/diagram-project-solid-light.svg",
+          "dark": "./assets/diagram-project-solid-dark.svg"
+        },
         "extensions": [
           ".p.json"
         ]

@@ -1,16 +1,24 @@
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import * as vscode from 'vscode';
+import { Commands } from '@axonivy/vscode-base';
 
 let child: ChildProcess;
 
 const webSocketAddressKey = 'WEB_SOCKET_ADDRESS';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.ENGINE_EXTENSION_EXECUTE, () => execute(context.extensionUri)));
+}
+
+async function execute(extensionUri: vscode.Uri): Promise<void> {
+  if (child) {
+    return;
+  }
   const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
   process.env['APP_NAME'] = vscode.workspace.getConfiguration().get('appName');
   if (runEmbeddedEngine) {
-    await startEmbeddedEngine(context.extensionUri);
+    await startEmbeddedEngine(extensionUri);
     return;
   }
   const engineUrl = vscode.workspace.getConfiguration().get('engineUrl') as string;

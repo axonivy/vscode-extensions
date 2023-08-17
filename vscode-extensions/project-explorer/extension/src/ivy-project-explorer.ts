@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN } from './ivy-project-tree-data-provider';
+import { Commands, executeCommand } from '@axonivy/vscode-base';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -35,7 +36,7 @@ export class IvyProjectExplorer {
 
   activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
-      vscode.commands.executeCommand('activateIvyEngine');
+      executeCommand(Commands.ENGINE_EXTENSION_EXECUTE);
     }
   }
 }

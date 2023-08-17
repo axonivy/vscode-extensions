@@ -25,10 +25,16 @@
   "engines": {
     "vscode": "^1.54.0"
   },
+  "extensionDependencies": [
+    "axonivy.vscode-engine-extension"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
   "main": "./lib/extension.js",
+  "dependencies": {
+    "@axonivy/vscode-base": "11.2.0"
+  },
   "devDependencies": {
     "@types/vscode": "^1.54.0",
     "ts-loader": "^9.4.2"
