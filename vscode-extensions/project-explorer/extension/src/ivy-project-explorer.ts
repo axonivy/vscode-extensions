@@ -11,32 +11,32 @@ export class IvyProjectExplorer {
     this.treeDataProvider = new IvyProjectTreeDataProvider();
     context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider }));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS, () => this.hasIvyProjects());
     const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
     projectFileWatcher.onDidChange(() => this.refresh());
-    this.hasIvyProjectsAndNotify();
+    projectFileWatcher.onDidCreate(() => this.refresh());
+    projectFileWatcher.onDidDelete(() => this.refresh());
+    this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
-  refresh(): void {
+  async hasIvyProjects(): Promise<boolean> {
+    return this.treeDataProvider.hasIvyProjects();
+  }
+
+  async refresh(): Promise<void> {
     this.treeDataProvider.refresh();
-    this.hasIvyProjectsAndNotify();
-  }
-
-  hasIvyProjectsAndNotify(): void {
-    this.treeDataProvider.hasIvyProjects().then(hasIvyProjects => this.notify(hasIvyProjects));
-  }
-
-  notify(hasIvyProjects: boolean) {
-    this.setHasIvyProjectsToContext(hasIvyProjects);
+    const hasIvyProjects = await this.hasIvyProjects();
+    this.setProjectExplorerActivationCondition(hasIvyProjects);
     this.activateEngineExtension(hasIvyProjects);
   }
 
-  setHasIvyProjectsToContext(hasIvyProjects: boolean): void {
-    vscode.commands.executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
+  setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
+    executeCommand(Commands.VSCODE_SET_CONTEXT, 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
   activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
-      executeCommand(Commands.ENGINE_EXTENSION_EXECUTE);
+      executeCommand(Commands.ENGINE_RESOLVE_URL);
     }
   }
 }

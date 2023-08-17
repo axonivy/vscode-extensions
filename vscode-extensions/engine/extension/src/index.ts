@@ -1,31 +1,34 @@
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import * as vscode from 'vscode';
-import { Commands } from '@axonivy/vscode-base';
+import { Commands, executeCommand } from '@axonivy/vscode-base';
 
 let child: ChildProcess;
 
 const webSocketAddressKey = 'WEB_SOCKET_ADDRESS';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  context.subscriptions.push(vscode.commands.registerCommand(Commands.ENGINE_EXTENSION_EXECUTE, () => execute(context.extensionUri)));
+  context.subscriptions.push(vscode.commands.registerCommand(Commands.ENGINE_RESOLVE_URL, () => resolveEngineUrl(context.extensionUri)));
+  const hasIvyProjects = await executeCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS);
+  if (hasIvyProjects) {
+    await resolveEngineUrl(context.extensionUri);
+  }
 }
 
-async function execute(extensionUri: vscode.Uri): Promise<void> {
+async function resolveEngineUrl(extensionUri: vscode.Uri): Promise<void> {
   if (child) {
     return;
   }
   const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
-  process.env['APP_NAME'] = vscode.workspace.getConfiguration().get('appName');
+  let engineUrl = vscode.workspace.getConfiguration().get('engineUrl') as string;
   if (runEmbeddedEngine) {
-    await startEmbeddedEngine(extensionUri);
-    return;
+    engineUrl = await startEmbeddedEngine(extensionUri);
   }
-  const engineUrl = vscode.workspace.getConfiguration().get('engineUrl') as string;
   process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
+  executeCommand(Commands.PROCESS_EDITOR_ACTIVATE);
 }
 
-async function startEmbeddedEngine(extensionUri: vscode.Uri) {
+async function startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
   const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
   outputChannel.show();
   const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
@@ -45,7 +48,6 @@ async function startEmbeddedEngine(extensionUri: vscode.Uri) {
       const output = data.toString();
       if (output && output.startsWith('Go to http')) {
         const engineUrl = output.split('Go to ')[1].split(' to see')[0];
-        process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
         resolve(engineUrl);
       }
       outputChannel.append(output);

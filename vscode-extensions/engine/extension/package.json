@@ -25,6 +25,9 @@
   "engines": {
     "vscode": "^1.54.0"
   },
+  "extensionDependencies": [
+    "axonivy.vscode-project-explorer-extension"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -56,12 +59,6 @@
     "dist"
   ],
   "contributes": {
-    "commands": [
-      {
-        "command": "vscode-engine-extension.execute",
-        "title": "Run Axon Ivy Engine"
-      }
-    ],
     "configuration": {
       "title": "Axon Ivy Engine",
       "properties": {
