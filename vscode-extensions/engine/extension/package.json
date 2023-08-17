@@ -29,9 +29,12 @@
     "axonivy.vscode-project-explorer-extension"
   ],
   "activationEvents": [
-    "onCommand:activateIvyEngine"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
+  "dependencies": {
+    "@axonivy/vscode-base": "11.2.0"
+  },
   "devDependencies": {
     "@types/vscode": "^1.54.0",
     "path": "^0.12.7",

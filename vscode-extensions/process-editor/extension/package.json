@@ -33,7 +33,7 @@
     "vscode": "^1.54.0"
   },
   "activationEvents": [
-    "onCommand:activateIvyEngine"
+    "onCommand:vscode-process-editor-extension.activate"
   ],
   "main": "./dist/extension.js",
   "dependencies": {
@@ -77,6 +77,10 @@
     "languages": [
       {
         "id": "ivy-process",
+        "icon": {
+          "light": "./assets/diagram-project-solid-light.svg",
+          "dark": "./assets/diagram-project-solid-dark.svg"
+        },
         "extensions": [
           ".p.json"
         ]
