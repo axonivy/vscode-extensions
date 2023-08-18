@@ -33,7 +33,7 @@
     "watch": "webpack --watch --mode development"
   },
   "activationEvents": [
-    "onStartupFinished"
+    "onCustomEditor:ivy.glspDiagram"
   ],
   "main": "./lib/inscription-extension.js",
   "files": [
@@ -51,7 +51,8 @@
         {
           "id": "ivy-view-container",
           "title": "Ivy",
-          "icon": "assets/ivy-logo.svg"
+          "icon": "assets/ivy-logo.svg",
+          "when": "ivy:hasIvyProjects"
         }
       ]
     },
@@ -60,7 +61,8 @@
         {
           "type": "webview",
           "id": "inscriptionEditor",
-          "name": "Inscription Editor"
+          "name": "Inscription Editor",
+          "when": "ivy:hasIvyProjects"
         }
       ]
     }
