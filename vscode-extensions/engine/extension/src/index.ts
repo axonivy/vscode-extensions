@@ -25,7 +25,6 @@ async function resolveEngineUrl(extensionUri: vscode.Uri): Promise<void> {
     engineUrl = await startEmbeddedEngine(extensionUri);
   }
   process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
-  executeCommand(Commands.PROCESS_EDITOR_ACTIVATE);
 }
 
 async function startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {

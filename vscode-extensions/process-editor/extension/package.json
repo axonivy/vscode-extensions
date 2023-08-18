@@ -32,9 +32,6 @@
   "engines": {
     "vscode": "^1.54.0"
   },
-  "activationEvents": [
-    "onCommand:vscode-process-editor-extension.activate"
-  ],
   "main": "./dist/extension.js",
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",

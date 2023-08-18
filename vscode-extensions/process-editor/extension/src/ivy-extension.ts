@@ -7,7 +7,10 @@ import { ProcessEditorExtension } from '@axonivy/vscode-base';
 
 export async function activate(context: vscode.ExtensionContext): Promise<ProcessEditorExtension> {
   // Wrap server with quickstart component
-  const webSocketAddress = process.env.WEB_SOCKET_ADDRESS || '';
+  const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
+  if (!webSocketAddress) {
+    throw Error('No Ivy Engine Url available');
+  }
   const workflowServer = new SocketGlspVscodeServer({
     clientId: 'ivy-web-ide-glsp-process',
     clientName: 'ivy-web-ide-glsp-process',
