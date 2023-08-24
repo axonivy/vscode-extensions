@@ -2,6 +2,7 @@ import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import * as vscode from 'vscode';
 import { Commands, executeCommand } from '@axonivy/vscode-base';
+import { IvyEngineApi } from './engine-api';
 
 let child: ChildProcess;
 
@@ -24,7 +25,11 @@ async function resolveEngineUrl(extensionUri: vscode.Uri): Promise<void> {
   if (runEmbeddedEngine) {
     engineUrl = await startEmbeddedEngine(extensionUri);
   }
-  process.env[webSocketAddressKey] = toWebSocketAddress(engineUrl);
+  const engineApi = new IvyEngineApi(engineUrl);
+  const devContextPath = await engineApi.devContextPath('default');
+  await engineApi.deployPmvs(devContextPath);
+  const webSocketAddress = toWebSocketAddress(engineUrl.slice(0, -1) + devContextPath + '/');
+  process.env[webSocketAddressKey] = webSocketAddress;
 }
 
 async function startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
