@@ -37,6 +37,10 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return (await this.ivyProjectFiles).length > 0;
   }
 
+  async getIvyProjects(): Promise<vscode.Uri[]> {
+    return await this.ivyProjectFiles;
+  }
+
   refresh(): void {
     this.ivyProjectFiles = this.searchIvyProjectFiles();
     this._onDidChangeTreeData.fire();
