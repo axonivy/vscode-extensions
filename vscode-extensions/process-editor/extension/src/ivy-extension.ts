@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
 import { ProcessEditorExtension } from '@axonivy/vscode-base';
+import { IvyProcessOutlineProvider } from './ivy-process-outline';
 
 export async function activate(context: vscode.ExtensionContext): Promise<ProcessEditorExtension> {
   // Wrap server with quickstart component
@@ -36,6 +37,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<Proces
 
   context.subscriptions.push(workflowServer, ivyVscodeConnector, customEditorProvider);
   workflowServer.start();
+
+  const ivyProcessOutline = new IvyProcessOutlineProvider(context, ivyVscodeConnector);
+  const treeView = vscode.window.createTreeView('ivyProcessOutline', { treeDataProvider: ivyProcessOutline, showCollapseAll: true });
+  ivyVscodeConnector.onSelectedElement(selectedElement => {
+    if (selectedElement) {
+      const element = ivyProcessOutline.findElementBy(selectedElement.pid);
+      if (element && treeView.visible) {
+        treeView.reveal(element, { select: true });
+      }
+    }
+  });
+  vscode.commands.registerCommand('ivyProcessOutline.selectElement', pid => ivyProcessOutline.select(pid));
 
   configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
   return { connector: ivyVscodeConnector };

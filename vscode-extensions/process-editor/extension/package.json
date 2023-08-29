@@ -71,12 +71,21 @@
         ]
       }
     ],
+    "views": {
+      "explorer": [
+        {
+          "id": "ivyProcessOutline",
+          "name": "Ivy Process Outline",
+          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "ivy-process",
         "icon": {
-          "light": "./assets/diagram-project-solid-light.svg",
-          "dark": "./assets/diagram-project-solid-dark.svg"
+          "light": "./assets/light/diagram-project-solid.svg",
+          "dark": "./assets/dark/diagram-project-solid.svg"
         },
         "extensions": [
           ".p.json"

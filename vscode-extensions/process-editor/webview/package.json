@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@axonivy/process-editor": "~11.2.0-next.732",
+    "@axonivy/process-editor-protocol": "11.2.0-next.738",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC10"
   },
   "devDependencies": {

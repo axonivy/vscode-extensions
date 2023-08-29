@@ -76,6 +76,13 @@
   resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.523.tgz#fec68ddb3e0081886eb5097fbdb06afd07a33102"
   integrity sha512-Yy78gZ5qLMBsPMCQt91Bt0Cd88+XmoG8sYjDynLXfvVIU8DhlU4hBitcXzT2PWcFosca2RT+HDQeRpQIn2vLzA==
 
+"@axonivy/process-editor-protocol@11.2.0-next.738":
+  version "11.2.0-next.738"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.738.tgz#b0f01c517335022c737231901f843035a06ce263"
+  integrity sha512-pJId2CgpXdZB7BbO8LYVT4acyuSdKDexNJrPkU+dSWZ9bvt90hyA/G3nHXrNA7y79kULpXnUMpgI43MS51lnxQ==
+  dependencies:
+    "@eclipse-glsp/protocol" "1.1.0-RC10"
+
 "@axonivy/process-editor@~11.2.0-next.732":
   version "11.2.0-next.732"
   resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.732.tgz#b0d5303f1817152847077ceb1e7c2ec5028a9ed1"
