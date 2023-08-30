@@ -10,7 +10,7 @@ import {
   SModelRootSchema,
   SelectionState
 } from '@eclipse-glsp/vscode-integration';
-import { InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
+import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { ProcessEditorConnector, SelectedElement } from '@axonivy/vscode-base';
@@ -24,7 +24,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
-  protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<vscode.CustomDocumentContentChangeEvent<D>>();
+  protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<{ client: GlspVscodeClient<D> }>();
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
@@ -37,11 +37,11 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   }
 
   override registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
-    this.onDidChangeActiveGlspEditorEventEmitter.fire({ document: client.document });
+    this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
 
     client.webviewPanel.onDidChangeViewState(e => {
       if (e.webviewPanel.active) {
-        this.onDidChangeActiveGlspEditorEventEmitter.fire({ document: client.document });
+        this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
       }
     });
     return super.registerClient(client).then(result => {
@@ -91,6 +91,10 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
       }
     }
     return undefined;
+  }
+
+  public override sendActionToClient(clientId: string, action: Action): void {
+    super.sendActionToClient(clientId, action);
   }
 
   protected override handleNavigateToExternalTargetAction(

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
-import { SelectAction, SelectAllAction } from '@eclipse-glsp/vscode-integration';
-import { JumpAction } from '@axonivy/process-editor-protocol';
+import { GlspVscodeClient, SelectAction, SelectAllAction } from '@eclipse-glsp/vscode-integration';
+import { JumpAction, MoveIntoViewportAction } from '@axonivy/process-editor-protocol';
 
 type Process = {
   elements: Element[];
@@ -20,12 +20,12 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   private _onDidChangeTreeData: vscode.EventEmitter<Element | undefined> = new vscode.EventEmitter<Element | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Element | undefined> = this._onDidChangeTreeData.event;
 
+  private client?: GlspVscodeClient<vscode.CustomDocument>;
   private tree?: Process;
   private text = '';
 
   constructor(private context: vscode.ExtensionContext, private ivyGlspConnector: IvyVscodeConnector) {
-    this.ivyGlspConnector.onDidChangeActiveGlspEditor(e => this.readProcessFile(e.document.uri.path));
-    this.ivyGlspConnector.onDidChangeCustomDocument(e => this.readProcessFile(e.document.uri.path));
+    this.ivyGlspConnector.onDidChangeActiveGlspEditor(e => this.readProcessFile(e.client));
   }
 
   refresh(element?: Element): void {
@@ -37,8 +37,14 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
     }
   }
 
-  private readProcessFile(path: string) {
-    vscode.workspace.fs.readFile(vscode.Uri.file(path)).then(content => {
+  private readProcessFile(client: GlspVscodeClient<vscode.CustomDocument>) {
+    this.client = client;
+    this.client.webviewPanel.onDidDispose(e => {
+      this.client = undefined;
+      this.text = '';
+      this.refresh();
+    });
+    vscode.workspace.fs.readFile(vscode.Uri.file(client.document.uri.path)).then(content => {
       this.text = content.toString();
       this.refresh();
     });
@@ -90,9 +96,14 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   }
 
   select(pid: string) {
-    this.ivyGlspConnector.sendActionToActiveClient(SelectAllAction.create(false));
-    this.ivyGlspConnector.sendActionToActiveClient(JumpAction.create({ elementId: this.parentPid(pid) }));
-    this.ivyGlspConnector.sendActionToActiveClient(SelectAction.create({ selectedElementsIDs: [pid] }));
+    if (this.client) {
+      const clientId = this.client.clientId;
+      this.ivyGlspConnector.sendActionToClient(clientId, SelectAllAction.create(false));
+      this.ivyGlspConnector.sendActionToClient(clientId, JumpAction.create({ elementId: this.parentPid(pid) }));
+      this.ivyGlspConnector.sendActionToClient(clientId, SelectAction.create({ selectedElementsIDs: [pid] }));
+      this.ivyGlspConnector.sendActionToClient(clientId, MoveIntoViewportAction.create({ elementIds: [pid] }));
+      this.client.webviewPanel.reveal();
+    }
   }
 
   findElementBy(pid: string) {
