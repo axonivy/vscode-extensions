@@ -2,7 +2,7 @@ import '../css/colors.css';
 import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
 import '../css/diagram.css';
 
-import { ivyBreakpointModule, createIvyDiagramContainer } from '@axonivy/process-editor';
+import { ivyBreakpointModule, createIvyDiagramContainer, ivyOpenInscriptionModule } from '@axonivy/process-editor';
 import { DiagramServerProxy, ICopyPasteHandler, TYPES } from '@eclipse-glsp/client';
 import {
   GLSPDiagramIdentifier,
@@ -14,7 +14,6 @@ import {
 } from '@eclipse-glsp/vscode-integration-webview';
 import { CopyPasteHandlerProvider } from '@eclipse-glsp/vscode-integration-webview/lib/copy-paste-handler-provider';
 import { Container } from 'inversify';
-import ivyOpenInscriptionModule from './open-inscription/di.config';
 import { IvyGLSPDiagramWidget } from './ivy-diagram-widget';
 
 class IvyGLSPStarter extends GLSPStarter {
