@@ -76,18 +76,19 @@
   resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.523.tgz#fec68ddb3e0081886eb5097fbdb06afd07a33102"
   integrity sha512-Yy78gZ5qLMBsPMCQt91Bt0Cd88+XmoG8sYjDynLXfvVIU8DhlU4hBitcXzT2PWcFosca2RT+HDQeRpQIn2vLzA==
 
-"@axonivy/process-editor-protocol@11.2.0-next.738":
-  version "11.2.0-next.738"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.738.tgz#b0f01c517335022c737231901f843035a06ce263"
-  integrity sha512-pJId2CgpXdZB7BbO8LYVT4acyuSdKDexNJrPkU+dSWZ9bvt90hyA/G3nHXrNA7y79kULpXnUMpgI43MS51lnxQ==
+"@axonivy/process-editor-protocol@11.2.0-next.744", "@axonivy/process-editor-protocol@11.2.0-next.744+d120d10":
+  version "11.2.0-next.744"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.744.tgz#be840bd1cc32f333be4148689524bf3724b51b11"
+  integrity sha512-QCGQmZx2SDADv3pUOvbxKfN9/ZtIVG8azI3inMgA5zeKTnGuRrKNAOkYG/Zq/uQv1QzEoqV4K/96u4u17pZJ1A==
   dependencies:
     "@eclipse-glsp/protocol" "1.1.0-RC10"
 
-"@axonivy/process-editor@~11.2.0-next.732":
-  version "11.2.0-next.732"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.732.tgz#b0d5303f1817152847077ceb1e7c2ec5028a9ed1"
-  integrity sha512-T+rUadAQ8NstE9PuuAlK9nP2CX84qpQ735FTAEwJSCFH8QRLYg4J77onXUIVpyEcr/jOE5zxcIci+uQee6tTTA==
+"@axonivy/process-editor@~11.2.0-next.744":
+  version "11.2.0-next.744"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.744.tgz#d24885cdebcaa74e4f66cb21cd236ede8ee9cd46"
+  integrity sha512-UJ+drhEqFQGzStbIZV2FyKprHEsyLXULQ/ts930rz5oBCP/zu5DhDF//kLRbLe57Cq52/rLLOXa1L7VmsOSswg==
   dependencies:
+    "@axonivy/process-editor-protocol" "11.2.0-next.744+d120d10"
     "@eclipse-glsp/client" "1.1.0-RC10"
     showdown "^2.1.0"
     toastify-js "1.12.0"
