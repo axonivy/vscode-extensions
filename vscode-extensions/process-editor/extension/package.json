@@ -76,7 +76,7 @@
         {
           "id": "ivyProcessOutline",
           "name": "Ivy Process Outline",
-          "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+          "when": "ivy:hasIvyProjects"
         }
       ]
     },
