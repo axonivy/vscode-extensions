@@ -1,6 +1,6 @@
 import { DiagramServerProxy, EnableToolPaletteAction, RequestModelAction, RequestTypeHintsAction } from '@eclipse-glsp/client';
 import { GLSPDiagramWidget } from '@eclipse-glsp/vscode-integration-webview';
-import { EnableViewportAction } from '@axonivy/process-editor';
+import { EnableViewportAction } from '@axonivy/process-editor-protocol';
 import { injectable } from 'inversify';
 
 @injectable()

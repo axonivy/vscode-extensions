@@ -10,10 +10,11 @@ import {
   SModelRootSchema,
   SelectionState
 } from '@eclipse-glsp/vscode-integration';
-import { SetModelAction } from '@eclipse-glsp/protocol';
+import { InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { ProcessEditorConnector, SelectedElement } from '@axonivy/vscode-base';
+import { OpenInscriptionAction } from '@axonivy/process-editor-protocol';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 
@@ -23,11 +24,31 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
+  protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<vscode.CustomDocumentContentChangeEvent<D>>();
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
 
     this.onSelectionUpdate(selection => this.selectionChange(selection));
+  }
+
+  get onDidChangeActiveGlspEditor() {
+    return this.onDidChangeActiveGlspEditorEventEmitter.event;
+  }
+
+  override registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
+    this.onDidChangeActiveGlspEditorEventEmitter.fire({ document: client.document });
+
+    client.webviewPanel.onDidChangeViewState(e => {
+      if (e.webviewPanel.active) {
+        this.onDidChangeActiveGlspEditorEventEmitter.fire({ document: client.document });
+      }
+    });
+    return super.registerClient(client).then(result => {
+      // Register server action handlers which are handled by this vscode integration
+      result.serverActions[client.diagramType].push(OpenInscriptionAction.KIND);
+      return result;
+    });
   }
 
   onSelectedElement(listener: (selectedElement: SelectedElement) => any): void {
@@ -119,6 +140,11 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
         const newRoot = action.newRoot as SModelRootSchema & { args: { app: string; pmv: string } };
         ivyClient.app = newRoot.args.app;
         ivyClient.pmv = newRoot.args.pmv;
+      }
+
+      if (OpenInscriptionAction.is(message.action)) {
+        vscode.commands.executeCommand('inscriptionEditor.focus');
+        return { processedMessage: undefined, messageChanged: true };
       }
     }
     return super.processMessage(message, origin);
