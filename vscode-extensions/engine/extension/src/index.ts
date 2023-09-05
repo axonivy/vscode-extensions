@@ -26,7 +26,7 @@ async function resolveEngineUrl(extensionUri: vscode.Uri): Promise<void> {
     engineUrl = await startEmbeddedEngine(extensionUri);
   }
   const engineApi = new IvyEngineApi(engineUrl);
-  const devContextPath = await engineApi.devContextPath('default');
+  const devContextPath = await engineApi.devContextPath();
   await engineApi.deployPmvs(devContextPath);
   const webSocketAddress = toWebSocketAddress(engineUrl.slice(0, -1) + devContextPath + '/');
   process.env[webSocketAddressKey] = webSocketAddress;
