@@ -18,4 +18,4 @@ Simply run the `Start VSCode Extension` launch config.
 
 If you do not want to use the embedded engine as backend, you can define an alternative under `VS Code Settings / Axon Ivy Engine`.
 
-Simply uncheck `Run Embedded Engine` and set `Engine Host`, `Engine Port` and `App Name` you want to use. Note that you have to start your engine with VM arguments `-Divy.enable.lsp=true` and `-Dglsp.test.mode=true`.
+Simply uncheck `Run Embedded Engine` and set `Engine Url` you want to use.

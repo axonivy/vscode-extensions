@@ -4,6 +4,7 @@ import * as https from 'https';
 import * as url from 'url';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as crypto from 'crypto';
 
 export class IvyEngineApi {
   private engineUrl: url.UrlWithStringQuery;
@@ -17,7 +18,8 @@ export class IvyEngineApi {
     };
   }
 
-  public async devContextPath(sessionId: string): Promise<string> {
+  public async devContextPath(): Promise<string> {
+    const sessionId = this.resolveSessionId();
     const options: http.RequestOptions = {
       ...this.requestOptions,
       path: '/system/api/web-ide/dev-context-path?sessionId=' + sessionId,
@@ -27,19 +29,28 @@ export class IvyEngineApi {
     return this.makeRequest(options);
   }
 
+  private resolveSessionId(): string {
+    if (vscode.workspace.workspaceFolders) {
+      const workspace = vscode.workspace.workspaceFolders[0].uri;
+      return crypto.createHash('sha256').update(workspace.toString()).digest('hex');
+    }
+    return 'workspace-not-available';
+  }
+
   public async deployPmvs(devContextPath: string): Promise<void> {
     const ivyProjects = (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as vscode.Uri[];
     ivyProjects.map(projectFile => path.dirname(projectFile.fsPath)).forEach(projectDir => this.deployPmv(devContextPath, projectDir));
   }
 
-  public async deployPmv(basePath: string, projectDir: string): Promise<string> {
+  public async deployPmv(basePath: string, projectDir: string): Promise<void> {
     const projectName = path.basename(projectDir);
     const options: http.RequestOptions = {
       ...this.requestOptions,
       path: basePath + '/api/web-ide/deploy-pmv?projectName=' + projectName + '&projectDir=' + projectDir,
+      auth: 'Developer:Developer',
       method: 'GET'
     };
-    return await this.makeRequest(options);
+    await this.makeRequest(options);
   }
 
   private makeRequest(options: http.RequestOptions): Promise<string> {
