@@ -58,11 +58,16 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   }
 
   getChildren(element?: Element): Thenable<Element[]> {
+    let children = this.tree?.elements ?? [];
     if (element) {
-      return Promise.resolve(element.elements ?? []);
-    } else {
-      return Promise.resolve(this.tree?.elements ?? []);
+      children = element.elements ?? [];
     }
+    children.sort((c1, c2) => {
+      const o1 = this.isEventElement(c1) ? 1 : this.isGatewayElement(c1) ? 2 : 3;
+      const o2 = this.isEventElement(c2) ? 1 : this.isGatewayElement(c2) ? 2 : 3;
+      return o1 - o2;
+    });
+    return Promise.resolve(children);
   }
 
   getParent(element: Element) {
@@ -111,14 +116,13 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   }
 
   private getIcon(element: Element) {
-    const type = element.type;
-    if (type.includes('Start') || type.includes('End')) {
+    if (this.isEventElement(element)) {
       return {
         light: this.context.asAbsolutePath(path.join('assets', 'light', 'events-group.svg')),
         dark: this.context.asAbsolutePath(path.join('assets', 'dark', 'events-group.svg'))
       };
     }
-    if (type === 'Join' || type === 'Split' || type === 'Alternative' || type === 'TaskSwitchGateway') {
+    if (this.isGatewayElement(element)) {
       return {
         light: this.context.asAbsolutePath(path.join('assets', 'light', 'gateways-group.svg')),
         dark: this.context.asAbsolutePath(path.join('assets', 'dark', 'gateways-group.svg'))
@@ -128,6 +132,16 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
       light: this.context.asAbsolutePath(path.join('assets', 'light', 'activities-group.svg')),
       dark: this.context.asAbsolutePath(path.join('assets', 'dark', 'activities-group.svg'))
     };
+  }
+
+  private isEventElement(element: Element) {
+    const type = element.type;
+    return type.includes('Start') || type.includes('End') || type.includes('Event');
+  }
+
+  private isGatewayElement(element: Element) {
+    const type = element.type;
+    return type === 'Join' || type === 'Split' || type === 'Alternative' || type === 'TaskSwitchGateway';
   }
 
   private getLabel(element: Element) {
