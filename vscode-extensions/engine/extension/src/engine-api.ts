@@ -39,7 +39,10 @@ export class IvyEngineApi {
 
   public async deployPmvs(devContextPath: string): Promise<void> {
     const ivyProjects = (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as vscode.Uri[];
-    ivyProjects.map(projectFile => path.dirname(projectFile.fsPath)).forEach(projectDir => this.deployPmv(devContextPath, projectDir));
+    for (const projectFile of ivyProjects) {
+      const projectDir = path.dirname(projectFile.fsPath);
+      await this.deployPmv(devContextPath, projectDir);
+    }
   }
 
   public async deployPmv(basePath: string, projectDir: string): Promise<void> {
