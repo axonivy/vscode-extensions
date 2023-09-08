@@ -22,7 +22,7 @@ export class IvyEngineApi {
     const sessionId = this.resolveSessionId();
     const options: http.RequestOptions = {
       ...this.requestOptions,
-      path: '/system/api/web-ide/dev-context-path?sessionId=' + sessionId,
+      path: '/system/api/web-ide/dev-context-path?sessionId=' + encodeURIComponent(sessionId),
       auth: 'admin:admin',
       method: 'GET'
     };
@@ -46,7 +46,12 @@ export class IvyEngineApi {
     const projectName = path.basename(projectDir);
     const options: http.RequestOptions = {
       ...this.requestOptions,
-      path: basePath + '/api/web-ide/deploy-pmv?projectName=' + projectName + '&projectDir=' + projectDir,
+      path:
+        basePath +
+        '/api/web-ide/deploy-pmv?projectName=' +
+        encodeURIComponent(projectName) +
+        '&projectDir=' +
+        encodeURIComponent(projectDir),
       auth: 'Developer:Developer',
       method: 'GET'
     };
