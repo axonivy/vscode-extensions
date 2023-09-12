@@ -28,8 +28,8 @@ const windowsUriCheck = new RegExp('^file:///.:/');
 
 export function decodeURI(uri: string): string {
   if (windowsUriCheck.test(uri)) {
-    const windowsUri = uri.replace('file:///', 'file://');
-    return decodeURIComponent(windowsUri);
+    console.log('filecheck ****', uri);
   }
+  console.log('ret ****', uri);
   return decodeURIComponent(uri);
 }
