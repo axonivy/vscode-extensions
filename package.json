@@ -3,7 +3,7 @@
   "name": "parent",
   "engines": {
     "yarn": ">=1.7.0 <2.x.x",
-    "node": ">=16.15.0"
+    "node": ">=18.17.1"
   },
   "scripts": {
     "build": "lerna run build",
@@ -17,12 +17,12 @@
     "watch": "lerna run --parallel watch"
   },
   "devDependencies": {
-    "@types/node": "^16.7.13",
-    "eslint": "^8.29.0",
+    "@types/node": "^18.11.9",
+    "eslint": "^8.49.0",
     "eslint-config-react-app": "^7.0.1",
     "lerna": "^6.1.0",
     "rimraf": "^3.0.2",
-    "typescript": "~4.5.5"
+    "typescript": "~5.2.2"
   },
   "workspaces": [
     "vscode-extensions/base",
