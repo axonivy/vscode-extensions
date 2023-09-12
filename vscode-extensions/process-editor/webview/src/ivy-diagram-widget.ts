@@ -12,7 +12,7 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
     this.actionDispatcher.dispatch(
       RequestModelAction.create({
         options: {
-          sourceUri: decodeURI(this.diagramIdentifier.uri),
+          sourceUri: decodeURIComponent(this.diagramIdentifier.uri),
           diagramType: this.diagramIdentifier.diagramType
         }
       })
@@ -22,14 +22,4 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
     this.actionDispatcher.dispatch(EnableToolPaletteAction.create());
     this.actionDispatcher.dispatch(EnableViewportAction.create());
   }
-}
-
-const windowsUriCheck = new RegExp('^file:///.:/');
-
-export function decodeURI(uri: string): string {
-  if (windowsUriCheck.test(uri)) {
-    console.log('filecheck ****', uri);
-  }
-  console.log('ret ****', uri);
-  return decodeURIComponent(uri);
 }
