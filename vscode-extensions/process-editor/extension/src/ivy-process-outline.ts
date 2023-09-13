@@ -111,8 +111,27 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
     }
   }
 
-  findElementBy(pid: string) {
-    return this.tree?.elements.find(e => this.fullPid(e) === pid);
+  findElementBy(searchPid: string) {
+    if (this.tree) {
+      return this.findElement(this.tree, searchPid);
+    }
+    return undefined;
+  }
+
+  findElement(parent: Element | Process, searchPid: string): Element | undefined {
+    if (!parent.elements) {
+      return undefined;
+    }
+    for (const child of parent.elements) {
+      const childPid = this.fullPid(child);
+      if (childPid === searchPid) {
+        return child;
+      }
+      if (searchPid.startsWith(childPid)) {
+        return this.findElement(child, searchPid);
+      }
+    }
+    return undefined;
   }
 
   private getIcon(element: Element) {
