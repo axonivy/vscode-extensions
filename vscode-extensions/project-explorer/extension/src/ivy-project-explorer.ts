@@ -37,7 +37,7 @@ export class IvyProjectExplorer {
 
   activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
-      executeCommand(Commands.ENGINE_RESOLVE_URL);
+      executeCommand(Commands.ENGINE_START_MANAGER);
     }
   }
 }

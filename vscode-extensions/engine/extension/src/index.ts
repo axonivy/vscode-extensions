@@ -1,87 +1,21 @@
-import { ChildProcess, execFile } from 'child_process';
-import Os from 'os';
 import * as vscode from 'vscode';
-import { Commands, executeCommand } from '@axonivy/vscode-base';
-import { IvyEngineApi } from './engine-api';
+import { Commands, executeCommand, registerAndSubscribeCommand } from '@axonivy/vscode-base';
+import { IvyEngineManager } from './engine-manager';
 
-let child: ChildProcess;
-
-const webSocketAddressKey = 'WEB_SOCKET_ADDRESS';
+let ivyEngineManager: IvyEngineManager;
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  context.subscriptions.push(vscode.commands.registerCommand(Commands.ENGINE_RESOLVE_URL, () => resolveEngineUrl(context.extensionUri)));
+  ivyEngineManager = new IvyEngineManager(context);
+  registerAndSubscribeCommand(context, Commands.ENGINE_START_MANAGER, () => ivyEngineManager.start());
+  registerAndSubscribeCommand(context, Commands.ENGINE_DEPLOY_PMVS, () => ivyEngineManager.deployPmvs());
+  registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_DEV_WF_UI, () => ivyEngineManager.openDevWfUi());
+  registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_ENGINE_COCKPIT, () => ivyEngineManager.openEngineCockpit());
   const hasIvyProjects = await executeCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS);
   if (hasIvyProjects) {
-    await resolveEngineUrl(context.extensionUri);
+    await ivyEngineManager.start();
   }
-}
-
-async function resolveEngineUrl(extensionUri: vscode.Uri): Promise<void> {
-  if (child) {
-    return;
-  }
-  const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
-  let engineUrl = vscode.workspace.getConfiguration().get('engineUrl') as string;
-  if (runEmbeddedEngine) {
-    engineUrl = await startEmbeddedEngine(extensionUri);
-  }
-  const engineApi = new IvyEngineApi(engineUrl);
-  const devContextPath = await engineApi.devContextPath();
-  await engineApi.deployPmvs(devContextPath);
-  const webSocketAddress = toWebSocketAddress(engineUrl.slice(0, -1) + devContextPath + '/');
-  process.env[webSocketAddressKey] = webSocketAddress;
-}
-
-async function startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
-  const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
-  outputChannel.show();
-  const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-  var engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).fsPath;
-  const env = {
-    env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true' }
-  };
-  console.log('Start ' + engineLauncherScriptPath);
-  child = execFile(engineLauncherScriptPath, env);
-  child.on('error', function (error: any) {
-    outputChannel.append(error);
-    throw new Error(error);
-  });
-
-  return new Promise(resolve => {
-    child.stdout?.on('data', function (data: any) {
-      const output = data.toString();
-      if (output && output.startsWith('Go to http')) {
-        const engineUrl = output.split('Go to ')[1].split(' to see')[0];
-        resolve(engineUrl);
-      }
-      outputChannel.append(output);
-    });
-  });
-}
-
-function toWebSocketAddress(engineUrl: string): string {
-  if (engineUrl.startsWith('https://')) {
-    return engineUrl.replace('https', 'wss');
-  }
-  return engineUrl.replace('http', 'ws');
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
-  if (child) {
-    console.log("Send 'shutdown' to Axon Ivy Engine");
-    const shutdown = new Promise<void>(resolve => {
-      child.on('exit', function (code: number) {
-        console.log('Axon Ivy Engine has shutdown with exit code ' + code);
-        resolve();
-      });
-    });
-    if (Os.platform() === 'win32') {
-      child.stdin?.write('shutdown\n');
-    } else {
-      child.kill('SIGINT');
-    }
-    console.log('Waiting for shutdown of Axon Ivy Engine');
-    await shutdown;
-    console.log('End waiting for Axon Ivy Engine shutdown');
-  }
+  ivyEngineManager.stop();
 }

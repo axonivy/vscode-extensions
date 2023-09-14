@@ -75,6 +75,20 @@
           "order": 1
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "vscode-engine-extension.openDevWfUi",
+        "title": "Open Dev Wf Ui in external browser"
+      },
+      {
+        "command": "vscode-engine-extension.openEngineCockpit",
+        "title": "Open Engine Cockpit external browser"
+      },
+      {
+        "command": "vscode-engine-extension.deployPmvs",
+        "title": "Deploy PMVs"
+      }
+    ]
   }
 }
