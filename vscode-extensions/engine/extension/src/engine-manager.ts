@@ -2,6 +2,8 @@ import { ChildProcess, execFile } from 'child_process';
 import * as vscode from 'vscode';
 import { IvyEngineApi } from './engine-api';
 import Os from 'os';
+import { executeCommand, Commands } from '@axonivy/vscode-base';
+import path from 'path';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -20,11 +22,10 @@ export class IvyEngineManager {
     if (this.engineUrl) {
       return;
     }
-    console.log('********** maanager start **** executed');
     this.engineUrl = await this.resolveEngineUrl();
     this.ivyEngineApi = new IvyEngineApi(this.engineUrl);
     this.devContextPath = await this.ivyEngineApi.devContextPath();
-    await this.deployPmvs();
+    await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress(this.engineUrl.slice(0, -1) + this.devContextPath + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
   }
@@ -64,10 +65,30 @@ export class IvyEngineManager {
     });
   }
 
-  public async deployPmvs(): Promise<void> {
+  public async initProjects(): Promise<void> {
     if (this.devContextPath) {
-      await this.ivyEngineApi.deployPmvs(this.devContextPath);
+      const ivyProjectDirectories = await this.ivyProjectDirectories();
+      await this.ivyEngineApi.initProjects(this.devContextPath, ivyProjectDirectories);
     }
+  }
+
+  public async deployProjects(): Promise<void> {
+    if (this.devContextPath) {
+      const ivyProjectDirectories = await this.ivyProjectDirectories();
+      await this.ivyEngineApi.deployProjects(this.devContextPath, ivyProjectDirectories);
+    }
+  }
+
+  public async buildProjects(): Promise<void> {
+    if (this.devContextPath) {
+      const ivyProjectDirectories = await this.ivyProjectDirectories();
+      await this.ivyEngineApi.buildProjects(this.devContextPath, ivyProjectDirectories);
+    }
+  }
+
+  async ivyProjectDirectories(): Promise<string[]> {
+    const ivyProjectFiles = (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECT_FILES)) as vscode.Uri[];
+    return ivyProjectFiles.map(projectFile => path.dirname(projectFile.fsPath));
   }
 
   async stop(): Promise<void> {

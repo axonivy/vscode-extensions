@@ -7,7 +7,8 @@ let ivyEngineManager: IvyEngineManager;
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   ivyEngineManager = new IvyEngineManager(context);
   registerAndSubscribeCommand(context, Commands.ENGINE_START_MANAGER, () => ivyEngineManager.start());
-  registerAndSubscribeCommand(context, Commands.ENGINE_DEPLOY_PMVS, () => ivyEngineManager.deployPmvs());
+  registerAndSubscribeCommand(context, Commands.ENGINE_DEPLOY_PROJECTS, () => ivyEngineManager.deployProjects());
+  registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_PROJECTS, () => ivyEngineManager.buildProjects());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_DEV_WF_UI, () => ivyEngineManager.openDevWfUi());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_ENGINE_COCKPIT, () => ivyEngineManager.openEngineCockpit());
   const hasIvyProjects = await executeCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS);

@@ -12,7 +12,7 @@ export class IvyProjectExplorer {
     context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider }));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS, () => this.hasIvyProjects());
-    vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
+    vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECT_FILES, () => this.treeDataProvider.getIvyProjectFiles());
     const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
     projectFileWatcher.onDidChange(() => this.refresh());
     projectFileWatcher.onDidCreate(() => this.refresh());

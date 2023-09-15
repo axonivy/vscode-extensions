@@ -86,8 +86,12 @@
         "title": "Open Engine Cockpit external browser"
       },
       {
-        "command": "vscode-engine-extension.deployPmvs",
-        "title": "Deploy PMVs"
+        "command": "vscode-engine-extension.deployProjects",
+        "title": "Deploy Ivy Projects"
+      },
+      {
+        "command": "vscode-engine-extension.buildProjects",
+        "title": "Build Ivy Projects"
       }
     ]
   }

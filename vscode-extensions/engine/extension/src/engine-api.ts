@@ -1,4 +1,3 @@
-import { Commands, executeCommand } from '@axonivy/vscode-base';
 import * as http from 'http';
 import * as https from 'https';
 import * as url from 'url';
@@ -7,6 +6,7 @@ import * as path from 'path';
 import * as crypto from 'crypto';
 
 export class IvyEngineApi {
+  private readonly API_PATH = '/api/web-ide/';
   private engineUrl: url.UrlWithStringQuery;
   private requestOptions: { host: string | null; port: string | null };
 
@@ -22,7 +22,7 @@ export class IvyEngineApi {
     const sessionId = this.resolveSessionId();
     const options: http.RequestOptions = {
       ...this.requestOptions,
-      path: '/system/api/web-ide/dev-context-path?sessionId=' + encodeURIComponent(sessionId),
+      path: '/system' + this.API_PATH + 'dev-context-path?sessionId=' + encodeURIComponent(sessionId),
       auth: 'admin:admin',
       method: 'GET'
     };
@@ -37,24 +37,65 @@ export class IvyEngineApi {
     return 'workspace-not-available';
   }
 
-  public async deployPmvs(devContextPath: string): Promise<void> {
-    const ivyProjects = (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as vscode.Uri[];
-    for (const projectFile of ivyProjects) {
-      const projectDir = path.dirname(projectFile.fsPath);
-      await this.deployPmv(devContextPath, projectDir);
+  public async initProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
+    for (const projectDir of ivyProjectDirectories) {
+      await this.initProject(devContextPath, projectDir);
     }
   }
 
-  public async deployPmv(basePath: string, projectDir: string): Promise<void> {
+  public async deployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: 'Deploy Projects in progress',
+        cancellable: true
+      },
+      async progess => {
+        for (const projectDir of ivyProjectDirectories) {
+          progess.report({ message: 'Deploy: ' + projectDir });
+          await this.deployProject(devContextPath, projectDir);
+        }
+      }
+    );
+  }
+
+  public async buildProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
+    for (const projectDir of ivyProjectDirectories) {
+      await this.buildProject(devContextPath, projectDir);
+    }
+  }
+
+  private async initProject(basePath: string, projectDir: string): Promise<void> {
     const projectName = path.basename(projectDir);
     const options: http.RequestOptions = {
       ...this.requestOptions,
       path:
         basePath +
-        '/api/web-ide/deploy-pmv?projectName=' +
+        this.API_PATH +
+        'init-project?projectName=' +
         encodeURIComponent(projectName) +
         '&projectDir=' +
         encodeURIComponent(projectDir),
+      auth: 'Developer:Developer',
+      method: 'GET'
+    };
+    await this.makeRequest(options);
+  }
+
+  private async deployProject(basePath: string, projectDir: string): Promise<void> {
+    const options: http.RequestOptions = {
+      ...this.requestOptions,
+      path: basePath + this.API_PATH + 'deploy-project?&projectDir=' + encodeURIComponent(projectDir),
+      auth: 'Developer:Developer',
+      method: 'GET'
+    };
+    await this.makeRequest(options);
+  }
+
+  private async buildProject(basePath: string, projectDir: string): Promise<void> {
+    const options: http.RequestOptions = {
+      ...this.requestOptions,
+      path: basePath + this.API_PATH + 'build-project?&projectDir=' + encodeURIComponent(projectDir),
       auth: 'Developer:Developer',
       method: 'GET'
     };
