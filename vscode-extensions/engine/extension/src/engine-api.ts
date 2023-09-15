@@ -40,21 +40,21 @@ export class IvyEngineApi {
   }
 
   public async initProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectActionWithProgress('Initialize Ivy Projects', ivyProjectDirectories, this.initProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Initialize Ivy Projects', ivyProjectDirectories, this.initProjectRequest, devContextPath);
   }
 
   public async deployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectActionWithProgress('Deploy Ivy Projects', ivyProjectDirectories, this.deployProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Deploy Ivy Projects', ivyProjectDirectories, this.deployProjectRequest, devContextPath);
   }
 
   public async buildProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectActionWithProgress('Build Ivy Projects', ivyProjectDirectories, this.buildProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Build Ivy Projects', ivyProjectDirectories, this.buildProjectRequest, devContextPath);
   }
 
-  private async runProjectActionWithProgress(
+  private async runProjectRequestWithProgress(
     title: string,
     ivyProjectDirectories: string[],
-    action: ProjectRequest,
+    request: ProjectRequest,
     devContextPath: string
   ): Promise<void> {
     const options = {
@@ -62,10 +62,10 @@ export class IvyEngineApi {
       title: title,
       cancellable: false
     };
-    vscode.window.withProgress(options, async progess => {
+    await vscode.window.withProgress(options, async progess => {
       for (const projectDir of ivyProjectDirectories) {
         progess.report({ message: projectDir });
-        await action(devContextPath, projectDir);
+        await request(devContextPath, projectDir);
       }
     });
   }
