@@ -37,7 +37,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return (await this.ivyProjectFiles).length > 0;
   }
 
-  async getIvyProjects(): Promise<vscode.Uri[]> {
+  async getIvyProjectFiles(): Promise<vscode.Uri[]> {
     return await this.ivyProjectFiles;
   }
 

@@ -75,6 +75,24 @@
           "order": 1
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "vscode-engine-extension.openDevWfUi",
+        "title": "Open Dev Workflow Ui in external browser"
+      },
+      {
+        "command": "vscode-engine-extension.openEngineCockpit",
+        "title": "Open Engine Cockpit in external browser"
+      },
+      {
+        "command": "vscode-engine-extension.deployProjects",
+        "title": "Deploy Ivy Projects"
+      },
+      {
+        "command": "vscode-engine-extension.buildProjects",
+        "title": "Build Ivy Projects"
+      }
+    ]
   }
 }
