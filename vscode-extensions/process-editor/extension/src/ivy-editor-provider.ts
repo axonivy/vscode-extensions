@@ -1,3 +1,4 @@
+import { Commands, executeCommand } from '@axonivy/vscode-base';
 import { GlspVscodeConnector, GlspEditorProvider } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
@@ -25,6 +26,14 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     webviewPanel.webview.options = {
       enableScripts: true
     };
+
+    webview.onDidReceiveMessage(message => {
+      switch (message.command) {
+        case 'startProcess':
+          executeCommand(Commands.ENGINE_START_PROCESS, message.processStartUri);
+          break;
+      }
+    });
 
     webviewPanel.webview.html = `
       <!DOCTYPE html>
