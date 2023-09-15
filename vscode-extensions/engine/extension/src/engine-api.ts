@@ -5,6 +5,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
+type ProjectRequest = (devContextPath: string, projectDir: string) => Promise<void>;
+
 export class IvyEngineApi {
   private readonly API_PATH = '/api/web-ide/';
   private engineUrl: url.UrlWithStringQuery;
@@ -38,39 +40,42 @@ export class IvyEngineApi {
   }
 
   public async initProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    for (const projectDir of ivyProjectDirectories) {
-      await this.initProject(devContextPath, projectDir);
-    }
+    await this.runProjectActionWithProgress('Initialize Ivy Projects', ivyProjectDirectories, this.initProjectRequest, devContextPath);
   }
 
   public async deployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    vscode.window.withProgress(
-      {
-        location: vscode.ProgressLocation.Notification,
-        title: 'Deploy Projects in progress',
-        cancellable: true
-      },
-      async progess => {
-        for (const projectDir of ivyProjectDirectories) {
-          progess.report({ message: 'Deploy: ' + projectDir });
-          await this.deployProject(devContextPath, projectDir);
-        }
-      }
-    );
+    await this.runProjectActionWithProgress('Deploy Ivy Projects', ivyProjectDirectories, this.deployProjectRequest, devContextPath);
   }
 
   public async buildProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    for (const projectDir of ivyProjectDirectories) {
-      await this.buildProject(devContextPath, projectDir);
-    }
+    await this.runProjectActionWithProgress('Build Ivy Projects', ivyProjectDirectories, this.buildProjectRequest, devContextPath);
   }
 
-  private async initProject(basePath: string, projectDir: string): Promise<void> {
+  private async runProjectActionWithProgress(
+    title: string,
+    ivyProjectDirectories: string[],
+    action: ProjectRequest,
+    devContextPath: string
+  ): Promise<void> {
+    const options = {
+      location: vscode.ProgressLocation.Notification,
+      title: title,
+      cancellable: false
+    };
+    vscode.window.withProgress(options, async progess => {
+      for (const projectDir of ivyProjectDirectories) {
+        progess.report({ message: projectDir });
+        await action(devContextPath, projectDir);
+      }
+    });
+  }
+
+  private initProjectRequest = async (devContextPath: string, projectDir: string): Promise<void> => {
     const projectName = path.basename(projectDir);
     const options: http.RequestOptions = {
       ...this.requestOptions,
       path:
-        basePath +
+        devContextPath +
         this.API_PATH +
         'init-project?projectName=' +
         encodeURIComponent(projectName) +
@@ -80,27 +85,27 @@ export class IvyEngineApi {
       method: 'GET'
     };
     await this.makeRequest(options);
-  }
+  };
 
-  private async deployProject(basePath: string, projectDir: string): Promise<void> {
+  private deployProjectRequest = async (devContextPath: string, projectDir: string): Promise<void> => {
     const options: http.RequestOptions = {
       ...this.requestOptions,
-      path: basePath + this.API_PATH + 'deploy-project?&projectDir=' + encodeURIComponent(projectDir),
+      path: devContextPath + this.API_PATH + 'deploy-project?&projectDir=' + encodeURIComponent(projectDir),
       auth: 'Developer:Developer',
       method: 'GET'
     };
     await this.makeRequest(options);
-  }
+  };
 
-  private async buildProject(basePath: string, projectDir: string): Promise<void> {
+  private buildProjectRequest = async (devContextPath: string, projectDir: string): Promise<void> => {
     const options: http.RequestOptions = {
       ...this.requestOptions,
-      path: basePath + this.API_PATH + 'build-project?&projectDir=' + encodeURIComponent(projectDir),
+      path: devContextPath + this.API_PATH + 'build-project?&projectDir=' + encodeURIComponent(projectDir),
       auth: 'Developer:Developer',
       method: 'GET'
     };
     await this.makeRequest(options);
-  }
+  };
 
   private makeRequest(options: http.RequestOptions): Promise<string> {
     if (this.engineUrl.protocol === 'http:') {
