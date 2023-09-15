@@ -79,11 +79,11 @@
     "commands": [
       {
         "command": "vscode-engine-extension.openDevWfUi",
-        "title": "Open Dev Wf Ui in external browser"
+        "title": "Open Dev Workflow Ui in external browser"
       },
       {
         "command": "vscode-engine-extension.openEngineCockpit",
-        "title": "Open Engine Cockpit external browser"
+        "title": "Open Engine Cockpit in external browser"
       },
       {
         "command": "vscode-engine-extension.deployProjects",
