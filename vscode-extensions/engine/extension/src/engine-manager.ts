@@ -85,6 +85,19 @@ export class IvyEngineManager {
     }
   }
 
+  public async buildAndDeployProjects(): Promise<void> {
+    if (this.devContextPath) {
+      const ivyProjectDirectories = await this.ivyProjectDirectories();
+      await this.ivyEngineApi.buildAndDeployProjects(this.devContextPath, ivyProjectDirectories);
+    }
+  }
+
+  public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
+    if (this.devContextPath) {
+      await this.ivyEngineApi.buildAndDeployProject(this.devContextPath, ivyProjectDirectory);
+    }
+  }
+
   async ivyProjectDirectories(): Promise<string[]> {
     return (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as string[];
   }

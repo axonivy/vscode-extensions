@@ -63,6 +63,18 @@
           "command": "ivyProjects.refreshEntry",
           "when": "view == ivyProjects",
           "group": "navigation"
+        },
+        {
+          "command": "ivyProjects.buildAndDeployAll",
+          "when": "view == ivyProjects",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "ivyProjects.buildAndDeployProject",
+          "when": "view == ivyProjects && viewItem == ivyProject",
+          "group": "inline"
         }
       ]
     },
@@ -73,6 +85,22 @@
         "icon": {
           "light": "assets/light/refresh.svg",
           "dark": "assets/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "ivyProjects.buildAndDeployAll",
+        "title": "Build and Deploy All",
+        "icon": {
+          "light": "assets/light/build.svg",
+          "dark": "assets/dark/build.svg"
+        }
+      },
+      {
+        "command": "ivyProjects.buildAndDeployProject",
+        "title": "Build and Deploy Project",
+        "icon": {
+          "light": "assets/light/build.svg",
+          "dark": "assets/dark/build.svg"
         }
       }
     ]

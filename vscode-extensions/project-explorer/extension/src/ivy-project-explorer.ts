@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN } from './ivy-project-tree-data-provider';
+import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN, Entry } from './ivy-project-tree-data-provider';
 import { Commands, executeCommand } from '@axonivy/vscode-base';
 
 export const VIEW_ID = 'ivyProjects';
@@ -9,8 +9,10 @@ export class IvyProjectExplorer {
 
   constructor(context: vscode.ExtensionContext) {
     this.treeDataProvider = new IvyProjectTreeDataProvider();
-    context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider }));
+    context.subscriptions.push(vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider, showCollapseAll: true }));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployAll`, () => this.buildAndDeployAll());
+    vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS, () => this.hasIvyProjects());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
     const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
@@ -20,22 +22,30 @@ export class IvyProjectExplorer {
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
-  async hasIvyProjects(): Promise<boolean> {
+  private async hasIvyProjects(): Promise<boolean> {
     return this.treeDataProvider.hasIvyProjects();
   }
 
-  async refresh(): Promise<void> {
+  private async refresh(): Promise<void> {
     this.treeDataProvider.refresh();
     const hasIvyProjects = await this.hasIvyProjects();
     this.setProjectExplorerActivationCondition(hasIvyProjects);
     this.activateEngineExtension(hasIvyProjects);
   }
 
-  setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
+  private async buildAndDeployAll(): Promise<void> {
+    executeCommand(Commands.ENGINE_BUILD_AND_DEPLOY_PROJECTS);
+  }
+
+  private async buildAndDeployProject(entry: Entry): Promise<void> {
+    executeCommand(Commands.ENGINE_BUILD_AND_DEPLOY_PROJECT, entry.uri.fsPath);
+  }
+
+  private setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
     executeCommand(Commands.VSCODE_SET_CONTEXT, 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
-  activateEngineExtension(hasIvyProjects: boolean): void {
+  private activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
       executeCommand(Commands.ENGINE_START_MANAGER);
     }
