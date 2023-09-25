@@ -15,12 +15,14 @@ import {
 import { CopyPasteHandlerProvider } from '@eclipse-glsp/vscode-integration-webview/lib/copy-paste-handler-provider';
 import { Container } from 'inversify';
 import { IvyGLSPDiagramWidget } from './ivy-diagram-widget';
+import ivyStartActionModule from './start/di.config';
 
 class IvyGLSPStarter extends GLSPStarter {
   createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container {
     const container = createIvyDiagramContainer(diagramIdentifier.clientId);
     container.load(ivyBreakpointModule);
     container.load(ivyOpenInscriptionModule);
+    container.load(ivyStartActionModule);
     return container;
   }
 

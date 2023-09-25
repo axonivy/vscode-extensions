@@ -11,6 +11,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_PROJECTS, () => ivyEngineManager.buildProjects());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_DEV_WF_UI, () => ivyEngineManager.openDevWfUi());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_ENGINE_COCKPIT, () => ivyEngineManager.openEngineCockpit());
+  registerAndSubscribeCommand(context, Commands.ENGINE_START_PROCESS, (processStartUri: string) =>
+    ivyEngineManager.startProcess(processStartUri)
+  );
   const hasIvyProjects = await executeCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS);
   if (hasIvyProjects) {
     await ivyEngineManager.start();
