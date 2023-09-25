@@ -12,20 +12,22 @@ interface Entry {
 export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
 
 export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry> {
-  private ivyProjectFiles: Promise<vscode.Uri[]>;
+  private ivyProjects: Promise<string[]>;
   private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | null | void> = new vscode.EventEmitter<
     Entry | undefined | null | void
   >();
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
 
   constructor() {
-    this.ivyProjectFiles = this.searchIvyProjectFiles();
+    this.ivyProjects = this.findIvyProjects();
   }
 
-  private async searchIvyProjectFiles(): Promise<vscode.Uri[]> {
-    const projectFiles = await vscode.workspace.findFiles(IVY_RPOJECT_FILE_PATTERN);
-    const ivyProjectFiles = projectFiles.filter(uri => this.containsIvyProjectNature(uri.fsPath)).sort();
-    return ivyProjectFiles;
+  private async findIvyProjects(): Promise<string[]> {
+    const ivyProjectFiles = await vscode.workspace.findFiles(IVY_RPOJECT_FILE_PATTERN);
+    return ivyProjectFiles
+      .filter(uri => this.containsIvyProjectNature(uri.fsPath))
+      .map(projectFile => path.dirname(projectFile.fsPath))
+      .sort();
   }
 
   private containsIvyProjectNature(path: string) {
@@ -34,15 +36,15 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   async hasIvyProjects(): Promise<boolean> {
-    return (await this.ivyProjectFiles).length > 0;
+    return (await this.ivyProjects).length > 0;
   }
 
-  async getIvyProjectFiles(): Promise<vscode.Uri[]> {
-    return await this.ivyProjectFiles;
+  async getIvyProjects(): Promise<string[]> {
+    return await this.ivyProjects;
   }
 
   refresh(): void {
-    this.ivyProjectFiles = this.searchIvyProjectFiles();
+    this.ivyProjects = this.findIvyProjects();
     this._onDidChangeTreeData.fire();
   }
 
@@ -66,13 +68,11 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       const children = await this.readDirectory(element.uri);
       return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type }));
     }
-    return (await this.ivyProjectFiles)
-      .map(project => path.dirname(project.fsPath))
-      .map(dir => ({
-        uri: vscode.Uri.file(dir),
-        type: vscode.FileType.Directory,
-        iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg')
-      }));
+    return (await this.ivyProjects).map(dir => ({
+      uri: vscode.Uri.file(dir),
+      type: vscode.FileType.Directory,
+      iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg')
+    }));
   }
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
