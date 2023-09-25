@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { IvyEngineApi } from './engine-api';
 import Os from 'os';
 import { executeCommand, Commands } from '@axonivy/vscode-base';
-import path from 'path';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -87,8 +86,7 @@ export class IvyEngineManager {
   }
 
   async ivyProjectDirectories(): Promise<string[]> {
-    const ivyProjectFiles = (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECT_FILES)) as vscode.Uri[];
-    return ivyProjectFiles.map(projectFile => path.dirname(projectFile.fsPath));
+    return (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as string[];
   }
 
   async stop(): Promise<void> {
