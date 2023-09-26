@@ -47,6 +47,7 @@ export class IvyEngineApi {
 
   public async initProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
     await this.runProjectRequestWithProgress('Initialize Ivy Projects', ivyProjectDirectory, this.initProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Activate Ivy Project', ivyProjectDirectory, this.activateProjectRequest, devContextPath);
   }
 
   public async deployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
@@ -81,8 +82,8 @@ export class IvyEngineApi {
 
   public async buildAndDeployProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
     await this.runProjectRequestWithProgress('Deactivate Ivy Project', ivyProjectDirectory, this.deactivateProjectRequest, devContextPath);
-    await this.runProjectRequestWithProgress('Build Ivy Project', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
-    await this.runProjectRequestWithProgress('Deploy Ivy Project', ivyProjectDirectory, this.deployProject, devContextPath);
+    // await this.runProjectRequestWithProgress('Build Ivy Project', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Deploy Ivy Project', ivyProjectDirectory, this.deployProjectRequest, devContextPath);
     await this.runProjectRequestWithProgress('Activate Ivy Project', ivyProjectDirectory, this.activateProjectRequest, devContextPath);
   }
 
