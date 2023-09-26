@@ -40,20 +40,55 @@ export class IvyEngineApi {
   }
 
   public async initProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectRequestWithProgress('Initialize Ivy Projects', ivyProjectDirectories, this.initProjectRequest, devContextPath);
+    for (const ivyProjectDirectory of ivyProjectDirectories) {
+      await this.initProject(devContextPath, ivyProjectDirectory);
+    }
+  }
+
+  public async initProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
+    await this.runProjectRequestWithProgress('Initialize Ivy Projects', ivyProjectDirectory, this.initProjectRequest, devContextPath);
   }
 
   public async deployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectRequestWithProgress('Deploy Ivy Projects', ivyProjectDirectories, this.deployProjectRequest, devContextPath);
+    for (const ivyProjectDirectory of ivyProjectDirectories) {
+      await this.deployProject(devContextPath, ivyProjectDirectory);
+    }
+  }
+
+  public async deployProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
+    await this.runProjectRequestWithProgress('Deactivate Ivy Project', ivyProjectDirectory, this.deactivateProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Deploy Ivy Project', ivyProjectDirectory, this.deployProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Activate Ivy Project', ivyProjectDirectory, this.activateProjectRequest, devContextPath);
   }
 
   public async buildProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
-    await this.runProjectRequestWithProgress('Build Ivy Projects', ivyProjectDirectories, this.buildProjectRequest, devContextPath);
+    for (const ivyProjectDirectory of ivyProjectDirectories) {
+      await this.buildProject(devContextPath, ivyProjectDirectory);
+    }
+  }
+
+  public async buildProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
+    await this.runProjectRequestWithProgress('Deactivate Ivy Project', ivyProjectDirectory, this.deactivateProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Build Ivy Project', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Activate Ivy Project', ivyProjectDirectory, this.activateProjectRequest, devContextPath);
+  }
+
+  public async buildAndDeployProjects(devContextPath: string, ivyProjectDirectories: string[]): Promise<void> {
+    for (const ivyProjectDirectory of ivyProjectDirectories) {
+      await this.buildAndDeployProject(devContextPath, ivyProjectDirectory);
+    }
+  }
+
+  public async buildAndDeployProject(devContextPath: string, ivyProjectDirectory: string): Promise<void> {
+    await this.runProjectRequestWithProgress('Deactivate Ivy Project', ivyProjectDirectory, this.deactivateProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Build Ivy Project', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
+    await this.runProjectRequestWithProgress('Deploy Ivy Project', ivyProjectDirectory, this.deployProject, devContextPath);
+    await this.runProjectRequestWithProgress('Activate Ivy Project', ivyProjectDirectory, this.activateProjectRequest, devContextPath);
   }
 
   private async runProjectRequestWithProgress(
     title: string,
-    ivyProjectDirectories: string[],
+    ivyProjectDirectory: string,
     request: ProjectRequest,
     devContextPath: string
   ): Promise<void> {
@@ -63,10 +98,8 @@ export class IvyEngineApi {
       cancellable: false
     };
     await vscode.window.withProgress(options, async progess => {
-      for (const projectDir of ivyProjectDirectories) {
-        progess.report({ message: projectDir });
-        await request(devContextPath, projectDir);
-      }
+      progess.report({ message: ivyProjectDirectory });
+      await request(devContextPath, ivyProjectDirectory);
     });
   }
 
@@ -81,6 +114,26 @@ export class IvyEngineApi {
         encodeURIComponent(projectName) +
         '&projectDir=' +
         encodeURIComponent(projectDir),
+      auth: 'Developer:Developer',
+      method: 'GET'
+    };
+    await this.makeRequest(options);
+  };
+
+  private deactivateProjectRequest = async (devContextPath: string, projectDir: string): Promise<void> => {
+    const options: http.RequestOptions = {
+      ...this.requestOptions,
+      path: devContextPath + this.API_PATH + 'deactivate-project?&projectDir=' + encodeURIComponent(projectDir),
+      auth: 'Developer:Developer',
+      method: 'GET'
+    };
+    await this.makeRequest(options);
+  };
+
+  private activateProjectRequest = async (devContextPath: string, projectDir: string): Promise<void> => {
+    const options: http.RequestOptions = {
+      ...this.requestOptions,
+      path: devContextPath + this.API_PATH + 'activate-project?&projectDir=' + encodeURIComponent(projectDir),
       auth: 'Developer:Developer',
       method: 'GET'
     };

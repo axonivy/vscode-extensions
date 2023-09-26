@@ -3,10 +3,11 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { FileStat } from './file-stat';
 
-interface Entry {
+export interface Entry {
   uri: vscode.Uri;
   type: vscode.FileType;
   iconPath?: string;
+  contextValue?: string;
 }
 
 export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
@@ -60,6 +61,9 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     if (element.iconPath) {
       treeItem.iconPath = element.iconPath;
     }
+    if (element.contextValue) {
+      treeItem.contextValue = element.contextValue;
+    }
     return treeItem;
   }
 
@@ -71,7 +75,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return (await this.ivyProjects).map(dir => ({
       uri: vscode.Uri.file(dir),
       type: vscode.FileType.Directory,
-      iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg')
+      iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg'),
+      contextValue: 'ivyProject'
     }));
   }
 
