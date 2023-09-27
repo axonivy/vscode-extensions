@@ -155,25 +155,25 @@
       {
         "command": "workflow.fit",
         "title": "Fit to Screen",
-        "category": "Workflow Diagram",
+        "category": "Ivy Process Editor",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.center",
         "title": "Center selection",
-        "category": "Workflow Diagram",
+        "category": "Ivy Process Editor",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.layout",
         "title": "Layout diagram",
-        "category": "Workflow Diagram",
+        "category": "Ivy Process Editor",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.exportAsSVG",
         "title": "Export as SVG",
-        "category": "Workflow Diagram",
+        "category": "Ivy Process Editor",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       }
     ],

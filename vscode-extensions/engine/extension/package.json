@@ -79,19 +79,23 @@
     "commands": [
       {
         "command": "vscode-engine-extension.openDevWfUi",
-        "title": "Open Dev Workflow Ui in external browser"
+        "title": "Open Developer Workflow UI",
+        "category": "Ivy Engine"
       },
       {
         "command": "vscode-engine-extension.openEngineCockpit",
-        "title": "Open Engine Cockpit in external browser"
+        "title": "Open Engine Cockpit",
+        "category": "Ivy Engine"
       },
       {
         "command": "vscode-engine-extension.deployProjects",
-        "title": "Deploy Ivy Projects"
+        "title": "Deploy all Projects",
+        "category": "Ivy Engine"
       },
       {
         "command": "vscode-engine-extension.buildProjects",
-        "title": "Build Ivy Projects"
+        "title": "Build all Projects",
+        "category": "Ivy Engine"
       }
     ]
   }
