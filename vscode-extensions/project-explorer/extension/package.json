@@ -82,6 +82,7 @@
       {
         "command": "ivyProjects.refreshEntry",
         "title": "Refresh",
+        "category": "Ivy Project Explorer",
         "icon": {
           "light": "assets/light/refresh.svg",
           "dark": "assets/dark/refresh.svg"
@@ -90,6 +91,7 @@
       {
         "command": "ivyProjects.buildAndDeployAll",
         "title": "Build and Deploy All",
+        "category": "Ivy Project Explorer",
         "icon": {
           "light": "assets/light/build.svg",
           "dark": "assets/dark/build.svg"
@@ -98,6 +100,7 @@
       {
         "command": "ivyProjects.buildAndDeployProject",
         "title": "Build and Deploy Project",
+        "category": "Ivy Project Explorer",
         "icon": {
           "light": "assets/light/build.svg",
           "dark": "assets/dark/build.svg"

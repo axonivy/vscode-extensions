@@ -47,7 +47,7 @@
       {
         "command": "yaml-variables-editor.new",
         "title": "Create a new Variables file",
-        "category": "YAML",
+        "category": "Ivy Variables Editor",
         "icon": "$(add)"
       }
     ]
