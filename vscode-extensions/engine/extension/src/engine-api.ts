@@ -1,6 +1,5 @@
 import * as http from 'http';
 import * as https from 'https';
-import * as url from 'url';
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
 import path from 'path';
@@ -10,32 +9,29 @@ import {
   DEACTIVATE_PROJECTS_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
+  PROJECT_REQUEST_OPTIONS,
   ProjectRequest
 } from './project-request';
 
 export class IvyEngineApi {
-  private readonly API_PATH = '/api/web-ide/';
-  private engineUrl: url.UrlWithStringQuery;
-  private requestOptions: { host: string | null; port: string | null };
+  private readonly API_PATH = 'api/web-ide';
+  private engineUrl: URL;
   private devContextPath = '';
 
   constructor(engineUrlString: string) {
-    this.engineUrl = url.parse(engineUrlString);
-    this.requestOptions = {
-      host: this.engineUrl.hostname,
-      port: this.engineUrl.port
-    };
+    this.engineUrl = new URL(engineUrlString);
   }
 
   public async devContextPathRequest(): Promise<string> {
+    const requestPath = path.join('system', this.API_PATH, 'dev-context-path');
+    const url = new URL(requestPath, this.engineUrl);
     const sessionId = this.sessionId();
+    url.searchParams.append('sessionId', sessionId);
     const options: http.RequestOptions = {
-      ...this.requestOptions,
-      path: '/system' + this.API_PATH + 'dev-context-path?sessionId=' + encodeURIComponent(sessionId),
       auth: 'admin:admin',
       method: 'GET'
     };
-    this.devContextPath = await this.makeRequest(options);
+    this.devContextPath = await this.makeRequest(url, options);
     return this.devContextPath;
   }
 
@@ -48,89 +44,87 @@ export class IvyEngineApi {
   }
 
   public async initProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const queryString = this.queryString(ivyProjectDirectories);
+    const searchParams = this.searchParams(ivyProjectDirectories);
     for (const ivyProjectDirectory of ivyProjectDirectories) {
       await this.initProject(ivyProjectDirectory);
     }
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, queryString);
+    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
   }
 
   private async initProject(ivyProjectDirectory: string): Promise<void> {
     const projectName = path.basename(ivyProjectDirectory);
-    const params = new URLSearchParams();
-    params.append('projectName', projectName);
-    params.append('projectDir', ivyProjectDirectory);
-    await this.runProjectRequestWithProgress(INIT_PROJECT_REQUEST, '?' + params.toString());
+    const searchParams = new URLSearchParams();
+    searchParams.append('projectName', projectName);
+    searchParams.append('projectDir', ivyProjectDirectory);
+    await this.runProjectRequestWithProgress(INIT_PROJECT_REQUEST, searchParams);
   }
 
   public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const queryString = this.queryString(ivyProjectDirectories);
-    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, queryString);
-    await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, queryString);
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, queryString);
+    const searchParams = this.searchParams(ivyProjectDirectories);
+    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
+    await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
+    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
   }
 
   public async buildProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const queryString = this.queryString(ivyProjectDirectories);
-    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, queryString);
-    await this.runProjectRequestWithProgress(BUILD_PROJECTS_REQUEST, queryString);
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, queryString);
+    const searchParams = this.searchParams(ivyProjectDirectories);
+    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
+    await this.runProjectRequestWithProgress(BUILD_PROJECTS_REQUEST, searchParams);
+    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
   }
 
   public async buildAndDeployProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const queryString = this.queryString(ivyProjectDirectories);
-    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, queryString);
+    const searchParams = this.searchParams(ivyProjectDirectories);
+    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
     // await this.runProjectRequestWithProgress('Build Ivy Projects', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
-    await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, queryString);
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, queryString);
+    await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
+    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
   }
 
-  private async runProjectRequestWithProgress(projectRequest: ProjectRequest, queryString: string): Promise<void> {
-    const processOptions = {
+  private async runProjectRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {
+    const progressOptions = {
       location: vscode.ProgressLocation.Notification,
       title: projectRequest.description,
       cancellable: false
     };
-    const projectRequestOptions = this.projectRequestOptions(projectRequest.sourcePath, queryString);
-    await vscode.window.withProgress(processOptions, async progess => {
-      progess.report({ message: projectRequestOptions.path ?? '' });
-      await this.makeRequest(projectRequestOptions);
+    const url = this.projectRequestURL(projectRequest.sourcePath, searchParams);
+    await vscode.window.withProgress(progressOptions, async progess => {
+      progess.report({ message: url.pathname + url.search });
+      await this.makeRequest(url, PROJECT_REQUEST_OPTIONS);
     });
   }
 
-  private projectRequestOptions(sourcePath: string, queryString: string): http.RequestOptions {
-    return {
-      ...this.requestOptions,
-      path: this.devContextPath + this.API_PATH + sourcePath + queryString,
-      auth: 'Developer:Developer',
-      method: 'GET'
-    };
+  private projectRequestURL(sourcePath: string, searchParams: URLSearchParams): URL {
+    const requestPath = path.join(this.devContextPath, this.API_PATH, sourcePath);
+    const url = new URL(requestPath, this.engineUrl);
+    searchParams.forEach((value, key) => url.searchParams.append(key, value));
+    return url;
   }
 
-  private queryString(ivyProjectDirectories: string[]): string {
-    const params = new URLSearchParams();
+  private searchParams(ivyProjectDirectories: string[]): URLSearchParams {
+    const searchParams = new URLSearchParams();
     for (const projectDir of ivyProjectDirectories) {
-      params.append('projectDir', projectDir);
+      searchParams.append('projectDir', projectDir);
     }
-    return '?' + params.toString();
+    return searchParams;
   }
 
-  private makeRequest(options: http.RequestOptions): Promise<string> {
-    if (this.engineUrl.protocol === 'http:') {
-      return this.makeHttpRquest(options);
+  private makeRequest(url: URL, options: http.RequestOptions): Promise<string> {
+    if (url.protocol === 'http:') {
+      return this.makeHttpRquest(url, options);
     }
-    return this.makeHttpsRquest(options);
+    return this.makeHttpsRquest(url, options);
   }
 
-  private makeHttpRquest(options: http.RequestOptions): Promise<string> {
+  private makeHttpRquest(url: URL, options: http.RequestOptions): Promise<string> {
     return new Promise((resolve, reject) => {
-      http.request(options, res => this.callback(res, resolve, reject)).end();
+      http.request(url, options, res => this.callback(res, resolve, reject)).end();
     });
   }
 
-  private makeHttpsRquest(options: http.RequestOptions): Promise<string> {
+  private makeHttpsRquest(url: URL, options: http.RequestOptions): Promise<string> {
     return new Promise((resolve, reject) => {
-      https.request(options, res => this.callback(res, resolve, reject)).end();
+      https.request(url, options, res => this.callback(res, resolve, reject)).end();
     });
   }
 
