@@ -23,7 +23,7 @@ export class IvyEngineManager {
     }
     this.engineUrl = await this.resolveEngineUrl();
     this.ivyEngineApi = new IvyEngineApi(this.engineUrl);
-    this.devContextPath = await this.ivyEngineApi.devContextPath();
+    this.devContextPath = await this.ivyEngineApi.devContextPathRequest();
     await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress(this.engineUrl.slice(0, -1) + this.devContextPath + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
@@ -67,34 +67,34 @@ export class IvyEngineManager {
   public async initProjects(): Promise<void> {
     if (this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.initProjects(this.devContextPath, ivyProjectDirectories);
+      await this.ivyEngineApi.initProjects(ivyProjectDirectories);
     }
   }
 
   public async deployProjects(): Promise<void> {
     if (this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.deployProjects(this.devContextPath, ivyProjectDirectories);
+      await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
     }
   }
 
   public async buildProjects(): Promise<void> {
     if (this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.buildProjects(this.devContextPath, ivyProjectDirectories);
+      await this.ivyEngineApi.buildProjects(ivyProjectDirectories);
     }
   }
 
   public async buildAndDeployProjects(): Promise<void> {
     if (this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.buildAndDeployProjects(this.devContextPath, ivyProjectDirectories);
+      await this.ivyEngineApi.buildAndDeployProjects(ivyProjectDirectories);
     }
   }
 
   public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
     if (this.devContextPath) {
-      await this.ivyEngineApi.buildAndDeployProject(this.devContextPath, ivyProjectDirectory);
+      await this.ivyEngineApi.buildAndDeployProjects([ivyProjectDirectory]);
     }
   }
 
