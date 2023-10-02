@@ -10,9 +10,10 @@ const config = {
     filename: 'inscription-extension.js',
     library: {
       type: 'commonjs'
-    }
+    },
+    devtoolModuleFilenameTemplate: '../[resource-path]'
   },
-  devtool: 'eval-source-map',
+  devtool: 'source-map',
   mode: 'development',
 
   externals: {
