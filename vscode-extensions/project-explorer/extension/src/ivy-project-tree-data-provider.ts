@@ -8,6 +8,7 @@ export interface Entry {
   type: vscode.FileType;
   iconPath?: string;
   contextValue?: string;
+  parent?: Entry;
 }
 
 export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
@@ -19,8 +20,23 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   >();
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
 
+  private entryCache = new Map<string, Entry>();
+  private openTabPaths: string[];
+
   constructor() {
+    this.openTabPaths = this.currentOpenTabPaths();
     this.ivyProjects = this.findIvyProjects();
+  }
+
+  private currentOpenTabPaths() {
+    return vscode.window.tabGroups.all
+      .flatMap(tabGroup => tabGroup.tabs.flatMap(tabs => tabs.input as { uri: vscode.Uri }))
+      .filter(input => input && input.uri)
+      .map(input => input.uri.fsPath);
+  }
+
+  getEntryCache() {
+    return this.entryCache;
   }
 
   private async findIvyProjects(): Promise<string[]> {
@@ -45,6 +61,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   refresh(): void {
+    this.entryCache.clear();
+    this.openTabPaths = this.currentOpenTabPaths();
     this.ivyProjects = this.findIvyProjects();
     this._onDidChangeTreeData.fire();
   }
@@ -67,29 +85,56 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return treeItem;
   }
 
+  async getParent(element: Entry): Promise<Entry | undefined> {
+    return element.parent;
+  }
+
   async getChildren(element?: Entry): Promise<Entry[]> {
     if (element) {
       const children = await this.readDirectory(element.uri);
-      return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type }));
+      return children.map(([childName, childType]) => this.createAndCacheChild(element, childName, childType));
     }
-    return (await this.ivyProjects).map(dir => ({
-      uri: vscode.Uri.file(dir),
+
+    return (await this.ivyProjects).map(dir => this.createAndCacheRoot(dir));
+  }
+
+  private createAndCacheRoot(ivyProjectDir: string): Entry {
+    const entry = {
+      uri: vscode.Uri.file(ivyProjectDir),
       type: vscode.FileType.Directory,
       iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg'),
       contextValue: 'ivyProject'
-    }));
+    };
+    this.entryCache.set(entry.uri.fsPath, entry);
+    this.getChildren(entry);
+    return entry;
+  }
+
+  private createAndCacheChild(parent: Entry, childName: string, childType: vscode.FileType): Entry {
+    const childUri = vscode.Uri.file(path.join(parent.uri.fsPath, childName));
+    const cachedChild = this.entryCache.get(childUri.fsPath);
+    if (cachedChild) {
+      return cachedChild;
+    }
+    const entry = { uri: childUri, type: childType, parent };
+    this.entryCache.set(childUri.fsPath, entry);
+    if (childType === vscode.FileType.Directory && this.openTabPathStartsWith(childUri.fsPath)) {
+      this.getChildren(entry);
+    }
+    return entry;
+  }
+
+  private openTabPathStartsWith(childPath: string): boolean {
+    return this.openTabPaths.find(tabPath => tabPath.startsWith(childPath)) ? true : false;
   }
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
     const children = await this.readdir(uri.fsPath);
-
     const result: [string, vscode.FileType][] = [];
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
+    for (const child of children) {
       const fileStat = await this.fileStat(path.join(uri.fsPath, child));
       result.push([child, fileStat.type]);
     }
-
     return Promise.resolve(result);
   }
 
