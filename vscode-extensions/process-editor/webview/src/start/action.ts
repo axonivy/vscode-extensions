@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { IActionHandler, SModelElement } from '@eclipse-glsp/client';
-import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode, StreamlineIcons } from '@axonivy/process-editor';
+import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode } from '@axonivy/process-editor';
+import { IvyIcons } from '@axonivy/editor-icons/lib';
 import { VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
 
 export interface StartProcessAction {
@@ -36,7 +37,7 @@ export class StarProcessQuickActionProvider extends SingleQuickActionProvider {
     if (element instanceof StartEventNode && element.type === EventStartTypes.START) {
       const processStartUri = (element.args['processStartUri'] as string) ?? '';
       return {
-        icon: StreamlineIcons.Play,
+        icon: IvyIcons.Play,
         title: 'Start Process (X)',
         location: 'Left',
         sorting: 'A',

@@ -24,17 +24,17 @@
     react "^18.2.0"
     yaml "^2.3.1"
 
-"@axonivy/editor-icons@11.2.0-next.523+cf5f661":
-  version "11.2.0-next.523"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.523.tgz#7ed7d078d35857fe177f91d4394d7e45e46ddfaa"
-  integrity sha512-jeueEUJ4rLoo4iXLwt3dKe7+zGkWcVaioAQaVEK+aSoA8Ls4BPjdENzIL0shalgBLtC6qnx2ORrIzYjOw7qBOw==
+"@axonivy/editor-icons@11.2.0-next.616", "@axonivy/editor-icons@11.2.0-next.616+59783fa", "@axonivy/editor-icons@~11.2.0-next.616":
+  version "11.2.0-next.616"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.616.tgz#852df6e48be1471b1b16119333385fcc401f43f4"
+  integrity sha512-kDM4pkrV99ATXuajZvW+DSM+5QJaWr+BdR2eo4MLisUZWxgE5rIQLKQYwmaS7fgtPy43edZA1NjctSuUdoYknw==
 
-"@axonivy/inscription-core@~11.2.0-next.523":
-  version "11.2.0-next.523"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.523.tgz#c11410259d0da735d55be80ae1e95433a861c1a0"
-  integrity sha512-xMaCLVxPjN7JdifCb75ArQAnEA/9cHM5sDnlB3oQAIEzBKGaxh579/9fo+Q/QUFkdKOAWTAO2GMOzwr8onYx1A==
+"@axonivy/inscription-core@~11.2.0-next.616":
+  version "11.2.0-next.616"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.616.tgz#bf87123f42fd0765ff9f093ed809abb02aa188bd"
+  integrity sha512-NGi/0pmA9nprQ2N14Jb6ogkftm9yIpyTworOgT6CHoJmk5vLF6kKDGELLs6Xf5ho1IDHRfujtznerkESOABiPw==
   dependencies:
-    "@axonivy/inscription-protocol" "11.2.0-next.523+cf5f661"
+    "@axonivy/inscription-protocol" "11.2.0-next.616+59783fa"
     monaco-editor "^0.34.1"
     monaco-editor-workers "^0.34.2"
     monaco-languageclient "^4.0.3"
@@ -42,13 +42,13 @@
     vscode-languageserver-protocol "^3.17.2"
     vscode-ws-jsonrpc "^2.0.1"
 
-"@axonivy/inscription-editor@~11.2.0-next.523":
-  version "11.2.0-next.523"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.523.tgz#be52c4cb7452fd780d81a64d9b4f21ad25a98f26"
-  integrity sha512-jd8n+qRNl4/voDvR0F60dSzAOh7i3nPP0CPfao9md6A76vfLW7rudwBibPIWJXloHcqSc/AWcRiAaxIl4TM2KQ==
+"@axonivy/inscription-editor@~11.2.0-next.616":
+  version "11.2.0-next.616"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.616.tgz#a2e6d9dc4f1d9e1f88e1b2d4f0d939f5008ee6c5"
+  integrity sha512-3u6DJXjQgNGzQ8fPAal4jIISKYL07Ff/A3WwvAQu742UBonGB5qizRGO473NFtj9hJ7AvRhFseXzOaDkE7mBgw==
   dependencies:
-    "@axonivy/editor-icons" "11.2.0-next.523+cf5f661"
-    "@axonivy/inscription-protocol" "11.2.0-next.523+cf5f661"
+    "@axonivy/editor-icons" "11.2.0-next.616+59783fa"
+    "@axonivy/inscription-protocol" "11.2.0-next.616+59783fa"
     "@monaco-editor/react" "^4.5.1"
     "@radix-ui/react-accordion" "^1.1.2"
     "@radix-ui/react-checkbox" "^1.0.4"
@@ -57,35 +57,37 @@
     "@radix-ui/react-dropdown-menu" "^2.0.5"
     "@radix-ui/react-label" "^2.0.2"
     "@radix-ui/react-popover" "^1.0.6"
+    "@radix-ui/react-radio-group" "^1.1.3"
     "@radix-ui/react-tabs" "^1.0.4"
     "@tanstack/react-query" "^4.32.0"
     "@tanstack/react-query-devtools" "^4.32.0"
     "@tanstack/react-table" "^8.9.1"
-    "@types/node" "^16.7.13"
+    "@types/node" "^18.11.9"
     downshift "^7.6.0"
     immer "^10.0.2"
     react "^18.2.0"
     react-aria "^3.25.0"
     react-error-boundary "^4.0.9"
 
-"@axonivy/inscription-protocol@11.2.0-next.523+cf5f661", "@axonivy/inscription-protocol@~11.2.0-next.523":
-  version "11.2.0-next.523"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.523.tgz#fec68ddb3e0081886eb5097fbdb06afd07a33102"
-  integrity sha512-Yy78gZ5qLMBsPMCQt91Bt0Cd88+XmoG8sYjDynLXfvVIU8DhlU4hBitcXzT2PWcFosca2RT+HDQeRpQIn2vLzA==
+"@axonivy/inscription-protocol@11.2.0-next.616+59783fa", "@axonivy/inscription-protocol@~11.2.0-next.616":
+  version "11.2.0-next.616"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.616.tgz#42d44dca60fb9f5fe623d68e9801b0a65325cc17"
+  integrity sha512-l4Pz4nBTxDPwjSP52DVDMqUWKS1FKfBa5qG7AzAy0YzEU3JZ0nqx+7LnwWoBnsHyviNJq7RXVERxllzRhGTqqw==
 
-"@axonivy/process-editor-protocol@11.2.0-next.744", "@axonivy/process-editor-protocol@11.2.0-next.744+d120d10":
-  version "11.2.0-next.744"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.744.tgz#be840bd1cc32f333be4148689524bf3724b51b11"
-  integrity sha512-QCGQmZx2SDADv3pUOvbxKfN9/ZtIVG8azI3inMgA5zeKTnGuRrKNAOkYG/Zq/uQv1QzEoqV4K/96u4u17pZJ1A==
+"@axonivy/process-editor-protocol@11.2.0-next.751+cf7e758", "@axonivy/process-editor-protocol@~11.2.0-next.751":
+  version "11.2.0-next.751"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.751.tgz#097eb592c510b783e094d1f596fec1617de1f514"
+  integrity sha512-3iPi1cxbaS3D9mIrC59+tEXOtwhxlO1lXTyv11BwDWCLkwQCdK9q7tPKxw5p4Z4T+1urWUG9LD88fsgANwyhGA==
   dependencies:
     "@eclipse-glsp/protocol" "1.1.0-RC10"
 
-"@axonivy/process-editor@~11.2.0-next.744":
-  version "11.2.0-next.744"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.744.tgz#d24885cdebcaa74e4f66cb21cd236ede8ee9cd46"
-  integrity sha512-UJ+drhEqFQGzStbIZV2FyKprHEsyLXULQ/ts930rz5oBCP/zu5DhDF//kLRbLe57Cq52/rLLOXa1L7VmsOSswg==
+"@axonivy/process-editor@~11.2.0-next.751":
+  version "11.2.0-next.751"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.751.tgz#f3b5b06a160f1336864eba687a957727aeaef37f"
+  integrity sha512-uSJiL4zgdgDow62O6tTlG9DEM2aiWjIb6WfRlFolMeTnbDUc27yesqUPQo9+t+w6e1pq5075Hgdjn03/U7+kRg==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.2.0-next.744+d120d10"
+    "@axonivy/editor-icons" "11.2.0-next.616"
+    "@axonivy/process-editor-protocol" "11.2.0-next.751+cf7e758"
     "@eclipse-glsp/client" "1.1.0-RC10"
     showdown "^2.1.0"
     toastify-js "1.12.0"
@@ -3043,6 +3045,23 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-slot" "1.0.2"
 
+"@radix-ui/react-radio-group@^1.1.3":
+  version "1.1.3"
+  resolved "https://npmjs-registry.ivyteam.io/@radix-ui/react-radio-group/-/react-radio-group-1.1.3.tgz#3197f5dcce143bcbf961471bf89320735c0212d3"
+  integrity sha512-x+yELayyefNeKeTx4fjK6j99Fs6c4qKm3aY38G3swQVTN6xMpsrbigC0uHs2L//g8q4qR7qOcww8430jJmi2ag==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-compose-refs" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-direction" "1.0.1"
+    "@radix-ui/react-presence" "1.0.1"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-roving-focus" "1.0.4"
+    "@radix-ui/react-use-controllable-state" "1.0.1"
+    "@radix-ui/react-use-previous" "1.0.1"
+    "@radix-ui/react-use-size" "1.0.1"
+
 "@radix-ui/react-roving-focus@1.0.4":
   version "1.0.4"
   resolved "https://npmjs-registry.ivyteam.io/@radix-ui/react-roving-focus/-/react-roving-focus-1.0.4.tgz#e90c4a6a5f6ac09d3b8c1f5b5e81aab2f0db1974"
@@ -4278,11 +4297,6 @@
   version "18.11.12"
   resolved "https://npmjs-registry.ivyteam.io/@types/node/-/node-18.11.12.tgz#89e7f8aa8c88abf432f9bd594888144d7dba10aa"
   integrity sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==
-
-"@types/node@^16.7.13":
-  version "16.18.4"
-  resolved "https://npmjs-registry.ivyteam.io/@types/node/-/node-16.18.4.tgz#712ba61b4caf091fc6490301b1888356638c17bd"
-  integrity sha512-9qGjJ5GyShZjUfx2ArBIGM+xExdfLvvaCyQR0t6yRXKPcWCVYF/WemtX/uIU3r7FYECXRXkIiw2Vnhn6y8d+pw==
 
 "@types/node@^18.11.9":
   version "18.17.15"
