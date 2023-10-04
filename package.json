@@ -13,6 +13,7 @@
     "lint": "lerna run lint --",
     "package": "lerna run package",
     "prepare": "lerna run prepare",
+    "test:playwright": "yarn -s --cwd playwright ui-tests",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "watch": "lerna run --parallel watch"
   },
@@ -30,6 +31,7 @@
     "vscode-extensions/process-editor/*",
     "vscode-extensions/engine/*",
     "vscode-extensions/config-editor/*",
-    "vscode-extensions/project-explorer/*"
+    "vscode-extensions/project-explorer/*",
+    "playwright/"
   ]
 }
