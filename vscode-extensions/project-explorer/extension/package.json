@@ -68,6 +68,10 @@
           "command": "ivyProjects.buildAndDeployAll",
           "when": "view == ivyProjects",
           "group": "navigation"
+        },
+        {
+          "command": "ivyProjects.refreshFileSelection",
+          "when": "view == ivyProjects"
         }
       ],
       "view/item/context": [
@@ -105,6 +109,11 @@
           "light": "assets/light/build.svg",
           "dark": "assets/dark/build.svg"
         }
+      },
+      {
+        "command": "ivyProjects.refreshFileSelection",
+        "title": "Refresh File Selection",
+        "category": "Ivy Project Explorer"
       }
     ]
   }
