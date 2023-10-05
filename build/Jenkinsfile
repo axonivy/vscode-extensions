@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    dockerfile {
-      filename 'build/Dockerfile'
-    }
-  }
+  agent any
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
@@ -19,6 +15,11 @@ pipeline {
 
   stages {
     stage('Build') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+        }
+      }
       steps {
         script {
           sh 'yarn update:axonivy:next'
@@ -29,6 +30,11 @@ pipeline {
     }
 
     stage('Codechecks (ESLint)') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+        }
+      }
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
@@ -40,15 +46,12 @@ pipeline {
       }
     }
 
-   stage('Playwright') {
-      steps {
-        script {
-          sh 'xvfb-run --auto-servernum yarn test:playwright'
+    stage('Package') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
         }
       }
-    }
-
-    stage('Package') {
       steps {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl

@@ -15,7 +15,6 @@ const args = [
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
   return await _electron.launch({
-    env: { ...process.env, '': '' },
     executablePath: await downloadAndUnzipVSCode('insiders'),
     args: [...args, workspacePath]
   });
