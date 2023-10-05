@@ -40,6 +40,14 @@ pipeline {
       }
     }
 
+    stage('Playwright Test') {
+      steps {
+        script {
+          sh 'yarn test:playwright'
+        }
+      }
+    }
+
     stage('Package') {
       steps {
         script {
