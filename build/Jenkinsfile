@@ -43,7 +43,7 @@ pipeline {
     stage('Playwright Test') {
       steps {
         script {
-          sh 'yarn test:playwright'
+          sh 'xvfb-run --auto-servernum yarn test:playwright'
         }
       }
     }
