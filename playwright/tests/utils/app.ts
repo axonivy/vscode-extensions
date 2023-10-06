@@ -13,7 +13,8 @@ const args = [
   '--skip-release-notes',
   '--skip-welcome',
   '--no-sandbox',
-  '--disable-gpu-sandbox'
+  '--disable-gpu-sandbox',
+  '--disable-gpu'
 ];
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
