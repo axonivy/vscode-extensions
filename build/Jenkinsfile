@@ -21,7 +21,6 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          sh 'yarn update:axonivy:next'
           sh 'yarn install --ignore-scripts && yarn clean'
           sh 'yarn build:production'
         }

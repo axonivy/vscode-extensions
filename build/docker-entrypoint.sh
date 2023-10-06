@@ -1,6 +1,8 @@
 #!/bin/bash
 
-Xvfb :99 -screen 0 1360x1020x24 -dpi 24 -listen tcp -noreset -ac & exec "$@"
+Xvfb :99 -screen 0 1360x1020x24 +extension RANDR & exec "$@"
+
+# Xvfb $DISPLAY -screen 0 1920x1080x24 &
 
 # echo "Starting Xvfb"
 # Xvfb :99 -ac &
