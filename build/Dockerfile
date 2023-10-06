@@ -49,4 +49,5 @@ RUN dos2unix /docker-entrypoint.sh
 ENV ELECTRON_ENABLE_STACK_DUMPING=true
 ENV ELECTRON_ENABLE_LOGGING=true
 ENV DEBUG=pw:browser*
+ENV DISPLAY :99
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
