@@ -20,6 +20,9 @@ export async function launchElectronApp(workspacePath: string): Promise<Electron
   return await _electron.launch({
     env: { ...process.env, NODE_ENV: 'development' },
     executablePath: await downloadAndUnzipVSCode('insiders'),
-    args: [...args, workspacePath]
+    args: [...args, workspacePath],
+    recordVideo: {
+      dir: './'
+    }
   });
 }
