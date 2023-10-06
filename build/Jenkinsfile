@@ -44,8 +44,7 @@ pipeline {
       steps {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl
-          sh 'export DISPLAY=:99'
-          sh 'Xvfb $DISPLAY -screen 0 1920x1080x24 & yarn test:playwright'
+          sh 'xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" -- yarn test:playwright'
         }
       }
     }
