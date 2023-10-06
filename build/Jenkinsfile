@@ -43,6 +43,7 @@ pipeline {
     stage('Playwright Test') {
       steps {
         script {
+          sh 'yarn download:engine ' + params.engineDownloadUrl
           sh 'yarn test:playwright'
         }
       }
