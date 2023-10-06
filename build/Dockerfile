@@ -1,19 +1,19 @@
-FROM mcr.microsoft.com/playwright:next
+# FROM mcr.microsoft.com/playwright:next
 # FROM node:18-buster
 
-RUN addgroup --gid 2000 build && adduser --uid 2000 --gid 2000 --disabled-password --gecos "" build
+# RUN addgroup --gid 2000 build && adduser --uid 2000 --gid 2000 --disabled-password --gecos "" build
 
-RUN apt-get update && apt-get install -y libx11-dev libxkbfile-dev libsecret-1-dev zip xvfb
+# RUN apt-get update && apt-get install -y libx11-dev libxkbfile-dev libsecret-1-dev zip xvfb
 
 
-COPY docker-entrypoint.sh /opt/bin/
-RUN chmod +x /opt/bin/docker-entrypoint.sh
+# COPY docker-entrypoint.sh /opt/bin/
+# RUN chmod +x /opt/bin/docker-entrypoint.sh
 
-USER build
-ENV DISPLAY :99
-ENV DEBUG=pw:browser*
+# USER build
+# ENV DISPLAY :99
+# ENV DEBUG=pw:browser*
 
-ENTRYPOINT ["/opt/bin/docker-entrypoint.sh"]
+# ENTRYPOINT ["/opt/bin/docker-entrypoint.sh"]
 
 # FROM node:18-buster
 
@@ -24,3 +24,28 @@ ENTRYPOINT ["/opt/bin/docker-entrypoint.sh"]
 # RUN apt-get update && apt-get install -y libsecret-1-dev libxkbfile-dev libkrb5-dev xvfb
 
 # USER node
+
+
+
+
+FROM node:18 AS node
+
+FROM node AS headless
+RUN apt-get update && \
+    apt-get install -y xvfb \
+    libgbm1 \
+    libxss1 \
+    libnss3 \
+    libgtk-3-dev \
+    libasound2-dev \
+    unzip \
+    dos2unix \
+    && rm -rf /var/lib/apt/lists/*
+
+FROM headless AS final
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+RUN dos2unix /docker-entrypoint.sh
+ENV ELECTRON_ENABLE_STACK_DUMPING=true
+ENV ELECTRON_ENABLE_LOGGING=true
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
