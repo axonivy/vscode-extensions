@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/playwright:next
+# FROM mcr.microsoft.com/playwright:next
+FROM node:18-buster
 
 RUN addgroup --gid 1000 build && adduser --uid 1000 --gid 1000 --disabled-password --gecos "" build
 
