@@ -1,8 +1,6 @@
 pipeline {
   agent {
-    dockerfile {
-      label 'windows'
-    }
+    label 'windows'
   }
 
   options {
