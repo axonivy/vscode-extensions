@@ -5,6 +5,8 @@ RUN addgroup --gid 2000 build && adduser --uid 2000 --gid 2000 --disabled-passwo
 
 RUN apt-get update && apt-get install -y libx11-dev libxkbfile-dev libsecret-1-dev zip xvfb
 
+USER build
+
 ENV DISPLAY :99
 
 COPY docker-entrypoint.sh /opt/bin/
