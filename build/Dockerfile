@@ -15,7 +15,6 @@
 
 FROM mcr.microsoft.com/devcontainers/typescript-node:18-bookworm
 
-RUN apt-get update && apt-get install -y libsecret-1-dev libxkbfile-dev libkrb5-dev
+RUN apt-get update && apt-get install -y libsecret-1-dev libxkbfile-dev libkrb5-dev xvfb
 
 USER node
-RUN echo 'export DISPLAY="${DISPLAY:-:1}"' | tee -a ~/.bashrc >> ~/.zshrc
