@@ -13,7 +13,6 @@ const args = [
   '--skip-release-notes',
   '--skip-welcome',
   '--no-sandbox',
-  '--disable-gpu-sandbox',
   '--disable-gpu'
 ];
 
