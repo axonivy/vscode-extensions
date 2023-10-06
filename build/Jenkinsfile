@@ -42,10 +42,10 @@ pipeline {
     stage('Playwright Test') {
       steps {
         script {
-          sh 'yarn download:engine ' + params.engineDownloadUrl
+          // sh 'yarn download:engine ' + params.engineDownloadUrl
           // sh 'xvfb-run --auto-servernum --server-args="-screen 0, 1600x900x24" yarn test:playwright'
           // sh 'xvfb-run -a yarn test:playwright'
-          sh 'yarn test:playwright'
+          sh 'xvfb-run --auto-servernum yarn test:playwright'
         }
       }
     }
