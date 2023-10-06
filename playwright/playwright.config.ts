@@ -7,6 +7,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   use: {
+    screenshot: 'on',
     trace: 'on-first-retry'
   }
 });
