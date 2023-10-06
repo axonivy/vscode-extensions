@@ -48,4 +48,5 @@ RUN chmod +x /docker-entrypoint.sh
 RUN dos2unix /docker-entrypoint.sh
 ENV ELECTRON_ENABLE_STACK_DUMPING=true
 ENV ELECTRON_ENABLE_LOGGING=true
+ENV DEBUG=pw:browser*
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
