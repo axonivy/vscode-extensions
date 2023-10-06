@@ -18,7 +18,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        nodejs(nodeJSInstallationName: '16.15.1') {
+        nodejs(nodeJSInstallationName: '18.17.1') {
           bat 'yarn install --ignore-scripts && yarn clean'
           bat 'yarn build:production'
           bat 'yarn test:playwright'
