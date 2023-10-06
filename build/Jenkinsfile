@@ -44,7 +44,7 @@ pipeline {
       steps {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl
-          sh 'xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" -- yarn test:playwright'
+          sh 'xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" -- npx playwright'
         }
       }
     }
@@ -57,12 +57,6 @@ pipeline {
           archiveArtifacts 'vscode-extensions/**/*.vsix'
         }
       }
-    }
-  }
-
-  post {
-    always {
-      cleanWs()
     }
   }
 } 
