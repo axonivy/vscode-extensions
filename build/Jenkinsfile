@@ -44,7 +44,7 @@ pipeline {
       steps {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl
-          sh 'xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" -- npx playwright test'
+          sh 'xvfb-run -a yarn test:playwright'
         }
       }
     }
