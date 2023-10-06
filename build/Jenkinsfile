@@ -44,7 +44,8 @@ pipeline {
       steps {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl
-          sh 'yarn test:playwright'
+          sh 'export DISPLAY=:99'
+          sh 'Xvfb $DISPLAY -screen 0 1920x1080x24 & yarn test:playwright'
         }
       }
     }
