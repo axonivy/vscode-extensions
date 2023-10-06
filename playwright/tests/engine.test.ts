@@ -25,6 +25,7 @@ test.describe('Engine Extension', () => {
   test('ensure that embedded engine is not started due to settings', async () => {
     const app = await launchElectronApp(noEngineWorkspacePath);
     const window = await app.firstWindow();
+    await window.screenshot({ path: 'shot.png' });
     await executeCloseAllEditorGroupsCommand(window);
     const outputview = new OutputView(window);
     await expect(outputview.viewLocator).toBeHidden();

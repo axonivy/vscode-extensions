@@ -8,6 +8,6 @@ export default defineConfig({
   reporter: 'html',
   use: {
     screenshot: 'on',
-    trace: 'on-first-retry'
+    trace: 'retain-on-failure'
   }
 });
