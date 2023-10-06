@@ -11,4 +11,4 @@
 
 FROM node:18-buster
 
-RUN apt-get update && apt-get install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
+RUN apt-get update && apt-get install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb libgconf-2-4
