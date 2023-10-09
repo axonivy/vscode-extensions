@@ -9,7 +9,8 @@ const args = [
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/engine/extension'),
   '--new-window',
   '--skip-release-notes',
-  '--skip-welcome'
+  '--skip-welcome',
+  '--disable-gpu'
 ];
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
