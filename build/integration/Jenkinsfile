@@ -33,6 +33,7 @@ pipeline {
       agent {
         dockerfile {
           dir 'build/integration/'
+          reuseNode true
         }
       }
       steps {
