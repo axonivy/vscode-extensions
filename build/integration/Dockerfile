@@ -1,7 +1,7 @@
 FROM node:18.17.1-bookworm as build-stage
 
 WORKDIR /home/vscode
-COPY ../../vscode-extensions .
+COPY ../../../. .
 
 RUN yarn install --ignore-scripts && yarn clean
 RUN yarn build:production
