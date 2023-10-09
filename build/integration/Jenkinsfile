@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    dockerfile {
-      filename 'build/Dockerfile'
-    }
-  }
+  agent any
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
@@ -19,6 +15,13 @@ pipeline {
 
   stages {
     stage('Build') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+          reuseNode true
+        }
+      }
+
       steps {
         script {
           sh 'yarn install --ignore-scripts && yarn clean'
