@@ -1,16 +1,4 @@
-FROM node:18.17.1-bookworm as build-stage
-
-WORKDIR /home/vscode
-COPY ../../../vscode-extensions .
-
-RUN yarn install --ignore-scripts && yarn clean
-RUN yarn build:production
-RUN yarn download:engine
-
 FROM mcr.microsoft.com/playwright:focal
-
-WORKDIR /home/vscode
-COPY --from=build-stage /home/vscode /home/vscode
 
 ENV DISPLAY :99
 

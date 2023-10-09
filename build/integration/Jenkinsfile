@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    dockerfile {
-      dir 'build/integration'
-    }
-  }
+  agent any
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
@@ -18,7 +14,27 @@ pipeline {
   }
 
   stages {
+    stage('Build') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+        }
+      }
+      steps {
+        script {
+          sh 'yarn install --ignore-scripts && yarn clean'
+          sh 'yarn build:production'
+          sh 'yarn download:engine ' + params.engineDownloadUrl
+        }
+      }
+    }
+
     stage('Playwright Tests') {
+      agent {
+        dockerfile {
+          dir 'build/integration/'
+        }
+      }
       steps {
         script {
           sh 'yarn test:playwright'
