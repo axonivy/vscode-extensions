@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'windows'
+    label 'bigSur'
   }
 
   options {
@@ -19,9 +19,9 @@ pipeline {
     stage('Build') {
       steps {
         nodejs(nodeJSInstallationName: '18.17.1') {
-          bat 'yarn install --ignore-scripts && yarn clean'
-          bat 'yarn build:production'
-          bat 'yarn test:playwright'
+          sh 'yarn install --ignore-scripts && yarn clean'
+          sh 'yarn build:production'
+          sh 'yarn test:playwright'
         }
       }
     }
