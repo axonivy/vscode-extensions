@@ -12,7 +12,7 @@ export class OutputView extends View {
   }
 
   async checkIfEngineStarted(): Promise<void> {
-    const expectedText = "Type 'shutdown' and confirm with ENTER to stop the running engine instance";
+    const expectedText = "Type 'shutdown' and confirm";
     await expect(async () => {
       await expect(this.viewLocator).toContainText(expectedText);
     }).toPass();
