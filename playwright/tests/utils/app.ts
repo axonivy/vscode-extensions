@@ -1,5 +1,5 @@
 import { ElectronApplication, _electron } from '@playwright/test';
-import { downloadAndUnzipVSCode } from '@vscode/test-electron';
+import { download } from '@vscode/test-electron';
 import * as path from 'path';
 
 const args = [
@@ -17,8 +17,7 @@ const args = [
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
   return await _electron.launch({
-    env: { ...process.env, NODE_ENV: 'development' },
-    executablePath: await downloadAndUnzipVSCode('insiders'),
+    executablePath: await download({ version: 'insiders' }),
     args: [...args, workspacePath],
     recordVideo: {
       dir: './'
