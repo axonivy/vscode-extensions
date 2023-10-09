@@ -38,9 +38,10 @@ pipeline {
           reuseNode true
         }
       }
+
       steps {
         script {
-          sh 'yarn test:playwright'
+          sh 'xvfb-run --auto-servernum yarn test:playwright'
         }
       }
     }
