@@ -5,7 +5,6 @@ import * as path from 'path';
 const args = [
   '--disable-updates',
   '--disable-workspace-trust',
-  '--disable-extensions',
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/project-explorer/extension'),
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/engine/extension'),
   '--new-window',
