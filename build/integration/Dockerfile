@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.33.0-jammy
+FROM mcr.microsoft.com/playwright:next
 
 RUN apt-get update && apt-get install -y wget apt-transport-https && \
     wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /usr/share/keyrings/adoptium.asc && \
