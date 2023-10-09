@@ -41,7 +41,7 @@ pipeline {
 
       steps {
         script {
-          sh 'xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" -- yarn test:playwright'
+          sh 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" -- yarn test:playwright'
         }
       }
     }
