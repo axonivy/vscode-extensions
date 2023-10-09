@@ -1,6 +1,8 @@
 pipeline {
   agent {
-    label 'windows'
+    dockerfile {
+      filename 'build/Dockerfile'
+    }
   }
 
   options {
@@ -18,11 +20,40 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        nodejs(nodeJSInstallationName: '18.17.1') {
-          bat 'yarn'
-          bat 'yarn test:playwright'
+        script {
+          sh 'yarn update:axonivy:next'
+          sh 'yarn install --ignore-scripts && yarn clean'
+          sh 'yarn build:production'
         }
       }
+    }
+
+    stage('Codechecks (ESLint)') {
+      steps {
+        script {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+            timeout(30) {
+              sh 'yarn lint -o eslint.xml -f checkstyle'
+            }
+          }
+        }
+      }
+    }
+
+    stage('Package') {
+      steps {
+        script {
+          sh 'yarn download:engine ' + params.engineDownloadUrl
+          sh 'yarn package'
+          archiveArtifacts 'vscode-extensions/**/*.vsix'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
     }
   }
 } 

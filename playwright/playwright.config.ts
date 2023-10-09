@@ -5,7 +5,6 @@ export default defineConfig({
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
-  reporter: 'html',
   use: {
     screenshot: 'on',
     trace: 'retain-on-failure'

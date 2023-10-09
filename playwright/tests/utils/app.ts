@@ -8,15 +8,17 @@ const args = [
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/project-explorer/extension'),
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/engine/extension'),
   '--new-window',
-  '--profile-temp',
   '--skip-release-notes',
-  '--skip-welcome',
-  '--no-sandbox',
-  '--disable-gpu'
+  '--skip-welcome'
 ];
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
+  console.log(process.env.ELECTRON_ENV);
+  console.log(process.env.DISPLAY);
   return await _electron.launch({
+    env: {
+      DISPLAY: process.env.DISPLAY!
+    },
     executablePath: await downloadAndUnzipVSCode('insiders'),
     args: [...args, workspacePath],
     recordVideo: {
