@@ -10,7 +10,7 @@ const args = [
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',
-  '--disable-gpu'
+  '--no-sandbox'
 ];
 
 export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
