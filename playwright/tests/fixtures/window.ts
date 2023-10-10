@@ -4,7 +4,6 @@ import { launchElectronApp } from '../utils/app';
 import { executeCloseAllEditorGroupsCommand } from '../utils/command';
 
 export const test = base.extend<{ window: Page }>({
-  // eslint-disable-next-line no-empty-pattern
   window: async ({}, use, testInfo) => {
     const app = await launchElectronApp(defaultWorkspacePath, testInfo.title);
     const window = await app.firstWindow();

@@ -15,14 +15,16 @@ test.describe('Engine Extension', () => {
     await outputview.checkIfEngineStarted();
   });
 
-  test('check default engine settings', async ({ window }) => {
+  test('check default engine settings', async ({}, testInfo) => {
+    const app = await launchElectronApp(noProjectWorkspacePath, testInfo.title);
+    const window = await app.firstWindow();
     const settingsView = new SettingsView(window);
     await settingsView.openDefaultSettings();
     await settingsView.containsSetting('"runEmbeddedEngine": true');
     await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
+    app.close();
   });
 
-  // eslint-disable-next-line no-empty-pattern
   test('ensure that embedded engine is not started due to settings', async ({}, testInfo) => {
     const app = await launchElectronApp(noEngineWorkspacePath, testInfo.title);
     const window = await app.firstWindow();
@@ -36,7 +38,6 @@ test.describe('Engine Extension', () => {
     app.close();
   });
 
-  // eslint-disable-next-line no-empty-pattern
   test('ensure that embedded engine is not started due to missing project file', async ({}, testInfo) => {
     const app = await launchElectronApp(noProjectWorkspacePath, testInfo.title);
     const window = await app.firstWindow();

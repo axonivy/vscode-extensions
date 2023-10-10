@@ -7,6 +7,7 @@ module.exports = {
     project: 'tsconfig.json'
   },
   rules: {
-    'import/no-unresolved': 'off'
+    'import/no-unresolved': 'off',
+    'no-empty-pattern': 'off'
   }
 };
