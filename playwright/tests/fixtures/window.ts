@@ -1,15 +1,25 @@
-import { Page, test as base, expect } from '@playwright/test';
+import { Page, test as base, ElectronApplication } from '@playwright/test';
 import { defaultWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
 import { executeCloseAllEditorGroupsCommand } from '../utils/command';
 
-export const test = base.extend<{ window: Page }>({
+let electronApp: ElectronApplication;
+
+export const test = base.extend<{ window: Page; windowFor(workspace: string): Promise<Page> }>({
   window: async ({}, use, testInfo) => {
-    const app = await launchElectronApp(defaultWorkspacePath, testInfo.title);
-    const window = await app.firstWindow();
-    expect(window).toBeDefined();
-    await executeCloseAllEditorGroupsCommand(window);
+    const window = await windowFor(defaultWorkspacePath, testInfo.title);
     await use(window);
-    await app.close();
+    await electronApp.close();
+  },
+  windowFor: async ({}, use, testInfo) => {
+    await use(workspace => windowFor(workspace, testInfo.title));
+    await electronApp.close();
   }
 });
+
+async function windowFor(workspace: string, testTitle: string): Promise<Page> {
+  electronApp = await launchElectronApp(workspace, testTitle);
+  const window = await electronApp.firstWindow();
+  await executeCloseAllEditorGroupsCommand(window);
+  return window;
+}
