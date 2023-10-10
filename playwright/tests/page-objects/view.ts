@@ -8,7 +8,7 @@ export interface ViewData {
 }
 
 export class View extends PageObject {
-  constructor(private data: ViewData, page: Page) {
+  constructor(private readonly data: ViewData, page: Page) {
     super(page);
   }
 
