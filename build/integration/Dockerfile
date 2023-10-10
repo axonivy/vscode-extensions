@@ -8,9 +8,3 @@ RUN apt-get update && apt-get install -y wget apt-transport-https && \
     apt-get clean
 
 ENV CI=true
-ENV DISPLAY :99
-
-COPY docker-entrypoint.sh /opt/bin/
-RUN chmod +x /opt/bin/docker-entrypoint.sh
-
-ENTRYPOINT ["/opt/bin/docker-entrypoint.sh"]
