@@ -22,11 +22,11 @@ test.describe('Engine Extension', () => {
     await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
   });
 
-  test('ensure that embedded engine is not started due to settings', async () => {
-    const app = await launchElectronApp(noEngineWorkspacePath);
+  // eslint-disable-next-line no-empty-pattern
+  test('ensure that embedded engine is not started due to settings', async ({}, testInfo) => {
+    const app = await launchElectronApp(noEngineWorkspacePath, testInfo.title);
     const window = await app.firstWindow();
     await executeCloseAllEditorGroupsCommand(window);
-    await window.screenshot({ path: 'shot.png' });
     const outputview = new OutputView(window);
     await expect(outputview.viewLocator).toBeHidden();
     const settingsView = new SettingsView(window);
@@ -36,8 +36,9 @@ test.describe('Engine Extension', () => {
     app.close();
   });
 
-  test('ensure that embedded engine is not started due to missing project file', async () => {
-    const app = await launchElectronApp(noProjectWorkspacePath);
+  // eslint-disable-next-line no-empty-pattern
+  test('ensure that embedded engine is not started due to missing project file', async ({}, testInfo) => {
+    const app = await launchElectronApp(noProjectWorkspacePath, testInfo.title);
     const window = await app.firstWindow();
     await executeCloseAllEditorGroupsCommand(window);
     const outputview = new OutputView(window);

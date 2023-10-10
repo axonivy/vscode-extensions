@@ -2,11 +2,9 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
-  retries: process.env.CI ? 2 : 0,
   workers: 1,
-  use: {
-    screenshot: 'on',
-    trace: 'retain-on-failure'
-  }
+  retries: 0,
+  timeout: 60 * 1000,
+  expect: { timeout: 10 * 1000 },
+  reporter: process.env.CI ? [['junit', { outputFile: 'report.xml' }]] : 'html'
 });

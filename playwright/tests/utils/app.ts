@@ -13,13 +13,13 @@ const args = [
   '--no-sandbox'
 ];
 
-export async function launchElectronApp(workspacePath: string): Promise<ElectronApplication> {
+export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
   return await _electron.launch({
     env: { ...process.env, NODE_ENV: 'development' },
     executablePath: await downloadAndUnzipVSCode('insiders'),
     args: [...args, workspacePath],
     recordVideo: {
-      dir: './'
+      dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))
     }
   });
 }

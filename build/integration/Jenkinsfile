@@ -34,14 +34,20 @@ pipeline {
     stage('Playwright Tests') {
       agent {
         dockerfile {
-          dir 'build/integration/'
+          filename 'build/integration/Dockerfile'
           reuseNode true
         }
       }
 
       steps {
         script {
-          sh 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" -- yarn test:playwright'
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" -- yarn test:playwright'
+          }
+          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+          }
         }
       }
     }
