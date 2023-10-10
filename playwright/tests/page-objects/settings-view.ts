@@ -27,8 +27,8 @@ export class SettingsView extends View {
   async containsSetting(expectedSetting: string) {
     await expect(this.viewLocator).toBeVisible();
     await this.viewLocator.click();
-    await this.page.keyboard.press(getCtrlOrMeta() + '+ArrowDown');
-    await this.page.keyboard.press(getCtrlOrMeta() + '+End');
+    await this.page.keyboard.press(getCtrlOrMeta() + '+KeyF');
+    await this.page.keyboard.insertText(expectedSetting);
     await expect(this.viewLocator).toContainText(expectedSetting);
   }
 }
