@@ -10,8 +10,7 @@ const args = [
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',
-  '--no-sandbox',
-  '--window-size=1920,1080'
+  '--no-sandbox'
 ];
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
