@@ -42,6 +42,7 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'yarn test:playwright:download:vscode'
             sh 'xvfb-run --auto-servernum yarn test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true

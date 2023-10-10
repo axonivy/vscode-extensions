@@ -3,9 +3,11 @@
   "name": "@axonivy/vscode-extensions-playwright",
   "version": "11.2.0",
   "scripts": {
-    "ui-tests": "playwright test"
+    "ui-tests": "playwright test",
+    "download:vscode": "ts-node tests/utils/download-vscode.ts"
   },
   "devDependencies": {
+    "ts-node": "^10.0.0",
     "@playwright/test": "^1.38.1",
     "@vscode/test-electron": "^2.3.4"
   }
