@@ -17,7 +17,7 @@ export const test = base.extend<{ window: Page; windowFor(workspace: string): Pr
   }
 });
 
-async function windowFor(workspace: string, testTitle: string): Promise<Page> {
+export async function windowFor(workspace: string, testTitle: string): Promise<Page> {
   electronApp = await launchElectronApp(workspace, testTitle);
   const window = await electronApp.firstWindow();
   await executeCloseAllEditorGroupsCommand(window);

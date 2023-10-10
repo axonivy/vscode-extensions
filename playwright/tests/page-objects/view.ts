@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { ElementHandle, Locator, Page, expect } from '@playwright/test';
 import { PageObject } from './page-object';
 
 export interface ViewData {
@@ -30,5 +30,22 @@ export class View extends PageObject {
 
   async isActive(): Promise<void> {
     await expect(this.tabLocator).toHaveClass(/checked/);
+  }
+
+  protected tabElement(): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
+    return this.page.$(this.data.tabSelector);
+  }
+
+  protected async elementContainsClass(
+    element: ElementHandle<SVGElement | HTMLElement> | null | undefined,
+    cssClass: string
+  ): Promise<boolean> {
+    if (element) {
+      const classValue = await element.getAttribute('class');
+      if (classValue) {
+        return classValue?.split(' ').includes(cssClass);
+      }
+    }
+    return false;
   }
 }
