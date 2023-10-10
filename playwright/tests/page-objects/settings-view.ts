@@ -28,6 +28,7 @@ export class SettingsView extends View {
     await expect(this.viewLocator).toBeVisible();
     await this.viewLocator.click();
     await this.page.keyboard.press(getCtrlOrMeta() + '+ArrowDown');
+    await this.page.keyboard.press(getCtrlOrMeta() + '+End');
     await expect(this.viewLocator).toContainText(expectedSetting);
   }
 }
