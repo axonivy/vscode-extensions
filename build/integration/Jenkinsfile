@@ -42,7 +42,7 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" yarn test:playwright'
+            sh 'xvfb-run --auto-servernum --server-args="-screen 0, 2560x1440x24" yarn test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
