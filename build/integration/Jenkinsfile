@@ -1,0 +1,61 @@
+pipeline {
+  agent any
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  parameters {
+    string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip', description: 'engine that will be packaged')
+  }
+
+  stages {
+    stage('Build') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+          reuseNode true
+        }
+      }
+
+      steps {
+        script {
+          sh 'yarn install --ignore-scripts && yarn clean'
+          sh 'yarn build:production'
+          sh 'yarn download:engine ' + params.engineDownloadUrl
+        }
+      }
+    }
+
+    stage('Playwright Tests') {
+      agent {
+        dockerfile {
+          filename 'build/integration/Dockerfile'
+          reuseNode true
+        }
+      }
+
+      steps {
+        script {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'xvfb-run --auto-servernum yarn test:playwright'
+          }
+          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+} 
