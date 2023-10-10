@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.axonivy.com/process/11.2.1/process.json",
+  "id": "15254DCE818AD7A3",
+  "config": {
+    "data": "workflow.humantask.ProcurementRequest"
+  },
+  "elements": [
+    {
+      "id": "f0",
+      "type": "RequestStart",
+      "name": "start.ivp",
+      "config": {
+        "signature": "start",
+        "request": {
+          "name": "2.1: <%=ivy.cms.co(\"/ProcessDescriptions/procurementRequest\")%> (<%=ivy.cms.co(\"/ProcessDescriptions/userTaskExample\")%>)",
+          "description": "<%=ivy.cms.co(\"/ProcessDescriptions/procurementRequestUserTaskDescription\")%>",
+          "category": "human",
+          "customFields": [{ "name": "cssIcon", "value": "fa fa-female" }]
+        },
+        "permission": {
+          "role": "Employee"
+        },
+        "task": {
+          "category": "Input/Procurement"
+        },
+        "case": {
+          "category": "Procurement/Request",
+          "attachToBusinessCase": false
+        }
+      },
+      "tags": ["demo"],
+      "visual": {
+        "at": { "x": 96, "y": 192 },
+        "labelOffset": { "x": 12, "y": 37 }
+      },
+      "connect": [{ "id": "f2", "to": "S10" }]
+    },
+    {
+      "id": "S10",
+      "type": "EmbeddedProcess",
+      "name": "Sub 1",
+      "elements": [
+        {
+          "id": "S10-f7",
+          "type": "UserTask",
+          "name": "Accept Request",
+          "config": {
+            "dialog": "workflow.humantask.AcceptRequest:start(workflow.humantask.ProcurementRequest)",
+            "call": {
+              "map": {
+                "param.procurementRequest": "in"
+              }
+            },
+            "task": {
+              "name": "<%=ivy.cms.co(\"/TaskDescriptions/acceptRequest\")%>: <%=in.amount%> <%=ivy.cms.co(\"/Dialogs/procurementRequest/piecesOf\")%> '<%=in.description%>' <%=ivy.cms.co(\"/Dialogs/procurementRequest/forTotal\")%> <%=in.totalPrice%><%=ivy.cms.co(\"/TaskDescriptions/currencySymbol\")%>",
+              "category": "Accept/Procurement",
+              "responsible": {
+                "activator": "Executive Manager"
+              }
+            },
+            "output": {
+              "map": {
+                "out": "in",
+                "out.accepted": "result.accepted",
+                "out.activityLog": "in.activityLog.add(result.logEntry)"
+              }
+            }
+          },
+          "visual": {
+            "at": { "x": 200, "y": 64 }
+          },
+          "connect": [{ "id": "S10-f1", "to": "S10-g1", "condition": "ivp==\"TaskA.ivp\"" }]
+        },
+        {
+          "id": "S10-g0",
+          "type": "EmbeddedStart",
+          "name": "in 1",
+          "visual": {
+            "at": { "x": 64, "y": 64 }
+          },
+          "parentConnector": "f2",
+          "connect": [{ "id": "S10-f0", "to": "S10-f7", "var": "in1" }]
+        },
+        {
+          "id": "S10-g1",
+          "type": "EmbeddedEnd",
+          "name": "out 1",
+          "visual": {
+            "at": { "x": 336, "y": 64 }
+          },
+          "parentConnector": "f3"
+        }
+      ],
+      "visual": {
+        "at": { "x": 224, "y": 192 }
+      },
+      "connect": [{ "id": "f3", "to": "f1" }]
+    },
+    {
+      "id": "f1",
+      "type": "TaskEnd",
+      "visual": {
+        "at": { "x": 352, "y": 192 }
+      }
+    }
+  ],
+  "layout": {
+    "lanes": [
+      {
+        "name": "Procurement Request",
+        "offset": 128,
+        "size": 128,
+        "lanes": [
+          {
+            "name": "Employee",
+            "size": 128
+          }
+        ]
+      }
+    ]
+  }
+}

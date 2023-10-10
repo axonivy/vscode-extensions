@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "@axonivy/vscode-extensions-playwright",
+  "version": "12.2.0",
+  "scripts": {
+    "ui-tests": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.38.1",
+    "@vscode/test-electron": "^2.3.4"
+  }
+}
