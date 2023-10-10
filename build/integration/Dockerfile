@@ -12,3 +12,5 @@ ENV DISPLAY :99
 
 COPY docker-entrypoint.sh /opt/bin/
 RUN chmod +x /opt/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/opt/bin/docker-entrypoint.sh"]

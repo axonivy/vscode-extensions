@@ -34,7 +34,7 @@ pipeline {
     stage('Playwright Tests') {
       agent {
         dockerfile {
-          filename 'build/integration/Dockerfile'
+          dir 'build/integration/'
           reuseNode true
         }
       }
