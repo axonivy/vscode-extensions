@@ -1,10 +1,12 @@
 import { expect, test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
-import { defaultWorkspacePath, userDialogPID } from './workspaces/workspace';
+import { defaultWorkspacePath } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { getCtrlOrMeta } from './utils/keyboard';
 import { OutputView } from './page-objects/output-view';
+
+const userDialogPID = '15254DCE818AD7A2-f3';
 
 test.describe('Process Editor', () => {
   let processEditor: ProcessEditor;
