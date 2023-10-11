@@ -1,7 +1,6 @@
 import { FrameLocator, Locator, Page } from 'playwright-core';
 import { View, ViewData } from './view';
 import { getCtrlOrMeta } from '../utils/keyboard';
-import { OutputView } from './output-view';
 import { expect } from 'playwright/test';
 
 export class ProcessEditor extends View {
@@ -14,11 +13,9 @@ export class ProcessEditor extends View {
   }
 
   async openProcess(): Promise<void> {
-    const outputView = new OutputView(this.page);
-    await outputView.checkIfEngineStarted();
     await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
     await this.page.keyboard.insertText(this.filePath);
-    await this.page.keyboard.press('Enter');
+    await this.page.locator(`div.quick-input-list-entry.has-actions:has-text("${this.filePath}")`).click();
   }
 
   override async isViewVisible(): Promise<void> {
@@ -35,14 +32,7 @@ export class ProcessEditor extends View {
     return this.viewFrameLoactor().locator(`[id$="_${pid}"]`);
   }
 
-  async isDirty(): Promise<boolean> {
-    return this.elementContainsClass(await this.tabElement(), 'dirty');
-  }
-
-  async undoChanges(): Promise<void> {
-    while (await this.isDirty()) {
-      await this.tabLocator.click();
-      await this.page.keyboard.press(getCtrlOrMeta() + '+KeyY');
-    }
+  async typeText(text: string): Promise<void> {
+    await this.page.keyboard.type(text);
   }
 }

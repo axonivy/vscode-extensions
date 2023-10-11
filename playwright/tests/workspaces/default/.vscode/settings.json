@@ -1,5 +1,4 @@
 {
     "runEmbeddedEngine": true,
-    "window.zoomLevel": -1,
-    "files.hotExit": "off"
+    "window.zoomLevel": -1
 }

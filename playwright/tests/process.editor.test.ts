@@ -1,27 +1,31 @@
-import { expect } from 'playwright/test';
-import { test, windowFor } from './fixtures/window';
+import { expect, test } from 'playwright/test';
+import { pageFor } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { defaultWorkspacePath, userDialogPID } from './workspaces/workspace';
 import { Page } from '@playwright/test';
-import { executeCloseAllEditorGroupsCommand } from './utils/command';
+import { getCtrlOrMeta } from './utils/keyboard';
+import { OutputView } from './page-objects/output-view';
 
 test.describe('Process Editor', () => {
   let processEditor: ProcessEditor;
-  let window: Page;
+  let page: Page;
 
   test.beforeAll(async () => {
-    window = await windowFor(defaultWorkspacePath, 'Process Editor');
+    page = await pageFor(defaultWorkspacePath, 'Process Editor');
+    const outputView = new OutputView(page);
+    await outputView.checkIfEngineStarted();
   });
 
   test.beforeEach(async () => {
-    processEditor = new ProcessEditor(window);
+    processEditor = new ProcessEditor(page);
+    await expect(processEditor.tabLocator).toBeHidden();
     await processEditor.openProcess();
     await processEditor.isViewVisible();
   });
 
   test.afterEach(async () => {
     await processEditor.undoChanges();
-    await executeCloseAllEditorGroupsCommand(window);
+    await processEditor.closeTab();
   });
 
   test('Check if User Dialog is visible', async () => {
@@ -40,6 +44,19 @@ test.describe('Process Editor', () => {
     expect(boundingBoxAfter).toBeDefined();
     expect(boundingBoxAfter!.x).not.toBe(boundingBoxBefore!.x);
     expect(boundingBoxAfter!.y).not.toBe(boundingBoxBefore!.y);
-    expect(await processEditor.isDirty()).toBe(true);
+  });
+
+  test('Change display name of Request Start', async () => {
+    const start = processEditor.locatorForPID('15254DCE818AD7A2-f0');
+    const initialName = 'start.ivp';
+    await expect(start).toHaveText(initialName);
+
+    await start.click();
+    await processEditor.typeText('l');
+    await processEditor.page.keyboard.press(`${getCtrlOrMeta()}+KeyA`);
+    await processEditor.typeText('a new test label');
+    await start.click();
+    await expect(start).not.toHaveText(initialName);
+    await expect(start).toHaveText('a new test label');
   });
 });

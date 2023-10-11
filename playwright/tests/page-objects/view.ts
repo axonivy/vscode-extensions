@@ -1,5 +1,6 @@
 import { ElementHandle, Locator, Page, expect } from '@playwright/test';
 import { PageObject } from './page-object';
+import { getCtrlOrMeta } from '../utils/keyboard';
 
 export interface ViewData {
   tabSelector: string;
@@ -47,5 +48,22 @@ export class View extends PageObject {
       }
     }
     return false;
+  }
+
+  async isDirty(): Promise<boolean> {
+    return this.elementContainsClass(await this.tabElement(), 'dirty');
+  }
+
+  async undoChanges(): Promise<void> {
+    while (await this.isDirty()) {
+      await this.tabLocator.click();
+      await this.page.keyboard.press(getCtrlOrMeta() + '+KeyY');
+    }
+  }
+
+  async closeTab(): Promise<void> {
+    await this.tabLocator.click();
+    await this.tabLocator.locator('.codicon-close').click();
+    await expect(this.tabLocator).toBeHidden();
   }
 }
