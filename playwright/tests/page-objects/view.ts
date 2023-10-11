@@ -1,6 +1,5 @@
 import { ElementHandle, Locator, Page, expect } from '@playwright/test';
 import { PageObject } from './page-object';
-import { getCtrlOrMeta } from '../utils/keyboard';
 
 export interface ViewData {
   tabSelector: string;
@@ -50,15 +49,20 @@ export class View extends PageObject {
     return false;
   }
 
-  async isDirty(): Promise<boolean> {
-    return this.elementContainsClass(await this.tabElement(), 'dirty');
+  async isDirty(): Promise<void> {
+    await expect(this.tabLocator).toHaveClass(/dirty/);
+  }
+
+  async isNotDirty(): Promise<void> {
+    await expect(this.tabLocator).not.toHaveClass(/dirty/);
   }
 
   async undoChanges(): Promise<void> {
-    while (await this.isDirty()) {
+    while (await this.elementContainsClass(await this.tabElement(), 'dirty')) {
       await this.tabLocator.click();
-      await this.page.keyboard.press(getCtrlOrMeta() + '+KeyY');
+      await this.executeCommand('Undo');
     }
+    await this.isNotDirty();
   }
 
   async closeTab(): Promise<void> {
