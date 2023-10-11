@@ -31,4 +31,18 @@ export class View extends PageObject {
   async isActive(): Promise<void> {
     await expect(this.tabLocator).toHaveClass(/checked/);
   }
+
+  async isDirty(): Promise<void> {
+    await expect(this.tabLocator).toHaveClass(/dirty/);
+  }
+
+  async isNotDirty(): Promise<void> {
+    await expect(this.tabLocator).not.toHaveClass(/dirty/);
+  }
+
+  async revertAndCloseEditor(): Promise<void> {
+    await this.tabLocator.click();
+    await this.executeCommand('View: Revert and Close Editor');
+    await expect(this.tabLocator).toBeHidden();
+  }
 }

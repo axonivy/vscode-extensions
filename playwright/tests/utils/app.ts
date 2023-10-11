@@ -7,6 +7,8 @@ const args = [
   '--disable-workspace-trust',
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/project-explorer/extension'),
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/engine/extension'),
+  '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/process-editor/extension'),
+  '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/inscription/extension'),
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',
