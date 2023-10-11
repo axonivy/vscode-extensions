@@ -32,23 +32,6 @@ export class View extends PageObject {
     await expect(this.tabLocator).toHaveClass(/checked/);
   }
 
-  protected tabElement(): Promise<ElementHandle<SVGElement | HTMLElement> | null> {
-    return this.page.$(this.data.tabSelector);
-  }
-
-  protected async elementContainsClass(
-    element: ElementHandle<SVGElement | HTMLElement> | null | undefined,
-    cssClass: string
-  ): Promise<boolean> {
-    if (element) {
-      const classValue = await element.getAttribute('class');
-      if (classValue) {
-        return classValue?.split(' ').includes(cssClass);
-      }
-    }
-    return false;
-  }
-
   async isDirty(): Promise<void> {
     await expect(this.tabLocator).toHaveClass(/dirty/);
   }
@@ -57,17 +40,9 @@ export class View extends PageObject {
     await expect(this.tabLocator).not.toHaveClass(/dirty/);
   }
 
-  async undoChanges(): Promise<void> {
-    while (await this.elementContainsClass(await this.tabElement(), 'dirty')) {
-      await this.tabLocator.click();
-      await this.executeCommand('Undo');
-    }
-    await this.isNotDirty();
-  }
-
-  async closeTab(): Promise<void> {
+  async revertAndCloseEditor(): Promise<void> {
     await this.tabLocator.click();
-    await this.tabLocator.locator('.codicon-close').click();
+    await this.executeCommand('View: Revert and Close Editor');
     await expect(this.tabLocator).toBeHidden();
   }
 }

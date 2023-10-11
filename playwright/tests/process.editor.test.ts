@@ -18,14 +18,12 @@ test.describe('Process Editor', () => {
 
   test.beforeEach(async () => {
     processEditor = new ProcessEditor(page);
-    await expect(processEditor.tabLocator).toBeHidden();
     await processEditor.openProcess();
     await processEditor.isViewVisible();
   });
 
   test.afterEach(async () => {
-    await processEditor.undoChanges();
-    await processEditor.closeTab();
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Check if User Dialog is visible', async () => {
