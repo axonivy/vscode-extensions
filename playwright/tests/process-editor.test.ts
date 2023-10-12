@@ -29,13 +29,13 @@ test.describe('Process Editor', () => {
   });
 
   test('Check if User Dialog is visible', async () => {
-    const userDialog = await processEditor.locatorForPID(userDialogPID);
+    const userDialog = processEditor.locatorForPID(userDialogPID);
     await expect(userDialog).toBeVisible();
     await processEditor.isNotDirty();
   });
 
   test('Change User Dialog position', async () => {
-    const userDialog = await processEditor.locatorForPID(userDialogPID);
+    const userDialog = processEditor.locatorForPID(userDialogPID);
     const boundingBoxBefore = await userDialog.boundingBox();
     expect(boundingBoxBefore).toBeDefined();
     await userDialog.dragTo(userDialog, { force: true, targetPosition: { x: 1, y: 1 } });
@@ -48,7 +48,7 @@ test.describe('Process Editor', () => {
   });
 
   test('Change display name of Request Start', async () => {
-    const start = await processEditor.locatorForPID('15254DCE818AD7A2-f0');
+    const start = processEditor.locatorForPID('15254DCE818AD7A2-f0');
     const initialName = 'start.ivp';
     await expect(start).toHaveText(initialName);
 

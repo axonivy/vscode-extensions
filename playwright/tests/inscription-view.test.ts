@@ -30,21 +30,22 @@ test.describe('Inscription View', () => {
   });
 
   test('Check Process Editor Connector', async () => {
-    let element = await processEditor.locatorForPID(userDialogPID);
+    let element = processEditor.locatorForPID(userDialogPID);
     await expect(element).toBeVisible();
     await element.dblclick();
     await inscriptionView.isTabVisible();
     await inscriptionView.isViewVisible();
     let header = inscriptionView.header();
     await expect(header).toHaveText('User Dialog - Enter Request');
-    element = await processEditor.locatorForPID('15254DCE818AD7A2-f9');
+
+    element = processEditor.locatorForPID('15254DCE818AD7A2-f9');
     await element.click();
     header = inscriptionView.header();
     await expect(header).toHaveText('E-Mail - Notify Requester');
   });
 
   test('Change User Dialog display name', async () => {
-    const element = await processEditor.locatorForPID(userDialogPID);
+    const element = processEditor.locatorForPID(userDialogPID);
     await element.dblclick();
     const nameAccordion = inscriptionView.accordionFor('Name');
     await expect(nameAccordion).toBeVisible();
@@ -64,7 +65,7 @@ test.describe('Inscription View', () => {
   });
 
   test('Monaco Editor completion', async () => {
-    const element = await processEditor.locatorForPID(userDialogPID);
+    const element = processEditor.locatorForPID(userDialogPID);
     await element.dblclick();
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();

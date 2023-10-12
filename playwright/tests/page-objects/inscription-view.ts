@@ -1,17 +1,14 @@
-import { FrameLocator, Locator, Page, expect } from '@playwright/test';
-import { View, ViewData } from './view';
+import { Locator, Page, expect } from '@playwright/test';
+import { ViewData } from './view';
+import { IFrameView } from './iframe-view';
 
-export class InscriptionView extends View {
+export class InscriptionView extends IFrameView {
   constructor(page: Page) {
     const outputViewData: ViewData = {
       tabSelector: 'li.action-item:has-text("IVY")',
-      viewSelector: 'div'
+      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true'
     };
     super(outputViewData, page);
-  }
-
-  protected viewFrameLoactor(): FrameLocator {
-    return this.viewLocator.frameLocator('iFrame').nth(1).frameLocator('iFrame');
   }
 
   override async isViewVisible(): Promise<void> {
