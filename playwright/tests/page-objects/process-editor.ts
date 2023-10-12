@@ -1,13 +1,14 @@
-import { FrameLocator, Locator, Page } from 'playwright-core';
-import { View, ViewData } from './view';
+import { Locator, Page } from 'playwright-core';
+import { ViewData } from './view';
 import { getCtrlOrMeta } from '../utils/keyboard';
 import { expect } from 'playwright/test';
+import { IFrameView } from './iframe-view';
 
-export class ProcessEditor extends View {
+export class ProcessEditor extends IFrameView {
   constructor(page: Page, private filePath: string = 'ProcurementRequestUserTask.p.json') {
     const outputViewData: ViewData = {
       tabSelector: `div.tab:has-text("${filePath}")`,
-      viewSelector: 'div'
+      viewSelector: 'body > div > div[data-parent-flow-to-element-id] >> visible = true'
     };
     super(outputViewData, page);
   }
@@ -22,10 +23,6 @@ export class ProcessEditor extends View {
     await this.isTabVisible();
     const graph = this.viewFrameLoactor().locator('.sprotty-graph');
     await expect(graph).toBeVisible();
-  }
-
-  protected viewFrameLoactor(): FrameLocator {
-    return this.viewLocator.frameLocator('iFrame').frameLocator('iFrame#active-frame');
   }
 
   locatorForPID(pid: string): Locator {

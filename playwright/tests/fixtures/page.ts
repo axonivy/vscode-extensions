@@ -17,6 +17,9 @@ export const test = base.extend<{ page: Page; pageFor(workspace: string): Promis
 });
 
 export async function pageFor(workspace: string, testTitle: string): Promise<Page> {
+  if (electronApp) {
+    await electronApp.close();
+  }
   electronApp = await launchElectronApp(workspace, testTitle);
   const page = await electronApp.firstWindow();
   await expect(page.locator('div.command-center')).toBeAttached();

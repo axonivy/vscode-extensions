@@ -82,6 +82,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   }
 
   private toSelectedElement(pids: string[]): SelectedElement {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (let [_, client] of this.clientMap) {
       if (client.webviewPanel.active) {
         const ivyClient = client as IvyGlspClient;

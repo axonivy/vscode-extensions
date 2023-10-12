@@ -4,7 +4,6 @@ import { PageObject } from './page-object';
 export interface ViewData {
   tabSelector: string;
   viewSelector: string;
-  viewName?: string;
 }
 
 export class View extends PageObject {
