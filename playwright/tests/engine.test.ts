@@ -31,20 +31,20 @@ test.describe('Engine Extension', () => {
 
   test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
     page = await pageFor(noEngineWorkspacePath);
-    const outputview = new OutputView(page);
-    await expect(outputview.viewLocator).toBeHidden();
     const settingsView = new SettingsView(page);
     await settingsView.openWorkspaceSettings();
     await settingsView.containsSetting('"runEmbeddedEngine": false');
     await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
+    const outputview = new OutputView(page);
+    await expect(outputview.viewLocator).toBeHidden();
   });
 
   test('ensure that embedded engine is not started due to missing project file', async ({ pageFor }) => {
     page = await pageFor(noProjectWorkspacePath);
-    const outputview = new OutputView(page);
-    await expect(outputview.viewLocator).toBeHidden();
     const settingsView = new SettingsView(page);
     await settingsView.openWorkspaceSettings();
     await settingsView.containsSetting('"runEmbeddedEngine": true');
+    const outputview = new OutputView(page);
+    await expect(outputview.viewLocator).toBeHidden();
   });
 });

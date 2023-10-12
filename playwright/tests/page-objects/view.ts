@@ -4,10 +4,11 @@ import { PageObject } from './page-object';
 export interface ViewData {
   tabSelector: string;
   viewSelector: string;
+  viewName?: string;
 }
 
 export class View extends PageObject {
-  constructor(private readonly data: ViewData, page: Page) {
+  constructor(protected readonly data: ViewData, page: Page) {
     super(page);
   }
 
@@ -40,8 +41,10 @@ export class View extends PageObject {
   }
 
   async revertAndCloseEditor(): Promise<void> {
-    await this.tabLocator.click();
-    await this.executeCommand('View: Revert and Close Editor');
+    if (await this.tabLocator.isVisible()) {
+      await this.tabLocator.click();
+      await this.executeCommand('View: Revert and Close Editor');
+    }
     await expect(this.tabLocator).toBeHidden();
   }
 }
