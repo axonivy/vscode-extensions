@@ -50,7 +50,7 @@
       "panel": [
         {
           "id": "ivy-view-container",
-          "title": "Ivy",
+          "title": "Inscription",
           "icon": "assets/ivy-logo.svg",
           "when": "ivy:hasIvyProjects"
         }
@@ -61,7 +61,7 @@
         {
           "type": "webview",
           "id": "inscriptionEditor",
-          "name": "Inscription Editor",
+          "name": "Inscription",
           "when": "ivy:hasIvyProjects"
         }
       ]
