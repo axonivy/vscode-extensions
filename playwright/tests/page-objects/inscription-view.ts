@@ -5,7 +5,7 @@ import { IFrameView } from './iframe-view';
 export class InscriptionView extends IFrameView {
   constructor(page: Page) {
     const outputViewData: ViewData = {
-      tabSelector: 'li.action-item:has-text("IVY")',
+      tabSelector: 'li.action-item:has-text("INSCRIPTION")',
       viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true'
     };
     super(outputViewData, page);

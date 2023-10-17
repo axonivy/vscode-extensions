@@ -9,6 +9,8 @@ export namespace Commands {
   export const ENGINE_BUILD_AND_DEPLOY_PROJECTS = 'vscode-engine-extension.buildAndDeployProjects';
   export const ENGINE_OPEN_DEV_WF_UI = 'vscode-engine-extension.openDevWfUi';
   export const ENGINE_OPEN_ENGINE_COCKPIT = 'vscode-engine-extension.openEngineCockpit';
+  export const ENGINE_IVY_BROWSER_OPEN = 'vscode-engine-extension.ivyBrowserOpen';
+  export const ENGINE_OPEN_IN_EXTERNAL_BROWSER = 'vscode-engine-extension.openInExternalBrowser';
   export const ENGINE_START_PROCESS = 'vscode-engine-extension.startProcess';
   export const PROJECT_EXPLORER_HAS_IVY_PROJECTS = 'vscode-project-explorer-extension.hasIvyProjects';
   export const PROJECT_EXPLORER_GET_IVY_PROJECTS = 'vscode-project-explorer-extension.getIvyProjects';

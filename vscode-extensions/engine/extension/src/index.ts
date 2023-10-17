@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { Commands, executeCommand, registerAndSubscribeCommand } from '@axonivy/vscode-base';
 import { IvyEngineManager } from './engine-manager';
+import { activateIvyBrowser } from './browser/ivy-browser';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -22,6 +23,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   if (hasIvyProjects) {
     await ivyEngineManager.start();
   }
+  activateIvyBrowser(context);
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {

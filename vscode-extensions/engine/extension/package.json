@@ -76,6 +76,40 @@
         }
       }
     },
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "ivy-browser-container",
+          "title": "Browser",
+          "icon": "assets/globe.svg",
+          "when": "ivy:hasIvyProjects"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscode-engine-extension.openDevWfUi",
+          "when": "view == ivyBrowserView",
+          "group": "navigation"
+        },
+        {
+          "command": "vscode-engine-extension.openInExternalBrowser",
+          "when": "view == ivyBrowserView",
+          "group": "navigation"
+        }
+      ]
+    },
+    "views": {
+      "ivy-browser-container": [
+        {
+          "type": "webview",
+          "id": "ivyBrowserView",
+          "name": "Browser",
+          "when": "ivy:hasIvyProjects"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "vscode-engine-extension.openDevWfUi",
@@ -95,6 +129,16 @@
       {
         "command": "vscode-engine-extension.buildProjects",
         "title": "Build all Projects",
+        "category": "Ivy Engine"
+      },
+      {
+        "command": "vscode-engine-extension.ivyBrowserOpen",
+        "title": "Open Ivy Browser",
+        "category": "Ivy Engine"
+      },
+      {
+        "command": "vscode-engine-extension.openInExternalBrowser",
+        "title": "Open in External Browser",
         "category": "Ivy Engine"
       }
     ]

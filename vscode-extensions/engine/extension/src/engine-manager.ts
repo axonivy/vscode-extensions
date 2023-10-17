@@ -109,21 +109,21 @@ export class IvyEngineManager {
   }
 
   openDevWfUi(): void {
-    this.openInExternalBrowser(this.devContextPath);
+    this.openInInternalBrowser(this.devContextPath);
   }
 
   openEngineCockpit(): void {
-    this.openInExternalBrowser('system/engine-cockpit');
+    this.openInInternalBrowser('system/engine-cockpit');
   }
 
   startProcess(processStartUri: string): void {
-    this.openInExternalBrowser(processStartUri);
+    this.openInInternalBrowser(processStartUri);
   }
 
-  private openInExternalBrowser(postfix: string): void {
+  private openInInternalBrowser(postfix: string): void {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    const targetUri = vscode.Uri.parse(this.engineUrl + postfix);
-    vscode.env.openExternal(targetUri);
+    const targetUri = this.engineUrl + postfix;
+    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [targetUri]);
   }
 
   private async stopEmbeddedEngine(): Promise<void> {
