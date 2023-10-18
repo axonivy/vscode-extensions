@@ -1,0 +1,51 @@
+pipeline {
+  agent {
+    label 'windows'
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+  }
+
+  parameters {
+    string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip', description: 'engine that will be packaged')
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        nodejs(nodeJSInstallationName: '18.17.1') {
+          bat 'yarn update:axonivy:next'
+          bat 'yarn install --ignore-scripts && yarn clean'
+          bat 'yarn build:production'
+          bat 'yarn download:engine ' + params.engineDownloadUrl
+        }
+      }
+    }
+
+    stage('Playwright Tests') {
+      steps {
+        nodejs(nodeJSInstallationName: '18.17.1') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            bat 'yarn test:playwright:download:vscode'
+            bat 'yarn test:playwright'
+          }
+          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+}
