@@ -9,6 +9,7 @@ const args = [
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/engine/extension'),
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/process-editor/extension'),
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/inscription/extension'),
+  '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../vscode-extensions/config-editor/extension'),
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',

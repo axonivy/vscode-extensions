@@ -1,8 +1,7 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { ViewData } from './view';
-import { IFrameView } from './iframe-view';
+import { View, ViewData } from './view';
 
-export class InscriptionView extends IFrameView {
+export class InscriptionView extends View {
   constructor(page: Page) {
     const outputViewData: ViewData = {
       tabSelector: 'li.action-item:has-text("INSCRIPTION")',

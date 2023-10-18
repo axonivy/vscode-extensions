@@ -12,8 +12,8 @@ test.describe('Inscription View', () => {
   let processEditor: ProcessEditor;
   let inscriptionView: InscriptionView;
 
-  test.beforeAll(async () => {
-    page = await pageFor(defaultWorkspacePath, 'Inscription View');
+  test.beforeAll(async ({}, testInfo) => {
+    page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
     inscriptionView = new InscriptionView(page);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
@@ -21,7 +21,7 @@ test.describe('Inscription View', () => {
 
   test.beforeEach(async () => {
     processEditor = new ProcessEditor(page);
-    await processEditor.openProcess();
+    await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });
 

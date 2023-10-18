@@ -12,15 +12,15 @@ test.describe('Process Editor', () => {
   let processEditor: ProcessEditor;
   let page: Page;
 
-  test.beforeAll(async () => {
-    page = await pageFor(defaultWorkspacePath, 'Process Editor');
+  test.beforeAll(async ({}, testInfo) => {
+    page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
   });
 
   test.beforeEach(async () => {
     processEditor = new ProcessEditor(page);
-    await processEditor.openProcess();
+    await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });
 
