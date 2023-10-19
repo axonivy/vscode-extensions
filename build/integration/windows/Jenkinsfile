@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'windows'
+    label { label 'windows-build02 || windows-build03' }
   }
 
   options {
