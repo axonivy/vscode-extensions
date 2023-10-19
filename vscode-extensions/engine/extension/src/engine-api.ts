@@ -5,7 +5,6 @@ import * as crypto from 'crypto';
 import path from 'path';
 import {
   ACTIVATE_PROJECTS_REQUEST,
-  BUILD_PROJECTS_REQUEST,
   DEACTIVATE_PROJECTS_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
@@ -62,21 +61,6 @@ export class IvyEngineApi {
   public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
     const searchParams = this.searchParams(ivyProjectDirectories);
     await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
-    await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
-  }
-
-  public async buildProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const searchParams = this.searchParams(ivyProjectDirectories);
-    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
-    await this.runProjectRequestWithProgress(BUILD_PROJECTS_REQUEST, searchParams);
-    await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
-  }
-
-  public async buildAndDeployProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const searchParams = this.searchParams(ivyProjectDirectories);
-    await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
-    // await this.runProjectRequestWithProgress('Build Ivy Projects', ivyProjectDirectory, this.buildProjectRequest, devContextPath);
     await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
     await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
   }

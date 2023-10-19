@@ -20,7 +20,11 @@ export class IvyProjectExplorer {
 
   private registerCommands(): void {
     vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    vscode.commands.registerCommand(`${VIEW_ID}.buildAll`, () => this.buildAll());
+    vscode.commands.registerCommand(`${VIEW_ID}.deployAll`, () => this.deployAll());
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployAll`, () => this.buildAndDeployAll());
+    vscode.commands.registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
+    vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshFileSelection`, () => this.syncProjectExplorerSelectionWithActiveTab());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS, () => this.hasIvyProjects());
@@ -45,8 +49,24 @@ export class IvyProjectExplorer {
     this.activateEngineExtension(hasIvyProjects);
   }
 
+  private async buildAll(): Promise<void> {
+    executeCommand(Commands.ENGINE_BUILD_PROJECTS);
+  }
+
+  private async deployAll(): Promise<void> {
+    executeCommand(Commands.ENGINE_DEPLOY_PROJECTS);
+  }
+
   private async buildAndDeployAll(): Promise<void> {
     executeCommand(Commands.ENGINE_BUILD_AND_DEPLOY_PROJECTS);
+  }
+
+  private async buildProject(entry: Entry): Promise<void> {
+    executeCommand(Commands.ENGINE_BUILD_PROJECT, entry.uri.fsPath);
+  }
+
+  private async deployProject(entry: Entry): Promise<void> {
+    executeCommand(Commands.ENGINE_DEPLOY_PROJECT, entry.uri.fsPath);
   }
 
   private async buildAndDeployProject(entry: Entry): Promise<void> {

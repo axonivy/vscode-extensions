@@ -65,20 +65,38 @@
           "group": "navigation"
         },
         {
-          "command": "ivyProjects.buildAndDeployAll",
+          "command": "ivyProjects.buildAll",
+          "when": "view == ivyProjects",
+          "group": "navigation"
+        },
+        {
+          "command": "ivyProjects.deployAll",
           "when": "view == ivyProjects",
           "group": "navigation"
         },
         {
           "command": "ivyProjects.refreshFileSelection",
           "when": "view == ivyProjects"
+        },
+        {
+          "command": "ivyProjects.buildAndDeployAll",
+          "when": "view == ivyProjects"
         }
       ],
       "view/item/context": [
         {
-          "command": "ivyProjects.buildAndDeployProject",
+          "command": "ivyProjects.buildProject",
           "when": "view == ivyProjects && viewItem == ivyProject",
           "group": "inline"
+        },
+        {
+          "command": "ivyProjects.deployProject",
+          "when": "view == ivyProjects && viewItem == ivyProject",
+          "group": "inline"
+        },
+        {
+          "command": "ivyProjects.buildAndDeployProject",
+          "when": "view == ivyProjects && viewItem == ivyProject"
         }
       ]
     },
@@ -93,8 +111,8 @@
         }
       },
       {
-        "command": "ivyProjects.buildAndDeployAll",
-        "title": "Build and Deploy All",
+        "command": "ivyProjects.buildAll",
+        "title": "Build All",
         "category": "Ivy Project Explorer",
         "icon": {
           "light": "assets/light/build.svg",
@@ -102,13 +120,41 @@
         }
       },
       {
-        "command": "ivyProjects.buildAndDeployProject",
-        "title": "Build and Deploy Project",
+        "command": "ivyProjects.deployAll",
+        "title": "Deploy All",
+        "category": "Ivy Project Explorer",
+        "icon": {
+          "light": "assets/light/upload.svg",
+          "dark": "assets/dark/upload.svg"
+        }
+      },
+      {
+        "command": "ivyProjects.buildProject",
+        "title": "Build Project",
         "category": "Ivy Project Explorer",
         "icon": {
           "light": "assets/light/build.svg",
           "dark": "assets/dark/build.svg"
         }
+      },
+      {
+        "command": "ivyProjects.deployProject",
+        "title": "Deploy Project",
+        "category": "Ivy Project Explorer",
+        "icon": {
+          "light": "assets/light/upload.svg",
+          "dark": "assets/dark/upload.svg"
+        }
+      },
+      {
+        "command": "ivyProjects.buildAndDeployProject",
+        "title": "Build and Deploy Project",
+        "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.buildAndDeployAll",
+        "title": "Build and Deploy All",
+        "category": "Ivy Project Explorer"
       },
       {
         "command": "ivyProjects.refreshFileSelection",
