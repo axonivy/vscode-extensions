@@ -45,8 +45,9 @@ pipeline {
 
   post {
     always {
-      sleep(time:60, unit: "SECONDS")
-      cleanWs()
+      catchError {
+        cleanWs()
+      }
     }
   }
 }
