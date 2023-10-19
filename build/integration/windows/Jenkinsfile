@@ -45,9 +45,8 @@ pipeline {
 
   post {
     always {
-      timeout(time: 1, unit: 'MINUTES') {
-        cleanWs()
-      }
+      sleep(time:60, unit: "SECONDS")
+      cleanWs()
     }
   }
 }
