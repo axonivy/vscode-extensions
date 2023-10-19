@@ -12,12 +12,14 @@ const args = [
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',
-  '--no-sandbox'
+  '--no-sandbox',
+  '--disable-gpu',
+  '--disable-extensions',
+  '--verbose'
 ];
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
   return await _electron.launch({
-    env: { DEBUG: 'pw:browser' },
     executablePath: await downloadAndUnzipVSCode('insiders'),
     args: [...args, workspacePath],
     recordVideo: {
