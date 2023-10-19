@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { FrameLocator, Locator, Page, expect } from '@playwright/test';
 import { PageObject } from './page-object';
 
 export interface ViewData {
@@ -20,6 +20,10 @@ export class View extends PageObject {
     return this.page.locator(this.data.viewSelector);
   }
 
+  protected viewFrameLoactor(): FrameLocator {
+    return this.viewLocator.frameLocator('iFrame').frameLocator('iFrame');
+  }
+
   async isTabVisible(): Promise<void> {
     await expect(this.tabLocator).toBeVisible();
   }
@@ -38,13 +42,5 @@ export class View extends PageObject {
 
   async isNotDirty(): Promise<void> {
     await expect(this.tabLocator).not.toHaveClass(/dirty/);
-  }
-
-  async revertAndCloseEditor(): Promise<void> {
-    if (await this.tabLocator.isVisible()) {
-      await this.tabLocator.click();
-      await this.executeCommand('View: Revert and Close Editor');
-    }
-    await expect(this.tabLocator).toBeHidden();
   }
 }
