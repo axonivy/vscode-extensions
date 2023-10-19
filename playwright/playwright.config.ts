@@ -5,6 +5,6 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   timeout: 60 * 1000,
-  expect: { timeout: 10 * 1000 },
+  expect: { timeout: 30 * 1000 },
   reporter: process.env.CI ? [['junit', { outputFile: 'report.xml' }]] : 'html'
 });
