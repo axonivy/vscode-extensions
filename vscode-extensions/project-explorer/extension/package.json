@@ -105,46 +105,31 @@
         "command": "ivyProjects.refreshEntry",
         "title": "Refresh",
         "category": "Ivy Project Explorer",
-        "icon": {
-          "light": "assets/light/refresh.svg",
-          "dark": "assets/dark/refresh.svg"
-        }
+        "icon": "$(refresh)"
       },
       {
         "command": "ivyProjects.buildAll",
         "title": "Build All",
         "category": "Ivy Project Explorer",
-        "icon": {
-          "light": "assets/light/build.svg",
-          "dark": "assets/dark/build.svg"
-        }
+        "icon": "$(tools)"
       },
       {
         "command": "ivyProjects.deployAll",
         "title": "Deploy All",
         "category": "Ivy Project Explorer",
-        "icon": {
-          "light": "assets/light/upload.svg",
-          "dark": "assets/dark/upload.svg"
-        }
+        "icon": "$(cloud-upload)"
       },
       {
         "command": "ivyProjects.buildProject",
         "title": "Build Project",
         "category": "Ivy Project Explorer",
-        "icon": {
-          "light": "assets/light/build.svg",
-          "dark": "assets/dark/build.svg"
-        }
+        "icon": "$(tools)"
       },
       {
         "command": "ivyProjects.deployProject",
         "title": "Deploy Project",
         "category": "Ivy Project Explorer",
-        "icon": {
-          "light": "assets/light/upload.svg",
-          "dark": "assets/dark/upload.svg"
-        }
+        "icon": "$(cloud-upload)"
       },
       {
         "command": "ivyProjects.buildAndDeployProject",
