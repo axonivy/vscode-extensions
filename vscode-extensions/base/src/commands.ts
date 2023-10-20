@@ -5,6 +5,8 @@ export namespace Commands {
   export const ENGINE_START_MANAGER = 'vscode-engine-extension.startIvyEngineManager';
   export const ENGINE_DEPLOY_PROJECTS = 'vscode-engine-extension.deployProjects';
   export const ENGINE_BUILD_PROJECTS = 'vscode-engine-extension.buildProjects';
+  export const ENGINE_DEPLOY_PROJECT = 'vscode-engine-extension.deployProject';
+  export const ENGINE_BUILD_PROJECT = 'vscode-engine-extension.buildProject';
   export const ENGINE_BUILD_AND_DEPLOY_PROJECT = 'vscode-engine-extension.buildAndDeployProject';
   export const ENGINE_BUILD_AND_DEPLOY_PROJECTS = 'vscode-engine-extension.buildAndDeployProjects';
   export const ENGINE_OPEN_DEV_WF_UI = 'vscode-engine-extension.openDevWfUi';

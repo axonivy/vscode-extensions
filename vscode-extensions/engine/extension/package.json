@@ -81,7 +81,7 @@
         {
           "id": "ivy-browser-container",
           "title": "Browser",
-          "icon": "assets/globe.svg",
+          "icon": "$(globe)",
           "when": "ivy:hasIvyProjects"
         }
       ]

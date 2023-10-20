@@ -14,6 +14,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_AND_DEPLOY_PROJECT, (ivyProjectDirectory: string) =>
     ivyEngineManager.buildAndDeployProject(ivyProjectDirectory)
   );
+  registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_PROJECT, (ivyProjectDirectory: string) =>
+    ivyEngineManager.buildProject(ivyProjectDirectory)
+  );
+  registerAndSubscribeCommand(context, Commands.ENGINE_DEPLOY_PROJECT, (ivyProjectDirectory: string) =>
+    ivyEngineManager.deployProject(ivyProjectDirectory)
+  );
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_DEV_WF_UI, () => ivyEngineManager.openDevWfUi());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_ENGINE_COCKPIT, () => ivyEngineManager.openEngineCockpit());
   registerAndSubscribeCommand(context, Commands.ENGINE_START_PROCESS, (processStartUri: string) =>
