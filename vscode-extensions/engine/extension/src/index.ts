@@ -29,7 +29,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   if (hasIvyProjects) {
     await ivyEngineManager.start();
   }
-  activateIvyBrowser(context);
+  activateIvyBrowser(context, ivyEngineManager.devWfUiUri());
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {

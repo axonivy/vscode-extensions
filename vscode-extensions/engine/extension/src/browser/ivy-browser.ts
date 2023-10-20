@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { Commands, registerAndSubscribeCommand, executeCommand } from '@axonivy/vscode-base';
 import { IvyBrowserViewProvider } from './ivy-browser-view-provider';
 
-export async function activateIvyBrowser(context: vscode.ExtensionContext) {
-  const provider = new IvyBrowserViewProvider(context.extensionUri);
+export async function activateIvyBrowser(context: vscode.ExtensionContext, baseUri: string) {
+  const provider = new IvyBrowserViewProvider(context.extensionUri, baseUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(IvyBrowserViewProvider.viewType, provider, {
       webviewOptions: { retainContextWhenHidden: true }
