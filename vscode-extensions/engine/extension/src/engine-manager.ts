@@ -82,10 +82,7 @@ export class IvyEngineManager {
   }
 
   public async buildProjects(): Promise<void> {
-    if (vscode.workspace.workspaceFolders) {
-      const rootDirectory = vscode.workspace.workspaceFolders[0].uri.fsPath;
-      await this.mavenBuilder.buildProject(rootDirectory);
-    }
+    await this.mavenBuilder.buildProjects();
   }
 
   public async buildProject(ivyProjectDirectory: string): Promise<void> {
