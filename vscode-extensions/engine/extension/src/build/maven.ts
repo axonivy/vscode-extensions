@@ -27,9 +27,12 @@ export class MavenBuilder {
         this.outputChannel.show();
         throw new Error(error);
       });
-      childProcess.stdout?.on('data', (data: any) => {
-        this.outputChannel.append(data);
-      });
+      if (childProcess.stdout) {
+        childProcess.stdout.setEncoding('utf-8');
+        childProcess.stdout.on('data', (data: any) => {
+          this.outputChannel.append(data);
+        });
+      }
       return new Promise(resolve => {
         childProcess.on('exit', () => {
           resolve();
