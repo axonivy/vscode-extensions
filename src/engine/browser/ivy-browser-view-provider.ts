@@ -39,8 +39,8 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
   }
 
   private getWebviewContent(webview: vscode.Webview) {
-    const browserCss = this.extensionResourceUrl(webview, 'src', 'browser', 'media', 'browser.css');
-    const mainJs = this.extensionResourceUrl(webview, 'src', 'browser', 'media', 'index.js');
+    const browserCss = this.extensionResourceUrl(webview, 'src', 'engine', 'browser', 'media', 'browser.css');
+    const mainJs = this.extensionResourceUrl(webview, 'src', 'engine', 'browser', 'media', 'index.js');
     const nonce = getNonce();
     return `<!DOCTYPE html>
     <html>

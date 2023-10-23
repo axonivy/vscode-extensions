@@ -9,6 +9,7 @@
   "repository": {
     "url": "https://github.com/axonivy/vscode-extensions"
   },
+  "icon": "assets/ivy-logo.png",
   "displayName": "Axon Ivy Designer",
   "engines": {
     "yarn": ">=1.7.0 <2.x.x",
