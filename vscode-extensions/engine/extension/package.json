@@ -87,20 +87,6 @@
         }
       ]
     },
-    "menus": {
-      "view/title": [
-        {
-          "command": "vscode-engine-extension.openDevWfUi",
-          "when": "view == ivyBrowserView",
-          "group": "navigation"
-        },
-        {
-          "command": "vscode-engine-extension.openInExternalBrowser",
-          "when": "view == ivyBrowserView",
-          "group": "navigation"
-        }
-      ]
-    },
     "views": {
       "ivy-browser-container": [
         {

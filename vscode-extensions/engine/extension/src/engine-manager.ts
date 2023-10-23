@@ -110,6 +110,10 @@ export class IvyEngineManager {
     }
   }
 
+  public devWfUiUri(): string {
+    return this.fullUri(this.devContextPath);
+  }
+
   async ivyProjectDirectories(): Promise<string[]> {
     return (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as string[];
   }
@@ -133,9 +137,12 @@ export class IvyEngineManager {
   }
 
   private openInInternalBrowser(postfix: string): void {
+    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [this.fullUri(postfix)]);
+  }
+
+  private fullUri(postfix: string) {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    const targetUri = this.engineUrl + postfix;
-    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [targetUri]);
+    return this.engineUrl + postfix;
   }
 
   private async stopEmbeddedEngine(): Promise<void> {
