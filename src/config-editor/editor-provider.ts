@@ -41,7 +41,10 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
   ): Promise<void> {
     webviewPanel.webview.options = {
       enableScripts: true,
-      localResourceRoots: [vscode.Uri.joinPath(this.context.extensionUri, 'out'), vscode.Uri.joinPath(this.context.extensionUri, 'dist')]
+      localResourceRoots: [
+        vscode.Uri.joinPath(this.context.extensionUri, 'out'),
+        vscode.Uri.joinPath(this.context.extensionUri, 'webviews', 'dist')
+      ]
     };
     webviewPanel.webview.html = this.getWebviewContent(webviewPanel.webview, this.context.extensionUri);
 
@@ -88,9 +91,10 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-    const stylesUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.css']);
-    const codiconFontUri = getUri(webview, extensionUri, ['dist', 'assets', 'codicon.ttf']);
-    const scriptUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.js']);
+    const basePath = ['webviews', 'dist', 'config-editor', 'assets'];
+    const stylesUri = getUri(webview, extensionUri, [...basePath, 'index.css']);
+    const codiconFontUri = getUri(webview, extensionUri, [...basePath, 'codicon.ttf']);
+    const scriptUri = getUri(webview, extensionUri, [...basePath, 'index.js']);
     const nonce = getNonce();
 
     return `

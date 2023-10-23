@@ -21,7 +21,9 @@ export default class IvyEditorProvider extends GlspEditorProvider {
   ): void {
     const webview = webviewPanel.webview;
     const extensionUri = this.extensionContext.extensionUri;
-    const webviewScriptSourceUri = webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, 'dist', 'webview.js'));
+    const webviewScriptSourceUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(extensionUri, 'webviews', 'dist', 'process-editor', 'webview.js')
+    );
 
     webviewPanel.webview.options = {
       enableScripts: true

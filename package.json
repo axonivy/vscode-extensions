@@ -89,32 +89,32 @@
         "icon": "$(add)"
       },
       {
-        "command": "vscode-engine-extension.openDevWfUi",
+        "command": "engine.openDevWfUi",
         "title": "Open Developer Workflow UI",
         "category": "Ivy Engine"
       },
       {
-        "command": "vscode-engine-extension.openEngineCockpit",
+        "command": "engine.openEngineCockpit",
         "title": "Open Engine Cockpit",
         "category": "Ivy Engine"
       },
       {
-        "command": "vscode-engine-extension.deployProjects",
+        "command": "engine.deployProjects",
         "title": "Deploy all Projects",
         "category": "Ivy Engine"
       },
       {
-        "command": "vscode-engine-extension.buildProjects",
+        "command": "engine.buildProjects",
         "title": "Build all Projects",
         "category": "Ivy Engine"
       },
       {
-        "command": "vscode-engine-extension.ivyBrowserOpen",
+        "command": "engine.ivyBrowserOpen",
         "title": "Open Ivy Browser",
         "category": "Ivy Engine"
       },
       {
-        "command": "vscode-engine-extension.openInExternalBrowser",
+        "command": "engine.openInExternalBrowser",
         "title": "Open in External Browser",
         "category": "Ivy Engine"
       },

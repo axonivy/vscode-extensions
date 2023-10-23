@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import { SelectedElement } from '../base/process-editor-connector';
 import { Message } from './message';
 
-export const APP_DIR = 'dist';
-
 export class InscriptionViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'inscriptionEditor';
   public static readonly TITLE = 'Inscription Editor';
@@ -103,7 +101,7 @@ export class InscriptionViewProvider implements vscode.WebviewViewProvider {
   }
 
   private getAppUri(...pathSegments: string[]) {
-    return vscode.Uri.joinPath(this.extensionUri, APP_DIR, ...pathSegments);
+    return vscode.Uri.joinPath(this.extensionUri, 'webviews', 'dist', 'inscription', ...pathSegments);
   }
 
   private findRootHtmlKey(buildManifest: object) {

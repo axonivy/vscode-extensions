@@ -9,7 +9,7 @@ export class MavenBuilder {
   private readonly buildCommand: string;
   private readonly xmlParser = new XMLParser();
   constructor(extensionUri: vscode.Uri) {
-    const engineDir = vscode.Uri.joinPath(extensionUri, 'engine', 'AxonIvyEngine').fsPath;
+    const engineDir = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine').fsPath;
     this.buildCommand = `mvn install -Dmaven.test.skip=true -Divy.engine.directory=${engineDir}`;
     this.outputChannel = vscode.window.createOutputChannel('Ivy Maven');
   }

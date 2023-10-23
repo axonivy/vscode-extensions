@@ -27,7 +27,6 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshFileSelection`, () => this.syncProjectExplorerSelectionWithActiveTab());
-    vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_HAS_IVY_PROJECTS, () => this.hasIvyProjects());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
   }
 
@@ -38,7 +37,7 @@ export class IvyProjectExplorer {
     projectFileWatcher.onDidDelete(() => this.refresh());
   }
 
-  private async hasIvyProjects(): Promise<boolean> {
+  public async hasIvyProjects(): Promise<boolean> {
     return this.treeDataProvider.hasIvyProjects();
   }
 

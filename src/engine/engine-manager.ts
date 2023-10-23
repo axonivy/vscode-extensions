@@ -14,6 +14,7 @@ export class IvyEngineManager {
   private webSocketAddress: string;
   private extensionUri: vscode.Uri;
   private readonly mavenBuilder: MavenBuilder;
+  private started = false;
 
   constructor(context: vscode.ExtensionContext) {
     this.extensionUri = context.extensionUri;
@@ -21,15 +22,17 @@ export class IvyEngineManager {
   }
 
   async start(): Promise<void> {
-    if (this.engineUrl) {
+    if (this.started) {
       return;
     }
+    this.started = true;
     this.engineUrl = await this.resolveEngineUrl();
     this.ivyEngineApi = new IvyEngineApi(this.engineUrl);
     this.devContextPath = await this.ivyEngineApi.devContextPathRequest();
     await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress(this.engineUrl.slice(0, -1) + this.devContextPath + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
+    executeCommand(Commands.PROCESS_EDITOR_ACTIVATE);
   }
 
   private async resolveEngineUrl(): Promise<string> {
@@ -44,7 +47,7 @@ export class IvyEngineManager {
     const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
     outputChannel.show();
     const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-    var engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'engine', 'AxonIvyEngine', 'bin', executable).fsPath;
+    var engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine', 'bin', executable).fsPath;
     const env = {
       env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true' }
     };
