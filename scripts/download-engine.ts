@@ -7,9 +7,9 @@ function downloadEngine() {
     ? process.argv[2]
     : 'https://jenkins.ivyteam.io/job/core_product/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip';
 
-  const engineDir = 'engine';
+  const engineDir = 'AxonIvyEngine';
   if (fs.existsSync(engineDir)) {
-    fs.rmSync(engineDir, {recursive: true, force: true});
+    fs.rmSync(engineDir, { recursive: true, force: true });
   }
   fs.mkdirSync(engineDir);
 
@@ -21,27 +21,27 @@ function downloadEngine() {
     fileStream.on('finish', () => {
       fileStream.close();
       console.log('Download', filename, 'finished');
-      unzipEngine(filename, path.join(engineDir, 'AxonIvyEngine'));
+      unzipEngine(filename, engineDir);
     });
   });
 }
 
 function unzipEngine(zipName: string, targetDir: string) {
-  const AdmZip = require("adm-zip");
+  const AdmZip = require('adm-zip');
   var zip = new AdmZip(zipName);
   zip.extractAllTo(targetDir, true, true);
   fs.rmSync(zipName);
 
   fs.readdir(targetDir, function (err, files) {
     files.forEach(file => {
-      if(file.endsWith('.zip')) {
-        const nestedZipName = path.join(targetDir, file)
+      if (file.endsWith('.zip')) {
+        const nestedZipName = path.join(targetDir, file);
         zip = new AdmZip(nestedZipName);
         zip.extractAllTo(targetDir, true, true);
-        fs.rmSync(nestedZipName)
+        fs.rmSync(nestedZipName);
         return;
       }
-    })
+    });
   });
 }
 

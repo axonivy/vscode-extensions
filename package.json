@@ -18,7 +18,7 @@
   "scripts": {
     "build": "lerna run build",
     "build:production": "lerna run build:production",
-    "download:engine": "yarn --cwd vscode-extensions/engine/extension download:engine",
+    "download:engine": "ts-node scripts/download-engine.ts",
     "clean": "lerna run clean",
     "lint": "lerna run lint --",
     "package": "lerna run package",
@@ -28,6 +28,7 @@
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "watch": "lerna run --parallel watch"
   },
+  "main": "./dist/extension.js",
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
     "@tanstack/react-query": "^4.32.0",

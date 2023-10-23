@@ -102,7 +102,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     const entry = {
       uri: vscode.Uri.file(ivyProjectDir),
       type: vscode.FileType.Directory,
-      iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo.svg'),
+      iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo-black-background.svg'),
       contextValue: 'ivyProject'
     };
     this.entryCache.set(entry.uri.fsPath, entry);
