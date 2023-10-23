@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: '../../dist/webviews/config-editor',
+    outDir: '../dist/config-editor',
     rollupOptions: {
       output: {
         entryFileNames: `assets/[name].js`,

@@ -7,7 +7,7 @@ const config = {
   entry: path.resolve(__dirname, 'src/index.ts'),
   output: {
     filename: 'webview.js',
-    path: path.resolve(__dirname, '../../dist/webviews/process-editor'),
+    path: path.resolve(__dirname, '../dist/process-editor'),
     library: {
       type: 'commonjs'
     }

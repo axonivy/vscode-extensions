@@ -16,17 +16,17 @@
     "vscode": "^1.54.0"
   },
   "scripts": {
-    "build": "lerna run build",
-    "build:production": "lerna run build:production",
+    "build": "lerna run build && webpack --mode=development",
+    "build:production": "lerna run build:production && webpack --mode=production",
     "download:engine": "ts-node scripts/download-engine.ts",
-    "clean": "lerna run clean",
-    "lint": "lerna run lint --",
-    "package": "lerna run package",
-    "prepare": "lerna run prepare",
+    "clean": "lerna run clean & rimraf lib dist webviews/dist",
+    "lint": "lerna run lint -- & eslint --ext .ts,.tsx ./src",
+    "package": "vsce package --yarn",
+    "prepare": "yarn clean && yarn build",
     "test:playwright": "yarn -s --cwd playwright ui-tests",
     "test:playwright:download:vscode": "yarn -s --cwd playwright download:vscode",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
-    "watch": "lerna run --parallel watch"
+    "watch": "webpack --watch --mode development"
   },
   "main": "./dist/extension.js",
   "dependencies": {

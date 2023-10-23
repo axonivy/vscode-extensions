@@ -16,7 +16,6 @@
   "scripts": {
     "build": "vite build --mode development --emptyOutDir",
     "build:production": "vite build --emptyOutDir",
-    "clean": "rimraf ../extension/dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build",
     "watch": "vite build --mode development --watch --emptyOutDir"

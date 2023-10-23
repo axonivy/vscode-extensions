@@ -36,7 +36,7 @@
   "scripts": {
     "build": "webpack --mode=development",
     "build:production": "webpack --mode=production",
-    "clean": "rimraf lib tsconfig.tsbuildinfo ",
+    "clean": "rimraf lib",
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build",
     "watch": "webpack --watch --mode development"
