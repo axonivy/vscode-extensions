@@ -38,4 +38,4 @@ gen-webpack.config.js
 
 *.vsix
 dist/
-**/extension/engine/
+AxonIvyEngine/

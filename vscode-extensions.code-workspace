@@ -6,23 +6,15 @@
     },
     {
       "name": "process-editor",
-      "path": "vscode-extensions/process-editor"
+      "path": "webviews/process-editor"
     },
     {
       "name": "config-editor",
-      "path": "vscode-extensions/config-editor"
-    },
-    {
-      "name": "engine",
-      "path": "vscode-extensions/engine"
+      "path": "webviews/config-editor"
     },
     {
       "name": "inscription",
-      "path": "vscode-extensions/inscription"
-    },
-    {
-      "name": "project-explorer",
-      "path": "vscode-extensions/project-explorer"
+      "path": "webviews/inscription"
     }
   ],
   "settings": {
