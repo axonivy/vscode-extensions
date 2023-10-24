@@ -34,8 +34,8 @@ function unzipEngine(zipName: string, targetDir: string) {
 
   fs.readdir(targetDir, function (err, files) {
     files.forEach(file => {
-      if (file.endsWith('.zip')) {
-        const nestedZipName = path.join(targetDir, file);
+      const nestedZipName = path.join(targetDir, file);
+      if (nestedZipName.endsWith('.zip') && fs.existsSync(nestedZipName)) {
         zip = new AdmZip(nestedZipName);
         zip.extractAllTo(targetDir, true, true);
         fs.rmSync(nestedZipName);
