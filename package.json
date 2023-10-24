@@ -17,10 +17,12 @@
     "vscode": "^1.54.0"
   },
   "scripts": {
-    "build": "lerna run build && webpack --mode=development",
+    "build": "lerna run build && yarn build:node",
+    "build:node": "webpack --mode=development",
     "build:production": "lerna run build:production && webpack --mode=production",
     "download:engine": "ts-node scripts/download-engine.ts",
-    "clean": "lerna run clean & rimraf lib dist webviews/dist",
+    "clean": "lerna run clean & yarn clean:node & rimraf webviews/dist",
+    "clean:node": "rimraf lib dist",
     "lint": "lerna run lint -- & eslint --ext .ts,.tsx ./src",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",

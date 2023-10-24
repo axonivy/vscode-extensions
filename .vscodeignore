@@ -6,6 +6,7 @@
 lerna.json
 vscode-extensions.code-workspace
 webpack.config.json
+README.md
 
 **/node_modules
 

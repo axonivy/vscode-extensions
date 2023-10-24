@@ -12,7 +12,8 @@
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js",
       ],
-      "sourceMaps": true
+      "sourceMaps": true,
+      "preLaunchTask": "clean & build node"
     }
   ]
 }
