@@ -9,9 +9,9 @@ import { NewProcessParams } from '../project-explorer/new-process';
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
   private childProcess: ChildProcess;
-  private engineUrl: string;
+  private engineUrl: Promise<string>;
   private ivyEngineApi: IvyEngineApi;
-  private devContextPath: string;
+  private devContextPath: Promise<string>;
   private webSocketAddress: string;
   private extensionUri: vscode.Uri;
   private readonly mavenBuilder: MavenBuilder;
@@ -27,11 +27,11 @@ export class IvyEngineManager {
       return;
     }
     this.started = true;
-    this.engineUrl = await this.resolveEngineUrl();
-    this.ivyEngineApi = new IvyEngineApi(this.engineUrl);
-    this.devContextPath = await this.ivyEngineApi.devContextPathRequest();
+    this.engineUrl = this.resolveEngineUrl();
+    this.ivyEngineApi = new IvyEngineApi(await this.engineUrl);
+    this.devContextPath = this.ivyEngineApi.devContextPathRequest();
     await this.initProjects();
-    this.webSocketAddress = this.toWebSocketAddress(this.engineUrl.slice(0, -1) + this.devContextPath + '/');
+    this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
     executeCommand(Commands.PROCESS_EDITOR_ACTIVATE);
   }
@@ -72,14 +72,14 @@ export class IvyEngineManager {
   }
 
   public async initProjects(): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.ivyEngineApi.initProjects(ivyProjectDirectories);
     }
   }
 
   public async deployProjects(): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
     }
@@ -94,13 +94,13 @@ export class IvyEngineManager {
   }
 
   public async deployProject(ivyProjectDirectory: string): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
     }
   }
 
   public async buildAndDeployProjects(): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.buildProjects();
       await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
@@ -108,20 +108,20 @@ export class IvyEngineManager {
   }
 
   public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       await this.buildProject(ivyProjectDirectory);
       await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
     }
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
-    if (this.devContextPath) {
+    if (await this.devContextPath) {
       await this.ivyEngineApi.createProcess(newProcessParams);
     }
   }
 
-  public devWfUiUri(): string {
-    return this.fullUri(this.devContextPath);
+  public async devWfUiUri(): Promise<string> {
+    return this.fullUri(await this.devContextPath);
   }
 
   async ivyProjectDirectories(): Promise<string[]> {
@@ -134,25 +134,25 @@ export class IvyEngineManager {
     }
   }
 
-  openDevWfUi(): void {
-    this.openInInternalBrowser(this.devContextPath);
+  async openDevWfUi(): Promise<void> {
+    await this.openInInternalBrowser(await this.devContextPath);
   }
 
-  openEngineCockpit(): void {
-    this.openInInternalBrowser('system/engine-cockpit');
+  async openEngineCockpit(): Promise<void> {
+    await this.openInInternalBrowser('system/engine-cockpit');
   }
 
-  startProcess(processStartUri: string): void {
-    this.openInInternalBrowser(processStartUri);
+  async startProcess(processStartUri: string): Promise<void> {
+    await this.openInInternalBrowser(processStartUri);
   }
 
-  private openInInternalBrowser(postfix: string): void {
-    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [this.fullUri(postfix)]);
+  private async openInInternalBrowser(postfix: string): Promise<void> {
+    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [await this.fullUri(postfix)]);
   }
 
-  private fullUri(postfix: string) {
+  private async fullUri(postfix: string) {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    return this.engineUrl + postfix;
+    return (await this.engineUrl) + postfix;
   }
 
   private async stopEmbeddedEngine(): Promise<void> {

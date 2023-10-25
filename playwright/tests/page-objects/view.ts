@@ -21,7 +21,9 @@ export class View extends PageObject {
   }
 
   protected viewFrameLoactor(): FrameLocator {
-    return this.viewLocator.frameLocator('iFrame').frameLocator('iFrame');
+    return this.viewLocator
+      .frameLocator('iFrame')
+      .frameLocator(`iFrame#active-frame${this.data.viewName ? `[title="${this.data.viewName}"]` : ''}`);
   }
 
   async isTabVisible(): Promise<void> {

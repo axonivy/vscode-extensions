@@ -5,7 +5,8 @@ export class InscriptionView extends View {
   constructor(page: Page) {
     const outputViewData: ViewData = {
       tabSelector: 'li.action-item:has-text("INSCRIPTION")',
-      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true'
+      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true',
+      viewName: 'Inscription'
     };
     super(outputViewData, page);
   }

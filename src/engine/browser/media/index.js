@@ -37,8 +37,6 @@ window.addEventListener('message', e => {
   }
 });
 
-window.addEventListener('message', console.log);
-
 onceDocumentLoaded(() => {
   setInterval(() => {
     const iframeFocused = document.activeElement?.tagName === 'IFRAME';
