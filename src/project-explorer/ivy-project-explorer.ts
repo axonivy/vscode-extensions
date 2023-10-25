@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN, Entry } from './ivy-project-tree-data-provider';
 import { Commands, executeCommand } from '../base/commands';
+import { addNewProcess } from './new-process';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -14,6 +15,7 @@ export class IvyProjectExplorer {
     context.subscriptions.push(this.treeView);
     this.registerCommands();
     this.defineIvyProjectFileWatcher();
+    this.defineProcessModelFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
@@ -27,6 +29,11 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshFileSelection`, () => this.syncProjectExplorerSelectionWithActiveTab());
+    vscode.commands.registerCommand(`${VIEW_ID}.addNewProcess`, (entry: Entry) => addNewProcess(this.treeDataProvider.rootOf(entry)));
+    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
+      this.treeDataProvider.delete(entry);
+      this.treeDataProvider.refresh();
+    });
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
   }
 
@@ -35,6 +42,15 @@ export class IvyProjectExplorer {
     projectFileWatcher.onDidChange(() => this.refresh());
     projectFileWatcher.onDidCreate(() => this.refresh());
     projectFileWatcher.onDidDelete(() => this.refresh());
+  }
+
+  private defineProcessModelFileWatcher(): void {
+    const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/processes/**/*.p.json');
+    processModelFileWatcher.onDidCreate(_onDidChangeTreeData => {
+      this.treeDataProvider.refresh();
+      executeCommand('vscode.open', vscode.Uri.file(_onDidChangeTreeData.fsPath));
+    });
+    processModelFileWatcher.onDidDelete(() => this.treeDataProvider.refresh());
   }
 
   public async hasIvyProjects(): Promise<boolean> {

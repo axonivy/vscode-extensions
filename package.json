@@ -35,7 +35,8 @@
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
     "@tanstack/react-query": "^4.32.0",
-    "fast-xml-parser": "^4.3.2"
+    "fast-xml-parser": "^4.3.2",
+    "rimraf": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
@@ -47,7 +48,6 @@
     "lerna": "^6.1.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
     "typescript": "~5.2.2",
     "vsce": "1.79.5",
     "vscode-config-editor-webview": "11.2.0",
@@ -189,6 +189,16 @@
         "command": "ivyProjects.refreshFileSelection",
         "title": "Refresh File Selection",
         "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.addNewProcess",
+        "title": "Add new Process",
+        "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.deleteEntry",
+        "title": "Delete",
+        "category": "Ivy Project Explorer"
       }
     ],
     "configuration": {
@@ -327,6 +337,14 @@
         {
           "command": "ivyProjects.buildAndDeployProject",
           "when": "view == ivyProjects && viewItem == ivyProject"
+        },
+        {
+          "command": "ivyProjects.addNewProcess",
+          "when": "view == ivyProjects"
+        },
+        {
+          "command": "ivyProjects.deleteEntry",
+          "when": "view == ivyProjects"
         }
       ]
     },
