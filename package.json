@@ -36,10 +36,11 @@
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
     "@tanstack/react-query": "^4.32.0",
     "fast-xml-parser": "^4.3.2",
-    "rimraf": "^5.0.5"
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
+    "@types/rimraf": "^3.0.2",
     "@types/vscode": "^1.54.0",
     "@types/vscode-webview": "^1.54.0",
     "adm-zip": "^0.5.10",

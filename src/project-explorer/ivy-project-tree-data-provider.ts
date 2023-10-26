@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { rimraf } from 'rimraf';
+import rimraf from 'rimraf';
 import { FileStat } from './file-stat';
 
 export interface Entry {
@@ -209,6 +209,6 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   async delete(entry: Entry): Promise<void> {
-    rimraf(entry.uri.fsPath);
+    rimraf(entry.uri.fsPath, () => {});
   }
 }
