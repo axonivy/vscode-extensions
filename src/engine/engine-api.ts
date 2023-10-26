@@ -5,12 +5,14 @@ import * as crypto from 'crypto';
 import path from 'path';
 import {
   ACTIVATE_PROJECTS_REQUEST,
+  CREATE_PROCESS_REQUEST,
   DEACTIVATE_PROJECTS_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
   PROJECT_REQUEST_OPTIONS,
   ProjectRequest
 } from './project-request';
+import { NewProcessParams } from '../project-explorer/new-process';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
@@ -63,6 +65,12 @@ export class IvyEngineApi {
     await this.runProjectRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
     await this.runProjectRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
     await this.runProjectRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
+  }
+
+  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('newProcessParams', JSON.stringify(newProcessParams));
+    await this.runProjectRequestWithProgress(CREATE_PROCESS_REQUEST, searchParams);
   }
 
   private async runProjectRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {

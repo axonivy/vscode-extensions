@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import rimraf from 'rimraf';
 import { FileStat } from './file-stat';
 
 export interface Entry {
@@ -20,6 +21,9 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   >();
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
 
+  private _onDidChangeEntryCache: vscode.EventEmitter<Entry> = new vscode.EventEmitter<Entry>();
+  readonly onDidChangeEntryCache: vscode.Event<Entry> = this._onDidChangeEntryCache.event;
+
   private entryCache = new Map<string, Entry>();
   private openTabPaths: string[];
 
@@ -37,6 +41,11 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   getEntryCache() {
     return this.entryCache;
+  }
+
+  cacheEntry(entry: Entry) {
+    this.entryCache.set(entry.uri.fsPath, entry);
+    this._onDidChangeEntryCache.fire(entry);
   }
 
   private async findIvyProjects(): Promise<string[]> {
@@ -94,7 +103,6 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       const children = await this.readDirectory(element.uri);
       return children.map(([childName, childType]) => this.createAndCacheChild(element, childName, childType));
     }
-
     return (await this.ivyProjects).map(dir => this.createAndCacheRoot(dir));
   }
 
@@ -105,7 +113,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo-black-background.svg'),
       contextValue: 'ivyProject'
     };
-    this.entryCache.set(entry.uri.fsPath, entry);
+    this.cacheEntry(entry);
     this.getChildren(entry);
     return entry;
   }
@@ -117,7 +125,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       return cachedChild;
     }
     const entry = { uri: childUri, type: childType, parent };
-    this.entryCache.set(childUri.fsPath, entry);
+    this.cacheEntry(entry);
     if (childType === vscode.FileType.Directory && this.openTabPathStartsWith(childUri.fsPath)) {
       this.getChildren(entry);
     }
@@ -191,5 +199,16 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     }
 
     return error;
+  }
+
+  static rootOf(child: Entry): Entry {
+    if (child.parent) {
+      return this.rootOf(child.parent);
+    }
+    return child;
+  }
+
+  async delete(entry: Entry): Promise<void> {
+    rimraf(entry.uri.fsPath, () => {});
   }
 }

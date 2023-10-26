@@ -4,6 +4,7 @@ import { IvyEngineApi } from './engine-api';
 import Os from 'os';
 import { executeCommand, Commands } from '../base/commands';
 import { MavenBuilder } from './build/maven';
+import { NewProcessParams } from '../project-explorer/new-process';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -110,6 +111,12 @@ export class IvyEngineManager {
     if (this.devContextPath) {
       await this.buildProject(ivyProjectDirectory);
       await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
+    }
+  }
+
+  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
+    if (this.devContextPath) {
+      await this.ivyEngineApi.createProcess(newProcessParams);
     }
   }
 
