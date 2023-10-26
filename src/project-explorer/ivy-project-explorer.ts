@@ -17,6 +17,11 @@ export class IvyProjectExplorer {
     this.defineIvyProjectFileWatcher();
     this.defineProcessModelFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
+
+    this.treeDataProvider.onDidChangeEntryCache(() => {
+      this.syncProjectExplorerSelectionWithActiveTab();
+    });
+
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
@@ -29,7 +34,7 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.refreshFileSelection`, () => this.syncProjectExplorerSelectionWithActiveTab());
-    vscode.commands.registerCommand(`${VIEW_ID}.addNewProcess`, (entry: Entry) => addNewProcess(this.treeDataProvider.rootOf(entry)));
+    vscode.commands.registerCommand(`${VIEW_ID}.addNewProcess`, (entry: Entry) => addNewProcess(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
       this.treeDataProvider.delete(entry);
       this.treeDataProvider.refresh();
