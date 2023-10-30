@@ -4,17 +4,17 @@
       "name": "root",
       "path": "./"
     },
-    {
-      "name": "process-editor",
-      "path": "webviews/process-editor"
+    { 
+      "name": "extension",
+      "path": "src"
     },
     {
-      "name": "config-editor",
-      "path": "webviews/config-editor"
+      "name": "webviews",
+      "path": "webviews"
     },
     {
-      "name": "inscription",
-      "path": "webviews/inscription"
+      "name": "playwright",
+      "path": "playwright"
     }
   ],
   "settings": {
