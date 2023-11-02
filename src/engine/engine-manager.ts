@@ -1,10 +1,10 @@
 import { ChildProcess, execFile } from 'child_process';
 import * as vscode from 'vscode';
-import { IvyEngineApi } from './engine-api';
 import Os from 'os';
 import { executeCommand, Commands } from '../base/commands';
 import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
+import { IvyEngineApi } from './api/engine-api';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
