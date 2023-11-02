@@ -1,0 +1,45 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  grid-template-areas: 'sprotty inscription';
+  grid-auto-columns: minmax(50%, 100%) min-content;
+}
+body:has(#inscription > .hidden) {
+  grid-template-areas: 'sprotty';
+  grid-auto-columns: 100%;
+  grid-auto-rows: 100%;
+}
+#sprotty {
+  grid-area: sprotty;
+}
+#inscription {
+  grid-area: inscription;
+  overflow-y: scroll;
+}
+
+.main-widget {
+  position: relative;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}

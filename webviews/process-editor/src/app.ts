@@ -2,7 +2,8 @@ import '../css/colors.css';
 import '@eclipse-glsp/vscode-integration-webview/css/glsp-vscode.css';
 import '../css/diagram.css';
 
-import { ivyBreakpointModule, createIvyDiagramContainer, ivyOpenInscriptionModule } from '@axonivy/process-editor';
+import { ivyBreakpointModule, createIvyDiagramContainer } from '@axonivy/process-editor';
+import { ivyInscriptionModule } from '@axonivy/process-editor-inscription';
 import { DiagramServerProxy, ICopyPasteHandler, TYPES } from '@eclipse-glsp/client';
 import {
   GLSPDiagramIdentifier,
@@ -16,13 +17,27 @@ import { CopyPasteHandlerProvider } from '@eclipse-glsp/vscode-integration-webvi
 import { Container } from 'inversify';
 import { IvyGLSPDiagramWidget } from './ivy-diagram-widget';
 import ivyStartActionModule from './start/di.config';
+import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
+import { MonacoEditorUtil } from '@axonivy/inscription-editor';
+import { MonacoUtil } from '@axonivy/inscription-core';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+export type Message =
+  | {
+      command: 'connect.to.web.sockets';
+      webSocketAddress: string;
+    }
+  | {
+      command: 'theme';
+      theme: 'dark' | 'light';
+    };
 
 class IvyGLSPStarter extends GLSPStarter {
   createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container {
     const container = createIvyDiagramContainer(diagramIdentifier.clientId);
     container.load(ivyBreakpointModule);
-    container.load(ivyOpenInscriptionModule);
     container.load(ivyStartActionModule);
+    container.load(ivyInscriptionModule);
     return container;
   }
 
@@ -47,5 +62,17 @@ class IvyGLSPStarter extends GLSPStarter {
 }
 
 export function launch(): void {
+  MonacoUtil.initStandalone(editorWorker);
+  MonacoEditorUtil.initMonaco(reactMonaco, 'light');
+  const handleMessages = (event: MessageEvent<Message>) => {
+    const message = event.data;
+    switch (message.command) {
+      case 'theme':
+        reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(message.theme));
+        break;
+    }
+  };
+
+  window.addEventListener('message', handleMessages);
   new IvyGLSPStarter();
 }

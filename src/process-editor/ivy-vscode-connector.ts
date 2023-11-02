@@ -14,7 +14,6 @@ import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { ProcessEditorConnector, SelectedElement } from '../base/process-editor-connector';
-import { OpenInscriptionAction } from '@axonivy/process-editor-protocol';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 
@@ -46,7 +45,6 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     });
     return super.registerClient(client).then(result => {
       // Register server action handlers which are handled by this vscode integration
-      result.serverActions[client.diagramType].push(OpenInscriptionAction.KIND);
       return result;
     });
   }
@@ -145,11 +143,6 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
         const newRoot = action.newRoot as SModelRootSchema & { args: { app: string; pmv: string } };
         ivyClient.app = newRoot.args.app;
         ivyClient.pmv = newRoot.args.pmv;
-      }
-
-      if (OpenInscriptionAction.is(message.action)) {
-        vscode.commands.executeCommand('inscriptionEditor.focus');
-        return { processedMessage: undefined, messageChanged: true };
       }
     }
     return super.processMessage(message, origin);

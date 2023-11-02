@@ -6,7 +6,6 @@ import { IvyEngineManager } from './engine/engine-manager';
 import { Commands, registerAndSubscribeCommand } from './base/commands';
 import { activateIvyBrowser } from './engine/browser/ivy-browser';
 import { activateProcessEditor } from './process-editor/ivy-extension';
-import { activateInscription } from './inscription/inscription-extension';
 import { NewProcessParams } from './project-explorer/new-process';
 
 let ivyEngineManager: IvyEngineManager;
@@ -16,7 +15,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   ivyEngineManager = new IvyEngineManager(context);
   registerAndSubscribeCommand(context, Commands.ENGINE_START_MANAGER, () => ivyEngineManager.start());
-  registerAndSubscribeCommand(context, Commands.PROCESS_EDITOR_ACTIVATE, () => activateProcessEditorAndInscription(context));
+  registerAndSubscribeCommand(context, Commands.PROCESS_EDITOR_ACTIVATE, () => activateProcessEditor(context));
   registerAndSubscribeCommand(context, Commands.ENGINE_DEPLOY_PROJECTS, () => ivyEngineManager.deployProjects());
   registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_PROJECTS, () => ivyEngineManager.buildProjects());
   registerAndSubscribeCommand(context, Commands.ENGINE_BUILD_AND_DEPLOY_PROJECTS, () => ivyEngineManager.buildAndDeployProjects());
@@ -44,11 +43,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   });
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));
-}
-
-async function activateProcessEditorAndInscription(context: vscode.ExtensionContext): Promise<void> {
-  const processEditorConnector = await activateProcessEditor(context);
-  activateInscription(context, processEditorConnector);
 }
 
 export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
