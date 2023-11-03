@@ -20,7 +20,7 @@ pipeline {
       steps {
         nodejs(nodeJSInstallationName: '18.17.1') {
           bat 'yarn update:axonivy:next'
-          bat 'yarn install --ignore-scripts && yarn clean'
+          bat 'yarn install'
           bat 'yarn build:production'
           bat 'yarn download:engine ' + params.engineDownloadUrl
         }

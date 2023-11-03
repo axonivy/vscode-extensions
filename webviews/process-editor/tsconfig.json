@@ -2,8 +2,8 @@
   "extends": "../../config/tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "lib",
+    "types": ["node", "reflect-metadata", "vscode", "vite/client"]
   },
-  "include": ["src"],
-  "types": ["node", "reflect-metadata", "vscode"]
+  "include": ["src"]
 }

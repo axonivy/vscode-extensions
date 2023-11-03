@@ -7,7 +7,7 @@ import { OutputView } from './page-objects/output-view';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
-test.describe('Inscription View', () => {
+test.describe.skip('Inscription View', () => {
   let page: Page;
   let processEditor: ProcessEditor;
   let inscriptionView: InscriptionView;

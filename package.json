@@ -21,8 +21,7 @@
     "build:node": "webpack --mode=development",
     "build:production": "lerna run build:production && webpack --mode=production",
     "download:engine": "ts-node scripts/download-engine.ts",
-    "clean": "lerna run clean & yarn clean:node & rimraf webviews/dist",
-    "clean:node": "rimraf lib dist",
+    "clean": "rimraf lib dist webviews/dist",
     "lint": "lerna run lint -- & eslint --ext .ts,.tsx ./src",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
@@ -34,7 +33,6 @@
   "main": "./dist/extension.js",
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
-    "@tanstack/react-query": "^4.32.0",
     "fast-xml-parser": "^4.3.2"
   },
   "devDependencies": {
@@ -51,10 +49,10 @@
     "typescript": "~5.2.2",
     "vsce": "1.79.5",
     "vscode-config-editor-webview": "11.2.0",
-    "vscode-inscription-webview": "11.2.0",
     "vscode-process-editor-webview": "11.2.0",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "ts-loader": "^9.4.2"
   },
   "workspaces": [
     "webviews/*",
@@ -220,12 +218,6 @@
           "title": "Browser",
           "icon": "$(globe)",
           "when": "ivy:hasIvyProjects"
-        },
-        {
-          "id": "ivy-view-container",
-          "title": "Inscription",
-          "icon": "assets/ivy-logo.svg",
-          "when": "ivy:hasIvyProjects"
         }
       ]
     },
@@ -235,14 +227,6 @@
           "type": "webview",
           "id": "ivyBrowserView",
           "name": "Browser",
-          "when": "ivy:hasIvyProjects"
-        }
-      ],
-      "ivy-view-container": [
-        {
-          "type": "webview",
-          "id": "inscriptionEditor",
-          "name": "Inscription",
           "when": "ivy:hasIvyProjects"
         }
       ],
