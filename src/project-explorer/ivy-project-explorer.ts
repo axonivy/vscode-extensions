@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN, Entry } from './ivy-project-tree-data-provider';
 import { Commands, executeCommand } from '../base/commands';
 import { addNewProcess } from './new-process';
+import path from 'path';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -18,8 +19,8 @@ export class IvyProjectExplorer {
     this.defineProcessModelFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
 
-    this.treeDataProvider.onDidChangeEntryCache(() => {
-      this.syncProjectExplorerSelectionWithActiveTab();
+    this.treeDataProvider.onDidCreateTreeItem(entry => {
+      this.revealActiveEntry(entry);
     });
 
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
@@ -33,7 +34,6 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
-    vscode.commands.registerCommand(`${VIEW_ID}.refreshFileSelection`, () => this.syncProjectExplorerSelectionWithActiveTab());
     vscode.commands.registerCommand(`${VIEW_ID}.addNewProcess`, (entry: Entry) => addNewProcess(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
       this.treeDataProvider.delete(entry);
@@ -51,11 +51,13 @@ export class IvyProjectExplorer {
 
   private defineProcessModelFileWatcher(): void {
     const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/processes/**/*.p.json');
-    processModelFileWatcher.onDidCreate(_onDidChangeTreeData => {
+    processModelFileWatcher.onDidCreate(e => {
+      executeCommand('vscode.open', vscode.Uri.file(e.fsPath));
       this.treeDataProvider.refresh();
-      executeCommand('vscode.open', vscode.Uri.file(_onDidChangeTreeData.fsPath));
     });
-    processModelFileWatcher.onDidDelete(() => this.treeDataProvider.refresh());
+    processModelFileWatcher.onDidDelete(e => {
+      this.treeDataProvider.refresh();
+    });
   }
 
   public async hasIvyProjects(): Promise<boolean> {
@@ -104,18 +106,44 @@ export class IvyProjectExplorer {
   }
 
   private changeTabListener(event: vscode.TabChangeEvent): void {
-    if (!event.changed) {
+    if (event.changed.length > 0) {
+      this.syncProjectExplorerSelectionWithActiveTab();
+    }
+    if (event.opened.length === 1) {
+      const tabInput = event.opened[0].input as { uri: vscode.Uri };
+      if (tabInput && tabInput.uri && !this.treeDataProvider.getEntryCache().has(tabInput.uri.fsPath)) {
+        this.revealRecursively(tabInput.uri.fsPath);
+      }
+    }
+  }
+
+  private revealRecursively(entryPath: string): void {
+    const entry = this.treeDataProvider.getEntryCache().get(entryPath);
+    if (entry) {
+      this.treeView.reveal(entry, { expand: true });
       return;
     }
-    this.syncProjectExplorerSelectionWithActiveTab();
+    const parentEntryPath = path.dirname(entryPath);
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(parentEntryPath))) {
+      this.revealRecursively(parentEntryPath);
+    }
   }
 
   private syncProjectExplorerSelectionWithActiveTab(): void {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
-    if (tabInput && tabInput.uri) {
+    if (tabInput && tabInput.uri && this.treeView.visible) {
       const entry = this.treeDataProvider.getEntryCache().get(tabInput.uri.fsPath);
-      if (entry && this.treeView.visible) {
-        this.treeView.reveal(entry);
+      if (entry) {
+        this.treeView.reveal(entry, { expand: true });
+      }
+    }
+  }
+
+  private revealActiveEntry(entry: Entry): void {
+    const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
+    if (tabInput && tabInput.uri && this.treeView.visible) {
+      if (tabInput.uri.path.startsWith(entry.uri.path)) {
+        this.treeView.reveal(entry, { expand: true });
       }
     }
   }
