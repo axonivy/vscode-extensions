@@ -7,6 +7,7 @@ import { Commands, registerAndSubscribeCommand } from './base/commands';
 import { activateIvyBrowser } from './engine/browser/ivy-browser';
 import { activateProcessEditor } from './process-editor/ivy-extension';
 import { NewProcessParams } from './project-explorer/new-process';
+import { NewProjectParams } from './project-explorer/new-project';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -30,6 +31,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
   registerAndSubscribeCommand(context, Commands.ENGINE_CREATE_PROCESS, (newProcessParams: NewProcessParams) =>
     ivyEngineManager.createProcess(newProcessParams)
+  );
+  registerAndSubscribeCommand(context, Commands.ENGINE_CREATE_PROJECT, (newProjectParams: NewProjectParams) =>
+    ivyEngineManager.createProject(newProjectParams)
   );
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_DEV_WF_UI, () => ivyEngineManager.openDevWfUi());
   registerAndSubscribeCommand(context, Commands.ENGINE_OPEN_ENGINE_COCKPIT, () => ivyEngineManager.openEngineCockpit());

@@ -185,9 +185,25 @@
         "category": "Ivy Project Explorer"
       },
       {
-        "command": "ivyProjects.addNewProcess",
-        "title": "Add new Process",
+        "command": "ivyProjects.addBusinessProcess",
+        "title": "Business Process",
         "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.addCallableSubProcess",
+        "title": "Callable Sub Process",
+        "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.addWebServiceProcess",
+        "title": "Web Service Process",
+        "category": "Ivy Project Explorer"
+      },
+      {
+        "command": "ivyProjects.addNewProject",
+        "title": "Project",
+        "category": "Ivy Project Explorer",
+        "icon": "$(add)"
       },
       {
         "command": "ivyProjects.deleteEntry",
@@ -254,6 +270,10 @@
       {
         "id": "workflow.editor.title",
         "label": "Diagram"
+      },
+      {
+        "id": "ivyProjects.new",
+        "label": "New"
       }
     ],
     "menus": {
@@ -288,21 +308,25 @@
         {
           "command": "ivyProjects.refreshEntry",
           "when": "view == ivyProjects",
-          "group": "navigation"
+          "group": "navigation@3"
         },
         {
           "command": "ivyProjects.buildAll",
-          "when": "view == ivyProjects",
-          "group": "navigation"
+          "when": "view == ivyProjects"
         },
         {
           "command": "ivyProjects.deployAll",
           "when": "view == ivyProjects",
-          "group": "navigation"
+          "group": "navigation@2"
         },
         {
           "command": "ivyProjects.buildAndDeployAll",
           "when": "view == ivyProjects"
+        },
+        {
+          "command": "ivyProjects.addNewProject",
+          "when": "view == ivyProjects",
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
@@ -321,12 +345,31 @@
           "when": "view == ivyProjects && viewItem == ivyProject"
         },
         {
-          "command": "ivyProjects.addNewProcess",
+          "command": "ivyProjects.deleteEntry",
           "when": "view == ivyProjects"
         },
         {
-          "command": "ivyProjects.deleteEntry",
-          "when": "view == ivyProjects"
+          "submenu": "ivyProjects.new",
+          "when": "view == ivyProjects",
+          "group": "ivyProjects@1"
+        }
+      ],
+      "ivyProjects.new": [
+        {
+          "command": "ivyProjects.addBusinessProcess",
+          "group": "1_new@1"
+        },
+        {
+          "command": "ivyProjects.addCallableSubProcess",
+          "group": "1_new@2"
+        },
+        {
+          "command": "ivyProjects.addWebServiceProcess",
+          "group": "1_new@2"
+        },
+        {
+          "command": "ivyProjects.addNewProject",
+          "group": "2_new@1"
         }
       ]
     },

@@ -5,6 +5,7 @@ import { executeCommand, Commands } from '../base/commands';
 import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
+import { NewProjectParams } from '../project-explorer/new-project';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -117,6 +118,15 @@ export class IvyEngineManager {
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
     if (await this.devContextPath) {
       await this.ivyEngineApi.createProcess(newProcessParams);
+    }
+  }
+
+  public async createProject(newProjectParams: NewProjectParams): Promise<void> {
+    if (await this.devContextPath) {
+      await this.ivyEngineApi.createProject(newProjectParams);
+      if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(newProjectParams.path))) {
+        await this.buildAndDeployProject(newProjectParams.path);
+      }
     }
   }
 

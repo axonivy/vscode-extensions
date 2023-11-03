@@ -10,6 +10,7 @@ export namespace Commands {
   export const ENGINE_BUILD_AND_DEPLOY_PROJECT = 'engine.buildAndDeployProject';
   export const ENGINE_BUILD_AND_DEPLOY_PROJECTS = 'engine.buildAndDeployProjects';
   export const ENGINE_CREATE_PROCESS = 'engine.createProcess';
+  export const ENGINE_CREATE_PROJECT = 'engine.createProject';
   export const ENGINE_OPEN_DEV_WF_UI = 'engine.openDevWfUi';
   export const ENGINE_OPEN_ENGINE_COCKPIT = 'engine.openEngineCockpit';
   export const ENGINE_IVY_BROWSER_OPEN = 'engine.ivyBrowserOpen';

@@ -3,6 +3,8 @@ import { Entry, IvyProjectTreeDataProvider } from './ivy-project-tree-data-provi
 import { Commands, executeCommand } from '../base/commands';
 import path from 'path';
 
+export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
+
 export interface NewProcessParams {
   name: string;
   kind: string;
@@ -10,17 +12,17 @@ export interface NewProcessParams {
   path: string;
 }
 
-export async function addNewProcess(entry: Entry): Promise<void> {
+export async function addNewProcess(entry: Entry, kind: ProcessKind): Promise<void> {
   if (!entry) {
     throw new Error('Select a Project before creating a new process');
   }
-  const input = await collectNewProcessParams(entry);
+  const input = await collectNewProcessParams(entry, kind);
   if (input) {
     executeCommand(Commands.ENGINE_CREATE_PROCESS, input);
   }
 }
 
-async function collectNewProcessParams(entry: Entry): Promise<NewProcessParams | undefined> {
+async function collectNewProcessParams(entry: Entry, kind: ProcessKind): Promise<NewProcessParams | undefined> {
   const name = await vscode.window.showInputBox({ title: 'Process Name' });
   if (!name) {
     return;
@@ -29,10 +31,6 @@ async function collectNewProcessParams(entry: Entry): Promise<NewProcessParams |
   const resolvedNamespace = resolveNamespaceFromPath(entry, root);
   const namespace = await vscode.window.showInputBox({ title: 'Namespace', value: resolvedNamespace });
   if (!namespace && namespace !== '') {
-    return;
-  }
-  const kind = await vscode.window.showQuickPick(['Business Process', 'Callable Sub Process', 'Web Service Process']);
-  if (!kind) {
     return;
   }
   const path = root.uri.fsPath;

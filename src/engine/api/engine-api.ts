@@ -5,6 +5,7 @@ import path from 'path';
 import {
   ACTIVATE_PROJECTS_REQUEST,
   CREATE_PROCESS_REQUEST,
+  CREATE_PROJECT_REQUEST,
   DEACTIVATE_PROJECTS_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
@@ -14,6 +15,7 @@ import {
   makePostRequest
 } from './request';
 import { NewProcessParams } from '../../project-explorer/new-process';
+import { NewProjectParams } from '../../project-explorer/new-project';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
@@ -70,6 +72,10 @@ export class IvyEngineApi {
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
     await this.runPostRequestWithProgress(newProcessParams, CREATE_PROCESS_REQUEST);
+  }
+
+  public async createProject(newProjectParams: NewProjectParams): Promise<void> {
+    await this.runPostRequestWithProgress(newProjectParams, CREATE_PROJECT_REQUEST);
   }
 
   private async runGetRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {
