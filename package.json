@@ -35,12 +35,10 @@
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
     "@tanstack/react-query": "^4.32.0",
-    "fast-xml-parser": "^4.3.2",
-    "rimraf": "^3.0.2"
+    "fast-xml-parser": "^4.3.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
-    "@types/rimraf": "^3.0.2",
     "@types/vscode": "^1.54.0",
     "@types/vscode-webview": "^1.54.0",
     "adm-zip": "^0.5.10",
@@ -49,6 +47,7 @@
     "lerna": "^6.1.0",
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.2",
     "typescript": "~5.2.2",
     "vsce": "1.79.5",
     "vscode-config-editor-webview": "11.2.0",
@@ -187,11 +186,6 @@
         "category": "Ivy Project Explorer"
       },
       {
-        "command": "ivyProjects.refreshFileSelection",
-        "title": "Refresh File Selection",
-        "category": "Ivy Project Explorer"
-      },
-      {
         "command": "ivyProjects.addNewProcess",
         "title": "Add new Process",
         "category": "Ivy Project Explorer"
@@ -314,10 +308,6 @@
           "command": "ivyProjects.deployAll",
           "when": "view == ivyProjects",
           "group": "navigation"
-        },
-        {
-          "command": "ivyProjects.refreshFileSelection",
-          "when": "view == ivyProjects"
         },
         {
           "command": "ivyProjects.buildAndDeployAll",

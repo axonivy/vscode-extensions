@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import rimraf from 'rimraf';
 import { FileStat } from './file-stat';
 
 export interface Entry {
@@ -21,8 +20,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   >();
   readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
 
-  private _onDidChangeEntryCache: vscode.EventEmitter<Entry> = new vscode.EventEmitter<Entry>();
-  readonly onDidChangeEntryCache: vscode.Event<Entry> = this._onDidChangeEntryCache.event;
+  private _onDidCreateTreeItem: vscode.EventEmitter<Entry> = new vscode.EventEmitter<Entry>();
+  readonly onDidCreateTreeItem: vscode.Event<Entry> = this._onDidCreateTreeItem.event;
 
   private entryCache = new Map<string, Entry>();
   private openTabPaths: string[];
@@ -43,9 +42,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return this.entryCache;
   }
 
-  cacheEntry(entry: Entry) {
+  private cacheEntry(entry: Entry) {
     this.entryCache.set(entry.uri.fsPath, entry);
-    this._onDidChangeEntryCache.fire(entry);
   }
 
   private async findIvyProjects(): Promise<string[]> {
@@ -76,11 +74,14 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     this._onDidChangeTreeData.fire();
   }
 
+  refreshSubtree(entry: Entry): void {
+    this.openTabPaths = this.currentOpenTabPaths();
+    this._onDidChangeTreeData.fire(entry);
+  }
+
   getTreeItem(element: Entry): vscode.TreeItem {
-    const treeItem = new vscode.TreeItem(
-      element.uri,
-      element.type === vscode.FileType.Directory ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None
-    );
+    const collapsibleState = this.collapsibleStateOf(element);
+    const treeItem = new vscode.TreeItem(element.uri, collapsibleState);
     if (element.type === vscode.FileType.File) {
       treeItem.command = { command: 'vscode.open', title: 'Open File', arguments: [element.uri] };
       treeItem.contextValue = 'file';
@@ -91,7 +92,18 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     if (element.contextValue) {
       treeItem.contextValue = element.contextValue;
     }
+    this._onDidCreateTreeItem.fire(element);
     return treeItem;
+  }
+
+  private collapsibleStateOf(element: Entry): vscode.TreeItemCollapsibleState {
+    if (element.type !== vscode.FileType.Directory) {
+      return vscode.TreeItemCollapsibleState.None;
+    }
+    if (this.openTabPathStartsWith(element.uri.fsPath)) {
+      return vscode.TreeItemCollapsibleState.Expanded;
+    }
+    return vscode.TreeItemCollapsibleState.Collapsed;
   }
 
   async getParent(element: Entry): Promise<Entry | undefined> {
@@ -114,21 +126,13 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       contextValue: 'ivyProject'
     };
     this.cacheEntry(entry);
-    this.getChildren(entry);
     return entry;
   }
 
   private createAndCacheChild(parent: Entry, childName: string, childType: vscode.FileType): Entry {
     const childUri = vscode.Uri.file(path.join(parent.uri.fsPath, childName));
-    const cachedChild = this.entryCache.get(childUri.fsPath);
-    if (cachedChild) {
-      return cachedChild;
-    }
     const entry = { uri: childUri, type: childType, parent };
     this.cacheEntry(entry);
-    if (childType === vscode.FileType.Directory && this.openTabPathStartsWith(childUri.fsPath)) {
-      this.getChildren(entry);
-    }
     return entry;
   }
 
@@ -143,7 +147,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       const fileStat = await this.fileStat(path.join(uri.fsPath, child));
       result.push([child, fileStat.type]);
     }
-    return Promise.resolve(result);
+    return result;
   }
 
   async readdir(path: string): Promise<string[]> {
@@ -209,6 +213,6 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   async delete(entry: Entry): Promise<void> {
-    rimraf(entry.uri.fsPath, () => {});
+    vscode.workspace.fs.delete(entry.uri, { recursive: true });
   }
 }
