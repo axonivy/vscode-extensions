@@ -1,7 +1,8 @@
-import { Locator, Page } from 'playwright-core';
+import { Page } from 'playwright-core';
 import { ViewData } from './view';
 import { expect } from 'playwright/test';
 import { Editor } from './editor';
+import { InscriptionView } from './inscription-view';
 
 export class ProcessEditor extends Editor {
   constructor(page: Page, editorFile: string = 'ProcurementRequestUserTask.p.json') {
@@ -12,17 +13,32 @@ export class ProcessEditor extends Editor {
     super(editorFile, outputViewData, page);
   }
 
-  override async isViewVisible(): Promise<void> {
+  override async isViewVisible() {
     await this.isTabVisible();
     const graph = this.viewFrameLoactor().locator('.sprotty-graph');
     await expect(graph).toBeVisible();
   }
 
-  locatorForPID(pid: string): Locator {
+  locatorForPID(pid: string) {
     return this.viewFrameLoactor().locator(`[id$="_${pid}"]`);
   }
 
-  async typeText(text: string): Promise<void> {
+  async typeText(text: string) {
     await this.page.keyboard.type(text);
+  }
+
+  async openInscriptionView(pid?: string) {
+    if (pid) {
+      await this.locatorForPID(pid).dblclick();
+    } else {
+      await this.viewFrameLoactor().locator('#btn_inscription_toggle').click();
+    }
+    const view = this.inscriptionView();
+    await view.assertViewVisible();
+    return view;
+  }
+
+  inscriptionView() {
+    return new InscriptionView(this.page, this.viewFrameLoactor().locator('.inscription-ui-container'));
   }
 }

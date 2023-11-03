@@ -1,5 +1,4 @@
 import { Page, expect, test } from '@playwright/test';
-import { InscriptionView } from './page-objects/inscription-view';
 import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
 import { defaultWorkspacePath } from './workspaces/workspace';
@@ -7,14 +6,12 @@ import { OutputView } from './page-objects/output-view';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
-test.describe.skip('Inscription View', () => {
+test.describe('Inscription View', () => {
   let page: Page;
   let processEditor: ProcessEditor;
-  let inscriptionView: InscriptionView;
 
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
-    inscriptionView = new InscriptionView(page);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
   });
@@ -33,26 +30,24 @@ test.describe.skip('Inscription View', () => {
     let element = processEditor.locatorForPID(userDialogPID);
     await expect(element).toBeVisible();
     await element.dblclick();
-    await inscriptionView.isTabVisible();
-    await inscriptionView.isViewVisible();
-    let header = inscriptionView.header();
-    await expect(header).toHaveText('User Dialog - Enter Request');
+    const inscriptionView = processEditor.inscriptionView();
+    await inscriptionView.assertViewVisible();
+    await expect(inscriptionView.header()).toHaveText('User Dialog - Enter Request');
 
-    element = processEditor.locatorForPID('15254DCE818AD7A2-f9');
+    element = processEditor.locatorForPID('15254DCE818AD7A2-f0');
     await element.click();
-    header = inscriptionView.header();
-    await expect(header).toHaveText('E-Mail - Notify Requester');
+    await expect(inscriptionView.header()).toHaveText('Start - start.ivp');
   });
 
   test('Change User Dialog display name', async () => {
-    const element = processEditor.locatorForPID(userDialogPID);
-    await element.dblclick();
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const nameAccordion = inscriptionView.accordionFor('General');
     await expect(nameAccordion).toBeVisible();
     await nameAccordion.click();
 
     const inputField = inscriptionView.inputFieldFor('Display name');
     await expect(inputField).toHaveText('Enter Request');
+    const element = processEditor.locatorForPID(userDialogPID);
     await expect(element).toHaveText('Enter Request');
 
     const newDisplayName = 'a new display name for this test';
@@ -60,13 +55,11 @@ test.describe.skip('Inscription View', () => {
     await inputField.fill(newDisplayName);
     await inputField.blur();
     await expect(inputField).toHaveText(newDisplayName);
-    await element.click();
     await expect(element).toHaveText(newDisplayName);
   });
 
   test('Monaco Editor completion', async () => {
-    const element = processEditor.locatorForPID(userDialogPID);
-    await element.dblclick();
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
     await outputAccordion.click();

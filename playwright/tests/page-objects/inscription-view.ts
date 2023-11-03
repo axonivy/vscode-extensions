@@ -1,34 +1,26 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { View, ViewData } from './view';
 
-export class InscriptionView extends View {
-  constructor(page: Page) {
-    const outputViewData: ViewData = {
-      tabSelector: 'li.action-item:has-text("INSCRIPTION")',
-      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true',
-      viewName: 'Inscription'
-    };
-    super(outputViewData, page);
-  }
+export class InscriptionView {
+  constructor(readonly page: Page, readonly parent: Locator) {}
 
-  override async isViewVisible(): Promise<void> {
-    await expect(this.viewFrameLoactor().locator('.editor-root')).toBeVisible();
+  async assertViewVisible() {
+    await expect(this.parent).toBeVisible();
   }
 
   header(): Locator {
-    return this.viewFrameLoactor().locator('.header-title');
+    return this.parent.locator('.header-title');
   }
 
   accordionFor(name: string): Locator {
-    return this.viewFrameLoactor().locator(`.accordion-trigger:has-text("${name}")`);
+    return this.parent.locator(`.accordion-trigger:has-text("${name}")`);
   }
 
   inputFieldFor(label: string): Locator {
-    return this.viewFrameLoactor().getByLabel(label, { exact: true });
+    return this.parent.getByLabel(label, { exact: true });
   }
 
   monacoEditor(): Locator {
-    return this.viewFrameLoactor().locator('.view-lines.monaco-mouse-cursor-text');
+    return this.parent.locator('.view-lines.monaco-mouse-cursor-text');
   }
 
   async triggerMonacoContentAssist(): Promise<void> {
@@ -44,6 +36,6 @@ export class InscriptionView extends View {
   }
 
   monacoContentAssist(): Locator {
-    return this.viewFrameLoactor().locator('div.editor-widget.suggest-widget');
+    return this.parent.locator('div.editor-widget.suggest-widget');
   }
 }
