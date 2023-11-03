@@ -23,7 +23,10 @@ export class IvyProjectExplorer {
       this.revealActiveEntry(entry);
     });
 
-    this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
+    this.hasIvyProjects().then(hasIvyProjects => {
+      this.setProjectExplorerActivationCondition(hasIvyProjects);
+      this.focusIvyView(hasIvyProjects);
+    });
   }
 
   private registerCommands(): void {
@@ -101,6 +104,12 @@ export class IvyProjectExplorer {
   private activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
       executeCommand(Commands.ENGINE_START_MANAGER);
+    }
+  }
+
+  private focusIvyView(hasIvyProjects: boolean): void {
+    if (hasIvyProjects) {
+      executeCommand(`${VIEW_ID}.focus`);
     }
   }
 
