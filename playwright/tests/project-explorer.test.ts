@@ -18,11 +18,9 @@ test.describe('Project Explorer', () => {
   test('Verify that Project Explorer lists several Ivy Projects', async ({ pageFor }) => {
     const page = await pageFor(multiProjectWorkspacePath);
     const explorer = new ProjectExplorerView(page);
-    await explorer.openView();
     await explorer.hasNode('ivy-project-1');
     await explorer.hasNode('ivy-project-2');
     await explorer.hasNoNode('ivy-project-3');
     await explorer.hasNoNode('no-ivy-project');
-    await explorer.closeView();
   });
 });

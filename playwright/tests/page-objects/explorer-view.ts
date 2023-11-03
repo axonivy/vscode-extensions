@@ -52,7 +52,7 @@ export class ProjectExplorerView extends ExplorerView {
 
 export class OutlineExplorerView extends ExplorerView {
   constructor(page: Page) {
-    super('Ivy Process Outline', page);
+    super('Process Outline', page);
   }
 
   async selectNode(name: string): Promise<void> {
