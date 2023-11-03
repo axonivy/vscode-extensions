@@ -53,7 +53,6 @@ export class IvyProjectExplorer {
     const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/processes/**/*.p.json');
     processModelFileWatcher.onDidCreate(e => {
       executeCommand('vscode.open', vscode.Uri.file(e.fsPath));
-      this.treeDataProvider.refresh();
     });
     processModelFileWatcher.onDidDelete(e => {
       this.treeDataProvider.refresh();
@@ -109,33 +108,30 @@ export class IvyProjectExplorer {
     if (event.changed.length > 0) {
       this.syncProjectExplorerSelectionWithActiveTab();
     }
-    if (event.opened.length === 1) {
-      const tabInput = event.opened[0].input as { uri: vscode.Uri };
-      if (tabInput && tabInput.uri && !this.treeDataProvider.getEntryCache().has(tabInput.uri.fsPath)) {
-        this.revealRecursively(tabInput.uri.fsPath);
-      }
-    }
-  }
-
-  private revealRecursively(entryPath: string): void {
-    const entry = this.treeDataProvider.getEntryCache().get(entryPath);
-    if (entry) {
-      this.treeView.reveal(entry, { expand: true });
-      return;
-    }
-    const parentEntryPath = path.dirname(entryPath);
-    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(parentEntryPath))) {
-      this.revealRecursively(parentEntryPath);
-    }
   }
 
   private syncProjectExplorerSelectionWithActiveTab(): void {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
     if (tabInput && tabInput.uri && this.treeView.visible) {
-      const entry = this.treeDataProvider.getEntryCache().get(tabInput.uri.fsPath);
+      const entryPath = tabInput.uri.fsPath;
+      const entry = this.treeDataProvider.getEntryCache().get(entryPath);
       if (entry) {
         this.treeView.reveal(entry, { expand: true });
+        return;
       }
+      this.refreshRecursively(path.dirname(entryPath));
+    }
+  }
+
+  private refreshRecursively(entryPath: string): void {
+    const entry = this.treeDataProvider.getEntryCache().get(entryPath);
+    if (entry) {
+      this.treeDataProvider.refreshSubtree(entry);
+      return;
+    }
+    const parentEntryPath = path.dirname(entryPath);
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(parentEntryPath))) {
+      this.refreshRecursively(parentEntryPath);
     }
   }
 

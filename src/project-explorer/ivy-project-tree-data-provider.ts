@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import rimraf from 'rimraf';
 import { FileStat } from './file-stat';
 
 export interface Entry {
@@ -73,6 +72,11 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     this.openTabPaths = this.currentOpenTabPaths();
     this.ivyProjects = this.findIvyProjects();
     this._onDidChangeTreeData.fire();
+  }
+
+  refreshSubtree(entry: Entry): void {
+    this.openTabPaths = this.currentOpenTabPaths();
+    this._onDidChangeTreeData.fire(entry);
   }
 
   getTreeItem(element: Entry): vscode.TreeItem {
@@ -209,6 +213,6 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   async delete(entry: Entry): Promise<void> {
-    rimraf(entry.uri.fsPath, () => {});
+    vscode.workspace.fs.delete(entry.uri, { recursive: true });
   }
 }
