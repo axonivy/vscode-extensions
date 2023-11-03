@@ -47,7 +47,7 @@ test.describe('Inscription View', () => {
   test('Change User Dialog display name', async () => {
     const element = processEditor.locatorForPID(userDialogPID);
     await element.dblclick();
-    const nameAccordion = inscriptionView.accordionFor('Name');
+    const nameAccordion = inscriptionView.accordionFor('General');
     await expect(nameAccordion).toBeVisible();
     await nameAccordion.click();
 

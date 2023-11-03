@@ -15,26 +15,31 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axonivy/config-editor@~11.2.0-next.32":
-  version "11.2.0-next.32"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/config-editor/-/config-editor-11.2.0-next.32.tgz#1e9b7e4ea6ba7da2bf4e44442811191f83a526b7"
-  integrity sha512-u2xhcpg+FoIKsF9dLbmRu3y69+3zWSzuR2luxRAut95QKWocPcuNcc11VO7SmfIpgcdq2+a26/2sLsc3XPclRA==
+"@axonivy/config-editor@~11.2.0-next.36":
+  version "11.2.0-next.36"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/config-editor/-/config-editor-11.2.0-next.36.tgz#1776dd20ed27fb106afe3f6162b80f5295838405"
+  integrity sha512-xKJAZliMb5Scq666I91A5Tlz9JFXI1VC2NGjOclnPu+WBuw0LItLPpJXXqXEin6WsI84/sRof6Iw0NBvkBdG9A==
   dependencies:
     "@vscode/webview-ui-toolkit" "^1.2.2"
     react "^18.2.0"
     yaml "^2.3.1"
 
-"@axonivy/editor-icons@11.2.0-next.616", "@axonivy/editor-icons@11.2.0-next.616+59783fa", "@axonivy/editor-icons@~11.2.0-next.616":
+"@axonivy/editor-icons@11.2.0-next.616":
   version "11.2.0-next.616"
   resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.616.tgz#852df6e48be1471b1b16119333385fcc401f43f4"
   integrity sha512-kDM4pkrV99ATXuajZvW+DSM+5QJaWr+BdR2eo4MLisUZWxgE5rIQLKQYwmaS7fgtPy43edZA1NjctSuUdoYknw==
 
-"@axonivy/inscription-core@~11.2.0-next.616":
-  version "11.2.0-next.616"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.616.tgz#bf87123f42fd0765ff9f093ed809abb02aa188bd"
-  integrity sha512-NGi/0pmA9nprQ2N14Jb6ogkftm9yIpyTworOgT6CHoJmk5vLF6kKDGELLs6Xf5ho1IDHRfujtznerkESOABiPw==
+"@axonivy/editor-icons@11.2.0-next.697+bef2000", "@axonivy/editor-icons@~11.2.0-next.697":
+  version "11.2.0-next.697"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/editor-icons/-/editor-icons-11.2.0-next.697.tgz#958bc930d56f4e9b8bda2a487df0d847ed2b1c08"
+  integrity sha512-L7F4Nl+rTcB93tW2454zotqDKrm5u9z0VEFGKNK8Hfx0niP0q12zsrHpQfgKOXjeaqK01nMRL5BXYTRvXskb7g==
+
+"@axonivy/inscription-core@~11.2.0-next.697":
+  version "11.2.0-next.697"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-core/-/inscription-core-11.2.0-next.697.tgz#d5d94f3bd352308bbbec89417bb8ba90f4cc2119"
+  integrity sha512-bIgaemmgyMdrFww3E0ajMbOobbcLttCqJcUPK0Bo9aQ/ngQK+NCx4sSVYs8JkfKlaYpXJDUEJRMPNdLsWRDJ8A==
   dependencies:
-    "@axonivy/inscription-protocol" "11.2.0-next.616+59783fa"
+    "@axonivy/inscription-protocol" "11.2.0-next.697+bef2000"
     monaco-editor "^0.34.1"
     monaco-editor-workers "^0.34.2"
     monaco-languageclient "^4.0.3"
@@ -42,19 +47,18 @@
     vscode-languageserver-protocol "^3.17.2"
     vscode-ws-jsonrpc "^2.0.1"
 
-"@axonivy/inscription-editor@~11.2.0-next.616":
-  version "11.2.0-next.616"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.616.tgz#a2e6d9dc4f1d9e1f88e1b2d4f0d939f5008ee6c5"
-  integrity sha512-3u6DJXjQgNGzQ8fPAal4jIISKYL07Ff/A3WwvAQu742UBonGB5qizRGO473NFtj9hJ7AvRhFseXzOaDkE7mBgw==
+"@axonivy/inscription-editor@~11.2.0-next.697":
+  version "11.2.0-next.697"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-editor/-/inscription-editor-11.2.0-next.697.tgz#3ead022c0eada3ca835cff1ec3457bb2f544fdcf"
+  integrity sha512-Fz8mydIeJ+c0HZsN0jtJzLa1LO4UYuLB7xtJV1gCQ7oUGmVjz0JnDqRbwfah1XoaAxYJVqh0FIZYYyhA5ob62Q==
   dependencies:
-    "@axonivy/editor-icons" "11.2.0-next.616+59783fa"
-    "@axonivy/inscription-protocol" "11.2.0-next.616+59783fa"
+    "@axonivy/editor-icons" "11.2.0-next.697+bef2000"
+    "@axonivy/inscription-protocol" "11.2.0-next.697+bef2000"
     "@monaco-editor/react" "^4.5.1"
     "@radix-ui/react-accordion" "^1.1.2"
     "@radix-ui/react-checkbox" "^1.0.4"
     "@radix-ui/react-collapsible" "^1.0.3"
     "@radix-ui/react-dialog" "^1.0.4"
-    "@radix-ui/react-dropdown-menu" "^2.0.5"
     "@radix-ui/react-label" "^2.0.2"
     "@radix-ui/react-popover" "^1.0.6"
     "@radix-ui/react-radio-group" "^1.1.3"
@@ -69,25 +73,25 @@
     react-aria "^3.25.0"
     react-error-boundary "^4.0.9"
 
-"@axonivy/inscription-protocol@11.2.0-next.616+59783fa", "@axonivy/inscription-protocol@~11.2.0-next.616":
-  version "11.2.0-next.616"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.616.tgz#42d44dca60fb9f5fe623d68e9801b0a65325cc17"
-  integrity sha512-l4Pz4nBTxDPwjSP52DVDMqUWKS1FKfBa5qG7AzAy0YzEU3JZ0nqx+7LnwWoBnsHyviNJq7RXVERxllzRhGTqqw==
+"@axonivy/inscription-protocol@11.2.0-next.697+bef2000", "@axonivy/inscription-protocol@~11.2.0-next.697":
+  version "11.2.0-next.697"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/inscription-protocol/-/inscription-protocol-11.2.0-next.697.tgz#a923bcb58704a61188c4710ed1b274bda1b4a266"
+  integrity sha512-nawiAj0wBi3OYFhhnkf+kdtwIlrwi3k2TVsVwCQ7C/CxXdtV961VIeEKXv1ECh6xM4umSI8rJ9kLeUkaCbY+AA==
 
-"@axonivy/process-editor-protocol@11.2.0-next.751+cf7e758", "@axonivy/process-editor-protocol@~11.2.0-next.751":
-  version "11.2.0-next.751"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.751.tgz#097eb592c510b783e094d1f596fec1617de1f514"
-  integrity sha512-3iPi1cxbaS3D9mIrC59+tEXOtwhxlO1lXTyv11BwDWCLkwQCdK9q7tPKxw5p4Z4T+1urWUG9LD88fsgANwyhGA==
+"@axonivy/process-editor-protocol@11.2.0-next.753+98b3a7d", "@axonivy/process-editor-protocol@~11.2.0-next.753":
+  version "11.2.0-next.753"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor-protocol/-/process-editor-protocol-11.2.0-next.753.tgz#8f77f4201d22f4a4f4c267e636f329b13a763910"
+  integrity sha512-E9Swa8k30od1thoV9vyDhS2CAq/1SEQjhH/auOjfFO1aXyTKbnJwG8O/04Gb836Ms+MjrTj9odJSibEDlYxWow==
   dependencies:
     "@eclipse-glsp/protocol" "1.1.0-RC10"
 
-"@axonivy/process-editor@~11.2.0-next.751":
-  version "11.2.0-next.751"
-  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.751.tgz#f3b5b06a160f1336864eba687a957727aeaef37f"
-  integrity sha512-uSJiL4zgdgDow62O6tTlG9DEM2aiWjIb6WfRlFolMeTnbDUc27yesqUPQo9+t+w6e1pq5075Hgdjn03/U7+kRg==
+"@axonivy/process-editor@~11.2.0-next.753":
+  version "11.2.0-next.753"
+  resolved "https://npmjs-registry.ivyteam.io/@axonivy/process-editor/-/process-editor-11.2.0-next.753.tgz#424a305fe5e44c26679d7cade13ab4dac74595e5"
+  integrity sha512-tssBecJVUkZhfEotNG9A3v2eaXpfyAAPa1/qRw1vK0be2oq6lw/5NvhIoz5FqvK98tiptBVAsNP0DjRzHIe30w==
   dependencies:
     "@axonivy/editor-icons" "11.2.0-next.616"
-    "@axonivy/process-editor-protocol" "11.2.0-next.751+cf7e758"
+    "@axonivy/process-editor-protocol" "11.2.0-next.753+98b3a7d"
     "@eclipse-glsp/client" "1.1.0-RC10"
     showdown "^2.1.0"
     toastify-js "1.12.0"
@@ -2916,20 +2920,6 @@
     "@radix-ui/react-use-callback-ref" "1.0.1"
     "@radix-ui/react-use-escape-keydown" "1.0.3"
 
-"@radix-ui/react-dropdown-menu@^2.0.5":
-  version "2.0.5"
-  resolved "https://npmjs-registry.ivyteam.io/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.0.5.tgz#19bf4de8ffa348b4eb6a86842f14eff93d741170"
-  integrity sha512-xdOrZzOTocqqkCkYo8yRPCib5OkTkqN7lqNCdxwPOdE466DOaNl4N8PkUIlsXthQvW5Wwkd+aEmWpfWlBoDPEw==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/primitive" "1.0.1"
-    "@radix-ui/react-compose-refs" "1.0.1"
-    "@radix-ui/react-context" "1.0.1"
-    "@radix-ui/react-id" "1.0.1"
-    "@radix-ui/react-menu" "2.0.5"
-    "@radix-ui/react-primitive" "1.0.3"
-    "@radix-ui/react-use-controllable-state" "1.0.1"
-
 "@radix-ui/react-focus-guards@1.0.1":
   version "1.0.1"
   resolved "https://npmjs-registry.ivyteam.io/@radix-ui/react-focus-guards/-/react-focus-guards-1.0.1.tgz#1ea7e32092216b946397866199d892f71f7f98ad"
@@ -2962,31 +2952,6 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-primitive" "1.0.3"
-
-"@radix-ui/react-menu@2.0.5":
-  version "2.0.5"
-  resolved "https://npmjs-registry.ivyteam.io/@radix-ui/react-menu/-/react-menu-2.0.5.tgz#a7d78b0808c4d38269240bf5d5c7ffea3e225e16"
-  integrity sha512-Gw4f9pwdH+w5w+49k0gLjN0PfRDHvxmAgG16AbyJZ7zhwZ6PBHKtWohvnSwfusfnK3L68dpBREHpVkj8wEM7ZA==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/primitive" "1.0.1"
-    "@radix-ui/react-collection" "1.0.3"
-    "@radix-ui/react-compose-refs" "1.0.1"
-    "@radix-ui/react-context" "1.0.1"
-    "@radix-ui/react-direction" "1.0.1"
-    "@radix-ui/react-dismissable-layer" "1.0.4"
-    "@radix-ui/react-focus-guards" "1.0.1"
-    "@radix-ui/react-focus-scope" "1.0.3"
-    "@radix-ui/react-id" "1.0.1"
-    "@radix-ui/react-popper" "1.1.2"
-    "@radix-ui/react-portal" "1.0.3"
-    "@radix-ui/react-presence" "1.0.1"
-    "@radix-ui/react-primitive" "1.0.3"
-    "@radix-ui/react-roving-focus" "1.0.4"
-    "@radix-ui/react-slot" "1.0.2"
-    "@radix-ui/react-use-callback-ref" "1.0.1"
-    aria-hidden "^1.1.1"
-    react-remove-scroll "2.5.5"
 
 "@radix-ui/react-popover@^1.0.6":
   version "1.0.6"
