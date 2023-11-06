@@ -5,7 +5,7 @@ import { noEngineWorkspacePath, noProjectWorkspacePath } from './workspaces/work
 import { SettingsView } from './page-objects/settings-view';
 import { executeCloseAllEditorGroupsCommand } from './utils/command';
 
-test.describe('Engine Extension', () => {
+test.describe('Engine', () => {
   let page: Page;
 
   test.afterEach(async () => {
@@ -32,6 +32,7 @@ test.describe('Engine Extension', () => {
   test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
     page = await pageFor(noEngineWorkspacePath);
     const settingsView = new SettingsView(page);
+    await settingsView.isActionItemChecked('Axon Ivy');
     await settingsView.openWorkspaceSettings();
     await settingsView.containsSetting('"runEmbeddedEngine": false');
     await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
