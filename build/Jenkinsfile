@@ -11,7 +11,7 @@ pipeline {
 
   triggers {
     cron '@midnight'
-    upstream(upstreamProjects: "core_product-engine/${env.BRANCH_NAME}", threshold: hudson.model.Result.UNSTABLE)
+    upstream(upstreamProjects: "core_product-engine/${env.BRANCH_NAME},process-editor-client/${env.BRANCH_NAME}", threshold: hudson.model.Result.UNSTABLE)
   }
 
   parameters {
