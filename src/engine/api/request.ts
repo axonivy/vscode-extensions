@@ -8,6 +8,7 @@ export const DEACTIVATE_PROJECTS_REQUEST: ProjectRequest = { sourcePath: 'deacti
 export const ACTIVATE_PROJECTS_REQUEST: ProjectRequest = { sourcePath: 'activate-projects', description: 'Activate Ivy Project' };
 export const DEPLOY_PROJECTS_REQUEST: ProjectRequest = { sourcePath: 'deploy-projects', description: 'Deploy Ivy Projects' };
 export const CREATE_PROCESS_REQUEST: ProjectRequest = { sourcePath: 'create-process', description: 'Create new Process' };
+export const CREATE_PROJECT_REQUEST: ProjectRequest = { sourcePath: 'create-project', description: 'Create new Project' };
 
 export const PROJECT_REQUEST_OPTIONS: http.RequestOptions = {
   auth: 'Developer:Developer',
