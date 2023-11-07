@@ -9,6 +9,7 @@ body {
   display: grid;
   grid-template-areas: 'sprotty inscription';
   grid-auto-columns: minmax(50%, 100%) min-content;
+  grid-auto-rows: 1fr 0;
 }
 body:has(#inscription > .hidden) {
   grid-template-areas: 'sprotty';
@@ -20,7 +21,8 @@ body:has(#inscription > .hidden) {
 }
 #inscription {
   grid-area: inscription;
-  overflow-y: scroll;
+  background-color: var(--glsp-editor-background);
+  height: 100vh;
 }
 
 .main-widget {
