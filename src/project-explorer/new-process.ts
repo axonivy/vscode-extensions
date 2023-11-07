@@ -7,7 +7,7 @@ export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Ser
 
 export interface NewProcessParams {
   name: string;
-  kind: string;
+  kind: ProcessKind;
   namespace: string;
   path: string;
 }

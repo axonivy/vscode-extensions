@@ -4,13 +4,15 @@ import fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import path from 'path';
 
+const IVY_ENGINE_VERSION = '11.2.0';
+
 export class MavenBuilder {
   private readonly outputChannel: vscode.OutputChannel;
   private readonly buildCommand: string;
   private readonly xmlParser = new XMLParser();
   constructor(extensionUri: vscode.Uri) {
     const engineDir = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine').fsPath;
-    this.buildCommand = `mvn install --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDir} -Dstyle.color=never`;
+    this.buildCommand = `mvn install --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDir} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
     this.outputChannel = vscode.window.createOutputChannel('Ivy Maven');
   }
 
