@@ -62,13 +62,14 @@ class IvyGLSPStarter extends GLSPStarter {
 }
 
 export function launch(): void {
-  MonacoUtil.initStandalone(editorWorker);
-  MonacoEditorUtil.initMonaco(reactMonaco, 'light');
+  MonacoUtil.initStandalone(editorWorker).then(() => MonacoEditorUtil.initMonaco(reactMonaco, 'light'));
   const handleMessages = (event: MessageEvent<Message>) => {
     const message = event.data;
     switch (message.command) {
       case 'theme':
-        reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(message.theme));
+        MonacoUtil.monacoInitialized().then(() => {
+          reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(message.theme));
+        });
         break;
     }
   };
