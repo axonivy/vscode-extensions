@@ -8,6 +8,10 @@ export abstract class PageObject {
     await executeCommand(this.page, command);
   }
 
+  async isAxonIvyActionItemChecked() {
+    await this.isActionItemChecked('Axon Ivy');
+  }
+
   async isActionItemChecked(label: string) {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
   }
