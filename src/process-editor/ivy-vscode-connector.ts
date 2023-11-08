@@ -8,7 +8,8 @@ import {
   MessageProcessingResult,
   NavigateToExternalTargetAction,
   SModelRootSchema,
-  SelectionState
+  SelectionState,
+  ServerMessageAction
 } from '@eclipse-glsp/vscode-integration';
 import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
@@ -24,11 +25,14 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
   protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<{ client: GlspVscodeClient<D> }>();
+  private readonly modelLoading: vscode.StatusBarItem;
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
 
     this.onSelectionUpdate(selection => this.selectionChange(selection));
+    this.modelLoading = vscode.window.createStatusBarItem();
+    this.modelLoading.text = '$(loading~spin) Model loading';
   }
 
   get onDidChangeActiveGlspEditor() {
@@ -146,5 +150,33 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
       }
     }
     return super.processMessage(message, origin);
+  }
+
+  protected override handleServerMessageAction(
+    message: ActionMessage<ServerMessageAction>,
+    _client: GlspVscodeClient<D> | undefined,
+    _origin: MessageOrigin
+  ): MessageProcessingResult {
+    switch (message.action.severity) {
+      case 'ERROR':
+      case 'FATAL':
+        vscode.window.showErrorMessage(message.action.message);
+        break;
+      case 'WARNING':
+        vscode.window.showWarningMessage(message.action.message);
+        break;
+      case 'INFO':
+      case 'OK':
+        if (message.action.message.includes('Model loading')) {
+          this.modelLoading.show();
+        } else {
+          vscode.window.showInformationMessage(message.action.message);
+        }
+        break;
+      case 'NONE':
+        this.modelLoading.hide();
+    }
+    // Do not propagate action
+    return { processedMessage: undefined, messageChanged: true };
   }
 }
