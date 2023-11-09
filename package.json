@@ -397,6 +397,16 @@
         "mac": "alt+l",
         "command": "workflow.layout",
         "when": "activeCustomEditorId == 'ivy.glspDiagram'"
+      },
+      {
+        "key": "delete",
+        "command": "ivyProjects.deleteEntry",
+        "when": "focusedView == ivyProjects"
+      },
+      {
+        "mac": "cmd+backspace",
+        "command": "ivyProjects.deleteEntry",
+        "when": "focusedView == ivyProjects"
       }
     ],
     "languages": [
@@ -409,6 +419,18 @@
         "extensions": [
           ".p.json"
         ]
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "ivyProjects",
+        "contents": "You have not yet opened a folder.\n[Open Folder](command:vscode.openFolder)",
+        "when": "workbenchState == empty"
+      },
+      {
+        "view": "ivyProjects",
+        "contents": "You have not yet added a project.\n[Add Project](command:ivyProjects.addNewProject)",
+        "when": "workbenchState != empty"
       }
     ]
   }

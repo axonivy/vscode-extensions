@@ -4,6 +4,7 @@ import { Commands, executeCommand } from '../base/commands';
 import { addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
+import { getCmdEntry } from './utility';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -41,9 +42,8 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) => addNewProcess(entry, 'Business Process'));
     vscode.commands.registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) => addNewProcess(entry, 'Callable Sub Process'));
     vscode.commands.registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) => addNewProcess(entry, 'Web Service Process'));
-    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
-      this.treeDataProvider.delete(entry);
-      this.treeDataProvider.refresh();
+    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, async (entry?: Entry) => {
+      this.treeDataProvider.delete(getCmdEntry(this.treeView.selection, entry)).then(() => this.treeDataProvider.refresh());
     });
     vscode.commands.registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
