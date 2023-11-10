@@ -34,17 +34,18 @@ test.describe('Project Explorer', () => {
     await explorer.showAxonIvyContainer();
     await expect(explorer.page.locator('.welcome-view-content')).toContainText('Add Project');
     await explorer.addProject(projectName);
-    await explorer.addProcess(projectName, 'testProcess');
 
     let processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
-    await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
+    await processEditor.revertAndCloseEditor();
 
+    await explorer.addProcess(projectName, 'testProcess');
     processEditor = new ProcessEditor(page, 'testProcess.p.json');
     await processEditor.openEditorFile();
     await processEditor.startProcessAndAssertExecuted(start, end);
+    await processEditor.revertAndCloseEditor();
 
     removeFromWorkspace(empty, projectName);
   });
