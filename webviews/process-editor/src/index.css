@@ -8,7 +8,7 @@ body {
 body {
   display: grid;
   grid-template-areas: 'sprotty inscription';
-  grid-auto-columns: minmax(50%, 100%) min-content;
+  grid-auto-columns: minmax(250px, 100%) min-content;
   grid-auto-rows: 1fr 0;
 }
 #sprotty {
