@@ -24,6 +24,7 @@ export class MavenBuilder {
     };
     return await vscode.window.withProgress(progressOptions, async () => {
       const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
+      this.outputChannel.show();
       childProcess.on('error', (error: any) => {
         this.outputChannel.append(error);
         this.outputChannel.show();
