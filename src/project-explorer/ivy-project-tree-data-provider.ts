@@ -158,7 +158,15 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return child;
   }
 
-  async delete(entry: Entry): Promise<void> {
-    await vscode.workspace.fs.delete(entry.uri, { recursive: true });
+  async delete(entry?: Entry): Promise<void> {
+    if (!entry?.uri) {
+      return;
+    }
+    const fileName = path.basename(entry.uri.path);
+    const message = `Are you sure you want to permanently delete ${fileName}?`;
+    const answer = await vscode.window.showInformationMessage(message, { modal: true }, 'Delete');
+    if (answer === 'Delete') {
+      await vscode.workspace.fs.delete(entry.uri, { recursive: true, useTrash: true });
+    }
   }
 }
