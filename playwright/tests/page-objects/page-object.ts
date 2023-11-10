@@ -15,4 +15,17 @@ export abstract class PageObject {
   async isActionItemChecked(label: string) {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
   }
+
+  async showAxonIvyContainer() {
+    await this.page.locator('li.action-item').getByLabel('Axon Ivy').first().click();
+    await this.isAxonIvyActionItemChecked();
+  }
+
+  async provideUserInput(input?: string): Promise<void> {
+    await this.page.locator('.quick-input-widget').focus();
+    if (input) {
+      await this.page.keyboard.type(input);
+    }
+    await this.page.keyboard.press('Enter');
+  }
 }

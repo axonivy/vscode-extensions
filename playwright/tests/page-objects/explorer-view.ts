@@ -42,11 +42,33 @@ export abstract class ExplorerView extends View {
     const node = this.viewLocator.getByText(name);
     await expect(node).not.toBeAttached();
   }
+
+  async clickAction(title: string): Promise<void> {
+    const actionLocator = this.page.getByRole('button', { name: title, exact: true });
+    await expect(actionLocator).toBeVisible();
+    await actionLocator.click();
+  }
 }
 
 export class ProjectExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Axon Ivy Projects', page);
+  }
+
+  async addProject(projectName: string): Promise<void> {
+    await this.clickAction('Project');
+    await this.provideUserInput(projectName);
+    await this.provideUserInput();
+    await this.provideUserInput();
+    await this.provideUserInput();
+    await this.hasNode(projectName);
+  }
+
+  async addProcess(projectName: string, processName: string): Promise<void> {
+    await this.viewLocator.getByText(projectName).click();
+    await this.executeCommand('Ivy Project Explorer: Business Process');
+    await this.provideUserInput(processName);
+    await this.hasNode(`${processName}.p.json`);
   }
 }
 

@@ -15,7 +15,7 @@ export interface NewProcessParams {
 const prompt =
   'Enter the new process name e.g. "myProcess". You can also specify its directory name in the form "parentDirectory/subDirectory/myProcess".';
 
-export async function addNewProcess(entry: Entry, kind: ProcessKind): Promise<void> {
+export async function addNewProcess(entry: Entry | undefined, kind: ProcessKind): Promise<void> {
   if (!entry) {
     throw new Error('Select a Project before creating a new process');
   }
