@@ -34,6 +34,7 @@ test.describe('Project Explorer', () => {
     await explorer.showAxonIvyContainer();
     await expect(explorer.page.locator('.welcome-view-content')).toContainText('Add Project');
     await explorer.addProject(projectName);
+    await explorer.isNotificationVisible('Build Project');
     await explorer.awaitNotification('Deploy Ivy Projects');
 
     let processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');

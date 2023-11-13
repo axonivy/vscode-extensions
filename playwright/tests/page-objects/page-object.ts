@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 import { executeCommand } from '../utils/command';
 
 export abstract class PageObject {
@@ -21,10 +21,19 @@ export abstract class PageObject {
     await this.isAxonIvyActionItemChecked();
   }
 
+  async isNotificationVisible(title: string): Promise<void> {
+    const notification = this.notificationLocator(title);
+    await expect(notification).toBeVisible();
+  }
+
   async awaitNotification(title: string): Promise<void> {
-    const notification = this.page.locator(`div.notification-list-item-message:has-text("${title}")`);
+    const notification = this.notificationLocator(title);
     await expect(notification).toBeVisible();
     await expect(notification).toBeHidden();
+  }
+
+  private notificationLocator(title: string): Locator {
+    return this.page.locator(`div.notification-list-item-message:has-text("${title}")`);
   }
 
   async provideUserInput(input?: string): Promise<void> {
