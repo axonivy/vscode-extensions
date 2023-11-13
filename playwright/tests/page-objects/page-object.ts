@@ -26,11 +26,10 @@ export abstract class PageObject {
   }
 
   async provideUserInput(input?: string): Promise<void> {
-    const delay = { delay: 50 };
     await this.page.locator('.quick-input-widget').focus();
     if (input) {
-      await this.page.keyboard.type(input, delay);
+      await this.page.keyboard.type(input);
     }
-    await this.page.keyboard.press('Enter', delay);
+    await this.page.keyboard.press('Enter');
   }
 }
