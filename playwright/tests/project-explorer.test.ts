@@ -3,6 +3,7 @@ import { OutlineExplorerView, ProjectExplorerView } from './page-objects/explore
 import { empty, multiProjectWorkspacePath, noProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
 import { ProcessEditor } from './page-objects/process-editor';
 import { OutputView } from './page-objects/output-view';
+import { expect } from '@playwright/test';
 
 test.describe('Project Explorer', () => {
   test('Ensure Project Explorer is hidden as there is no Ivy Project', async ({ pageFor }) => {
@@ -46,9 +47,9 @@ test.describe('Project Explorer', () => {
     await processEditor.revertAndCloseEditor();
 
     await explorer.addProcess(projectName, 'testProcess');
+    await expect(start).toBeVisible();
     await explorer.awaitNotification('Deploy Ivy Projects');
     processEditor = new ProcessEditor(page, 'testProcess.p.json');
-    await processEditor.openEditorFile();
     await processEditor.startProcessAndAssertExecuted(start, end);
     await processEditor.revertAndCloseEditor();
     removeFromWorkspace(empty, projectName);
