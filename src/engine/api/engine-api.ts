@@ -53,6 +53,7 @@ export class IvyEngineApi {
       await this.initProject(ivyProjectDirectory);
     }
     await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    vscode.window.setStatusBarMessage('Successful Project Initialization', 5_000);
   }
 
   private async initProject(ivyProjectDirectory: string): Promise<void> {
@@ -68,6 +69,7 @@ export class IvyEngineApi {
     await this.runGetRequest(DEACTIVATE_PROJECTS_REQUEST, searchParams);
     await this.runGetRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
     await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    vscode.window.setStatusBarMessage('Successful Project Deployment', 5_000);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {

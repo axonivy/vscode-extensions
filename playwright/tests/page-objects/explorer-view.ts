@@ -67,9 +67,13 @@ export class ProjectExplorerView extends ExplorerView {
     await this.provideUserInput();
   }
 
-  async addProcess(projectName: string, processName: string): Promise<void> {
+  async addProcess(
+    projectName: string,
+    processName: string,
+    kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process'
+  ): Promise<void> {
     await this.viewLocator.getByText(projectName).click();
-    await this.executeCommand('Ivy Project Explorer: Business Process');
+    await this.executeCommand('Ivy Project Explorer: ' + kind);
     await this.provideUserInput(processName);
   }
 }
