@@ -23,12 +23,6 @@ test.describe('Create Process', () => {
     await explorer.hasStatusMessage('Successful Project Initialization');
   });
 
-  test.afterEach(async () => {
-    if (processEditor) {
-      await processEditor.revertAndCloseEditor();
-    }
-  });
-
   test.afterAll(async () => {
     cleanUp();
   });
