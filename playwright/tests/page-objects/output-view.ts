@@ -17,9 +17,4 @@ export class OutputView extends View {
       await expect(this.viewLocator).toContainText(expectedText);
     }).toPass();
   }
-
-  async isOutputChannelSelected(name: string): Promise<void> {
-    const channel = this.page.getByRole('toolbar').getByTitle(name, { exact: true });
-    await expect(channel).toBeVisible();
-  }
 }

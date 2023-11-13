@@ -3,7 +3,7 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
 import { ProjectExplorerView } from './page-objects/explorer-view';
 
-test.describe('Process Editor', () => {
+test.describe('Create Project', () => {
   const projectName = 'testProject';
 
   test.beforeAll(async () => {
@@ -14,7 +14,7 @@ test.describe('Process Editor', () => {
     removeFromWorkspace(empty, projectName);
   });
 
-  test('Add Project execute init Process', async ({ pageFor }) => {
+  test('Add Project and execute init Process', async ({ pageFor }) => {
     const page = await pageFor(empty);
     const explorer = new ProjectExplorerView(page);
     await explorer.showAxonIvyContainer();
