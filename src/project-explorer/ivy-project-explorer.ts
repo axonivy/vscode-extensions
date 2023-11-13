@@ -62,11 +62,11 @@ export class IvyProjectExplorer {
   }
 
   private defineProcessModelFileWatcher(): void {
-    const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/processes/**/*.p.json');
+    const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/*.p.json');
     processModelFileWatcher.onDidCreate(e => {
-      executeCommand('vscode.open', vscode.Uri.file(e.fsPath));
+      executeCommand('vscode.open', e);
     });
-    processModelFileWatcher.onDidDelete(e => {
+    processModelFileWatcher.onDidDelete(() => {
       this.treeDataProvider.refresh();
     });
   }
