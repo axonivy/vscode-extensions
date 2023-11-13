@@ -55,6 +55,10 @@ export class ProjectExplorerView extends ExplorerView {
     super('Axon Ivy Projects', page);
   }
 
+  async isWelcomeViewVisible(): Promise<void> {
+    await expect(this.page.locator('.welcome-view-content')).toBeVisible();
+  }
+
   async addProject(projectName: string): Promise<void> {
     await this.clickAction('Project');
     await this.provideUserInput(projectName);

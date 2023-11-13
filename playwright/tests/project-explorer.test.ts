@@ -2,7 +2,7 @@ import { test } from './fixtures/page';
 import { OutlineExplorerView, ProjectExplorerView } from './page-objects/explorer-view';
 import { empty, multiProjectWorkspacePath, noProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
 import { ProcessEditor } from './page-objects/process-editor';
-import { expect } from '@playwright/test';
+import { OutputView } from './page-objects/output-view';
 
 test.describe('Project Explorer', () => {
   test('Ensure Project Explorer is hidden as there is no Ivy Project', async ({ pageFor }) => {
@@ -32,9 +32,11 @@ test.describe('Project Explorer', () => {
     const page = await pageFor(empty);
     const explorer = new ProjectExplorerView(page);
     await explorer.showAxonIvyContainer();
-    await expect(explorer.page.locator('.welcome-view-content')).toContainText('Add Project');
+    await explorer.isWelcomeViewVisible();
     await explorer.addProject(projectName);
-    await explorer.isNotificationVisible('Build Project');
+    const outputView = new OutputView(page);
+    await outputView.isOutputChannelSelected('Axon Ivy Engine');
+    await outputView.isOutputChannelSelected('Axon Ivy Maven');
     await explorer.awaitNotification('Deploy Ivy Projects');
 
     let processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
@@ -49,7 +51,6 @@ test.describe('Project Explorer', () => {
     await processEditor.openEditorFile();
     await processEditor.startProcessAndAssertExecuted(start, end);
     await processEditor.revertAndCloseEditor();
-
     removeFromWorkspace(empty, projectName);
   });
 });

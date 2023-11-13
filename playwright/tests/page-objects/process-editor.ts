@@ -51,6 +51,6 @@ export class ProcessEditor extends Editor {
     await startEvent.click();
     const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
     await playButton.click();
-    await expect(executedElement).toHaveClass(/executed/, { timeout: 5_000 });
+    await expect(executedElement).toHaveClass(/executed/);
   }
 }
