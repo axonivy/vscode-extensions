@@ -21,6 +21,12 @@ export abstract class PageObject {
     await this.isAxonIvyActionItemChecked();
   }
 
+  async awaitNotification(title: string): Promise<void> {
+    const notification = this.page.locator(`div.notification-list-item-message:has-text("${title}")`);
+    await expect(notification).toBeVisible();
+    await expect(notification).toBeHidden();
+  }
+
   async provideUserInput(input?: string): Promise<void> {
     await this.page.locator('.quick-input-widget').focus();
     if (input) {

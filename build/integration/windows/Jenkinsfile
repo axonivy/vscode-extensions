@@ -3,6 +3,10 @@ pipeline {
     label { label 'windows-build01 || windows-build03' }
   }
 
+  tools {
+    maven '3.9'
+  }
+
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
   }

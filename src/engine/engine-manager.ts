@@ -130,8 +130,9 @@ export class IvyEngineManager {
       await this.ivyEngineApi.createProject(newProjectParams);
       const path = newProjectParams.path;
       if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(path))) {
+        console.log('path:', path);
         await this.ivyEngineApi.initProjects([path]);
-        await this.createProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
+        await this.ivyEngineApi.createProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
         await this.buildAndDeployProject(path);
       }
     }
