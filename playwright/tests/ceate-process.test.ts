@@ -34,13 +34,15 @@ test.describe('Create Process', () => {
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Add nested business process', async () => {
     await explorer.addProcess(projectName, 'parent1/parent2/child', 'Business Process');
-    await explorer.hasNode('parent1');
-    await explorer.hasNode('parent2');
-    await explorer.hasNode('child.p.json');
+    processEditor = new ProcessEditor(page, 'child.p.json');
+    const start = processEditor.locatorForElementType('g.start\\:requestStart');
+    await expect(start).toBeVisible();
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Add callable sub process', async () => {
@@ -48,6 +50,7 @@ test.describe('Create Process', () => {
     processEditor = new ProcessEditor(page, 'testCallableSubProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
     await expect(start).toBeVisible();
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Add web service process', async () => {
@@ -55,5 +58,6 @@ test.describe('Create Process', () => {
     processEditor = new ProcessEditor(page, 'testCallableSubProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
     await expect(start).toBeVisible();
+    await processEditor.revertAndCloseEditor();
   });
 });
