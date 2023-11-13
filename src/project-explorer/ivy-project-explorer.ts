@@ -148,7 +148,7 @@ export class IvyProjectExplorer {
       return;
     }
     const parentEntryPath = path.dirname(entryPath);
-    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(parentEntryPath))) {
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(parentEntryPath))) {
       this.refreshRecursively(parentEntryPath);
     }
   }
