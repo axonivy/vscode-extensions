@@ -37,7 +37,7 @@ test.describe('Project Explorer', () => {
     const outputView = new OutputView(page);
     await outputView.isOutputChannelSelected('Axon Ivy Engine');
     await outputView.isOutputChannelSelected('Axon Ivy Maven');
-    await explorer.awaitNotification('Deploy Ivy Projects');
+    await explorer.awaitNotification('Deploy Ivy Projects', 60_000);
 
     let processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');

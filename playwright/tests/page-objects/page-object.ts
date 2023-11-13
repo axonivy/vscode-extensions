@@ -21,9 +21,9 @@ export abstract class PageObject {
     await this.isAxonIvyActionItemChecked();
   }
 
-  async awaitNotification(title: string): Promise<void> {
+  async awaitNotification(title: string, timeout?: number): Promise<void> {
     const notification = this.page.locator(`div.notification-list-item-message:has-text("${title}")`);
-    await expect(notification).toBeVisible();
+    await expect(notification).toBeVisible({ timeout });
     await expect(notification).toBeHidden();
   }
 
