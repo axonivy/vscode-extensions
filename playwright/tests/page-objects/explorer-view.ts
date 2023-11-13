@@ -48,6 +48,16 @@ export abstract class ExplorerView extends View {
     await expect(actionLocator).toBeVisible();
     await actionLocator.click();
   }
+
+  async selectNode(name: string): Promise<void> {
+    await this.viewLocator.getByText(name).click();
+    await this.isSelected(name);
+  }
+
+  async isSelected(name: string): Promise<void> {
+    const selected = this.viewLocator.locator('.monaco-list-row.selected');
+    await expect(selected).toContainText(name);
+  }
 }
 
 export class ProjectExplorerView extends ExplorerView {
@@ -72,7 +82,7 @@ export class ProjectExplorerView extends ExplorerView {
     processName: string,
     kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process'
   ): Promise<void> {
-    await this.viewLocator.getByText(projectName).click();
+    await this.selectNode(projectName);
     await this.executeCommand('Ivy Project Explorer: ' + kind);
     await this.provideUserInput(processName);
   }
@@ -81,16 +91,6 @@ export class ProjectExplorerView extends ExplorerView {
 export class OutlineExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Process Outline', page);
-  }
-
-  async selectNode(name: string): Promise<void> {
-    await this.viewLocator.getByText(name).click();
-    await this.isSelected(name);
-  }
-
-  async isSelected(name: string): Promise<void> {
-    const selected = this.viewLocator.locator('.monaco-list-row.selected');
-    await expect(selected).toContainText(name);
   }
 
   async doubleClickExpandable(name: string): Promise<void> {
