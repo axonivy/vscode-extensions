@@ -38,13 +38,13 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) =>
-      addNewProcess(this.getCmdEntry(entry), 'Business Process')
+      addNewProcess('Business Process', this.getCmdEntry(entry))
     );
     vscode.commands.registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) =>
-      addNewProcess(this.getCmdEntry(entry), 'Callable Sub Process')
+      addNewProcess('Callable Sub Process', this.getCmdEntry(entry))
     );
     vscode.commands.registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) =>
-      addNewProcess(this.getCmdEntry(entry), 'Web Service Process')
+      addNewProcess('Web Service Process', this.getCmdEntry(entry))
     );
     vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
       this.treeDataProvider.delete(this.getCmdEntry(entry)).then(() => this.treeDataProvider.refresh());
