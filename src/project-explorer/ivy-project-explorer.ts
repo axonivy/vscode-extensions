@@ -17,7 +17,6 @@ export class IvyProjectExplorer {
     context.subscriptions.push(this.treeView);
     this.registerCommands();
     this.defineIvyProjectFileWatcher();
-    this.defineProcessModelFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
 
     this.treeDataProvider.onDidCreateTreeItem(entry => {
@@ -59,12 +58,6 @@ export class IvyProjectExplorer {
     projectFileWatcher.onDidChange(() => this.refresh());
     projectFileWatcher.onDidCreate(() => this.refresh());
     projectFileWatcher.onDidDelete(() => this.refresh());
-  }
-
-  private defineProcessModelFileWatcher(): void {
-    vscode.workspace.createFileSystemWatcher('**/*.p.json').onDidCreate(e => {
-      executeCommand('vscode.open', e);
-    });
   }
 
   public async hasIvyProjects(): Promise<boolean> {

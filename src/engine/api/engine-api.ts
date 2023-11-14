@@ -72,8 +72,8 @@ export class IvyEngineApi {
     vscode.window.setStatusBarMessage('Successful Project Deployment', 5_000);
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
-    await this.runPostRequest(newProcessParams, CREATE_PROCESS_REQUEST);
+  public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
+    return await this.runPostRequest(newProcessParams, CREATE_PROCESS_REQUEST);
   }
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
@@ -122,7 +122,7 @@ export class IvyEngineApi {
     return searchParams;
   }
 
-  private async runPostRequest(payload: any, projectRequest: ProjectRequest): Promise<void> {
+  private async runPostRequest(payload: any, projectRequest: ProjectRequest): Promise<string> {
     const data = JSON.stringify(payload);
     const requestOptions = {
       ...PROJECT_REQUEST_OPTIONS,
@@ -136,6 +136,6 @@ export class IvyEngineApi {
     const url = this.projectRequestURL(projectRequest.sourcePath);
     const message = url.pathname + url.search;
     console.log(projectRequest.description, message);
-    await makePostRequest(url, requestOptions, data);
+    return await makePostRequest(url, requestOptions, data);
   }
 }

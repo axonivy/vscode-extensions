@@ -14,13 +14,18 @@ test.describe('Create Process', () => {
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
 
-  test.beforeEach(async ({}, testInfo) => {
+  test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
+    processEditor = new ProcessEditor(page);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
     explorer = new ProjectExplorerView(page);
     await explorer.hasStatusMessage('Successful Project Initialization');
+  });
+
+  test.afterEach(async () => {
+    await processEditor.revertAndCloseEditor();
   });
 
   test.afterAll(async () => {
@@ -29,35 +34,33 @@ test.describe('Create Process', () => {
 
   test('Add business process and execute it', async () => {
     await explorer.addProcess(projectName, 'testBusinessProcess', 'Business Process');
+    await explorer.hasNoNode('testBusinessProcess.p.json');
     await explorer.hasStatusMessage('Successful Project Deployment');
-    processEditor = new ProcessEditor(page, 'testBusinessProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
-    await processEditor.revertAndCloseEditor();
   });
 
   test('Add nested business process', async () => {
     await explorer.addProcess(projectName, 'parent1/parent2/child', 'Business Process');
-    processEditor = new ProcessEditor(page, 'child.p.json');
+    await explorer.hasNoNode('parent1');
+    await explorer.hasNoNode('parent2');
+    await explorer.hasNoNode('child.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await expect(start).toBeVisible();
-    await processEditor.revertAndCloseEditor();
   });
 
   test('Add callable sub process', async () => {
     await explorer.addProcess(projectName, 'testCallableSubProcess', 'Callable Sub Process');
-    processEditor = new ProcessEditor(page, 'testCallableSubProcess.p.json');
+    await explorer.hasNoNode('testCallableSubProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
     await expect(start).toBeVisible();
-    await processEditor.revertAndCloseEditor();
   });
 
   test('Add web service process', async () => {
     await explorer.addProcess(projectName, 'testWebServiceProcess', 'Web Service Process');
-    processEditor = new ProcessEditor(page, 'testCallableSubProcess.p.json');
+    await explorer.hasNoNode('testWebServiceProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
     await expect(start).toBeVisible();
-    await processEditor.revertAndCloseEditor();
   });
 });
