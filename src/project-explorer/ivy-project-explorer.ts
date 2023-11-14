@@ -62,7 +62,7 @@ export class IvyProjectExplorer {
   }
 
   private defineProcessModelFileWatcher(): void {
-    vscode.workspace.createFileSystemWatcher('**/**.p.json').onDidCreate(e => {
+    vscode.workspace.createFileSystemWatcher('**/*.p.json').onDidCreate(e => {
       executeCommand('vscode.open', e);
     });
   }
