@@ -52,7 +52,8 @@ export class IvyEngineApi {
     for (const ivyProjectDirectory of ivyProjectDirectories) {
       await this.initProject(ivyProjectDirectory);
     }
-    await this.runGetRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    vscode.window.setStatusBarMessage('Successful Project Initialization', 5_000);
   }
 
   private async initProject(ivyProjectDirectory: string): Promise<void> {
@@ -65,17 +66,18 @@ export class IvyEngineApi {
 
   public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
     const searchParams = this.searchParams(ivyProjectDirectories);
-    await this.runGetRequestWithProgress(DEACTIVATE_PROJECTS_REQUEST, searchParams);
+    await this.runGetRequest(DEACTIVATE_PROJECTS_REQUEST, searchParams);
     await this.runGetRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
-    await this.runGetRequestWithProgress(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    vscode.window.setStatusBarMessage('Successful Project Deployment', 5_000);
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
-    await this.runPostRequestWithProgress(newProcessParams, CREATE_PROCESS_REQUEST);
+  public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
+    return await this.runPostRequest(newProcessParams, CREATE_PROCESS_REQUEST);
   }
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
-    await this.runPostRequestWithProgress(newProjectParams, CREATE_PROJECT_REQUEST);
+    await this.runPostRequest(newProjectParams, CREATE_PROJECT_REQUEST);
   }
 
   private async runGetRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {
@@ -84,11 +86,21 @@ export class IvyEngineApi {
       title: projectRequest.description,
       cancellable: false
     };
-    const url = this.projectRequestURLWithParams(projectRequest.sourcePath, searchParams);
     await vscode.window.withProgress(progressOptions, async progess => {
-      progess.report({ message: url.pathname + url.search });
-      await makeGetRequest(url, PROJECT_REQUEST_OPTIONS);
+      await this.runGetRequest(projectRequest, searchParams, progess);
     });
+  }
+
+  private async runGetRequest(
+    projectRequest: ProjectRequest,
+    searchParams: URLSearchParams,
+    progress?: vscode.Progress<{ message?: string; increment?: number }>
+  ): Promise<void> {
+    const url = this.projectRequestURLWithParams(projectRequest.sourcePath, searchParams);
+    const message = url.pathname + url.search;
+    progress?.report({ message });
+    console.log(projectRequest.description, message);
+    await makeGetRequest(url, PROJECT_REQUEST_OPTIONS);
   }
 
   private projectRequestURLWithParams(sourcePath: string, searchParams: URLSearchParams): URL {
@@ -110,7 +122,7 @@ export class IvyEngineApi {
     return searchParams;
   }
 
-  private async runPostRequestWithProgress(payload: any, projectRequest: ProjectRequest): Promise<void> {
+  private async runPostRequest(payload: any, projectRequest: ProjectRequest): Promise<string> {
     const data = JSON.stringify(payload);
     const requestOptions = {
       ...PROJECT_REQUEST_OPTIONS,
@@ -121,15 +133,9 @@ export class IvyEngineApi {
         'X-Requested-By': 'web-ide'
       }
     };
-    const progressOptions = {
-      location: vscode.ProgressLocation.Notification,
-      title: projectRequest.description,
-      cancellable: false
-    };
     const url = this.projectRequestURL(projectRequest.sourcePath);
-    await vscode.window.withProgress(progressOptions, async progess => {
-      progess.report({ message: url.pathname + url.search });
-      await makePostRequest(url, requestOptions, data);
-    });
+    const message = url.pathname + url.search;
+    console.log(projectRequest.description, message);
+    return await makePostRequest(url, requestOptions, data);
   }
 }

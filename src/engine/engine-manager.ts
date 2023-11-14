@@ -117,7 +117,8 @@ export class IvyEngineManager {
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
     if (await this.devContextPath) {
-      await this.ivyEngineApi.createProcess(newProcessParams);
+      await this.createAndOpenProcess(newProcessParams);
+      await this.ivyEngineApi.deployProjects([newProcessParams.path]);
     }
   }
 
@@ -128,13 +129,17 @@ export class IvyEngineManager {
     if (await this.devContextPath) {
       await this.ivyEngineApi.createProject(newProjectParams);
       const path = newProjectParams.path;
-      if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(path))) {
+      if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
         await this.ivyEngineApi.initProjects([path]);
-        await this.deployProject(path);
-        await this.createProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
+        await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
         await this.buildAndDeployProject(path);
       }
     }
+  }
+
+  private async createAndOpenProcess(newProcessParams: NewProcessParams): Promise<void> {
+    const newProcessUri = await this.ivyEngineApi.createProcess(newProcessParams);
+    executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
   }
 
   public async devWfUiUri(): Promise<string> {

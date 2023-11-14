@@ -15,4 +15,21 @@ export abstract class PageObject {
   async isActionItemChecked(label: string) {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
   }
+
+  async showAxonIvyContainer() {
+    await this.page.locator('li.action-item').getByLabel('Axon Ivy').first().click();
+    await this.isAxonIvyActionItemChecked();
+  }
+
+  async hasStatusMessage(message: string, timeout?: number): Promise<void> {
+    await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
+  }
+
+  async provideUserInput(input?: string): Promise<void> {
+    await this.page.locator('.quick-input-widget').focus();
+    if (input) {
+      await this.page.keyboard.type(input);
+    }
+    await this.page.keyboard.press('Enter');
+  }
 }

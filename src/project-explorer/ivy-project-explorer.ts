@@ -4,7 +4,6 @@ import { Commands, executeCommand } from '../base/commands';
 import { addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
-import { getCmdEntry } from './utility';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -18,7 +17,6 @@ export class IvyProjectExplorer {
     context.subscriptions.push(this.treeView);
     this.registerCommands();
     this.defineIvyProjectFileWatcher();
-    this.defineProcessModelFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
 
     this.treeDataProvider.onDidCreateTreeItem(entry => {
@@ -39,11 +37,17 @@ export class IvyProjectExplorer {
     vscode.commands.registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
     vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
-    vscode.commands.registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) => addNewProcess(entry, 'Business Process'));
-    vscode.commands.registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) => addNewProcess(entry, 'Callable Sub Process'));
-    vscode.commands.registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) => addNewProcess(entry, 'Web Service Process'));
-    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, async (entry?: Entry) => {
-      this.treeDataProvider.delete(getCmdEntry(this.treeView.selection, entry)).then(() => this.treeDataProvider.refresh());
+    vscode.commands.registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) =>
+      addNewProcess('Business Process', this.getCmdEntry(entry))
+    );
+    vscode.commands.registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) =>
+      addNewProcess('Callable Sub Process', this.getCmdEntry(entry))
+    );
+    vscode.commands.registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) =>
+      addNewProcess('Web Service Process', this.getCmdEntry(entry))
+    );
+    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
+      this.treeDataProvider.delete(this.getCmdEntry(entry)).then(() => this.treeDataProvider.refresh());
     });
     vscode.commands.registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
     vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
@@ -54,16 +58,6 @@ export class IvyProjectExplorer {
     projectFileWatcher.onDidChange(() => this.refresh());
     projectFileWatcher.onDidCreate(() => this.refresh());
     projectFileWatcher.onDidDelete(() => this.refresh());
-  }
-
-  private defineProcessModelFileWatcher(): void {
-    const processModelFileWatcher = vscode.workspace.createFileSystemWatcher('**/processes/**/*.p.json');
-    processModelFileWatcher.onDidCreate(e => {
-      executeCommand('vscode.open', vscode.Uri.file(e.fsPath));
-    });
-    processModelFileWatcher.onDidDelete(e => {
-      this.treeDataProvider.refresh();
-    });
   }
 
   public async hasIvyProjects(): Promise<boolean> {
@@ -143,7 +137,7 @@ export class IvyProjectExplorer {
       return;
     }
     const parentEntryPath = path.dirname(entryPath);
-    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.parse(parentEntryPath))) {
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(parentEntryPath))) {
       this.refreshRecursively(parentEntryPath);
     }
   }
@@ -155,5 +149,15 @@ export class IvyProjectExplorer {
         this.treeView.reveal(entry, { expand: true });
       }
     }
+  }
+
+  private getCmdEntry(entry: Entry): Entry | undefined {
+    if (entry) {
+      return entry;
+    }
+    if (this.treeView.selection.length > 0) {
+      return this.treeView.selection[0];
+    }
+    return undefined;
   }
 }

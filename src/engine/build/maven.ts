@@ -13,32 +13,26 @@ export class MavenBuilder {
   constructor(extensionUri: vscode.Uri) {
     const engineDir = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine').fsPath;
     this.buildCommand = `mvn process-test-classes --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDir} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
-    this.outputChannel = vscode.window.createOutputChannel('Ivy Maven');
+    this.outputChannel = vscode.window.createOutputChannel('Axon Ivy Maven');
   }
 
   async buildProject(ivyProjectDir: string): Promise<void> {
-    const progressOptions = {
-      location: vscode.ProgressLocation.Notification,
-      title: `Build Project ${ivyProjectDir}`,
-      cancellable: false
-    };
-    return await vscode.window.withProgress(progressOptions, async () => {
-      const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
-      childProcess.on('error', (error: any) => {
-        this.outputChannel.append(error);
-        this.outputChannel.show();
-        throw new Error(error);
+    const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
+    this.outputChannel.show();
+    childProcess.on('error', (error: any) => {
+      this.outputChannel.append(error);
+      this.outputChannel.show();
+      throw new Error(error);
+    });
+    if (childProcess.stdout) {
+      childProcess.stdout.setEncoding('utf-8');
+      childProcess.stdout.on('data', (data: any) => {
+        this.outputChannel.append(data);
       });
-      if (childProcess.stdout) {
-        childProcess.stdout.setEncoding('utf-8');
-        childProcess.stdout.on('data', (data: any) => {
-          this.outputChannel.append(data);
-        });
-      }
-      return new Promise(resolve => {
-        childProcess.on('exit', () => {
-          resolve();
-        });
+    }
+    return new Promise(resolve => {
+      childProcess.on('exit', () => {
+        resolve();
       });
     });
   }

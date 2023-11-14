@@ -3,6 +3,7 @@ import { ViewData } from './view';
 import { expect } from 'playwright/test';
 import { Editor } from './editor';
 import { InscriptionView } from './inscription-view';
+import { Locator } from '@playwright/test';
 
 export class ProcessEditor extends Editor {
   constructor(page: Page, editorFile: string = 'ProcurementRequestUserTask.p.json') {
@@ -23,6 +24,10 @@ export class ProcessEditor extends Editor {
     return this.viewFrameLoactor().locator(`[id$="_${pid}"]`);
   }
 
+  locatorForElementType(type: string) {
+    return this.viewFrameLoactor().locator(type);
+  }
+
   async typeText(text: string) {
     await this.page.keyboard.type(text);
   }
@@ -40,5 +45,12 @@ export class ProcessEditor extends Editor {
 
   inscriptionView() {
     return new InscriptionView(this.page, this.viewFrameLoactor().locator('.inscription-ui-container'));
+  }
+
+  async startProcessAndAssertExecuted(startEvent: Locator, executedElement: Locator) {
+    await startEvent.click();
+    const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
+    await playButton.click();
+    await expect(executedElement).toHaveClass(/executed/);
   }
 }

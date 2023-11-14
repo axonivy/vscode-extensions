@@ -42,17 +42,11 @@ export abstract class ExplorerView extends View {
     const node = this.viewLocator.getByText(name);
     await expect(node).not.toBeAttached();
   }
-}
 
-export class ProjectExplorerView extends ExplorerView {
-  constructor(page: Page) {
-    super('Axon Ivy Projects', page);
-  }
-}
-
-export class OutlineExplorerView extends ExplorerView {
-  constructor(page: Page) {
-    super('Process Outline', page);
+  async clickAction(title: string): Promise<void> {
+    const actionLocator = this.page.getByRole('button', { name: title, exact: true });
+    await expect(actionLocator).toBeVisible();
+    await actionLocator.click();
   }
 
   async selectNode(name: string): Promise<void> {
@@ -63,6 +57,40 @@ export class OutlineExplorerView extends ExplorerView {
   async isSelected(name: string): Promise<void> {
     const selected = this.viewLocator.locator('.monaco-list-row.selected');
     await expect(selected).toContainText(name);
+  }
+}
+
+export class ProjectExplorerView extends ExplorerView {
+  constructor(page: Page) {
+    super('Axon Ivy Projects', page);
+  }
+
+  async isWelcomeViewVisible(): Promise<void> {
+    await expect(this.page.locator('.welcome-view-content')).toBeVisible();
+  }
+
+  async addProject(projectName: string): Promise<void> {
+    await this.clickAction('Project');
+    await this.provideUserInput(projectName);
+    await this.provideUserInput();
+    await this.provideUserInput();
+    await this.provideUserInput();
+  }
+
+  async addProcess(
+    projectName: string,
+    processName: string,
+    kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process'
+  ): Promise<void> {
+    await this.selectNode(projectName);
+    await this.executeCommand('Ivy Project Explorer: ' + kind);
+    await this.provideUserInput(processName);
+  }
+}
+
+export class OutlineExplorerView extends ExplorerView {
+  constructor(page: Page) {
+    super('Process Outline', page);
   }
 
   async doubleClickExpandable(name: string): Promise<void> {
