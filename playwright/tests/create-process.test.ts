@@ -57,6 +57,7 @@ test.describe('Create Process', () => {
     await explorer.hasNoNode('testCallableSubProcess.p.json');
     processEditor = getProcessEditor('testCallableSubProcess');
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
+    await processEditor.isViewVisible();
     await expect(start).toBeVisible();
   });
 
@@ -65,6 +66,7 @@ test.describe('Create Process', () => {
     await explorer.hasNoNode('testWebServiceProcess.p.json');
     processEditor = getProcessEditor('testWebServiceProcess');
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
+    await processEditor.isViewVisible();
     await expect(start).toBeVisible();
   });
 });
