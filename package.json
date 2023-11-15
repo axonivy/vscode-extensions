@@ -101,23 +101,8 @@
         "category": "Ivy Engine"
       },
       {
-        "command": "engine.deployProjects",
-        "title": "Deploy all Projects",
-        "category": "Ivy Engine"
-      },
-      {
-        "command": "engine.buildProjects",
-        "title": "Build all Projects",
-        "category": "Ivy Engine"
-      },
-      {
         "command": "engine.ivyBrowserOpen",
         "title": "Open Ivy Browser",
-        "category": "Ivy Engine"
-      },
-      {
-        "command": "engine.openInExternalBrowser",
-        "title": "Open in External Browser",
         "category": "Ivy Engine"
       },
       {

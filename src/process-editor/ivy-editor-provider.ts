@@ -1,4 +1,4 @@
-import { Commands, executeCommand } from '../base/commands';
+import { executeCommand } from '../base/commands';
 import { GlspVscodeConnector, GlspEditorProvider } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
@@ -36,7 +36,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
           webview.postMessage({ command: 'theme', theme: vsCodeThemeToInscriptionMonacoTheme(vscode.window.activeColorTheme) });
           break;
         case 'startProcess':
-          executeCommand(Commands.ENGINE_START_PROCESS, message.processStartUri);
+          executeCommand('engine.startProcess', message.processStartUri);
           break;
       }
     });

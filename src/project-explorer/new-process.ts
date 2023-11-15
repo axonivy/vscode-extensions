@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Entry, IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
-import { Commands, executeCommand } from '../base/commands';
+import { executeCommand } from '../base/commands';
 import path from 'path';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
@@ -21,7 +21,7 @@ export async function addNewProcess(kind: ProcessKind, entry?: Entry): Promise<v
   }
   const input = await collectNewProcessParams(entry, kind);
   if (input) {
-    executeCommand(Commands.ENGINE_CREATE_PROCESS, input);
+    executeCommand('engine.createProcess', input);
   }
 }
 
