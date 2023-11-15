@@ -48,10 +48,9 @@ export class IvyProjectExplorer {
   }
 
   private defineIvyProjectFileWatcher(): void {
-    const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
+    const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, false, true);
     projectFileWatcher.onDidChange(() => this.refresh());
     projectFileWatcher.onDidCreate(() => this.refresh());
-    projectFileWatcher.onDidDelete(() => this.refresh());
   }
 
   public async hasIvyProjects(): Promise<boolean> {

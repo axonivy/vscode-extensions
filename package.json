@@ -34,6 +34,7 @@
   "main": "./dist/extension.js",
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
+    "axios": "^1.6.2",
     "fast-xml-parser": "^4.3.2"
   },
   "devDependencies": {
@@ -47,13 +48,13 @@
     "path": "^0.12.7",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
+    "ts-loader": "^9.4.2",
     "typescript": "~5.2.2",
     "vsce": "1.79.5",
     "vscode-config-editor-webview": "11.2.0",
     "vscode-process-editor-webview": "11.2.0",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1",
-    "ts-loader": "^9.4.2"
+    "webpack-cli": "^5.0.1"
   },
   "workspaces": [
     "webviews/*",
