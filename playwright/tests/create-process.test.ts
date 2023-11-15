@@ -15,7 +15,7 @@ test.describe('Create Process', () => {
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
   const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeEach(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
@@ -57,7 +57,6 @@ test.describe('Create Process', () => {
     await explorer.hasNoNode('testCallableSubProcess.p.json');
     processEditor = getProcessEditor('testCallableSubProcess');
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
-    await processEditor.isViewVisible();
     await expect(start).toBeVisible();
   });
 
@@ -66,7 +65,6 @@ test.describe('Create Process', () => {
     await explorer.hasNoNode('testWebServiceProcess.p.json');
     processEditor = getProcessEditor('testWebServiceProcess');
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
-    await processEditor.isViewVisible();
     await expect(start).toBeVisible();
   });
 });
