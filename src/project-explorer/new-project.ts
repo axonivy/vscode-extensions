@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Commands, executeCommand } from '../base/commands';
+import { executeCommand } from '../base/commands';
 import path from 'path';
 
 export interface NewProjectParams {
@@ -13,7 +13,7 @@ export interface NewProjectParams {
 export async function addNewProject(): Promise<void> {
   const input = await collectNewProjectParams();
   if (input) {
-    executeCommand(Commands.ENGINE_CREATE_PROJECT, input);
+    executeCommand('engine.createProject', input);
   }
 }
 

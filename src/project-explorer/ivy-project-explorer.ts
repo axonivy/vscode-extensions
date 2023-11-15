@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN, Entry } from './ivy-project-tree-data-provider';
-import { Commands, executeCommand } from '../base/commands';
+import { executeCommand, registerCommand } from '../base/commands';
 import { addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
@@ -30,27 +30,21 @@ export class IvyProjectExplorer {
   }
 
   private registerCommands(): void {
-    vscode.commands.registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
-    vscode.commands.registerCommand(`${VIEW_ID}.buildAll`, () => this.buildAll());
-    vscode.commands.registerCommand(`${VIEW_ID}.deployAll`, () => this.deployAll());
-    vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployAll`, () => this.buildAndDeployAll());
-    vscode.commands.registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
-    vscode.commands.registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
-    vscode.commands.registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
-    vscode.commands.registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) =>
-      addNewProcess('Business Process', this.getCmdEntry(entry))
-    );
-    vscode.commands.registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) =>
-      addNewProcess('Callable Sub Process', this.getCmdEntry(entry))
-    );
-    vscode.commands.registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) =>
-      addNewProcess('Web Service Process', this.getCmdEntry(entry))
-    );
-    vscode.commands.registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
+    registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    registerCommand(`${VIEW_ID}.buildAll`, () => this.buildAll());
+    registerCommand(`${VIEW_ID}.deployAll`, () => this.deployAll());
+    registerCommand(`${VIEW_ID}.buildAndDeployAll`, () => this.buildAndDeployAll());
+    registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
+    registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
+    registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
+    registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) => addNewProcess('Business Process', this.getCmdEntry(entry)));
+    registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) => addNewProcess('Callable Sub Process', this.getCmdEntry(entry)));
+    registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) => addNewProcess('Web Service Process', this.getCmdEntry(entry)));
+    registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
       this.treeDataProvider.delete(this.getCmdEntry(entry)).then(() => this.treeDataProvider.refresh());
     });
-    vscode.commands.registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
-    vscode.commands.registerCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS, () => this.treeDataProvider.getIvyProjects());
+    registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
+    registerCommand(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
   }
 
   private defineIvyProjectFileWatcher(): void {
@@ -72,31 +66,31 @@ export class IvyProjectExplorer {
   }
 
   private async buildAll(): Promise<void> {
-    executeCommand(Commands.ENGINE_BUILD_PROJECTS);
+    executeCommand('engine.buildProjects');
   }
 
   private async deployAll(): Promise<void> {
-    executeCommand(Commands.ENGINE_DEPLOY_PROJECTS);
+    executeCommand('engine.deployProjects');
   }
 
   private async buildAndDeployAll(): Promise<void> {
-    executeCommand(Commands.ENGINE_BUILD_AND_DEPLOY_PROJECTS);
+    executeCommand('engine.buildAndDeployProjects');
   }
 
   private async buildProject(entry: Entry): Promise<void> {
-    executeCommand(Commands.ENGINE_BUILD_PROJECT, entry.uri.fsPath);
+    executeCommand('engine.buildProject', entry.uri.fsPath);
   }
 
   private async deployProject(entry: Entry): Promise<void> {
-    executeCommand(Commands.ENGINE_DEPLOY_PROJECT, entry.uri.fsPath);
+    executeCommand('engine.deployProject', entry.uri.fsPath);
   }
 
   private async buildAndDeployProject(entry: Entry): Promise<void> {
-    executeCommand(Commands.ENGINE_BUILD_AND_DEPLOY_PROJECT, entry.uri.fsPath);
+    executeCommand('engine.buildAndDeployProject', entry.uri.fsPath);
   }
 
   private setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
-    executeCommand(Commands.VSCODE_SET_CONTEXT, 'ivy:hasIvyProjects', hasIvyProjects);
+    executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
   private focusIvyView(hasIvyProjects: boolean): void {
@@ -107,7 +101,7 @@ export class IvyProjectExplorer {
 
   private activateEngineExtension(hasIvyProjects: boolean): void {
     if (hasIvyProjects) {
-      executeCommand(Commands.ENGINE_START_MANAGER);
+      executeCommand('engine.startIvyEngineManager');
     }
   }
 

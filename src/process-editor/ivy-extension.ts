@@ -5,6 +5,7 @@ import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
 import { ProcessEditorConnector } from '../base/process-editor-connector';
 import { IvyProcessOutlineProvider } from './ivy-process-outline';
+import { registerCommand } from '../base/commands';
 
 export async function activateProcessEditor(context: vscode.ExtensionContext): Promise<ProcessEditorConnector> {
   // Wrap server with quickstart component
@@ -48,7 +49,7 @@ export async function activateProcessEditor(context: vscode.ExtensionContext): P
       }
     }
   });
-  vscode.commands.registerCommand('ivyProcessOutline.selectElement', pid => ivyProcessOutline.select(pid));
+  registerCommand('ivyProcessOutline.selectElement', pid => ivyProcessOutline.select(pid));
 
   configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
   return ivyVscodeConnector;

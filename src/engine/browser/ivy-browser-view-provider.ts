@@ -1,4 +1,4 @@
-import { Commands, executeCommand } from '../../base/commands';
+import { executeCommand } from '../../base/commands';
 import * as vscode from 'vscode';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
@@ -24,7 +24,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case 'openHome':
-          executeCommand(Commands.ENGINE_OPEN_DEV_WF_UI);
+          executeCommand('engine.openDevWfUi');
           break;
       }
     });

@@ -1,7 +1,7 @@
 import { ChildProcess, execFile } from 'child_process';
 import * as vscode from 'vscode';
 import Os from 'os';
-import { executeCommand, Commands } from '../base/commands';
+import { executeCommand } from '../base/commands';
 import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
@@ -34,7 +34,7 @@ export class IvyEngineManager {
     await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
-    executeCommand(Commands.PROCESS_EDITOR_ACTIVATE);
+    executeCommand('process-editor.activate');
   }
 
   private async resolveEngineUrl(): Promise<string> {
@@ -147,7 +147,7 @@ export class IvyEngineManager {
   }
 
   async ivyProjectDirectories(): Promise<string[]> {
-    return (await executeCommand(Commands.PROJECT_EXPLORER_GET_IVY_PROJECTS)) as string[];
+    return (await executeCommand('ivyProjects.getIvyProjects')) as string[];
   }
 
   async stop(): Promise<void> {
@@ -169,7 +169,7 @@ export class IvyEngineManager {
   }
 
   private async openInInternalBrowser(postfix: string): Promise<void> {
-    executeCommand(Commands.ENGINE_IVY_BROWSER_OPEN, [await this.fullUri(postfix)]);
+    executeCommand('engine.ivyBrowserOpen', [await this.fullUri(postfix)]);
   }
 
   private async fullUri(postfix: string) {
