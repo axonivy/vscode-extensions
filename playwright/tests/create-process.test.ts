@@ -15,7 +15,7 @@ test.describe('Create Process', () => {
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
   const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeEach(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
