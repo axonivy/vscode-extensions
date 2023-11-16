@@ -87,7 +87,7 @@ export class IvyEngineApi {
   public async deleteProject(projectDir: string): Promise<any> {
     const params = { projectDir };
     const url = this.projectRequestURL(DELETE_PROJECT_REQUEST.sourcePath).toString();
-    return new Promise(resolve => axios.delete(url, { params, headers, auth }).then(response => resolve(response.data)));
+    return axios.delete(url, { params, headers, auth }).then(response => response.data);
   }
 
   private async runGetRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {
