@@ -190,11 +190,6 @@
         "title": "Project",
         "category": "Ivy Project Explorer",
         "icon": "$(add)"
-      },
-      {
-        "command": "ivyProjects.deleteEntry",
-        "title": "Delete",
-        "category": "Ivy Project Explorer"
       }
     ],
     "configuration": {
@@ -331,10 +326,6 @@
           "when": "view == ivyProjects && viewItem == ivyProject"
         },
         {
-          "command": "ivyProjects.deleteEntry",
-          "when": "view == ivyProjects"
-        },
-        {
           "submenu": "ivyProjects.new",
           "when": "view == ivyProjects",
           "group": "ivyProjects@1"
@@ -383,16 +374,6 @@
         "mac": "alt+l",
         "command": "workflow.layout",
         "when": "activeCustomEditorId == 'ivy.glspDiagram'"
-      },
-      {
-        "key": "delete",
-        "command": "ivyProjects.deleteEntry",
-        "when": "focusedView == ivyProjects"
-      },
-      {
-        "mac": "cmd+backspace",
-        "command": "ivyProjects.deleteEntry",
-        "when": "focusedView == ivyProjects"
       }
     ],
     "languages": [

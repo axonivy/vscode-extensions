@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { executeCommand } from '../base/commands';
 
 export interface Entry {
   uri: vscode.Uri;
@@ -157,24 +156,5 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       return this.rootOf(child.parent);
     }
     return child;
-  }
-
-  async delete(entry?: Entry): Promise<void> {
-    if (!entry?.uri) {
-      return;
-    }
-    const fileName = path.basename(entry.uri.path);
-    const message = `Are you sure you want to permanently delete ${fileName}?`;
-    const answer = await vscode.window.showInformationMessage(message, { modal: true }, 'Delete');
-    if (answer === 'Delete') {
-      const filePath = entry.uri.fsPath;
-      this.ivyProjects
-        .then(projects => {
-          if (projects.includes(filePath)) {
-            executeCommand('engine.deleteProject', filePath);
-          }
-        })
-        .then(() => vscode.workspace.fs.delete(entry.uri, { recursive: true, useTrash: true }));
-    }
   }
 }

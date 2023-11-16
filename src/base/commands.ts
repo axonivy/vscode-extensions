@@ -36,7 +36,6 @@ type ProjectViewCommand =
   | 'ivyProjects.addBusinessProcess'
   | 'ivyProjects.addCallableSubProcess'
   | 'ivyProjects.addWebServiceProcess'
-  | 'ivyProjects.deleteEntry'
   | 'ivyProjects.addNewProject'
   | 'ivyProjects.getIvyProjects';
 type ViewCommand = 'ivyBrowserView.focus' | 'ivyProjects.focus' | 'ivyProcessOutline.selectElement';
