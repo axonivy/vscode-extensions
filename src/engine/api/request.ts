@@ -1,3 +1,4 @@
+import { AxiosBasicCredentials } from 'axios';
 import * as http from 'http';
 import * as https from 'https';
 
@@ -9,11 +10,15 @@ export const ACTIVATE_PROJECTS_REQUEST: ProjectRequest = { sourcePath: 'activate
 export const DEPLOY_PROJECTS_REQUEST: ProjectRequest = { sourcePath: 'deploy-projects', description: 'Deploy Ivy Projects' };
 export const CREATE_PROCESS_REQUEST: ProjectRequest = { sourcePath: 'create-process', description: 'Create new Process' };
 export const CREATE_PROJECT_REQUEST: ProjectRequest = { sourcePath: 'create-project', description: 'Create new Project' };
+export const DELETE_PROJECT_REQUEST: ProjectRequest = { sourcePath: 'delete-project', description: 'Delete Project' };
 
 export const PROJECT_REQUEST_OPTIONS: http.RequestOptions = {
   auth: 'Developer:Developer',
   method: 'GET'
 };
+
+export const headers = { 'X-Requested-By': 'web-ide' };
+export const auth: AxiosBasicCredentials = { username: 'Developer', password: 'Developer' };
 
 export function makeGetRequest(url: URL, options: http.RequestOptions): Promise<string> {
   if (url.protocol === 'http:') {

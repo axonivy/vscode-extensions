@@ -7,15 +7,19 @@ import {
   CREATE_PROCESS_REQUEST,
   CREATE_PROJECT_REQUEST,
   DEACTIVATE_PROJECTS_REQUEST,
+  DELETE_PROJECT_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
   PROJECT_REQUEST_OPTIONS,
   ProjectRequest,
+  auth,
+  headers,
   makeGetRequest,
   makePostRequest
 } from './request';
 import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
+import axios from 'axios';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
@@ -78,6 +82,12 @@ export class IvyEngineApi {
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
     await this.runPostRequest(newProjectParams, CREATE_PROJECT_REQUEST);
+  }
+
+  public async deleteProject(projectDir: string): Promise<any> {
+    const params = { projectDir };
+    const url = this.projectRequestURL(DELETE_PROJECT_REQUEST.sourcePath).toString();
+    return axios.delete(url, { params, headers, auth }).then(response => response.data);
   }
 
   private async runGetRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {

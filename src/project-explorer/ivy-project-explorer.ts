@@ -40,18 +40,27 @@ export class IvyProjectExplorer {
     registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) => addNewProcess('Business Process', this.getCmdEntry(entry)));
     registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) => addNewProcess('Callable Sub Process', this.getCmdEntry(entry)));
     registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) => addNewProcess('Web Service Process', this.getCmdEntry(entry)));
-    registerCommand(`${VIEW_ID}.deleteEntry`, (entry: Entry) => {
-      this.treeDataProvider.delete(this.getCmdEntry(entry)).then(() => this.treeDataProvider.refresh());
-    });
     registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
     registerCommand(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
   }
 
   private defineIvyProjectFileWatcher(): void {
-    const projectFileWatcher = vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN);
-    projectFileWatcher.onDidChange(() => this.refresh());
-    projectFileWatcher.onDidCreate(() => this.refresh());
-    projectFileWatcher.onDidDelete(() => this.refresh());
+    vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(() => this.refresh());
+    vscode.workspace.createFileSystemWatcher('**/*', true, true, false).onDidDelete(e =>
+      this.treeDataProvider
+        .getIvyProjects()
+        .then(projects => this.deleteProjectOnEngine(e, projects))
+        .then(() => this.refresh())
+    );
+  }
+
+  private deleteProjectOnEngine(uri: vscode.Uri, ivyProjects: string[]) {
+    const filePath = uri.fsPath;
+    for (const project of ivyProjects) {
+      if (project === filePath || project.startsWith(uri.fsPath + path.sep)) {
+        executeCommand('engine.deleteProject', project);
+      }
+    }
   }
 
   public async hasIvyProjects(): Promise<boolean> {

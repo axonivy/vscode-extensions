@@ -142,6 +142,12 @@ export class IvyEngineManager {
     executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
   }
 
+  public async deleteProject(ivyProjectDirectory: string): Promise<void> {
+    if (await this.devContextPath) {
+      this.ivyEngineApi.deleteProject(ivyProjectDirectory);
+    }
+  }
+
   public async devWfUiUri(): Promise<string> {
     return this.fullUri(await this.devContextPath);
   }
