@@ -1,9 +1,10 @@
 import * as vscode from 'vscode';
 import { IvyProjectTreeDataProvider, IVY_RPOJECT_FILE_PATTERN, Entry } from './ivy-project-tree-data-provider';
-import { executeCommand, registerCommand } from '../base/commands';
-import { addNewProcess } from './new-process';
+import { Command, executeCommand, registerCommand } from '../base/commands';
+import { ProcessKind, addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
+import { TreeSelection, executeTreeSelectionCommand, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -18,30 +19,25 @@ export class IvyProjectExplorer {
     this.registerCommands();
     this.defineIvyProjectFileWatcher();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
-
     this.treeDataProvider.onDidCreateTreeItem(entry => {
       this.revealActiveEntry(entry);
     });
-
-    this.hasIvyProjects().then(hasIvyProjects => {
-      this.setProjectExplorerActivationCondition(hasIvyProjects);
-      this.focusIvyView(hasIvyProjects);
-    });
+    this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
   private registerCommands(): void {
     registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
-    registerCommand(`${VIEW_ID}.buildAll`, () => this.buildAll());
-    registerCommand(`${VIEW_ID}.deployAll`, () => this.deployAll());
-    registerCommand(`${VIEW_ID}.buildAndDeployAll`, () => this.buildAndDeployAll());
-    registerCommand(`${VIEW_ID}.buildProject`, (entry: Entry) => this.buildProject(entry));
-    registerCommand(`${VIEW_ID}.deployProject`, (entry: Entry) => this.deployProject(entry));
-    registerCommand(`${VIEW_ID}.buildAndDeployProject`, (entry: Entry) => this.buildAndDeployProject(entry));
-    registerCommand(`${VIEW_ID}.addBusinessProcess`, (entry: Entry) => addNewProcess('Business Process', this.getCmdEntry(entry)));
-    registerCommand(`${VIEW_ID}.addCallableSubProcess`, (entry: Entry) => addNewProcess('Callable Sub Process', this.getCmdEntry(entry)));
-    registerCommand(`${VIEW_ID}.addWebServiceProcess`, (entry: Entry) => addNewProcess('Web Service Process', this.getCmdEntry(entry)));
-    registerCommand(`${VIEW_ID}.addNewProject`, () => addNewProject());
+    registerCommand(`${VIEW_ID}.buildProject`, (selection: TreeSelection) => this.execute('engine.buildProject', selection));
+    registerCommand(`${VIEW_ID}.deployProject`, (selection: TreeSelection) => this.execute('engine.deployProject', selection));
+    registerCommand(`${VIEW_ID}.buildAndDeployProject`, (selection: TreeSelection) =>
+      this.execute('engine.buildAndDeployProject', selection)
+    );
+    registerCommand(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess('Business Process', selection));
+    registerCommand(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
+    registerCommand(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
+    registerCommand(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
     registerCommand(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
+    registerCommand(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
   private defineIvyProjectFileWatcher(): void {
@@ -74,38 +70,21 @@ export class IvyProjectExplorer {
     this.activateEngineExtension(hasIvyProjects);
   }
 
-  private async buildAll(): Promise<void> {
-    executeCommand('engine.buildProjects');
+  private async execute(command: Command, selection: TreeSelection) {
+    executeTreeSelectionCommand(command, selection, this.treeDataProvider.getIvyProjects());
   }
 
-  private async deployAll(): Promise<void> {
-    executeCommand('engine.deployProjects');
-  }
-
-  private async buildAndDeployAll(): Promise<void> {
-    executeCommand('engine.buildAndDeployProjects');
-  }
-
-  private async buildProject(entry: Entry): Promise<void> {
-    executeCommand('engine.buildProject', entry.uri.fsPath);
-  }
-
-  private async deployProject(entry: Entry): Promise<void> {
-    executeCommand('engine.deployProject', entry.uri.fsPath);
-  }
-
-  private async buildAndDeployProject(entry: Entry): Promise<void> {
-    executeCommand('engine.buildAndDeployProject', entry.uri.fsPath);
+  private async addProcess(kind: ProcessKind, selection: TreeSelection) {
+    const projectDir = await treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects());
+    if (!projectDir) {
+      return;
+    }
+    const selectedUri = await treeSelectionToUri(selection);
+    addNewProcess(selectedUri, projectDir, kind);
   }
 
   private setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
     executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
-  }
-
-  private focusIvyView(hasIvyProjects: boolean): void {
-    if (hasIvyProjects) {
-      executeCommand(`${VIEW_ID}.focus`);
-    }
   }
 
   private activateEngineExtension(hasIvyProjects: boolean): void {

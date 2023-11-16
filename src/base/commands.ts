@@ -7,7 +7,8 @@ export async function executeCommand(command: Command, ...rest: any[]) {
 export async function registerCommand(command: Command, callback: (...args: any[]) => any) {
   commands.registerCommand(command, callback);
 }
-export type Command = 'setContext' | 'vscode.open' | EngineCommand | ProjectViewCommand | ViewCommand;
+export type Command = VSCodeCommand | EngineCommand | ProjectViewCommand | ViewCommand;
+type VSCodeCommand = 'revealInExplorer' | 'setContext' | 'vscode.open' | 'copyFilePath';
 type EngineCommand =
   | 'engine.startIvyEngineManager'
   | 'engine.deployProjects'
@@ -27,9 +28,6 @@ type EngineCommand =
   | 'process-editor.activate';
 type ProjectViewCommand =
   | 'ivyProjects.refreshEntry'
-  | 'ivyProjects.buildAll'
-  | 'ivyProjects.deployAll'
-  | 'ivyProjects.buildAndDeployAll'
   | 'ivyProjects.buildProject'
   | 'ivyProjects.deployProject'
   | 'ivyProjects.buildAndDeployProject'
@@ -37,5 +35,6 @@ type ProjectViewCommand =
   | 'ivyProjects.addCallableSubProcess'
   | 'ivyProjects.addWebServiceProcess'
   | 'ivyProjects.addNewProject'
-  | 'ivyProjects.getIvyProjects';
-type ViewCommand = 'ivyBrowserView.focus' | 'ivyProjects.focus' | 'ivyProcessOutline.selectElement';
+  | 'ivyProjects.getIvyProjects'
+  | 'ivyProjects.revealInExplorer';
+type ViewCommand = 'ivyBrowserView.focus' | 'ivyProcessOutline.selectElement';

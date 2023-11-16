@@ -1,7 +1,7 @@
 import { test } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
-import { ProjectExplorerView } from './page-objects/explorer-view';
+import { FileExplorer } from './page-objects/explorer-view';
 
 test.describe('Create Project', () => {
   const projectName = 'testProject';
@@ -16,9 +16,7 @@ test.describe('Create Project', () => {
 
   test('Add Project and execute init Process', async ({ pageFor }) => {
     const page = await pageFor(empty);
-    const explorer = new ProjectExplorerView(page);
-    await explorer.showAxonIvyContainer();
-    await explorer.isWelcomeViewVisible();
+    const explorer = new FileExplorer(page);
     await explorer.addProject(projectName);
     await explorer.hasStatusMessage('Successful Project Deployment', 60_000);
 

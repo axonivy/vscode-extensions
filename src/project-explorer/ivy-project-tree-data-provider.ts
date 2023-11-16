@@ -69,7 +69,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   async getIvyProjects(): Promise<string[]> {
-    return await this.ivyProjects;
+    return this.ivyProjects;
   }
 
   refresh(): void {
@@ -149,12 +149,5 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
     return (await vscode.workspace.fs.readDirectory(uri)).filter(([childName]) => !childName.startsWith('.'));
-  }
-
-  static rootOf(child: Entry): Entry {
-    if (child.parent) {
-      return this.rootOf(child.parent);
-    }
-    return child;
   }
 }

@@ -43,12 +43,6 @@ export abstract class ExplorerView extends View {
     await expect(node).not.toBeAttached();
   }
 
-  async clickAction(title: string): Promise<void> {
-    const actionLocator = this.page.getByRole('button', { name: title, exact: true });
-    await expect(actionLocator).toBeVisible();
-    await actionLocator.click();
-  }
-
   async selectNode(name: string): Promise<void> {
     await this.viewLocator.getByText(name).click();
     await this.isSelected(name);
@@ -60,6 +54,28 @@ export abstract class ExplorerView extends View {
   }
 }
 
+export class FileExplorer extends ExplorerView {
+  constructor(page: Page) {
+    super('Explorer', page);
+  }
+
+  async addFolder(name: string) {
+    await this.executeCommand('File: New Folder');
+    await this.provideUserInput(name);
+  }
+
+  async addProject(projectName: string): Promise<void> {
+    await this.viewLocator.click();
+    await this.addFolder(projectName);
+    await this.selectNode(projectName);
+    await this.executeCommand('Axon Ivy: New Project');
+    await this.provideUserInput(projectName);
+    await this.provideUserInput();
+    await this.provideUserInput();
+    await this.provideUserInput();
+  }
+}
+
 export class ProjectExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Axon Ivy Projects', page);
@@ -67,14 +83,6 @@ export class ProjectExplorerView extends ExplorerView {
 
   async isWelcomeViewVisible(): Promise<void> {
     await expect(this.page.locator('.welcome-view-content')).toBeVisible();
-  }
-
-  async addProject(projectName: string): Promise<void> {
-    await this.clickAction('Project');
-    await this.provideUserInput(projectName);
-    await this.provideUserInput();
-    await this.provideUserInput();
-    await this.provideUserInput();
   }
 
   async addProcess(

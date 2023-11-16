@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { Entry, IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
 import { executeCommand } from '../base/commands';
 import path from 'path';
 
@@ -15,19 +14,19 @@ export interface NewProcessParams {
 const prompt =
   'Enter the new process name e.g. "myProcess". You can also specify its directory name in the form "parentDirectory/subDirectory/myProcess".';
 
-export async function addNewProcess(kind: ProcessKind, entry?: Entry): Promise<void> {
-  if (!entry) {
-    throw new Error('Select a Project before creating a new process');
-  }
-  const input = await collectNewProcessParams(entry, kind);
+export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind: ProcessKind): Promise<void> {
+  const input = await collectNewProcessParams(selectedUri, projectDir, kind);
   if (input) {
     executeCommand('engine.createProcess', input);
   }
 }
 
-async function collectNewProcessParams(entry: Entry, kind: ProcessKind): Promise<NewProcessParams | undefined> {
-  const root = IvyProjectTreeDataProvider.rootOf(entry);
-  const resolvedNamespace = resolveNamespaceFromPath(entry, root);
+async function collectNewProcessParams(
+  selectedUri: vscode.Uri,
+  projectDir: string,
+  kind: ProcessKind
+): Promise<NewProcessParams | undefined> {
+  const resolvedNamespace = await resolveNamespaceFromPath(selectedUri, projectDir);
   const placeHolder = 'newProcessName';
   const nameWithNamespace = await vscode.window.showInputBox({
     title: 'Process Name',
@@ -43,15 +42,15 @@ async function collectNewProcessParams(entry: Entry, kind: ProcessKind): Promise
   const nameStartIndex = nameWithNamespace.lastIndexOf('/') + 1;
   const name = nameWithNamespace.substring(nameStartIndex, nameWithNamespace.length);
   const namespace = nameWithNamespace.substring(0, nameStartIndex);
-  const path = root.uri.fsPath;
-  return { name, kind, path, namespace };
+  return { name, kind, path: projectDir, namespace };
 }
 
-function resolveNamespaceFromPath(entry: Entry, root: Entry): string | undefined {
-  const entryPath = entry.type === vscode.FileType.File ? path.dirname(entry.uri.path) : entry.uri.path;
-  const processPath = path.join(root.uri.path, 'processes') + path.sep;
-  if (entryPath.startsWith(processPath)) {
-    const namespace = entryPath.replace(processPath, '').replaceAll(path.sep, '/');
+async function resolveNamespaceFromPath(selectedUri: vscode.Uri, projectDir: string): Promise<string | undefined> {
+  const fileStat = await vscode.workspace.fs.stat(selectedUri);
+  const selectedPath = fileStat.type === vscode.FileType.File ? path.dirname(selectedUri.path) : selectedUri.path;
+  const processPath = path.join(projectDir, 'processes') + path.sep;
+  if (selectedPath.startsWith(processPath)) {
+    const namespace = selectedPath.replace(processPath, '').replaceAll(path.sep, '/');
     return namespace + '/';
   }
   return undefined;
