@@ -25,8 +25,8 @@ test.describe('Engine', () => {
     page = await pageFor(noProjectWorkspacePath);
     const settingsView = new SettingsView(page);
     await settingsView.openDefaultSettings();
-    await settingsView.containsSetting('"runEmbeddedEngine": true');
-    await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
+    await settingsView.containsSetting('"engine.runEmbedded": true');
+    await settingsView.containsSetting('"engine.url": "http://localhost:8080/"');
   });
 
   test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
@@ -34,8 +34,8 @@ test.describe('Engine', () => {
     const settingsView = new SettingsView(page);
     await settingsView.isExplorerActionItemChecked();
     await settingsView.openWorkspaceSettings();
-    await settingsView.containsSetting('"runEmbeddedEngine": false');
-    await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');
+    await settingsView.containsSetting('"engine.runEmbedded": false');
+    await settingsView.containsSetting('"engine.url": "http://localhost:8080/"');
     const outputview = new OutputView(page);
     await expect(outputview.viewLocator).toBeHidden();
   });
@@ -44,7 +44,7 @@ test.describe('Engine', () => {
     page = await pageFor(noProjectWorkspacePath);
     const settingsView = new SettingsView(page);
     await settingsView.openWorkspaceSettings();
-    await settingsView.containsSetting('"runEmbeddedEngine": true');
+    await settingsView.containsSetting('"engine.runEmbedded": true');
     const outputview = new OutputView(page);
     await expect(outputview.viewLocator).toBeHidden();
   });

@@ -8,21 +8,12 @@ export abstract class PageObject {
     await executeCommand(this.page, command);
   }
 
-  async isAxonIvyActionItemChecked() {
-    await this.isActionItemChecked('Axon Ivy');
-  }
-
   async isExplorerActionItemChecked() {
     await this.isActionItemChecked('Explorer');
   }
 
   async isActionItemChecked(label: string) {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
-  }
-
-  async showAxonIvyContainer() {
-    await this.page.locator('li.action-item').getByLabel('Axon Ivy').first().click();
-    await this.isAxonIvyActionItemChecked();
   }
 
   async hasStatusMessage(message: string, timeout?: number): Promise<void> {

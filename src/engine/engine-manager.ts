@@ -6,6 +6,7 @@ import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
 import { NewProjectParams } from '../project-explorer/new-project';
+import { engineRunEmbedded, engineUrl } from '../base/configurations';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -38,11 +39,11 @@ export class IvyEngineManager {
   }
 
   private async resolveEngineUrl(): Promise<string> {
-    const runEmbeddedEngine = vscode.workspace.getConfiguration().get('runEmbeddedEngine');
+    const runEmbeddedEngine = engineRunEmbedded;
     if (runEmbeddedEngine) {
       return await this.startEmbeddedEngine(this.extensionUri);
     }
-    return vscode.workspace.getConfiguration().get('engineUrl') as string;
+    return engineUrl ?? '';
   }
 
   private async startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
