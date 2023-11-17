@@ -31,7 +31,7 @@ test.describe('Project Explorer', () => {
     const page = await pageFor(multiProjectWorkspacePath);
     const explorer = new ProjectExplorerView(page);
     await explorer.showAxonIvyContainer();
-    await explorer.doubleClickExpandable('prebuiltProject');
+    await explorer.selectNode('prebuiltProject');
     await explorer.revealInExplorer('pom.xml');
     const fileExplorer = new FileExplorer(page);
     await fileExplorer.isSelected('pom.xml');
