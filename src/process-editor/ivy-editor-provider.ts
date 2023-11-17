@@ -21,9 +21,6 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     _token: vscode.CancellationToken,
     clientId: string
   ): void {
-    vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(_document.uri, '*'), true, true, false).onDidDelete(e => {
-      webviewPanel.dispose();
-    });
     const webview = webviewPanel.webview;
     webviewPanel.webview.options = {
       enableScripts: true

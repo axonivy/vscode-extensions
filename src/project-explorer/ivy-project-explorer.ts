@@ -17,7 +17,7 @@ export class IvyProjectExplorer {
     this.treeView = vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider, showCollapseAll: true });
     context.subscriptions.push(this.treeView);
     this.registerCommands();
-    this.defineIvyProjectFileWatcher();
+    this.defineFileWatchers();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
     this.treeDataProvider.onDidCreateTreeItem(entry => {
       this.revealActiveEntry(entry);
@@ -40,7 +40,7 @@ export class IvyProjectExplorer {
     registerCommand(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
-  private defineIvyProjectFileWatcher(): void {
+  private defineFileWatchers(): void {
     vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(() => this.refresh());
     vscode.workspace.createFileSystemWatcher('**/*', true, true, false).onDidDelete(e =>
       this.treeDataProvider
@@ -48,6 +48,7 @@ export class IvyProjectExplorer {
         .then(projects => this.deleteProjectOnEngine(e, projects))
         .then(() => this.refresh())
     );
+    vscode.workspace.createFileSystemWatcher('**/*.p.json', true, false, true).onDidChange(e => this.execute('engine.deployProject', e));
   }
 
   private deleteProjectOnEngine(uri: vscode.Uri, ivyProjects: string[]) {
