@@ -52,6 +52,10 @@ export abstract class ExplorerView extends View {
     const selected = this.viewLocator.locator('.monaco-list-row.selected');
     await expect(selected).toContainText(name);
   }
+
+  async doubleClickExpandable(name: string): Promise<void> {
+    await this.viewLocator.getByText(name).dblclick();
+  }
 }
 
 export class FileExplorer extends ExplorerView {
@@ -59,7 +63,7 @@ export class FileExplorer extends ExplorerView {
     super('Explorer', page);
   }
 
-  async addFolder(name: string) {
+  async addFolder(name: string): Promise<void> {
     await this.executeCommand('File: New Folder');
     await this.provideUserInput(name);
   }
@@ -91,14 +95,15 @@ export class ProjectExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Axon Ivy Projects', page);
   }
+
+  async revealInExplorer(name: string): Promise<void> {
+    await this.selectNode(name);
+    await this.executeCommand('Axon Ivy: Reveal in Explorer');
+  }
 }
 
 export class OutlineExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Process Outline', page);
-  }
-
-  async doubleClickExpandable(name: string): Promise<void> {
-    await this.viewLocator.getByText(name).dblclick();
   }
 }

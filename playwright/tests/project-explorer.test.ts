@@ -1,5 +1,5 @@
 import { test } from './fixtures/page';
-import { OutlineExplorerView, ProjectExplorerView } from './page-objects/explorer-view';
+import { FileExplorer, OutlineExplorerView, ProjectExplorerView } from './page-objects/explorer-view';
 import { multiProjectWorkspacePath, noProjectWorkspacePath } from './workspaces/workspace';
 
 test.describe('Project Explorer', () => {
@@ -25,5 +25,15 @@ test.describe('Project Explorer', () => {
     await explorer.hasNode('ivy-project-2');
     await explorer.hasNoNode('ivy-project-3');
     await explorer.hasNoNode('no-ivy-project');
+  });
+
+  test('Reveal in Explorer', async ({ pageFor }) => {
+    const page = await pageFor(multiProjectWorkspacePath);
+    const explorer = new ProjectExplorerView(page);
+    await explorer.showAxonIvyContainer();
+    await explorer.doubleClickExpandable('prebuiltProject');
+    await explorer.revealInExplorer('pom.xml');
+    const fileExplorer = new FileExplorer(page);
+    await fileExplorer.isSelected('pom.xml');
   });
 });
