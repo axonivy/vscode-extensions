@@ -13,7 +13,7 @@ test.describe('Variables Editor', () => {
 
   test.beforeEach(async () => {
     editor = new VariablesEditor(page);
-    await editor.isAxonIvyActionItemChecked();
+    await editor.isExplorerActionItemChecked();
     await editor.openEditorFile();
     await editor.isTabVisible();
     await editor.isViewVisible();

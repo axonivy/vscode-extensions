@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { executeCommand } from '../base/commands';
 import path from 'path';
+import { TreeSelection, treeSelectionToUri } from './tree-selection';
 
 export interface NewProjectParams {
   name: string;
@@ -10,23 +11,21 @@ export interface NewProjectParams {
   path: string;
 }
 
-export async function addNewProject(): Promise<void> {
-  const input = await collectNewProjectParams();
+export async function addNewProject(selection: TreeSelection): Promise<void> {
+  const selectedUri = await treeSelectionToUri(selection);
+  const input = await collectNewProjectParams(selectedUri);
   if (input) {
     executeCommand('engine.createProject', input);
   }
 }
 
-async function collectNewProjectParams(): Promise<NewProjectParams | undefined> {
-  const workspacePath = await getWorkspacePath();
-  if (!workspacePath) {
-    return;
-  }
-  const name = await vscode.window.showInputBox({ title: 'Project Name', validateInput: validateProjectName });
+async function collectNewProjectParams(selectedUri: vscode.Uri): Promise<NewProjectParams | undefined> {
+  let prompt = `Project Location: ${selectedUri.path}`;
+  const name = await vscode.window.showInputBox({ title: 'Project Name', validateInput: validateProjectName, prompt });
   if (!name) {
     return;
   }
-  const projectPath = path.join(workspacePath, name);
+  const projectPath = path.join(selectedUri.fsPath, name);
   const groupId = await vscode.window.showInputBox({ title: 'Group Id', value: name, validateInput: validateId });
   if (!groupId) {
     return;
@@ -44,23 +43,6 @@ async function collectNewProjectParams(): Promise<NewProjectParams | undefined> 
     return;
   }
   return { path: projectPath, name, groupId, projectId, defaultNamespace };
-}
-
-async function getWorkspacePath(): Promise<string | undefined> {
-  if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
-    return;
-  }
-  if (vscode.workspace.workspaceFolders.length === 1) {
-    return vscode.workspace.workspaceFolders[0].uri.fsPath;
-  }
-  const workspacePath = await vscode.window.showQuickPick(
-    vscode.workspace.workspaceFolders.map(w => w.uri.fsPath),
-    { title: 'Select a workspace for the new project.' }
-  );
-  if (workspacePath) {
-    return workspacePath;
-  }
-  return;
 }
 
 function validateProjectName(value: string): string | undefined {

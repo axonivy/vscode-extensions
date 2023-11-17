@@ -32,7 +32,7 @@ test.describe('Engine', () => {
   test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
     page = await pageFor(noEngineWorkspacePath);
     const settingsView = new SettingsView(page);
-    await settingsView.isAxonIvyActionItemChecked();
+    await settingsView.isExplorerActionItemChecked();
     await settingsView.openWorkspaceSettings();
     await settingsView.containsSetting('"runEmbeddedEngine": false');
     await settingsView.containsSetting('"engineUrl": "http://localhost:8080/"');

@@ -1,5 +1,6 @@
 import { Page, expect, Locator } from '@playwright/test';
 import { View, ViewData } from './view';
+import path from 'path';
 
 export abstract class ExplorerView extends View {
   constructor(private viewName: string, page: Page) {
@@ -43,12 +44,6 @@ export abstract class ExplorerView extends View {
     await expect(node).not.toBeAttached();
   }
 
-  async clickAction(title: string): Promise<void> {
-    const actionLocator = this.page.getByRole('button', { name: title, exact: true });
-    await expect(actionLocator).toBeVisible();
-    await actionLocator.click();
-  }
-
   async selectNode(name: string): Promise<void> {
     await this.viewLocator.getByText(name).click();
     await this.isSelected(name);
@@ -58,23 +53,32 @@ export abstract class ExplorerView extends View {
     const selected = this.viewLocator.locator('.monaco-list-row.selected');
     await expect(selected).toContainText(name);
   }
+
+  async doubleClickExpandable(name: string): Promise<void> {
+    await this.viewLocator.getByText(name).dblclick();
+  }
 }
 
-export class ProjectExplorerView extends ExplorerView {
+export class FileExplorer extends ExplorerView {
   constructor(page: Page) {
-    super('Axon Ivy Projects', page);
+    super('Explorer', page);
   }
 
-  async isWelcomeViewVisible(): Promise<void> {
-    await expect(this.page.locator('.welcome-view-content')).toBeVisible();
+  async addFolder(name: string): Promise<void> {
+    await this.executeCommand('File: New Folder');
+    await this.provideUserInput(name);
   }
 
-  async addProject(projectName: string): Promise<void> {
-    await this.clickAction('Project');
+  async addNestedProject(rootFolder: string, projectName: string): Promise<void> {
+    await this.viewLocator.click();
+    await this.addFolder(rootFolder);
+    await this.selectNode(rootFolder);
+    await this.executeCommand('Axon Ivy: New Project');
     await this.provideUserInput(projectName);
     await this.provideUserInput();
     await this.provideUserInput();
     await this.provideUserInput();
+    await this.hasNode(rootFolder + path.sep + projectName);
   }
 
   async addProcess(
@@ -83,17 +87,24 @@ export class ProjectExplorerView extends ExplorerView {
     kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process'
   ): Promise<void> {
     await this.selectNode(projectName);
-    await this.executeCommand('Ivy Project Explorer: ' + kind);
+    await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(processName);
+  }
+}
+
+export class ProjectExplorerView extends ExplorerView {
+  constructor(page: Page) {
+    super('Axon Ivy Projects', page);
+  }
+
+  async revealInExplorer(name: string): Promise<void> {
+    await this.selectNode(name);
+    await this.executeCommand('Axon Ivy: Reveal in Explorer');
   }
 }
 
 export class OutlineExplorerView extends ExplorerView {
   constructor(page: Page) {
     super('Process Outline', page);
-  }
-
-  async doubleClickExpandable(name: string): Promise<void> {
-    await this.viewLocator.getByText(name).dblclick();
   }
 }

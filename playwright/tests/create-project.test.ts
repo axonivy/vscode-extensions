@@ -1,25 +1,24 @@
 import { test } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
-import { ProjectExplorerView } from './page-objects/explorer-view';
+import { FileExplorer } from './page-objects/explorer-view';
 
 test.describe('Create Project', () => {
   const projectName = 'testProject';
+  const rootFolder = 'parent';
 
   test.beforeAll(async () => {
-    removeFromWorkspace(empty, projectName);
+    removeFromWorkspace(empty, rootFolder);
   });
 
   test.afterAll(async () => {
-    removeFromWorkspace(empty, projectName);
+    removeFromWorkspace(empty, rootFolder);
   });
 
   test('Add Project and execute init Process', async ({ pageFor }) => {
     const page = await pageFor(empty);
-    const explorer = new ProjectExplorerView(page);
-    await explorer.showAxonIvyContainer();
-    await explorer.isWelcomeViewVisible();
-    await explorer.addProject(projectName);
+    const explorer = new FileExplorer(page);
+    await explorer.addNestedProject(rootFolder, projectName);
     await explorer.hasStatusMessage('Successful Project Deployment', 60_000);
 
     const processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');

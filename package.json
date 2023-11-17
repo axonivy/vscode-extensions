@@ -94,102 +94,107 @@
       {
         "command": "engine.openDevWfUi",
         "title": "Open Developer Workflow UI",
-        "category": "Ivy Engine"
+        "category": "Axon Ivy"
       },
       {
         "command": "engine.openEngineCockpit",
         "title": "Open Engine Cockpit",
-        "category": "Ivy Engine"
+        "category": "Axon Ivy"
       },
       {
         "command": "engine.ivyBrowserOpen",
         "title": "Open Ivy Browser",
-        "category": "Ivy Engine"
+        "category": "Axon Ivy"
       },
       {
         "command": "workflow.fit",
         "title": "Fit to Screen",
-        "category": "Ivy Process Editor",
+        "category": "Axon Ivy",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.center",
         "title": "Center selection",
-        "category": "Ivy Process Editor",
+        "category": "Axon Ivy",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.layout",
         "title": "Layout diagram",
-        "category": "Ivy Process Editor",
+        "category": "Axon Ivy",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "workflow.exportAsSVG",
         "title": "Export as SVG",
-        "category": "Ivy Process Editor",
+        "category": "Axon Ivy",
         "enablement": "activeCustomEditorId == 'ivy.glspDiagram'"
       },
       {
         "command": "ivyProjects.refreshEntry",
-        "title": "Refresh",
-        "category": "Ivy Project Explorer",
+        "title": "Refresh Project Explorer",
+        "category": "Axon Ivy",
         "icon": "$(refresh)"
       },
       {
-        "command": "ivyProjects.buildAll",
-        "title": "Build All",
-        "category": "Ivy Project Explorer",
+        "command": "engine.buildProjects",
+        "title": "Build all Projects",
+        "category": "Axon Ivy",
         "icon": "$(tools)"
       },
       {
-        "command": "ivyProjects.deployAll",
-        "title": "Deploy All",
-        "category": "Ivy Project Explorer",
+        "command": "engine.deployProjects",
+        "title": "Deploy all Projects",
+        "category": "Axon Ivy",
         "icon": "$(cloud-upload)"
       },
       {
         "command": "ivyProjects.buildProject",
         "title": "Build Project",
-        "category": "Ivy Project Explorer",
+        "category": "Axon Ivy",
         "icon": "$(tools)"
       },
       {
         "command": "ivyProjects.deployProject",
         "title": "Deploy Project",
-        "category": "Ivy Project Explorer",
+        "category": "Axon Ivy",
         "icon": "$(cloud-upload)"
       },
       {
         "command": "ivyProjects.buildAndDeployProject",
         "title": "Build and Deploy Project",
-        "category": "Ivy Project Explorer"
+        "category": "Axon Ivy"
       },
       {
-        "command": "ivyProjects.buildAndDeployAll",
-        "title": "Build and Deploy All",
-        "category": "Ivy Project Explorer"
+        "command": "engine.buildAndDeployProjects",
+        "title": "Build and Deploy all Projects",
+        "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addBusinessProcess",
-        "title": "Business Process",
-        "category": "Ivy Project Explorer"
+        "title": "New Business Process",
+        "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addCallableSubProcess",
-        "title": "Callable Sub Process",
-        "category": "Ivy Project Explorer"
+        "title": "New Callable Sub Process",
+        "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addWebServiceProcess",
-        "title": "Web Service Process",
-        "category": "Ivy Project Explorer"
+        "title": "New Web Service Process",
+        "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addNewProject",
-        "title": "Project",
-        "category": "Ivy Project Explorer",
+        "title": "New Project",
+        "category": "Axon Ivy",
         "icon": "$(add)"
+      },
+      {
+        "command": "ivyProjects.revealInExplorer",
+        "title": "Reveal in Explorer",
+        "category": "Axon Ivy"
       }
     ],
     "configuration": {
@@ -239,7 +244,9 @@
         {
           "id": "ivyProjects",
           "name": "Axon Ivy Projects"
-        },
+        }
+      ],
+      "explorer": [
         {
           "id": "ivyProcessOutline",
           "name": "Process Outline",
@@ -255,6 +262,14 @@
       {
         "id": "ivyProjects.new",
         "label": "New"
+      },
+      {
+        "id": "explorer.new",
+        "label": "Axon Ivy New..."
+      },
+      {
+        "id": "explorer.run",
+        "label": "Axon Ivy Run..."
       }
     ],
     "menus": {
@@ -292,22 +307,27 @@
           "group": "navigation@3"
         },
         {
-          "command": "ivyProjects.buildAll",
-          "when": "view == ivyProjects"
+          "command": "engine.buildProjects",
+          "when": "view == ivyProjects || view == workbench.explorer.fileView"
         },
         {
-          "command": "ivyProjects.deployAll",
-          "when": "view == ivyProjects",
+          "command": "engine.deployProjects",
+          "when": "view == ivyProjects || view == workbench.explorer.fileView",
           "group": "navigation@2"
         },
         {
-          "command": "ivyProjects.buildAndDeployAll",
-          "when": "view == ivyProjects"
+          "command": "engine.buildAndDeployProjects",
+          "when": "view == ivyProjects || view == workbench.explorer.fileView"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "explorer.new",
+          "group": "1@1"
         },
         {
-          "command": "ivyProjects.addNewProject",
-          "when": "view == ivyProjects",
-          "group": "navigation@1"
+          "submenu": "explorer.run",
+          "group": "1@2"
         }
       ],
       "view/item/context": [
@@ -323,7 +343,11 @@
         },
         {
           "command": "ivyProjects.buildAndDeployProject",
-          "when": "view == ivyProjects && viewItem == ivyProject"
+          "when": "view == ivyProjects"
+        },
+        {
+          "command": "ivyProjects.revealInExplorer",
+          "when": "view == ivyProjects"
         },
         {
           "submenu": "ivyProjects.new",
@@ -343,10 +367,38 @@
         {
           "command": "ivyProjects.addWebServiceProcess",
           "group": "1_new@2"
+        }
+      ],
+      "explorer.new": [
+        {
+          "command": "ivyProjects.addBusinessProcess",
+          "group": "1_new@1"
+        },
+        {
+          "command": "ivyProjects.addCallableSubProcess",
+          "group": "1_new@2"
+        },
+        {
+          "command": "ivyProjects.addWebServiceProcess",
+          "group": "1_new@2"
         },
         {
           "command": "ivyProjects.addNewProject",
           "group": "2_new@1"
+        }
+      ],
+      "explorer.run": [
+        {
+          "command": "ivyProjects.buildAndDeployProject",
+          "group": "run@3"
+        },
+        {
+          "command": "ivyProjects.buildProject",
+          "group": "run@1"
+        },
+        {
+          "command": "ivyProjects.deployProject",
+          "group": "run@2"
         }
       ]
     },
@@ -393,11 +445,6 @@
         "view": "ivyProjects",
         "contents": "You have not yet opened a folder.\n[Open Folder](command:vscode.openFolder)",
         "when": "workbenchState == empty"
-      },
-      {
-        "view": "ivyProjects",
-        "contents": "You have not yet added a project.\n[Add Project](command:ivyProjects.addNewProject)",
-        "when": "workbenchState != empty"
       }
     ]
   }
