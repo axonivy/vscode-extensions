@@ -1,5 +1,6 @@
 import { Page, expect, Locator } from '@playwright/test';
 import { View, ViewData } from './view';
+import path from 'path';
 
 export abstract class ExplorerView extends View {
   constructor(private viewName: string, page: Page) {
@@ -77,7 +78,7 @@ export class FileExplorer extends ExplorerView {
     await this.provideUserInput();
     await this.provideUserInput();
     await this.provideUserInput();
-    await this.hasNode(rootFolder + '/' + projectName);
+    await this.hasNode(rootFolder + path.sep + projectName);
   }
 
   async addProcess(
