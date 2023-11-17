@@ -12,6 +12,10 @@ export abstract class PageObject {
     await this.isActionItemChecked('Axon Ivy');
   }
 
+  async isExplorerActionItemChecked() {
+    await this.isActionItemChecked('Explorer');
+  }
+
   async isActionItemChecked(label: string) {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
   }

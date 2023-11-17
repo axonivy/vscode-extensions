@@ -172,17 +172,17 @@
       },
       {
         "command": "ivyProjects.addBusinessProcess",
-        "title": "Business Process",
+        "title": "New Business Process",
         "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addCallableSubProcess",
-        "title": "Callable Sub Process",
+        "title": "New Callable Sub Process",
         "category": "Axon Ivy"
       },
       {
         "command": "ivyProjects.addWebServiceProcess",
-        "title": "Web Service Process",
+        "title": "New Web Service Process",
         "category": "Axon Ivy"
       },
       {
@@ -244,7 +244,9 @@
         {
           "id": "ivyProjects",
           "name": "Axon Ivy Projects"
-        },
+        }
+      ],
+      "explorer": [
         {
           "id": "ivyProcessOutline",
           "name": "Process Outline",

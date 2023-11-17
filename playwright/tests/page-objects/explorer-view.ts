@@ -64,25 +64,16 @@ export class FileExplorer extends ExplorerView {
     await this.provideUserInput(name);
   }
 
-  async addProject(projectName: string): Promise<void> {
+  async addNestedProject(rootFolder: string, projectName: string): Promise<void> {
     await this.viewLocator.click();
-    await this.addFolder(projectName);
-    await this.selectNode(projectName);
+    await this.addFolder(rootFolder);
+    await this.selectNode(rootFolder);
     await this.executeCommand('Axon Ivy: New Project');
     await this.provideUserInput(projectName);
     await this.provideUserInput();
     await this.provideUserInput();
     await this.provideUserInput();
-  }
-}
-
-export class ProjectExplorerView extends ExplorerView {
-  constructor(page: Page) {
-    super('Axon Ivy Projects', page);
-  }
-
-  async isWelcomeViewVisible(): Promise<void> {
-    await expect(this.page.locator('.welcome-view-content')).toBeVisible();
+    await this.hasNode(rootFolder + '/' + projectName);
   }
 
   async addProcess(
@@ -91,8 +82,14 @@ export class ProjectExplorerView extends ExplorerView {
     kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process'
   ): Promise<void> {
     await this.selectNode(projectName);
-    await this.executeCommand('Ivy Project Explorer: ' + kind);
+    await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(processName);
+  }
+}
+
+export class ProjectExplorerView extends ExplorerView {
+  constructor(page: Page) {
+    super('Axon Ivy Projects', page);
   }
 }
 

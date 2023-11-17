@@ -4,12 +4,12 @@ import { multiProjectWorkspacePath, removeFromWorkspace } from './workspaces/wor
 import { Page, expect } from '@playwright/test';
 import { OutputView } from './page-objects/output-view';
 import { ProcessEditor } from './page-objects/process-editor';
-import { ProjectExplorerView } from './page-objects/explorer-view';
+import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 
 test.describe('Create Process', () => {
   let page: Page;
-  let explorer: ProjectExplorerView;
+  let explorer: FileExplorer;
   let processEditor: ProcessEditor;
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
@@ -20,7 +20,7 @@ test.describe('Create Process', () => {
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
-    explorer = new ProjectExplorerView(page);
+    explorer = new FileExplorer(page);
     await explorer.hasStatusMessage('Successful Project Initialization');
   });
 
