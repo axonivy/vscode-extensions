@@ -215,7 +215,7 @@
           },
           "project.excludePattern": {
             "type": "string",
-            "default": "",
+            "default": "**/target/**",
             "markdownDescription": "A Glob Pattern that is used to exclude Axon Ivy projects during detection. [Learn more about Glob Pattern](https://code.visualstudio.com/docs/editor/glob-patterns)",
             "order": 2
           },
