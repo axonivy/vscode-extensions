@@ -1,5 +1,5 @@
 {
-    "engineUrl": "http://localhost:8080/",
-    "runEmbeddedEngine": false,
+    "engine.url": "http://localhost:8080/",
+    "engine.runEmbedded": false,
     "window.zoomLevel": -1
 }

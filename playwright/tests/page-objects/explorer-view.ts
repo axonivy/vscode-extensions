@@ -45,7 +45,7 @@ export abstract class ExplorerView extends View {
   }
 
   async selectNode(name: string): Promise<void> {
-    await this.viewLocator.getByText(name).click();
+    await this.viewLocator.getByText(name, { exact: true }).click();
     await this.isSelected(name);
   }
 

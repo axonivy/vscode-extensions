@@ -197,31 +197,38 @@
         "category": "Axon Ivy"
       }
     ],
-    "configuration": {
-      "title": "Axon Ivy Engine",
-      "properties": {
-        "runEmbeddedEngine": {
-          "type": "boolean",
-          "default": true,
-          "description": "Start embedded Axon Ivy Engine. If set false you have to define host & port where your Engine runs.",
-          "order": 0
-        },
-        "engineUrl": {
-          "type": "string",
-          "default": "http://localhost:8080/",
-          "description": "Url of the Axon Ivy Engine that will be used.",
-          "order": 1
+    "configuration": [
+      {
+        "title": "Axon Ivy",
+        "properties": {
+          "engine.runEmbedded": {
+            "type": "boolean",
+            "default": true,
+            "description": "Start embedded Axon Ivy Engine. If set false you have to define host & port where your Engine runs.",
+            "order": 0
+          },
+          "engine.url": {
+            "type": "string",
+            "default": "http://localhost:8080/",
+            "description": "Url of the Axon Ivy Engine that will be used.",
+            "order": 1
+          },
+          "project.excludePattern": {
+            "type": "string",
+            "default": "**/target/**",
+            "markdownDescription": "A Glob Pattern that is used to exclude Axon Ivy projects during detection. [Learn more about Glob Pattern](https://code.visualstudio.com/docs/editor/glob-patterns)",
+            "order": 2
+          },
+          "project.maximumNumber": {
+            "type": "integer",
+            "default": 50,
+            "markdownDescription": "Maximum number of Axon Ivy projects that will be detected.",
+            "order": 3
+          }
         }
       }
-    },
+    ],
     "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "ivy-activitybar",
-          "title": "Axon Ivy",
-          "icon": "assets/ivy-logo.svg"
-        }
-      ],
       "panel": [
         {
           "id": "ivy-browser-container",
@@ -240,13 +247,12 @@
           "when": "ivy:hasIvyProjects"
         }
       ],
-      "ivy-activitybar": [
+      "explorer": [
         {
           "id": "ivyProjects",
-          "name": "Axon Ivy Projects"
-        }
-      ],
-      "explorer": [
+          "name": "Axon Ivy Projects",
+          "when": "ivy:hasIvyProjects"
+        },
         {
           "id": "ivyProcessOutline",
           "name": "Process Outline",

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { projectExcludePattern, projectMaximumNumber } from '../base/configurations';
 
 export interface Entry {
   uri: vscode.Uri;
@@ -23,9 +24,13 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   private entryCache = new Map<string, Entry>();
   private openTabPaths: string[];
+  private readonly excludePattern: string;
+  private readonly maxResults: number;
 
   constructor() {
     this.openTabPaths = this.currentOpenTabPaths();
+    this.excludePattern = projectExcludePattern ?? '';
+    this.maxResults = projectMaximumNumber ?? 50;
     this.ivyProjects = this.findIvyProjects();
   }
 
@@ -45,7 +50,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   private async findIvyProjects(): Promise<string[]> {
-    const ivyProjectFiles = await vscode.workspace.findFiles(IVY_RPOJECT_FILE_PATTERN);
+    const ivyProjectFiles = await vscode.workspace.findFiles(IVY_RPOJECT_FILE_PATTERN, this.excludePattern, this.maxResults);
     const ivyProjectFilesWihtInclude = await Promise.all(
       ivyProjectFiles.map(async uri => ({
         uri: uri,

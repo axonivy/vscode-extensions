@@ -1,4 +1,4 @@
 {
-    "runEmbeddedEngine": true,
+    "engine.runEmbedded": true,
     "window.zoomLevel": -1
 }
