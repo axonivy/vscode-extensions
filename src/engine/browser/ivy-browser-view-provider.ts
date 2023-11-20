@@ -8,7 +8,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly extensionUri: vscode.Uri, private url: string) {}
 
-  public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
+  public resolveWebviewView(webviewView: vscode.WebviewView) {
     this.view = webviewView;
     webviewView.webview.options = { enableForms: true, enableScripts: true };
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);

@@ -65,7 +65,7 @@ function makeHttpsPostRquest(url: URL, options: http.RequestOptions, data: strin
 function requestCallback(
   response: http.IncomingMessage,
   resolve: (value: string | PromiseLike<string>) => void,
-  reject: (reason?: any) => void
+  reject: (reason?: string) => void
 ) {
   let data = '';
   if (response.statusCode && response.statusCode >= 300) {

@@ -84,6 +84,7 @@ export class IvyEngineApi {
     await this.runPostRequest(newProjectParams, CREATE_PROJECT_REQUEST);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async deleteProject(projectDir: string): Promise<any> {
     const params = { projectDir };
     const url = this.projectRequestURL(DELETE_PROJECT_REQUEST.sourcePath).toString();
@@ -132,6 +133,7 @@ export class IvyEngineApi {
     return searchParams;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async runPostRequest(payload: any, projectRequest: ProjectRequest): Promise<string> {
     const data = JSON.stringify(payload);
     const requestOptions = {
