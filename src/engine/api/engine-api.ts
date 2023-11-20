@@ -74,6 +74,7 @@ export class IvyEngineApi {
     return this.post(CREATE_PROJECT_REQUEST, newProjectParams);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async deleteProject(projectDir: string): Promise<any> {
     return this.delete(DELETE_PROJECT_REQUEST, { projectDir });
   }

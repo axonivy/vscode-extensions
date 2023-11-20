@@ -1,6 +1,7 @@
 import { executeCommand } from '../base/commands';
 import { GlspVscodeConnector, GlspEditorProvider } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
+import fs from 'fs';
 
 export default class IvyEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
@@ -51,8 +52,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 
     const nonce = getNonce();
 
-    const fs = require('fs');
-    const manifest = JSON.parse(fs.readFileSync(this.getAppUri('build.manifest.json').fsPath));
+    const manifest = JSON.parse(fs.readFileSync(this.getAppUri('build.manifest.json').fsPath, 'utf8'));
 
     const rootHtmlKey = this.findRootHtmlKey(manifest);
 

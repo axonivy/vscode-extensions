@@ -1,4 +1,3 @@
-/** @type {import('vite').UserConfig} */
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 

@@ -20,7 +20,7 @@ export async function addNewProject(selection: TreeSelection): Promise<void> {
 }
 
 async function collectNewProjectParams(selectedUri: vscode.Uri): Promise<NewProjectParams | undefined> {
-  let prompt = `Project Location: ${selectedUri.path}`;
+  const prompt = `Project Location: ${selectedUri.path}`;
   const name = await vscode.window.showInputBox({ title: 'Project Name', validateInput: validateProjectName, prompt });
   if (!name) {
     return;

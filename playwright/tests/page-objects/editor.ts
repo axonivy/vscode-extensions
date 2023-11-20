@@ -10,7 +10,7 @@ export class Editor extends View {
   async openEditorFile(): Promise<void> {
     await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
     await this.page.keyboard.insertText(this.editorFile);
-    await this.page.locator(`div.quick-input-list-entry.has-actions:has-text("${this.editorFile}")`).click();
+    await this.page.locator(`div.quick-input-list-entry.has-actions:has-text("${this.editorFile}")`).first().click();
   }
 
   async revertAndCloseEditor(): Promise<void> {
