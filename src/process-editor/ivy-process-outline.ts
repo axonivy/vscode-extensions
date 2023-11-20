@@ -39,7 +39,7 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
 
   private readProcessFile(client: GlspVscodeClient<vscode.CustomDocument>) {
     this.client = client;
-    this.client.webviewPanel.onDidDispose(e => {
+    this.client.webviewPanel.onDidDispose(() => {
       this.client = undefined;
       this.text = '';
       this.refresh();

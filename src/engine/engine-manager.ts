@@ -24,7 +24,7 @@ export class IvyEngineManager {
     this.mavenBuilder = new MavenBuilder(this.extensionUri);
   }
 
-  async start(): Promise<void> {
+  async start() {
     if (this.started) {
       return;
     }
@@ -38,7 +38,7 @@ export class IvyEngineManager {
     executeCommand('process-editor.activate');
   }
 
-  private async resolveEngineUrl(): Promise<string> {
+  private async resolveEngineUrl() {
     const runEmbeddedEngine = engineRunEmbedded;
     if (runEmbeddedEngine) {
       return await this.startEmbeddedEngine(this.extensionUri);
@@ -50,18 +50,19 @@ export class IvyEngineManager {
     const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
     outputChannel.show();
     const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-    var engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine', 'bin', executable).fsPath;
+    const engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine', 'bin', executable).fsPath;
     const env = {
       env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true' }
     };
     console.log('Start ' + engineLauncherScriptPath);
     this.childProcess = execFile(engineLauncherScriptPath, env);
-    this.childProcess.on('error', function (error: any) {
-      outputChannel.append(error);
-      throw new Error(error);
+    this.childProcess.on('error', function (error: Error) {
+      outputChannel.append(error.message);
+      throw error;
     });
 
     return new Promise(resolve => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.childProcess.stdout?.on('data', function (data: any) {
         const output = data.toString();
         if (output && output.startsWith('Go to http')) {
@@ -73,35 +74,35 @@ export class IvyEngineManager {
     });
   }
 
-  public async initProjects(): Promise<void> {
+  public async initProjects() {
     if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.ivyEngineApi.initProjects(ivyProjectDirectories);
     }
   }
 
-  public async deployProjects(): Promise<void> {
+  public async deployProjects() {
     if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
     }
   }
 
-  public async buildProjects(): Promise<void> {
+  public async buildProjects() {
     await this.mavenBuilder.buildProjects();
   }
 
-  public async buildProject(ivyProjectDirectory: string): Promise<void> {
+  public async buildProject(ivyProjectDirectory: string) {
     await this.mavenBuilder.buildProject(ivyProjectDirectory);
   }
 
-  public async deployProject(ivyProjectDirectory: string): Promise<void> {
+  public async deployProject(ivyProjectDirectory: string) {
     if (await this.devContextPath) {
       await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
     }
   }
 
-  public async buildAndDeployProjects(): Promise<void> {
+  public async buildAndDeployProjects() {
     if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.buildProjects();
@@ -109,21 +110,21 @@ export class IvyEngineManager {
     }
   }
 
-  public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
+  public async buildAndDeployProject(ivyProjectDirectory: string) {
     if (await this.devContextPath) {
       await this.buildProject(ivyProjectDirectory);
       await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
     }
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
+  public async createProcess(newProcessParams: NewProcessParams) {
     if (await this.devContextPath) {
       await this.createAndOpenProcess(newProcessParams);
       await this.ivyEngineApi.deployProjects([newProcessParams.path]);
     }
   }
 
-  public async createProject(newProjectParams: NewProjectParams): Promise<void> {
+  public async createProject(newProjectParams: NewProjectParams) {
     if (!this.started) {
       await this.start();
     }
@@ -138,44 +139,44 @@ export class IvyEngineManager {
     }
   }
 
-  private async createAndOpenProcess(newProcessParams: NewProcessParams): Promise<void> {
+  private async createAndOpenProcess(newProcessParams: NewProcessParams) {
     const newProcessUri = await this.ivyEngineApi.createProcess(newProcessParams);
     executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
   }
 
-  public async deleteProject(ivyProjectDirectory: string): Promise<void> {
+  public async deleteProject(ivyProjectDirectory: string) {
     if (await this.devContextPath) {
       this.ivyEngineApi.deleteProject(ivyProjectDirectory);
     }
   }
 
-  public async devWfUiUri(): Promise<string> {
+  public async devWfUiUri() {
     return this.fullUri(await this.devContextPath);
   }
 
-  async ivyProjectDirectories(): Promise<string[]> {
+  async ivyProjectDirectories() {
     return (await executeCommand('ivyProjects.getIvyProjects')) as string[];
   }
 
-  async stop(): Promise<void> {
+  async stop() {
     if (this.childProcess) {
       this.stopEmbeddedEngine();
     }
   }
 
-  async openDevWfUi(): Promise<void> {
+  async openDevWfUi() {
     await this.openInInternalBrowser(await this.devContextPath);
   }
 
-  async openEngineCockpit(): Promise<void> {
+  async openEngineCockpit() {
     await this.openInInternalBrowser('system/engine-cockpit');
   }
 
-  async startProcess(processStartUri: string): Promise<void> {
+  async startProcess(processStartUri: string) {
     await this.openInInternalBrowser(processStartUri);
   }
 
-  private async openInInternalBrowser(postfix: string): Promise<void> {
+  private async openInInternalBrowser(postfix: string) {
     executeCommand('engine.ivyBrowserOpen', [await this.fullUri(postfix)]);
   }
 
@@ -184,7 +185,7 @@ export class IvyEngineManager {
     return (await this.engineUrl) + postfix;
   }
 
-  private async stopEmbeddedEngine(): Promise<void> {
+  private async stopEmbeddedEngine() {
     console.log("Send 'shutdown' to Axon Ivy Engine");
     const shutdown = new Promise<void>(resolve => {
       this.childProcess.on('exit', function (code: number) {
@@ -202,7 +203,7 @@ export class IvyEngineManager {
     console.log('End waiting for Axon Ivy Engine shutdown');
   }
 
-  private toWebSocketAddress(engineUrl: string): string {
+  private toWebSocketAddress(engineUrl: string) {
     if (engineUrl.startsWith('https://')) {
       return engineUrl.replace('https', 'wss');
     }

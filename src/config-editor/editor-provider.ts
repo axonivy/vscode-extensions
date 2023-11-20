@@ -35,11 +35,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     return providerRegistration;
   }
 
-  public async resolveCustomTextEditor(
-    document: vscode.TextDocument,
-    webviewPanel: vscode.WebviewPanel,
-    _token: vscode.CancellationToken
-  ): Promise<void> {
+  public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel): Promise<void> {
     webviewPanel.webview.options = {
       enableScripts: true,
       localResourceRoots: [
@@ -81,7 +77,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     updateWebview();
   }
 
-  protected updateYamlDocument(document: vscode.TextDocument, yaml: any) {
+  protected updateYamlDocument(document: vscode.TextDocument, yaml: string) {
     const edit = new vscode.WorkspaceEdit();
 
     // Just replace the entire document every time for this example extension.

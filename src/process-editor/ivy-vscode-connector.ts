@@ -39,7 +39,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return this.onDidChangeActiveGlspEditorEventEmitter.event;
   }
 
-  override registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
+  override async registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
     this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
 
     client.webviewPanel.onDidChangeViewState(e => {
@@ -47,18 +47,15 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
         this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
       }
     });
-    return super.registerClient(client).then(result => {
-      // Register server action handlers which are handled by this vscode integration
-      return result;
-    });
+    return super.registerClient(client);
   }
 
-  onSelectedElement(listener: (selectedElement: SelectedElement) => any): void {
+  onSelectedElement(listener: (selectedElement: SelectedElement) => void): void {
     this.onSelectedElementUpdate(listener);
   }
 
   getSelectedElement(): SelectedElement {
-    for (let [id, client] of this.clientMap) {
+    for (const [id, client] of this.clientMap) {
       if (client.webviewPanel.active) {
         const pids = this.clientSelectionMap.get(id)?.selectedElementsIDs || [];
         const ivyClient = client as IvyGlspClient;
@@ -85,7 +82,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 
   private toSelectedElement(pids: string[]): SelectedElement {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (let [_, client] of this.clientMap) {
+    for (const [_, client] of this.clientMap) {
       if (client.webviewPanel.active) {
         const ivyClient = client as IvyGlspClient;
         if (pids.length > 0) {
@@ -100,11 +97,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     super.sendActionToClient(clientId, action);
   }
 
-  protected override handleNavigateToExternalTargetAction(
-    message: ActionMessage<NavigateToExternalTargetAction>,
-    _client: GlspVscodeClient<D> | undefined,
-    _origin: MessageOrigin
-  ): MessageProcessingResult {
+  protected override handleNavigateToExternalTargetAction(message: ActionMessage<NavigateToExternalTargetAction>): MessageProcessingResult {
     const { uri, args } = message.action.target;
     const absolutePath = args?.['absolutePath'] as string;
     if (absolutePath) {
@@ -152,11 +145,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return super.processMessage(message, origin);
   }
 
-  protected override handleServerMessageAction(
-    message: ActionMessage<ServerMessageAction>,
-    _client: GlspVscodeClient<D> | undefined,
-    _origin: MessageOrigin
-  ): MessageProcessingResult {
+  protected override handleServerMessageAction(message: ActionMessage<ServerMessageAction>): MessageProcessingResult {
     switch (message.action.severity) {
       case 'ERROR':
       case 'FATAL':

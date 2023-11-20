@@ -1,9 +1,11 @@
 import { commands, ExtensionContext } from 'vscode';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function executeCommand(command: Command, ...rest: any[]) {
   return commands.executeCommand(command, ...rest);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function registerCommand(command: Command, context: ExtensionContext, callback: (...args: any[]) => any) {
   context.subscriptions.push(commands.registerCommand(command, callback));
 }

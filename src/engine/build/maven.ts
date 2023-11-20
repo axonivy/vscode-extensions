@@ -22,13 +22,14 @@ export class MavenBuilder {
   async buildProject(ivyProjectDir: string): Promise<void> {
     const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
     this.outputChannel.show();
-    childProcess.on('error', (error: any) => {
-      this.outputChannel.append(error);
+    childProcess.on('error', (error: Error) => {
+      this.outputChannel.append(error.message);
       this.outputChannel.show();
-      throw new Error(error);
+      throw error;
     });
     if (childProcess.stdout) {
       childProcess.stdout.setEncoding('utf-8');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       childProcess.stdout.on('data', (data: any) => {
         this.outputChannel.append(data);
       });
@@ -40,7 +41,7 @@ export class MavenBuilder {
     });
   }
 
-  async buildProjects(): Promise<void> {
+  async buildProjects() {
     const poms = (await vscode.workspace.findFiles('**/pom.xml', this.excludePattern)).map(uri => uri.fsPath);
     const moduleProjects = poms.filter(pom => this.containModuels(pom)).map(pom => path.dirname(pom));
     const projectsToBuild = poms.map(pom => path.dirname(pom)).filter(project => !this.isUnderModuleProject(project, moduleProjects));

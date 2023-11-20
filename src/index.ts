@@ -15,6 +15,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const projectExplorer = new IvyProjectExplorer(context);
 
   ivyEngineManager = new IvyEngineManager(context);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
   registerCmd('engine.startIvyEngineManager', () => ivyEngineManager.start());
   registerCmd('process-editor.activate', () => activateProcessEditor(context));
@@ -39,6 +40,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(YamlEditorProvider.register(context));
 }
 
-export async function deactivate(context: vscode.ExtensionContext): Promise<void> {
+export async function deactivate() {
   await ivyEngineManager.stop();
 }
