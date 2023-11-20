@@ -9,7 +9,7 @@ export async function activateIvyBrowser(context: vscode.ExtensionContext, baseU
       webviewOptions: { retainContextWhenHidden: true }
     })
   );
-  registerCommand('engine.ivyBrowserOpen', async (url?: string) => {
+  registerCommand('engine.ivyBrowserOpen', context, async (url?: string) => {
     if (!url) {
       url =
         (await vscode.window.showInputBox({
@@ -21,7 +21,7 @@ export async function activateIvyBrowser(context: vscode.ExtensionContext, baseU
     executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
   });
 
-  registerCommand('engine.openInExternalBrowser', () => {
+  registerCommand('engine.openInExternalBrowser', context, () => {
     provider.openInExternalBrowser();
   });
 }

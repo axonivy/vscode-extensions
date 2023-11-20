@@ -41,6 +41,7 @@ export async function activateProcessEditor(context: vscode.ExtensionContext): P
 
   const ivyProcessOutline = new IvyProcessOutlineProvider(context, ivyVscodeConnector);
   const treeView = vscode.window.createTreeView('ivyProcessOutline', { treeDataProvider: ivyProcessOutline, showCollapseAll: true });
+  context.subscriptions.push(treeView);
   ivyVscodeConnector.onSelectedElement(selectedElement => {
     if (selectedElement) {
       const element = ivyProcessOutline.findElementBy(selectedElement.pid);
@@ -49,7 +50,7 @@ export async function activateProcessEditor(context: vscode.ExtensionContext): P
       }
     }
   });
-  registerCommand('ivyProcessOutline.selectElement', pid => ivyProcessOutline.select(pid));
+  registerCommand('ivyProcessOutline.selectElement', context, pid => ivyProcessOutline.select(pid));
 
   configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
   return ivyVscodeConnector;

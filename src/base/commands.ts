@@ -1,13 +1,13 @@
-import { commands } from 'vscode';
+import { commands, ExtensionContext } from 'vscode';
 
 export async function executeCommand(command: Command, ...rest: any[]) {
   return commands.executeCommand(command, ...rest);
 }
 
-export async function registerCommand(command: Command, callback: (...args: any[]) => any) {
-  commands.registerCommand(command, callback);
+export async function registerCommand(command: Command, context: ExtensionContext, callback: (...args: any[]) => any) {
+  context.subscriptions.push(commands.registerCommand(command, callback));
 }
-export type Command = VSCodeCommand | EngineCommand | ProjectViewCommand | ViewCommand;
+export type Command = VSCodeCommand | EngineCommand | ProjectViewCommand | ViewCommand | 'yaml-variables-editor.new';
 type VSCodeCommand = 'revealInExplorer' | 'setContext' | 'vscode.open' | 'copyFilePath';
 type EngineCommand =
   | 'engine.startIvyEngineManager'
