@@ -16,7 +16,7 @@ export class IvyProjectExplorer {
     this.treeDataProvider = new IvyProjectTreeDataProvider();
     this.treeView = vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider, showCollapseAll: true });
     context.subscriptions.push(this.treeView);
-    this.registerCommands();
+    this.registerCommands(context);
     this.defineFileWatchers();
     vscode.window.tabGroups.onDidChangeTabs(async event => this.changeTabListener(event));
     this.treeDataProvider.onDidCreateTreeItem(entry => {
@@ -25,19 +25,18 @@ export class IvyProjectExplorer {
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
-  private registerCommands(): void {
-    registerCommand(`${VIEW_ID}.refreshEntry`, () => this.refresh());
-    registerCommand(`${VIEW_ID}.buildProject`, (selection: TreeSelection) => this.execute('engine.buildProject', selection));
-    registerCommand(`${VIEW_ID}.deployProject`, (selection: TreeSelection) => this.execute('engine.deployProject', selection));
-    registerCommand(`${VIEW_ID}.buildAndDeployProject`, (selection: TreeSelection) =>
-      this.execute('engine.buildAndDeployProject', selection)
-    );
-    registerCommand(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess('Business Process', selection));
-    registerCommand(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
-    registerCommand(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
-    registerCommand(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
-    registerCommand(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
-    registerCommand(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
+  private registerCommands(context: vscode.ExtensionContext): void {
+    const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
+    registerCmd(`${VIEW_ID}.refreshEntry`, () => this.refresh());
+    registerCmd(`${VIEW_ID}.buildProject`, (selection: TreeSelection) => this.execute('engine.buildProject', selection));
+    registerCmd(`${VIEW_ID}.deployProject`, (selection: TreeSelection) => this.execute('engine.deployProject', selection));
+    registerCmd(`${VIEW_ID}.buildAndDeployProject`, (selection: TreeSelection) => this.execute('engine.buildAndDeployProject', selection));
+    registerCmd(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess('Business Process', selection));
+    registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
+    registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
+    registerCmd(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
+    registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
+    registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
   private defineFileWatchers(): void {

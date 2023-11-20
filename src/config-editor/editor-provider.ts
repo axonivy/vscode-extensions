@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { getNonce, getUri } from './util';
 import * as fs from 'fs';
+import { registerCommand } from '../base/commands';
 
 export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = 'yaml-variables-editor';
@@ -9,7 +10,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
   constructor(private readonly context: vscode.ExtensionContext) {}
 
   public static register(context: vscode.ExtensionContext): vscode.Disposable {
-    vscode.commands.registerCommand('yaml-variables-editor.new', () => {
+    registerCommand('yaml-variables-editor.new', context, () => {
       const workspaceFolders = vscode.workspace.workspaceFolders;
       if (!workspaceFolders) {
         vscode.window.showErrorMessage('No workspace found');
