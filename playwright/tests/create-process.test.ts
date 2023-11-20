@@ -21,7 +21,7 @@ test.describe('Create Process', () => {
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Successful Project Initialization');
+    await explorer.hasStatusMessage('Successfully completed: Initialize Ivy Project');
   });
 
   test.afterEach(async () => {
@@ -36,7 +36,7 @@ test.describe('Create Process', () => {
     await explorer.addProcess(projectName, 'testBusinessProcess', 'Business Process');
     await explorer.hasNoNode('testBusinessProcess.p.json');
     processEditor = getProcessEditor('testBusinessProcess');
-    await explorer.hasStatusMessage('Successful Project Deployment');
+    await explorer.hasStatusMessage('Successfully completed: Deploy Ivy Projects');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);

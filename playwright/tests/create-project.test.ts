@@ -19,7 +19,7 @@ test.describe('Create Project', () => {
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
-    await explorer.hasStatusMessage('Successful Project Deployment', 60_000);
+    await explorer.hasStatusMessage('Successfully completed: Deploy Ivy Projects', 60_000);
 
     const processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
