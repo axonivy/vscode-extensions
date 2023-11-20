@@ -1,7 +1,9 @@
-import * as http from 'http';
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
 import path from 'path';
+import { deleteRequest, getRequest, postRequest } from './request';
+import { NewProcessParams } from '../../project-explorer/new-process';
+import { NewProjectParams } from '../../project-explorer/new-project';
 import {
   ACTIVATE_PROJECTS_REQUEST,
   CREATE_PROCESS_REQUEST,
@@ -10,37 +12,26 @@ import {
   DELETE_PROJECT_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
-  PROJECT_REQUEST_OPTIONS,
-  ProjectRequest,
-  auth,
-  headers,
-  makeGetRequest,
-  makePostRequest
-} from './request';
-import { NewProcessParams } from '../../project-explorer/new-process';
-import { NewProjectParams } from '../../project-explorer/new-project';
-import axios from 'axios';
+  ProjectRequest
+} from './project-request';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
-  private engineUrl: URL;
-  private devContextPath = '';
+  private readonly _devContextPath: Promise<string>;
+  private readonly devRequestUrl: Promise<string>;
 
-  constructor(engineUrlString: string) {
-    this.engineUrl = new URL(engineUrlString);
+  constructor(engineUrl: string) {
+    this._devContextPath = this.devContextPathRequest(engineUrl);
+    this.devRequestUrl = this.devContextPath.then(devContextPath =>
+      new URL(path.join(devContextPath, this.API_PATH), engineUrl).toString()
+    );
   }
 
-  public async devContextPathRequest(): Promise<string> {
-    const requestPath = path.join('system', this.API_PATH, 'dev-context-path');
-    const url = new URL(requestPath, this.engineUrl);
+  private async devContextPathRequest(engineUrl: string): Promise<string> {
+    const systemRequestUrl = engineUrl + path.join('system', this.API_PATH, 'dev-context-path');
     const sessionId = this.sessionId();
-    url.searchParams.append('sessionId', sessionId);
-    const options: http.RequestOptions = {
-      auth: 'admin:admin',
-      method: 'GET'
-    };
-    this.devContextPath = await makeGetRequest(url, options);
-    return this.devContextPath;
+    const params = { sessionId };
+    return getRequest(systemRequestUrl, params, { username: 'admin', password: 'admin' });
   }
 
   private sessionId(): string {
@@ -52,100 +43,43 @@ export class IvyEngineApi {
   }
 
   public async initProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const searchParams = this.searchParams(ivyProjectDirectories);
+    let url = await this.toRequestUrl(INIT_PROJECT_REQUEST);
     for (const ivyProjectDirectory of ivyProjectDirectories) {
-      await this.initProject(ivyProjectDirectory);
+      const projectName = path.basename(ivyProjectDirectory);
+      const params = { projectName, projectDir: ivyProjectDirectory };
+      await getRequest(url, params);
     }
-    await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    url = await this.toRequestUrl(ACTIVATE_PROJECTS_REQUEST);
+    const params = { projectDir: ivyProjectDirectories };
+    await getRequest(url, params);
     vscode.window.setStatusBarMessage('Successful Project Initialization', 5_000);
   }
 
-  private async initProject(ivyProjectDirectory: string): Promise<void> {
-    const projectName = path.basename(ivyProjectDirectory);
-    const searchParams = new URLSearchParams();
-    searchParams.append('projectName', projectName);
-    searchParams.append('projectDir', ivyProjectDirectory);
-    await this.runGetRequestWithProgress(INIT_PROJECT_REQUEST, searchParams);
-  }
-
   public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
-    const searchParams = this.searchParams(ivyProjectDirectories);
-    await this.runGetRequest(DEACTIVATE_PROJECTS_REQUEST, searchParams);
-    await this.runGetRequestWithProgress(DEPLOY_PROJECTS_REQUEST, searchParams);
-    await this.runGetRequest(ACTIVATE_PROJECTS_REQUEST, searchParams);
+    const params = { projectDir: ivyProjectDirectories };
+    await getRequest(await this.toRequestUrl(DEACTIVATE_PROJECTS_REQUEST), params);
+    await getRequest(await this.toRequestUrl(DEPLOY_PROJECTS_REQUEST), params);
+    await getRequest(await this.toRequestUrl(ACTIVATE_PROJECTS_REQUEST), params);
     vscode.window.setStatusBarMessage('Successful Project Deployment', 5_000);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
-    return await this.runPostRequest(newProcessParams, CREATE_PROCESS_REQUEST);
+    return postRequest(await this.toRequestUrl(CREATE_PROCESS_REQUEST), newProcessParams);
   }
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
-    await this.runPostRequest(newProjectParams, CREATE_PROJECT_REQUEST);
+    return postRequest(await this.toRequestUrl(CREATE_PROJECT_REQUEST), newProjectParams);
   }
 
   public async deleteProject(projectDir: string): Promise<any> {
-    const params = { projectDir };
-    const url = this.projectRequestURL(DELETE_PROJECT_REQUEST.sourcePath).toString();
-    return axios.delete(url, { params, headers, auth }).then(response => response.data);
+    return deleteRequest(await this.toRequestUrl(DELETE_PROJECT_REQUEST), { projectDir });
   }
 
-  private async runGetRequestWithProgress(projectRequest: ProjectRequest, searchParams: URLSearchParams): Promise<void> {
-    const progressOptions = {
-      location: vscode.ProgressLocation.Notification,
-      title: projectRequest.description,
-      cancellable: false
-    };
-    await vscode.window.withProgress(progressOptions, async progess => {
-      await this.runGetRequest(projectRequest, searchParams, progess);
-    });
+  private async toRequestUrl(projectRequest: ProjectRequest): Promise<string> {
+    return this.devRequestUrl.then(url => url + '/' + projectRequest.sourcePath);
   }
 
-  private async runGetRequest(
-    projectRequest: ProjectRequest,
-    searchParams: URLSearchParams,
-    progress?: vscode.Progress<{ message?: string; increment?: number }>
-  ): Promise<void> {
-    const url = this.projectRequestURLWithParams(projectRequest.sourcePath, searchParams);
-    const message = url.pathname + url.search;
-    progress?.report({ message });
-    console.log(projectRequest.description, message);
-    await makeGetRequest(url, PROJECT_REQUEST_OPTIONS);
-  }
-
-  private projectRequestURLWithParams(sourcePath: string, searchParams: URLSearchParams): URL {
-    const url = this.projectRequestURL(sourcePath);
-    searchParams.forEach((value, key) => url.searchParams.append(key, value));
-    return url;
-  }
-
-  private projectRequestURL(sourcePath: string): URL {
-    const requestPath = path.join(this.devContextPath, this.API_PATH, sourcePath);
-    return new URL(requestPath, this.engineUrl);
-  }
-
-  private searchParams(ivyProjectDirectories: string[]): URLSearchParams {
-    const searchParams = new URLSearchParams();
-    for (const projectDir of ivyProjectDirectories) {
-      searchParams.append('projectDir', projectDir);
-    }
-    return searchParams;
-  }
-
-  private async runPostRequest(payload: any, projectRequest: ProjectRequest): Promise<string> {
-    const data = JSON.stringify(payload);
-    const requestOptions = {
-      ...PROJECT_REQUEST_OPTIONS,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length,
-        'X-Requested-By': 'web-ide'
-      }
-    };
-    const url = this.projectRequestURL(projectRequest.sourcePath);
-    const message = url.pathname + url.search;
-    console.log(projectRequest.description, message);
-    return await makePostRequest(url, requestOptions, data);
+  public get devContextPath(): Promise<string> {
+    return this._devContextPath;
   }
 }

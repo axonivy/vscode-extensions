@@ -31,7 +31,7 @@ export class IvyEngineManager {
     this.started = true;
     this.engineUrl = this.resolveEngineUrl();
     this.ivyEngineApi = new IvyEngineApi(await this.engineUrl);
-    this.devContextPath = this.ivyEngineApi.devContextPathRequest();
+    this.devContextPath = this.ivyEngineApi.devContextPath;
     await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
@@ -73,7 +73,7 @@ export class IvyEngineManager {
     });
   }
 
-  public async initProjects(): Promise<void> {
+  private async initProjects(): Promise<void> {
     if (await this.devContextPath) {
       const ivyProjectDirectories = await this.ivyProjectDirectories();
       await this.ivyEngineApi.initProjects(ivyProjectDirectories);
