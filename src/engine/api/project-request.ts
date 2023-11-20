@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 export type ProjectRequest = { sourcePath: string; description: string };
 
 export const INIT_PROJECT_REQUEST = { sourcePath: 'init-project', description: 'Initialize Ivy Project' };
@@ -7,3 +9,11 @@ export const DEPLOY_PROJECTS_REQUEST = { sourcePath: 'deploy-projects', descript
 export const CREATE_PROCESS_REQUEST = { sourcePath: 'create-process', description: 'Create new Process' };
 export const CREATE_PROJECT_REQUEST = { sourcePath: 'create-project', description: 'Create new Project' };
 export const DELETE_PROJECT_REQUEST = { sourcePath: 'delete-project', description: 'Delete Project' };
+
+export function toProgressOptions(projectRequest: ProjectRequest) {
+  return {
+    location: vscode.ProgressLocation.Window,
+    title: projectRequest.description,
+    cancellable: false
+  };
+}

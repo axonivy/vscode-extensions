@@ -74,17 +74,13 @@ export class IvyEngineManager {
   }
 
   private async initProjects(): Promise<void> {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.initProjects(ivyProjectDirectories);
-    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.ivyEngineApi.initProjects(ivyProjectDirectories);
   }
 
   public async deployProjects(): Promise<void> {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
-    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
   public async buildProjects(): Promise<void> {
@@ -96,45 +92,35 @@ export class IvyEngineManager {
   }
 
   public async deployProject(ivyProjectDirectory: string): Promise<void> {
-    if (await this.devContextPath) {
-      await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
-    }
+    await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
   public async buildAndDeployProjects(): Promise<void> {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.buildProjects();
-      await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
-    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.buildProjects();
+    await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
   public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
-    if (await this.devContextPath) {
-      await this.buildProject(ivyProjectDirectory);
-      await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
-    }
+    await this.buildProject(ivyProjectDirectory);
+    await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
-    if (await this.devContextPath) {
-      await this.createAndOpenProcess(newProcessParams);
-      await this.ivyEngineApi.deployProjects([newProcessParams.path]);
-    }
+    await this.createAndOpenProcess(newProcessParams);
+    await this.ivyEngineApi.deployProjects([newProcessParams.path]);
   }
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
     if (!this.started) {
       await this.start();
     }
-    if (await this.devContextPath) {
-      await this.ivyEngineApi.createProject(newProjectParams);
-      const path = newProjectParams.path;
-      if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
-        await this.ivyEngineApi.initProjects([path]);
-        await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
-        await this.buildAndDeployProject(path);
-      }
+    await this.ivyEngineApi.createProject(newProjectParams);
+    const path = newProjectParams.path;
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
+      await this.ivyEngineApi.initProjects([path]);
+      await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
+      await this.buildAndDeployProject(path);
     }
   }
 
@@ -144,9 +130,7 @@ export class IvyEngineManager {
   }
 
   public async deleteProject(ivyProjectDirectory: string): Promise<void> {
-    if (await this.devContextPath) {
-      this.ivyEngineApi.deleteProject(ivyProjectDirectory);
-    }
+    this.ivyEngineApi.deleteProject(ivyProjectDirectory);
   }
 
   public async devWfUiUri(): Promise<string> {

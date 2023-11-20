@@ -12,7 +12,8 @@ import {
   DELETE_PROJECT_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
   INIT_PROJECT_REQUEST,
-  ProjectRequest
+  ProjectRequest,
+  toProgressOptions
 } from './project-request';
 
 export class IvyEngineApi {
@@ -43,36 +44,38 @@ export class IvyEngineApi {
   }
 
   public async initProjects(ivyProjectDirectories: string[]): Promise<void> {
-    let url = await this.toRequestUrl(INIT_PROJECT_REQUEST);
     for (const ivyProjectDirectory of ivyProjectDirectories) {
-      const projectName = path.basename(ivyProjectDirectory);
-      const params = { projectName, projectDir: ivyProjectDirectory };
-      await getRequest(url, params);
+      await this.initProject(ivyProjectDirectory);
     }
-    url = await this.toRequestUrl(ACTIVATE_PROJECTS_REQUEST);
     const params = { projectDir: ivyProjectDirectories };
-    await getRequest(url, params);
-    vscode.window.setStatusBarMessage('Successful Project Initialization', 5_000);
+    await this.get(ACTIVATE_PROJECTS_REQUEST, params);
+    this.setStatusBarMessage(INIT_PROJECT_REQUEST);
+  }
+
+  public async initProject(projectDir: string): Promise<void> {
+    const projectName = path.basename(projectDir);
+    const params = { projectName, projectDir };
+    await this.get(INIT_PROJECT_REQUEST, params);
   }
 
   public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
     const params = { projectDir: ivyProjectDirectories };
-    await getRequest(await this.toRequestUrl(DEACTIVATE_PROJECTS_REQUEST), params);
-    await getRequest(await this.toRequestUrl(DEPLOY_PROJECTS_REQUEST), params);
-    await getRequest(await this.toRequestUrl(ACTIVATE_PROJECTS_REQUEST), params);
-    vscode.window.setStatusBarMessage('Successful Project Deployment', 5_000);
+    await this.get(DEACTIVATE_PROJECTS_REQUEST, params);
+    await this.get(DEPLOY_PROJECTS_REQUEST, params);
+    await this.get(ACTIVATE_PROJECTS_REQUEST, params);
+    this.setStatusBarMessage(DEPLOY_PROJECTS_REQUEST);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
-    return postRequest(await this.toRequestUrl(CREATE_PROCESS_REQUEST), newProcessParams);
+    return this.post(CREATE_PROCESS_REQUEST, newProcessParams);
   }
 
   public async createProject(newProjectParams: NewProjectParams): Promise<void> {
-    return postRequest(await this.toRequestUrl(CREATE_PROJECT_REQUEST), newProjectParams);
+    return this.post(CREATE_PROJECT_REQUEST, newProjectParams);
   }
 
   public async deleteProject(projectDir: string): Promise<any> {
-    return deleteRequest(await this.toRequestUrl(DELETE_PROJECT_REQUEST), { projectDir });
+    return this.delete(DELETE_PROJECT_REQUEST, { projectDir });
   }
 
   private async toRequestUrl(projectRequest: ProjectRequest): Promise<string> {
@@ -81,5 +84,36 @@ export class IvyEngineApi {
 
   public get devContextPath(): Promise<string> {
     return this._devContextPath;
+  }
+
+  private async get(projectRequest: ProjectRequest, params: any): Promise<any> {
+    const url = await this.toRequestUrl(projectRequest);
+    return new Promise(resolve =>
+      vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
+        resolve(await getRequest(url, params));
+      })
+    );
+  }
+
+  private async post(projectRequest: ProjectRequest, params: any): Promise<any> {
+    const url = await this.toRequestUrl(projectRequest);
+    return new Promise(resolve =>
+      vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
+        resolve(await postRequest(url, params));
+      })
+    );
+  }
+
+  private async delete(projectRequest: ProjectRequest, params: any): Promise<any> {
+    const url = await this.toRequestUrl(projectRequest);
+    return new Promise(resolve =>
+      vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
+        resolve(await deleteRequest(url, params));
+      })
+    );
+  }
+
+  private setStatusBarMessage(projectRequest: ProjectRequest): void {
+    vscode.window.setStatusBarMessage(`Successfully completed: ${projectRequest.description}`, 5_000);
   }
 }
