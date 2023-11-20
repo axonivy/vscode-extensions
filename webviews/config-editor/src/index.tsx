@@ -9,3 +9,5 @@ createRoot(document.getElementById('root')!).render(
     <YAMLVariablesTable vscodeApi={vscodeApi} />
   </React.StrictMode>
 );
+
+vscodeApi.postMessage({ type: 'ready' });

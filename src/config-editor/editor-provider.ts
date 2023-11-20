@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getNonce, getUri } from './util';
-import * as fs from 'fs';
+import fs from 'fs';
 import { registerCommand } from '../base/commands';
 
 export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
@@ -64,6 +64,9 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
 
     webviewPanel.webview.onDidReceiveMessage(e => {
       switch (e.type) {
+        case 'ready':
+          updateWebview();
+          break;
         case 'updateDocument':
           this.updateYamlDocument(document, e.text);
           webviewPanel.webview.postMessage({
@@ -73,8 +76,6 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
           break;
       }
     });
-
-    updateWebview();
   }
 
   protected updateYamlDocument(document: vscode.TextDocument, yaml: string) {

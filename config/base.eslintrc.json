@@ -33,7 +33,7 @@
     "browser": true,
     "es2022": true
   },
-  "ignorePatterns": ["node_modules", "lib", "*.d.ts", ".eslintrc.*js"],
+  "ignorePatterns": ["node_modules", "lib", "*.d.ts", ".eslintrc.*js", "vite.*ts"],
   "rules": {
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/ban-ts-comment": "off",
