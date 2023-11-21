@@ -11,7 +11,7 @@ import { NewProjectParams } from './project-explorer/new-project';
 
 let ivyEngineManager: IvyEngineManager;
 
-export async function activate(context: vscode.ExtensionContext): Promise<void> {
+export async function activate(context: vscode.ExtensionContext) {
   const projectExplorer = new IvyProjectExplorer(context);
 
   ivyEngineManager = new IvyEngineManager(context);

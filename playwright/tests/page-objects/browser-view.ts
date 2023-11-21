@@ -11,7 +11,7 @@ export class BrowserView extends View {
     super(outputViewData, page);
   }
 
-  override async isViewVisible(): Promise<void> {
+  override async isViewVisible() {
     await expect(this.header()).toBeVisible();
   }
 

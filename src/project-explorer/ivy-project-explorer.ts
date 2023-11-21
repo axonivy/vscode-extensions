@@ -25,7 +25,7 @@ export class IvyProjectExplorer {
     this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
   }
 
-  private registerCommands(context: vscode.ExtensionContext): void {
+  private registerCommands(context: vscode.ExtensionContext) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
     registerCmd(`${VIEW_ID}.refreshEntry`, () => this.refresh());
@@ -40,7 +40,7 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
-  private defineFileWatchers(): void {
+  private defineFileWatchers() {
     vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(() => this.refresh());
     vscode.workspace.createFileSystemWatcher('**/*', true, true, false).onDidDelete(e =>
       this.treeDataProvider
@@ -64,7 +64,7 @@ export class IvyProjectExplorer {
     return this.treeDataProvider.hasIvyProjects();
   }
 
-  private async refresh(): Promise<void> {
+  private async refresh() {
     this.treeDataProvider.refresh();
     const hasIvyProjects = await this.hasIvyProjects();
     this.setProjectExplorerActivationCondition(hasIvyProjects);
@@ -84,23 +84,23 @@ export class IvyProjectExplorer {
     addNewProcess(selectedUri, projectDir, kind);
   }
 
-  private setProjectExplorerActivationCondition(hasIvyProjects: boolean): void {
+  private setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
     executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
-  private activateEngineExtension(hasIvyProjects: boolean): void {
+  private activateEngineExtension(hasIvyProjects: boolean) {
     if (hasIvyProjects) {
       executeCommand('engine.startIvyEngineManager');
     }
   }
 
-  private changeTabListener(event: vscode.TabChangeEvent): void {
+  private changeTabListener(event: vscode.TabChangeEvent) {
     if (event.changed.length > 0) {
       this.syncProjectExplorerSelectionWithActiveTab();
     }
   }
 
-  private syncProjectExplorerSelectionWithActiveTab(): void {
+  private syncProjectExplorerSelectionWithActiveTab() {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
     if (tabInput && tabInput.uri && this.treeView.visible) {
       const entryPath = tabInput.uri.fsPath;
@@ -113,7 +113,7 @@ export class IvyProjectExplorer {
     }
   }
 
-  private refreshRecursively(entryPath: string): void {
+  private refreshRecursively(entryPath: string) {
     const entry = this.treeDataProvider.getEntryCache().get(entryPath);
     if (entry) {
       this.treeDataProvider.refreshSubtree(entry);
@@ -125,7 +125,7 @@ export class IvyProjectExplorer {
     }
   }
 
-  private revealActiveEntry(entry: Entry): void {
+  private revealActiveEntry(entry: Entry) {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
     if (tabInput && tabInput.uri && this.treeView.visible) {
       if (tabInput.uri.path.startsWith(entry.uri.path)) {

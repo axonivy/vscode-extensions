@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-export async function executeCommand(page: Page, command: string): Promise<void> {
+export async function executeCommand(page: Page, command: string) {
   await expect(page.locator('div.command-center')).toBeAttached();
   await page.keyboard.press('F1');
   await expect(page.locator('.quick-input-list')).toBeVisible();

@@ -7,13 +7,13 @@ export class Editor extends View {
     super(viewData, page);
   }
 
-  async openEditorFile(): Promise<void> {
+  async openEditorFile() {
     await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
     await this.page.keyboard.insertText(this.editorFile);
     await this.page.locator(`div.quick-input-list-entry.has-actions:has-text("${this.editorFile}")`).first().click();
   }
 
-  async revertAndCloseEditor(): Promise<void> {
+  async revertAndCloseEditor() {
     if (await this.tabLocator.isVisible()) {
       await this.tabLocator.click();
       await this.executeCommand('View: Revert and Close Editor');

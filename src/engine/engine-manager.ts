@@ -74,12 +74,12 @@ export class IvyEngineManager {
     });
   }
 
-  private async initProjects(): Promise<void> {
+  private async initProjects() {
     const ivyProjectDirectories = await this.ivyProjectDirectories();
     await this.ivyEngineApi.initProjects(ivyProjectDirectories);
   }
 
-  public async deployProjects(): Promise<void> {
+  public async deployProjects() {
     const ivyProjectDirectories = await this.ivyProjectDirectories();
     await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
@@ -92,22 +92,22 @@ export class IvyEngineManager {
     await this.mavenBuilder.buildProject(ivyProjectDirectory);
   }
 
-  public async deployProject(ivyProjectDirectory: string): Promise<void> {
+  public async deployProject(ivyProjectDirectory: string) {
     await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
-  public async buildAndDeployProjects(): Promise<void> {
+  public async buildAndDeployProjects() {
     const ivyProjectDirectories = await this.ivyProjectDirectories();
     await this.buildProjects();
     await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
-  public async buildAndDeployProject(ivyProjectDirectory: string): Promise<void> {
+  public async buildAndDeployProject(ivyProjectDirectory: string) {
     await this.buildProject(ivyProjectDirectory);
     await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<void> {
+  public async createProcess(newProcessParams: NewProcessParams) {
     await this.createAndOpenProcess(newProcessParams);
     await this.ivyEngineApi.deployProjects([newProcessParams.path]);
   }
@@ -130,7 +130,7 @@ export class IvyEngineManager {
     executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
   }
 
-  public async deleteProject(ivyProjectDirectory: string): Promise<void> {
+  public async deleteProject(ivyProjectDirectory: string) {
     this.ivyEngineApi.deleteProject(ivyProjectDirectory);
   }
 

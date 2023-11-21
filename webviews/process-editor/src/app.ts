@@ -41,7 +41,7 @@ class IvyGLSPStarter extends GLSPStarter {
     return container;
   }
 
-  protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier): void {
+  protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier) {
     container.bind(VsCodeApi).toConstantValue(this.vscodeApi);
     // own IvyGLSPDiagramWidget
     container.bind(IvyGLSPDiagramWidget).toSelf().inSingletonScope();
@@ -61,7 +61,7 @@ class IvyGLSPStarter extends GLSPStarter {
   }
 }
 
-export function launch(): void {
+export function launch() {
   MonacoUtil.initStandalone(editorWorker).then(() => MonacoEditorUtil.initMonaco(reactMonaco, 'light'));
   const handleMessages = (event: MessageEvent<Message>) => {
     const message = event.data;

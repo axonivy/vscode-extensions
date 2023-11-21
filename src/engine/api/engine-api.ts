@@ -43,7 +43,7 @@ export class IvyEngineApi {
     return 'workspace-not-available';
   }
 
-  public async initProjects(ivyProjectDirectories: string[]): Promise<void> {
+  public async initProjects(ivyProjectDirectories: string[]) {
     for (const ivyProjectDirectory of ivyProjectDirectories) {
       await this.initProject(ivyProjectDirectory);
     }
@@ -52,13 +52,13 @@ export class IvyEngineApi {
     this.setStatusBarMessage(INIT_PROJECT_REQUEST);
   }
 
-  public async initProject(projectDir: string): Promise<void> {
+  public async initProject(projectDir: string) {
     const projectName = path.basename(projectDir);
     const params = { projectName, projectDir };
     await this.get(INIT_PROJECT_REQUEST, params);
   }
 
-  public async deployProjects(ivyProjectDirectories: string[]): Promise<void> {
+  public async deployProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
     await this.get(DEACTIVATE_PROJECTS_REQUEST, params);
     await this.get(DEPLOY_PROJECTS_REQUEST, params);
@@ -70,7 +70,7 @@ export class IvyEngineApi {
     return this.post(CREATE_PROCESS_REQUEST, newProcessParams);
   }
 
-  public async createProject(newProjectParams: NewProjectParams): Promise<void> {
+  public async createProject(newProjectParams: NewProjectParams) {
     return this.post(CREATE_PROJECT_REQUEST, newProjectParams);
   }
 
@@ -87,7 +87,8 @@ export class IvyEngineApi {
     return this._devContextPath;
   }
 
-  private async get(projectRequest: ProjectRequest, params: any): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async get(projectRequest: ProjectRequest, params: { projectDir: string | string[]; projectName?: string }): Promise<any> {
     const url = await this.toRequestUrl(projectRequest);
     return new Promise(resolve =>
       vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
@@ -96,7 +97,8 @@ export class IvyEngineApi {
     );
   }
 
-  private async post(projectRequest: ProjectRequest, params: any): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async post(projectRequest: ProjectRequest, params: NewProjectParams | NewProcessParams): Promise<any> {
     const url = await this.toRequestUrl(projectRequest);
     return new Promise(resolve =>
       vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
@@ -105,7 +107,8 @@ export class IvyEngineApi {
     );
   }
 
-  private async delete(projectRequest: ProjectRequest, params: any): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async delete(projectRequest: ProjectRequest, params: { projectDir: string }): Promise<any> {
     const url = await this.toRequestUrl(projectRequest);
     return new Promise(resolve =>
       vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
@@ -114,7 +117,7 @@ export class IvyEngineApi {
     );
   }
 
-  private setStatusBarMessage(projectRequest: ProjectRequest): void {
+  private setStatusBarMessage(projectRequest: ProjectRequest) {
     vscode.window.setStatusBarMessage(`Successfully completed: ${projectRequest.description}`, 5_000);
   }
 }

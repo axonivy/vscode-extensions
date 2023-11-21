@@ -35,7 +35,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     return providerRegistration;
   }
 
-  public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel): Promise<void> {
+  public async resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel) {
     webviewPanel.webview.options = {
       enableScripts: true,
       localResourceRoots: [

@@ -77,14 +77,14 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
     return this.ivyProjects;
   }
 
-  refresh(): void {
+  refresh() {
     this.entryCache.clear();
     this.openTabPaths = this.currentOpenTabPaths();
     this.ivyProjects = this.findIvyProjects();
     this._onDidChangeTreeData.fire();
   }
 
-  refreshSubtree(entry: Entry): void {
+  refreshSubtree(entry: Entry) {
     this.openTabPaths = this.currentOpenTabPaths();
     this._onDidChangeTreeData.fire(entry);
   }

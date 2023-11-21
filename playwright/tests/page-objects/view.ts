@@ -26,23 +26,23 @@ export class View extends PageObject {
       .frameLocator(`iFrame#active-frame${this.data.viewName ? `[title="${this.data.viewName}"]` : ''}`);
   }
 
-  async isTabVisible(): Promise<void> {
+  async isTabVisible() {
     await expect(this.tabLocator).toBeVisible();
   }
 
-  async isViewVisible(): Promise<void> {
+  async isViewVisible() {
     await expect(this.viewLocator).toBeVisible();
   }
 
-  async isActive(): Promise<void> {
+  async isActive() {
     await expect(this.tabLocator).toHaveClass(/checked/);
   }
 
-  async isDirty(): Promise<void> {
+  async isDirty() {
     await expect(this.tabLocator).toHaveClass(/dirty/);
   }
 
-  async isNotDirty(): Promise<void> {
+  async isNotDirty() {
     await expect(this.tabLocator).not.toHaveClass(/dirty/);
   }
 }

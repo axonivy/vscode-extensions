@@ -23,11 +23,11 @@ export class InscriptionView {
     return this.parent.locator('.view-lines.monaco-mouse-cursor-text');
   }
 
-  async triggerMonacoContentAssist(): Promise<void> {
+  async triggerMonacoContentAssist() {
     await this.page.keyboard.press('Control+Space');
   }
 
-  async writeToMonacoEditorWithCompletion(input: string, expectedCompletion: string): Promise<void> {
+  async writeToMonacoEditorWithCompletion(input: string, expectedCompletion: string) {
     await this.page.keyboard.type(input);
     const contentAssist = this.monacoContentAssist();
     await expect(contentAssist).toBeVisible();

@@ -3,7 +3,7 @@ import { ViewData } from './view';
 import { Editor } from './editor';
 
 export class VariablesEditor extends Editor {
-  constructor(page: Page, editorFile: string = 'variables.yaml') {
+  constructor(page: Page, editorFile = 'variables.yaml') {
     const outputViewData: ViewData = {
       tabSelector: `div.tab:has-text("${editorFile}")`,
       viewSelector: 'body > div > div[data-parent-flow-to-element-id] >> visible = true'
@@ -11,17 +11,17 @@ export class VariablesEditor extends Editor {
     super(editorFile, outputViewData, page);
   }
 
-  override async isViewVisible(): Promise<void> {
+  override async isViewVisible() {
     const header = this.viewFrameLoactor().locator('vscode-data-grid-cell:has-text("Key")');
     await expect(header).toBeVisible();
   }
 
-  async hasKey(key: string): Promise<void> {
+  async hasKey(key: string) {
     const field = this.viewFrameLoactor().locator(`vscode-text-field[grid-column="1"][current-value="${key}"]`);
     await expect(field).toBeVisible();
   }
 
-  async hasValue(value: string): Promise<void> {
+  async hasValue(value: string) {
     const field = this.viewFrameLoactor().locator(`vscode-text-field[grid-column="2"][current-value="${value}"]`);
     await expect(field).toBeVisible();
   }
@@ -30,7 +30,7 @@ export class VariablesEditor extends Editor {
     return this.viewFrameLoactor().locator('vscode-text-field');
   }
 
-  async add(key: string, value: string): Promise<void> {
+  async add(key: string, value: string) {
     await this.clickButton('Add');
     const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
     await keyField.click({ delay: 100 });
@@ -43,7 +43,7 @@ export class VariablesEditor extends Editor {
     await this.typeText(value);
   }
 
-  async addParentNode(parent: string): Promise<void> {
+  async addParentNode(parent: string) {
     await this.clickButton('Add Parent Node');
     const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
     await keyField.click({ delay: 100 });
@@ -51,12 +51,12 @@ export class VariablesEditor extends Editor {
     await this.typeText(parent);
   }
 
-  async clickButton(label: string): Promise<void> {
+  async clickButton(label: string) {
     const button = this.viewFrameLoactor().locator(`vscode-button[aria-label="${label}"]`).last();
     await button.click();
   }
 
-  async typeText(text: string): Promise<void> {
+  async typeText(text: string) {
     await this.page.keyboard.type(text, { delay: 100 });
   }
 }
