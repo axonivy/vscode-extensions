@@ -1,6 +1,6 @@
 {
   "name": "vscode-config-editor-webview",
-  "version": "11.2.0",
+  "version": "11.3.0",
   "private": true,
   "dependencies": {
     "@axonivy/config-editor": "~11.2.0-next.36",
