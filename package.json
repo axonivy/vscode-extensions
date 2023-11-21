@@ -57,8 +57,8 @@
     "ts-loader": "^9.4.2",
     "typescript": "~5.2.2",
     "vsce": "1.79.5",
-    "vscode-config-editor-webview": "11.2.0",
-    "vscode-process-editor-webview": "11.2.0",
+    "vscode-config-editor-webview": "11.3.0",
+    "vscode-process-editor-webview": "11.3.0",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1"
   },
