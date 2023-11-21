@@ -11,7 +11,7 @@ export class OutputView extends View {
     super(outputViewData, page);
   }
 
-  async checkIfEngineStarted(): Promise<void> {
+  async checkIfEngineStarted() {
     const expectedText = "Type 'shutdown' and confirm";
     await expect(async () => {
       await expect(this.viewLocator).toContainText(expectedText);

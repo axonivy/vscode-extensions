@@ -50,7 +50,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return super.registerClient(client);
   }
 
-  onSelectedElement(listener: (selectedElement: SelectedElement) => void): void {
+  onSelectedElement(listener: (selectedElement: SelectedElement) => void) {
     this.onSelectedElementUpdate(listener);
   }
 
@@ -93,7 +93,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return undefined;
   }
 
-  public override sendActionToClient(clientId: string, action: Action): void {
+  public override sendActionToClient(clientId: string, action: Action) {
     super.sendActionToClient(clientId, action);
   }
 
@@ -110,10 +110,10 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return { processedMessage: undefined, messageChanged: true };
   }
 
-  private openWithProcessEditor(absolutePath: string): void {
+  private openWithProcessEditor(absolutePath: string) {
     vscode.commands.executeCommand('vscode.openWith', vscode.Uri.parse(absolutePath), IvyEditorProvider.viewType);
   }
-  private showTextDocument(uri: string, args: Args | undefined): void {
+  private showTextDocument(uri: string, args: Args | undefined) {
     const SHOW_OPTIONS = 'jsonOpenerOptions';
     let showOptions = { ...args };
 

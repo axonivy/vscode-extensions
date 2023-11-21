@@ -30,7 +30,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  public refreshWebviewHtml(url: string): void {
+  public refreshWebviewHtml(url: string) {
     this.url = url;
     if (!this.view) {
       return;
@@ -103,7 +103,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     return webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, ...pathSegments));
   }
 
-  openInExternalBrowser(): void {
+  openInExternalBrowser() {
     vscode.env.openExternal(vscode.Uri.parse(this.url));
   }
 }

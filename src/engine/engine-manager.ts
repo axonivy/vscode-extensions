@@ -31,7 +31,7 @@ export class IvyEngineManager {
     this.started = true;
     this.engineUrl = this.resolveEngineUrl();
     this.ivyEngineApi = new IvyEngineApi(await this.engineUrl);
-    this.devContextPath = this.ivyEngineApi.devContextPathRequest();
+    this.devContextPath = this.ivyEngineApi.devContextPath;
     await this.initProjects();
     this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
@@ -74,18 +74,14 @@ export class IvyEngineManager {
     });
   }
 
-  public async initProjects() {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.initProjects(ivyProjectDirectories);
-    }
+  private async initProjects() {
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.ivyEngineApi.initProjects(ivyProjectDirectories);
   }
 
   public async deployProjects() {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
-    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
   public async buildProjects() {
@@ -97,45 +93,35 @@ export class IvyEngineManager {
   }
 
   public async deployProject(ivyProjectDirectory: string) {
-    if (await this.devContextPath) {
-      await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
-    }
+    await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
   public async buildAndDeployProjects() {
-    if (await this.devContextPath) {
-      const ivyProjectDirectories = await this.ivyProjectDirectories();
-      await this.buildProjects();
-      await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
-    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.buildProjects();
+    await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
   public async buildAndDeployProject(ivyProjectDirectory: string) {
-    if (await this.devContextPath) {
-      await this.buildProject(ivyProjectDirectory);
-      await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
-    }
+    await this.buildProject(ivyProjectDirectory);
+    await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
   public async createProcess(newProcessParams: NewProcessParams) {
-    if (await this.devContextPath) {
-      await this.createAndOpenProcess(newProcessParams);
-      await this.ivyEngineApi.deployProjects([newProcessParams.path]);
-    }
+    await this.createAndOpenProcess(newProcessParams);
+    await this.ivyEngineApi.deployProjects([newProcessParams.path]);
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
     if (!this.started) {
       await this.start();
     }
-    if (await this.devContextPath) {
-      await this.ivyEngineApi.createProject(newProjectParams);
-      const path = newProjectParams.path;
-      if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
-        await this.ivyEngineApi.initProjects([path]);
-        await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
-        await this.buildAndDeployProject(path);
-      }
+    await this.ivyEngineApi.createProject(newProjectParams);
+    const path = newProjectParams.path;
+    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
+      await this.ivyEngineApi.initProjects([path]);
+      await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
+      await this.buildAndDeployProject(path);
     }
   }
 
@@ -145,9 +131,7 @@ export class IvyEngineManager {
   }
 
   public async deleteProject(ivyProjectDirectory: string) {
-    if (await this.devContextPath) {
-      this.ivyEngineApi.deleteProject(ivyProjectDirectory);
-    }
+    this.ivyEngineApi.deleteProject(ivyProjectDirectory);
   }
 
   public async devWfUiUri() {

@@ -11,7 +11,7 @@ export interface NewProjectParams {
   path: string;
 }
 
-export async function addNewProject(selection: TreeSelection): Promise<void> {
+export async function addNewProject(selection: TreeSelection) {
   const selectedUri = await treeSelectionToUri(selection);
   const input = await collectNewProjectParams(selectedUri);
   if (input) {

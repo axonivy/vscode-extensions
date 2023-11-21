@@ -19,7 +19,7 @@ export class MavenBuilder {
     this.excludePattern = projectExcludePattern ?? '';
   }
 
-  async buildProject(ivyProjectDir: string): Promise<void> {
+  async buildProject(ivyProjectDir: string) {
     const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
     this.outputChannel.show();
     childProcess.on('error', (error: Error) => {
@@ -34,7 +34,7 @@ export class MavenBuilder {
         this.outputChannel.append(data);
       });
     }
-    return new Promise(resolve => {
+    new Promise<void>(resolve => {
       childProcess.on('exit', () => {
         resolve();
       });

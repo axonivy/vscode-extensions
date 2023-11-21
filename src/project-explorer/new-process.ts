@@ -14,7 +14,7 @@ export interface NewProcessParams {
 const prompt =
   'Enter the new process name e.g. "myProcess". You can also specify its directory name in the form "parentDirectory/subDirectory/myProcess".';
 
-export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind: ProcessKind): Promise<void> {
+export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind: ProcessKind) {
   const input = await collectNewProcessParams(selectedUri, projectDir, kind);
   if (input) {
     executeCommand('engine.createProcess', input);

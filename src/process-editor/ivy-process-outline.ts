@@ -28,7 +28,7 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
     this.ivyGlspConnector.onDidChangeActiveGlspEditor(e => this.readProcessFile(e.client));
   }
 
-  refresh(element?: Element): void {
+  refresh(element?: Element) {
     this.parseTree();
     if (element) {
       this._onDidChangeTreeData.fire(element);
@@ -50,7 +50,7 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
     });
   }
 
-  private parseTree(): void {
+  private parseTree() {
     this.tree = undefined;
     if (this.text && this.text.length > 0) {
       this.tree = JSON.parse(this.text) as Process;

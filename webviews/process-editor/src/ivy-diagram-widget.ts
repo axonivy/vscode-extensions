@@ -13,7 +13,7 @@ import { injectable, inject } from 'inversify';
 export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
   @inject(VsCodeApi) protected vsCodeApi: VsCodeApi;
 
-  override dispatchInitialActions(): void {
+  override dispatchInitialActions() {
     if (this.modelSource instanceof DiagramServerProxy) {
       this.modelSource.clientId = this.diagramIdentifier.clientId;
     }

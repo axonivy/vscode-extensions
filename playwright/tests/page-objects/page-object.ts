@@ -4,7 +4,7 @@ import { executeCommand } from '../utils/command';
 export abstract class PageObject {
   constructor(readonly page: Page) {}
 
-  async executeCommand(command: string): Promise<void> {
+  async executeCommand(command: string) {
     await executeCommand(this.page, command);
   }
 
@@ -16,11 +16,11 @@ export abstract class PageObject {
     await expect(this.page.locator('li.action-item.checked').getByLabel(label).first()).toBeVisible();
   }
 
-  async hasStatusMessage(message: string, timeout?: number): Promise<void> {
+  async hasStatusMessage(message: string, timeout?: number) {
     await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
   }
 
-  async provideUserInput(input?: string): Promise<void> {
+  async provideUserInput(input?: string) {
     await this.page.locator('.quick-input-widget').focus();
     if (input) {
       await this.page.keyboard.type(input);

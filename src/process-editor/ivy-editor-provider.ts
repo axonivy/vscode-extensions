@@ -16,12 +16,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     this.webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   }
 
-  setUpWebview(
-    _document: vscode.CustomDocument,
-    webviewPanel: vscode.WebviewPanel,
-    _token: vscode.CancellationToken,
-    clientId: string
-  ): void {
+  setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string) {
     const webview = webviewPanel.webview;
     webviewPanel.webview.options = {
       enableScripts: true

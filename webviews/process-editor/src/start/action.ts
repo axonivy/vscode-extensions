@@ -26,7 +26,7 @@ export namespace StartProcessAction {
 export class StartProcessActionHandler implements IActionHandler {
   constructor(@inject(VsCodeApi) private vscodeapi: VsCodeApi) {}
 
-  handle(action: StartProcessAction): void {
+  handle(action: StartProcessAction) {
     this.vscodeapi.postMessage({ command: 'startProcess', processStartUri: action.processStartUri });
   }
 }
