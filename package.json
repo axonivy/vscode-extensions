@@ -24,6 +24,7 @@
     "clean": "yarn clean:node && rimraf webviews/dist",
     "clean:node": "rimraf lib dist",
     "lint": "eslint --ext .ts,.tsx ./src && lerna run lint --",
+    "lint:ci": "eslint --ext .ts,.tsx ./src -o eslint.xml -f checkstyle && lerna run lint -- -o eslint.xml -f checkstyle",
     "package": "vsce package --yarn",
     "prepare": "yarn clean && yarn build",
     "test:playwright": "yarn -s --cwd playwright ui-tests",

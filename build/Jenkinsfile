@@ -34,8 +34,11 @@ pipeline {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
             timeout(30) {
-              sh 'yarn lint -o eslint.xml -f checkstyle'
+              sh 'yarn lint:ci'
             }
+          }
+          withChecks('ESLint') {
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(pattern: '**/eslint.xml,webviews/**/eslint.xml', skipSymbolicLinks: true)], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
           }
         }
       }
