@@ -51,7 +51,6 @@ export class IvyEngineApi {
     }
     const params = { projectDir: ivyProjectDirectories };
     await this.get(ACTIVATE_PROJECTS_REQUEST, params);
-    this.setStatusBarMessage(INIT_PROJECT_REQUEST);
   }
 
   public async initProject(projectDir: string) {

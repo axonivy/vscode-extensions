@@ -21,7 +21,7 @@ test.describe('Create Process', () => {
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Successfully completed: Initialize Ivy Project');
+    await explorer.hasStatusMessage('Successfully completed: Deploy Ivy Projects');
   });
 
   test.afterEach(async () => {

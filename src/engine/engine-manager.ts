@@ -34,6 +34,7 @@ export class IvyEngineManager {
     this.ivyEngineApi = new IvyEngineApi(await this.engineUrl);
     this.devContextPath = this.ivyEngineApi.devContextPath;
     await this.initProjects();
+    this.deployProjects();
     this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
     process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
     executeCommand('process-editor.activate');
