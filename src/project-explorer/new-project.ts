@@ -21,23 +21,29 @@ export async function addNewProject(selection: TreeSelection) {
 
 async function collectNewProjectParams(selectedUri: vscode.Uri): Promise<NewProjectParams | undefined> {
   const prompt = `Project Location: ${selectedUri.path}`;
-  const name = await vscode.window.showInputBox({ title: 'Project Name', validateInput: validateProjectName, prompt });
+  const name = await vscode.window.showInputBox({
+    title: 'Project Name',
+    validateInput: validateProjectName,
+    prompt,
+    ignoreFocusOut: true
+  });
   if (!name) {
     return;
   }
   const projectPath = path.join(selectedUri.fsPath, name);
-  const groupId = await vscode.window.showInputBox({ title: 'Group Id', value: name, validateInput: validateId });
+  const groupId = await vscode.window.showInputBox({ title: 'Group Id', value: name, validateInput: validateId, ignoreFocusOut: true });
   if (!groupId) {
     return;
   }
-  const projectId = await vscode.window.showInputBox({ title: 'Project Id', value: name, validateInput: validateId });
+  const projectId = await vscode.window.showInputBox({ title: 'Project Id', value: name, validateInput: validateId, ignoreFocusOut: true });
   if (!projectId) {
     return;
   }
   const defaultNamespace = await vscode.window.showInputBox({
     title: 'Default Namespace',
     value: name === groupId && name === projectId ? name.replaceAll('-', '.') : `${groupId}.${projectId}`.replaceAll('-', '.'),
-    validateInput: validateNamespace
+    validateInput: validateNamespace,
+    ignoreFocusOut: true
   });
   if (!defaultNamespace) {
     return;

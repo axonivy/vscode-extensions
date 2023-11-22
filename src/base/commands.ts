@@ -21,6 +21,7 @@ type EngineCommand =
   | 'engine.buildAndDeployProjects'
   | 'engine.createProcess'
   | 'engine.createProject'
+  | 'engine.createUserDialog'
   | 'engine.openDevWfUi'
   | 'engine.openEngineCockpit'
   | 'engine.ivyBrowserOpen'
@@ -37,6 +38,8 @@ type ProjectViewCommand =
   | 'ivyProjects.addCallableSubProcess'
   | 'ivyProjects.addWebServiceProcess'
   | 'ivyProjects.addNewProject'
+  | 'ivyProjects.addNewHtmlDialog'
+  | 'ivyProjects.addNewOfflineDialog'
   | 'ivyProjects.getIvyProjects'
   | 'ivyProjects.revealInExplorer';
 type ViewCommand = 'ivyBrowserView.focus' | 'ivyProcessOutline.selectElement';

@@ -8,6 +8,7 @@ import { activateIvyBrowser } from './engine/browser/ivy-browser';
 import { activateProcessEditor } from './process-editor/ivy-extension';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
+import { NewUserDialogParams } from './project-explorer/new-user-dialog';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -25,8 +26,9 @@ export async function activate(context: vscode.ExtensionContext) {
   registerCmd('engine.buildAndDeployProject', (ivyProjectDirectory: string) => ivyEngineManager.buildAndDeployProject(ivyProjectDirectory));
   registerCmd('engine.buildProject', (ivyProjectDirectory: string) => ivyEngineManager.buildProject(ivyProjectDirectory));
   registerCmd('engine.deployProject', (ivyProjectDirectory: string) => ivyEngineManager.deployProject(ivyProjectDirectory));
-  registerCmd('engine.createProcess', (newProcessParams: NewProcessParams) => ivyEngineManager.createProcess(newProcessParams));
-  registerCmd('engine.createProject', (newProjectParams: NewProjectParams) => ivyEngineManager.createProject(newProjectParams));
+  registerCmd('engine.createProcess', (params: NewProcessParams) => ivyEngineManager.createProcess(params));
+  registerCmd('engine.createProject', (params: NewProjectParams) => ivyEngineManager.createProject(params));
+  registerCmd('engine.createUserDialog', (params: NewUserDialogParams) => ivyEngineManager.createUserDialog(params));
   registerCmd('engine.openDevWfUi', () => ivyEngineManager.openDevWfUi());
   registerCmd('engine.openEngineCockpit', () => ivyEngineManager.openEngineCockpit());
   registerCmd('engine.startProcess', (processStartUri: string) => ivyEngineManager.startProcess(processStartUri));

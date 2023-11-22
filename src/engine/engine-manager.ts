@@ -7,6 +7,7 @@ import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
 import { NewProjectParams } from '../project-explorer/new-project';
 import { engineRunEmbedded, engineUrl } from '../base/configurations';
+import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 
 export class IvyEngineManager {
   private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
@@ -112,17 +113,22 @@ export class IvyEngineManager {
     await this.ivyEngineApi.deployProjects([newProcessParams.path]);
   }
 
+  public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
+    const hdPath = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
+    const xhtmlUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + '.xhtml');
+    executeCommand('vscode.open', xhtmlUri);
+    this.buildAndDeployProject(newUserDialogParams.projectDir);
+  }
+
   public async createProject(newProjectParams: NewProjectParams) {
     if (!this.started) {
       await this.start();
     }
     await this.ivyEngineApi.createProject(newProjectParams);
     const path = newProjectParams.path;
-    if (vscode.workspace.getWorkspaceFolder(vscode.Uri.file(path))) {
-      await this.ivyEngineApi.initProjects([path]);
-      await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
-      await this.buildAndDeployProject(path);
-    }
+    await this.ivyEngineApi.initProjects([path]);
+    await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
+    await this.buildAndDeployProject(path);
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
