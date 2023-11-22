@@ -79,17 +79,18 @@ export class IvyProjectExplorer {
   }
 
   private async addProcess(kind: ProcessKind, selection: TreeSelection) {
-    const projectDir = await treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects());
-    if (!projectDir) {
-      return;
-    }
-    const selectedUri = await treeSelectionToUri(selection);
-    addNewProcess(selectedUri, projectDir, kind);
+    treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(async projectDir =>
+      projectDir
+        ? addNewProcess(await treeSelectionToUri(selection), projectDir, kind)
+        : vscode.window.showWarningMessage('Add Process: no valid Axon Ivy Project selected.')
+    );
   }
 
   private async addUserDialog(selection: TreeSelection, type: DialogType) {
-    treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(projectDir =>
-      projectDir ? addNewUserDialog(projectDir, type) : {}
+    treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(async projectDir =>
+      projectDir
+        ? addNewUserDialog(projectDir, type)
+        : vscode.window.showWarningMessage('Add User Dialog: no valid Axon Ivy Project selected.')
     );
   }
 
