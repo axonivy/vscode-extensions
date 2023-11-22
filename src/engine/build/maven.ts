@@ -5,7 +5,7 @@ import { XMLParser } from 'fast-xml-parser';
 import path from 'path';
 import { projectExcludePattern } from '../../base/configurations';
 
-const IVY_ENGINE_VERSION = '11.2.0';
+const IVY_ENGINE_VERSION = '11.3.0';
 
 export class MavenBuilder {
   private readonly outputChannel: vscode.OutputChannel;
@@ -34,7 +34,7 @@ export class MavenBuilder {
         this.outputChannel.append(data);
       });
     }
-    new Promise<void>(resolve => {
+    await new Promise<void>(resolve => {
       childProcess.on('exit', () => {
         resolve();
       });

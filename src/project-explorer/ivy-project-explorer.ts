@@ -5,6 +5,7 @@ import { ProcessKind, addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
 import { TreeSelection, executeTreeSelectionCommand, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
+import { DialogType, addNewUserDialog } from './new-user-dialog';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -36,6 +37,8 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
     registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
     registerCmd(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
+    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'Html Dialog'));
+    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'Offline Dialog'));
     registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
@@ -82,6 +85,12 @@ export class IvyProjectExplorer {
     }
     const selectedUri = await treeSelectionToUri(selection);
     addNewProcess(selectedUri, projectDir, kind);
+  }
+
+  private async addUserDialog(selection: TreeSelection, type: DialogType) {
+    treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(projectDir =>
+      projectDir ? addNewUserDialog(projectDir, type) : {}
+    );
   }
 
   private setProjectExplorerActivationCondition(hasIvyProjects: boolean) {

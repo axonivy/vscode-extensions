@@ -34,7 +34,8 @@ async function collectNewProcessParams(
     placeHolder,
     value: resolvedNamespace ? resolvedNamespace + placeHolder : undefined,
     valueSelection: resolvedNamespace ? [resolvedNamespace.length, -1] : undefined,
-    validateInput: validateNameWithNamespace
+    validateInput: validateNameWithNamespace,
+    ignoreFocusOut: true
   });
   if (!nameWithNamespace) {
     return;

@@ -8,6 +8,7 @@ import {
   ACTIVATE_PROJECTS_REQUEST,
   CREATE_PROCESS_REQUEST,
   CREATE_PROJECT_REQUEST,
+  CREATE_USER_DIALOG_REQUEST,
   DEACTIVATE_PROJECTS_REQUEST,
   DELETE_PROJECT_REQUEST,
   DEPLOY_PROJECTS_REQUEST,
@@ -15,6 +16,7 @@ import {
   ProjectRequest,
   toProgressOptions
 } from './project-request';
+import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
@@ -74,6 +76,10 @@ export class IvyEngineApi {
     return this.post(CREATE_PROJECT_REQUEST, newProjectParams);
   }
 
+  public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
+    return this.post(CREATE_USER_DIALOG_REQUEST, newUserDialogParams);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async deleteProject(projectDir: string): Promise<any> {
     return this.delete(DELETE_PROJECT_REQUEST, { projectDir });
@@ -98,11 +104,11 @@ export class IvyEngineApi {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async post(projectRequest: ProjectRequest, params: NewProjectParams | NewProcessParams): Promise<any> {
+  private async post(projectRequest: ProjectRequest, data: NewProjectParams | NewProcessParams | NewUserDialogParams): Promise<any> {
     const url = await this.toRequestUrl(projectRequest);
     return new Promise(resolve =>
       vscode.window.withProgress(toProgressOptions(projectRequest), async () => {
-        resolve(await postRequest(url, params));
+        resolve(await postRequest(url, data));
       })
     );
   }
