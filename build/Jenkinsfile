@@ -38,7 +38,7 @@ pipeline {
             }
           }
           withChecks('ESLint') {
-            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(pattern: '**/eslint.xml,webviews/**/eslint.xml', skipSymbolicLinks: true)], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(pattern: 'extension/**/eslint.xml', skipSymbolicLinks: true)], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
           }
         }
       }
@@ -49,7 +49,7 @@ pipeline {
         script {
           sh 'yarn download:engine ' + params.engineDownloadUrl
           sh 'yarn package'
-          archiveArtifacts '*.vsix'
+          archiveArtifacts 'extension/**/*.vsix'
         }
       }
     }

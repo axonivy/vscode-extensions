@@ -6,7 +6,7 @@ export default defineConfig(() => {
     plugins: [tsconfigPaths()],
     build: {
       manifest: 'build.manifest.json',
-      outDir: '../dist/process-editor',
+      outDir: 'dist',
       chunkSizeWarningLimit: 5000
     },
     server: {

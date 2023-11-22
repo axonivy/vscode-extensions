@@ -40,7 +40,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
       enableScripts: true,
       localResourceRoots: [
         vscode.Uri.joinPath(this.context.extensionUri, 'out'),
-        vscode.Uri.joinPath(this.context.extensionUri, 'webviews', 'dist')
+        vscode.Uri.joinPath(this.context.extensionUri, 'webviews', 'config-editor', 'dist')
       ]
     };
     webviewPanel.webview.html = this.getWebviewContent(webviewPanel.webview, this.context.extensionUri);
@@ -89,7 +89,7 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-    const basePath = ['webviews', 'dist', 'config-editor', 'assets'];
+    const basePath = ['webviews', 'config-editor', 'dist', 'assets'];
     const stylesUri = getUri(webview, extensionUri, [...basePath, 'index.css']);
     const codiconFontUri = getUri(webview, extensionUri, [...basePath, 'codicon.ttf']);
     const scriptUri = getUri(webview, extensionUri, [...basePath, 'index.js']);

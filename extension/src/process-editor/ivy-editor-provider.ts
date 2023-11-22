@@ -85,7 +85,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
   }
 
   private getAppUri(...pathSegments: string[]) {
-    return vscode.Uri.joinPath(this.extensionContext.extensionUri, 'webviews', 'dist', 'process-editor', ...pathSegments);
+    return vscode.Uri.joinPath(this.extensionContext.extensionUri, 'webviews', 'process-editor', 'dist', ...pathSegments);
   }
 
   private findRootHtmlKey(buildManifest: object) {

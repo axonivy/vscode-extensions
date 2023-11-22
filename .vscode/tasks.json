@@ -1,14 +1,14 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "clean & build node",
-            "type": "shell",
-            "command": "yarn clean:node && yarn build:node",
-            "presentation": {
-                "reveal": "always",
-                "panel": "dedicated"
-              }
-          }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "clean & build extension",
+      "type": "shell",
+      "command": "yarn extension:clean && yarn extension:build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    }
+  ]
 }
