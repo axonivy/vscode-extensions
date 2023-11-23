@@ -40,8 +40,13 @@ pipeline {
           def random = (new Random()).nextInt(10000000)
           def networkName = "build-" + random
           def openvscodeServerName = "ivy-" + random
-          docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').inside("--name ${openvscodeServerName} --network ${networkName}") {
-            sh '/home/.openvscode-server/bin/openvscode-server --version'
+          try {
+            sh "docker network create ${networkName}"
+            docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').inside("--name ${openvscodeServerName} --network ${networkName}") {
+              sh '/home/.openvscode-server/bin/openvscode-server --version'
+            }
+          } finally {
+            sh "docker network rm ${networkName}"
           }
 
         }
