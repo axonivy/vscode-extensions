@@ -36,25 +36,17 @@ pipeline {
     stage('Playwright Tests') {
       steps {
         script {
-          def random = (new Random()).nextInt(10000000)
-          def networkName = "build-" + random
-          def openvscodeServerName = "ivy-" + random
-          try {
-            sh "docker network create ${networkName}"
-            docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
-              docker.build('playwright', '-f build/integration/openvscode-server/Dockerfile_playwright .').inside("-e OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
-                sh 'npx playwright install'
-                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                  sh 'yarn test:playwright:browser'
-                }
-                archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
-                withChecks('WebTests') {
-                  junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
-                }
+          docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("", "--disable-workspace-trust")  { container ->
+            docker.build('playwright', '-f build/integration/openvscode-server/Dockerfile_playwright .').inside("--link ${container.id}:openvscode -e OPENVSCODE_SERVER_HOST=openvscode") {
+              sh 'npx playwright install'
+              catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                sh 'yarn test:playwright:browser'
+              }
+              archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
+              withChecks('WebTests') {
+                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
               }
             }
-          } finally {
-            sh "docker network rm ${networkName}"
           }
         }
       }
