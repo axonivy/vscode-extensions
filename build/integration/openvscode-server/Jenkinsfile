@@ -43,7 +43,7 @@ pipeline {
             sh "docker network create ${networkName}"
             docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
               docker.withRegistry("https://mcr.microsoft.com") {
-                docker.image("playwright:v1.38.1-jammy").inside("-e CI=true OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
+                docker.build('playwright', '-f build/integration/openvscode-server/Dockerfile_playwright .').inside("-e OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
                   sh 'yarn test:playwright:browser'
                 }
               }
