@@ -44,32 +44,17 @@ pipeline {
             docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
               docker.build('playwright', '-f build/integration/openvscode-server/Dockerfile_playwright .').inside("-e OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
                 sh 'npx playwright install'
-                sh 'yarn test:playwright:browser'
+                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                  sh 'yarn test:playwright:browser'
+                }
+                archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
+                withChecks('WebTests') {
+                  junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+                }
               }
             }
           } finally {
             sh "docker network rm ${networkName}"
-          }
-        }
-      }
-    }
-
-    stage('Playwright Tests2') {
-      agent {
-        dockerfile {
-          filename 'build/integration/openvscode-server/Dockerfile-playwright'
-          reuseNode true
-        }
-      }
-
-      steps {
-        script {
-          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'yarn test:playwright:browser'
-          }
-          archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
-          withChecks('WebTests') {
-            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
           }
         }
       }
