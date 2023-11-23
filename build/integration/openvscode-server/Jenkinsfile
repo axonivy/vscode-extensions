@@ -43,8 +43,8 @@ pipeline {
             sh "docker network create ${networkName}"
             docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
               docker.build('playwright', '-f build/integration/openvscode-server/Dockerfile_playwright .').inside("-e OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
+                sh 'npx playwright install'
                 sh 'yarn test:playwright:browser'
-                }
               }
             }
           } finally {
