@@ -7,7 +7,7 @@ function downloadEngine() {
     ? process.argv[2]
     : 'https://jenkins.ivyteam.io/job/core_product-engine/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip';
 
-  const engineDir = 'AxonIvyEngine';
+  const engineDir = 'extension/AxonIvyEngine';
   if (fs.existsSync(engineDir)) {
     fs.rmSync(engineDir, { recursive: true, force: true });
   }

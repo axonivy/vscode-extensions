@@ -4,13 +4,13 @@
       "name": "root",
       "path": "./"
     },
-    { 
+    {
       "name": "extension",
-      "path": "src"
+      "path": "extension"
     },
     {
       "name": "webviews",
-      "path": "webviews"
+      "path": "extension/webviews"
     },
     {
       "name": "playwright",
@@ -56,5 +56,4 @@
     },
     "jest.jestCommandLine": "yarn test"
   }
-  
 }

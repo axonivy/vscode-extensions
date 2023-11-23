@@ -18,7 +18,7 @@
     "build": "vite build --mode development --emptyOutDir",
     "build:production": "vite build --emptyOutDir",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "prepare": "yarn clean && yarn build",
+    "clean": "rimraf dist lib",
     "watch": "vite build --mode development --watch --emptyOutDir"
   }
 }

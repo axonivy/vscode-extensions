@@ -1,0 +1,12 @@
+**/*.ts
+**/tsconfig.json
+
+.gitignore
+webpack.config.json
+
+**/node_modules
+
+lib/
+webviews/
+!webviews/config-editor/dist/
+!webviews/process-editor/dist/

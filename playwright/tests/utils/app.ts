@@ -5,7 +5,7 @@ import * as path from 'path';
 const args = [
   '--disable-updates',
   '--disable-workspace-trust',
-  '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../'),
+  '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../extension/'),
   '--new-window',
   '--skip-release-notes',
   '--skip-welcome',
