@@ -39,7 +39,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}.xhtml`);
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
-    await explorer.isFileTabVisible(name + '.xhtml');
+    await explorer.isTabWithNameVisible(name + '.xhtml');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
@@ -53,7 +53,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}.xhtml`);
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
-    await explorer.isFileTabVisible(name + '.xhtml');
+    await explorer.isTabWithNameVisible(name + '.xhtml');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');

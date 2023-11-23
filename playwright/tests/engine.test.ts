@@ -3,13 +3,12 @@ import { test } from './fixtures/page';
 import { OutputView } from './page-objects/output-view';
 import { noEngineWorkspacePath, noProjectWorkspacePath } from './workspaces/workspace';
 import { SettingsView } from './page-objects/settings-view';
-import { executeCloseAllEditorGroupsCommand } from './utils/command';
 
 test.describe('Engine', () => {
   let page: Page;
 
   test.afterEach(async () => {
-    await executeCloseAllEditorGroupsCommand(page);
+    await new OutputView(page).closeAllTabs();
   });
 
   test('check if embedded engine has started', async ({ page: fixturePage }) => {
