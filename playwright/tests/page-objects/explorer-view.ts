@@ -86,6 +86,17 @@ export class FileExplorer extends ExplorerView {
     await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(processName);
   }
+
+  async addUserDialog(projectName: string, dialogName: string, namespace: string, kind: 'Html Dialog' | 'Offline Dialog') {
+    await this.selectNode(projectName);
+    await this.executeCommand('Axon Ivy: New ' + kind);
+    await this.provideUserInput(dialogName);
+    await this.provideUserInput(namespace);
+    if (kind === 'Html Dialog') {
+      await this.provideUserInput();
+      await this.provideUserInput();
+    }
+  }
 }
 
 export class ProjectExplorerView extends ExplorerView {

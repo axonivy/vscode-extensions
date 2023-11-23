@@ -4,3 +4,5 @@ node_modules/
 /playwright/.cache/
 /playwright-videos/
 /.vscode-test
+**/target
+**/logs
