@@ -42,9 +42,9 @@ pipeline {
           def openvscodeServerName = "ivy-" + random
           try {
             sh "docker network create ${networkName}"
-            docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').inside("--name ${openvscodeServerName} --network ${networkName} --disable-workspace-trust") {
+            docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
               sh '/home/.openvscode-server/bin/openvscode-server --version'
-              docker.image("mcr.microsoft.com/playwright:v1.38.1-jammy").withRun("-e CI=true --network ${networkName}") {
+              docker.image("mcr.microsoft.com/playwright:v1.38.1-jammy").inside("-e CI true --network ${networkName} --OPENVSCODE_SERVER_HOST ${openvscodeServerName}") {
                 sh 'yarn test:playwright:browser'
               }
             }
