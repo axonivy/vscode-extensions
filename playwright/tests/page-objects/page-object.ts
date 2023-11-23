@@ -27,4 +27,14 @@ export abstract class PageObject {
     }
     await this.page.keyboard.press('Enter');
   }
+
+  async closeAllTabs() {
+    await executeCommand(this.page, 'view: close all editor groups');
+    await expect(this.page.locator('div.tab')).toBeHidden();
+  }
+
+  async isFileTabVisible(fileName: string) {
+    const tabSelector = `div.tab:has-text("${fileName}")`;
+    await expect(this.page.locator(tabSelector)).toBeVisible();
+  }
 }
