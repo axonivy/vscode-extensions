@@ -34,7 +34,7 @@ pipeline {
       }
     }
 
-    stage('Networking with Alex') {
+    stage('Playwright Tests') {
       steps {
         script {
           def random = (new Random()).nextInt(10000000)
@@ -44,7 +44,7 @@ pipeline {
             sh "docker network create ${networkName}"
             docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile_server .').withRun("--name ${openvscodeServerName} --network ${networkName}", "--disable-workspace-trust") {
               docker.withRegistry("https://mcr.microsoft.com/") {
-                image("playwright:v1.38.1-jammy").inside("-e CI true --network ${networkName} --OPENVSCODE_SERVER_HOST ${openvscodeServerName}") {
+                docker.image("playwright:v1.38.1-jammy").inside("-e CI=true OPENVSCODE_SERVER_HOST=${openvscodeServerName} --network ${networkName}") {
                   sh 'yarn test:playwright:browser'
                 }
               }
@@ -56,7 +56,7 @@ pipeline {
       }
     }
 
-    stage('Playwright Tests') {
+    stage('Playwright Tests2') {
       agent {
         dockerfile {
           filename 'build/integration/openvscode-server/Dockerfile-playwright'
