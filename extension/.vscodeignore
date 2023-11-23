@@ -2,7 +2,7 @@
 **/tsconfig.json
 
 .gitignore
-webpack.config.json
+webpack.config.js
 
 **/node_modules
 
