@@ -4,7 +4,8 @@ export default defineConfig({
   use: {
     headless: process.env.CI ? true : false,
     permissions: ['clipboard-read'],
-    trace: 'retain-on-failure'
+    trace: 'retain-on-failure',
+    video: 'retain-on-failure'
   },
   testDir: './tests',
   workers: 1,
