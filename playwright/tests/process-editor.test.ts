@@ -25,7 +25,7 @@ test.describe('Process Editor', () => {
   });
 
   test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
+    // await processEditor.revertAndCloseEditor();
   });
 
   test.only('Check if User Dialog is visible', async () => {
