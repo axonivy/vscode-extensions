@@ -21,20 +21,21 @@ export abstract class PageObject {
   }
 
   async provideUserInput(input?: string) {
-    await this.page.locator('.quick-input-widget').focus();
+    const options = { delay: 50 };
+    await this.page.locator('.quick-input-widget').click(options);
     if (input) {
-      await this.page.keyboard.type(input);
+      await this.page.keyboard.type(input, options);
     }
     await this.page.keyboard.press('Enter');
   }
 
   async closeAllTabs() {
-    await executeCommand(this.page, 'view: close all editor groups');
+    await executeCommand(this.page, 'View: Close All Editor Groups');
     await expect(this.page.locator('div.tab')).toBeHidden();
   }
 
-  async isFileTabVisible(fileName: string) {
-    const tabSelector = `div.tab:has-text("${fileName}")`;
+  async isTabWithNameVisible(name: string) {
+    const tabSelector = `div.tab:has-text("${name}")`;
     await expect(this.page.locator(tabSelector)).toBeVisible();
   }
 }

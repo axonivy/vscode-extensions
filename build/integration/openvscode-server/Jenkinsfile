@@ -1,0 +1,61 @@
+pipeline {
+  agent any
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+    disableConcurrentBuilds()
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  parameters {
+    string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product-engine/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip', description: 'engine that will be packaged')
+  }
+
+  stages {
+    stage('Build') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+          reuseNode true
+        }
+      }
+
+      steps {
+        script {
+          sh 'yarn update:axonivy:next'
+          sh 'yarn install'
+          sh 'yarn build:production'
+          sh 'yarn download:engine ' + params.engineDownloadUrl
+          sh 'yarn package'
+        }
+      }
+    }
+
+    stage('Playwright Tests') {
+      steps {
+        script {
+          docker.build('openvscode-server', '-f build/integration/openvscode-server/server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
+            docker.build('playwright', '-f build/integration/openvscode-server/playwright/Dockerfile .').inside("--network host") {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                sh 'yarn test:playwright:browser'
+              }
+              archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
+              withChecks('WebTests') {
+                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      cleanWs()
+    }
+  }
+} 

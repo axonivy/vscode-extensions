@@ -66,7 +66,7 @@ export class IvyEngineManager {
     return new Promise(resolve => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.childProcess.stdout?.on('data', function (data: any) {
-        const output = data.toString();
+        const output = data.toString() as string;
         if (output && output.startsWith('Go to http')) {
           const engineUrl = output.split('Go to ')[1].split(' to see')[0];
           resolve(engineUrl);

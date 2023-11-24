@@ -8,7 +8,3 @@ export async function executeCommand(page: Page, command: string) {
   await page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
   await expect(page.locator('.quick-input-list')).not.toBeVisible();
 }
-
-export async function executeCloseAllEditorGroupsCommand(page: Page) {
-  await executeCommand(page, 'View: Close All Editor Groups');
-}
