@@ -66,9 +66,10 @@ export class IvyEngineManager {
     return new Promise(resolve => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.childProcess.stdout?.on('data', function (data: any) {
-        const output = data.toString();
+        const output = data.toString() as string;
         if (output && output.startsWith('Go to http')) {
-          const engineUrl = output.split('Go to ')[1].split(' to see')[0];
+          const host = process.env.OPENVSCODE_SERVER_HOST ?? 'localhost';
+          const engineUrl = output.split('Go to ')[1].split(' to see')[0].replace('localhost', host);
           resolve(engineUrl);
         }
         outputChannel.append(output);
