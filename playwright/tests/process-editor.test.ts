@@ -20,7 +20,9 @@ test.describe('Process Editor', () => {
 
   test.beforeEach(async () => {
     processEditor = new ProcessEditor(page);
+    await page.waitForTimeout(10_000);
     await processEditor.openEditorFile();
+    await page.waitForTimeout(10_000);
     await processEditor.isViewVisible();
   });
 
