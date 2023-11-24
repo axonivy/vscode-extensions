@@ -4,8 +4,6 @@ ENV OPENVSCODE_SERVER_ROOT="/home/.openvscode-server"
 ENV OPENVSCODE="${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server"
 ENV IVY_EXTENSION="ivy-extension-11.2.0.vsix"
 
-ENV OPENVSCODE_SERVER_HOST="openvscode"
-
 COPY extension/${IVY_EXTENSION} /tmp/exts/
 COPY playwright/tests/workspaces/ /home/workspace
 

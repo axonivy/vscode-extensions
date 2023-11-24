@@ -3,6 +3,7 @@ pipeline {
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+    disableConcurrentBuilds()
   }
 
   triggers {
@@ -37,9 +38,7 @@ pipeline {
       steps {
         script {
           docker.build('openvscode-server', '-f build/integration/openvscode-server/server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
-            // docker.build('playwright', '-f build/integration/openvscode-server/playwright/Dockerfile .').inside("--link ${container.id}:openvscode -e OPENVSCODE_SERVER_HOST=openvscode") {
-            docker.build('playwright', '-f build/integration/openvscode-server/playwright/Dockerfile .').inside("--network host -e OPENVSCODE_SERVER_HOST=openvscode") {
-              sh 'npx playwright install'
+            docker.build('playwright', '-f build/integration/openvscode-server/playwright/Dockerfile .').inside("--network host") {
               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                 sh 'yarn test:playwright:browser'
               }
