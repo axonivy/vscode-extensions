@@ -6,7 +6,6 @@ import path from 'path';
 let electronApp: ElectronApplication;
 let browser: Browser;
 const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
-const host = process.env.OPENVSCODE_SERVER_HOST ?? 'localhost';
 
 export const test = base.extend<{ page: Page; pageFor(workspace: string): Promise<Page> }>({
   page: async ({}, use, testInfo) => {
@@ -46,7 +45,7 @@ async function launchElectron(workspace: string, testTitle: string): Promise<Pag
 async function launchBrowser(workspace: string): Promise<Page> {
   browser = await chromium.launch();
   const page = await browser.newPage();
-  await page.goto(`http://${host}:3000/?folder=/home/workspace/${path.basename(workspace)}`);
+  await page.goto(`http://localhost:3000/?folder=/home/workspace/${path.basename(workspace)}`);
   await page.waitForLoadState('networkidle');
   return page;
 }
