@@ -66,7 +66,8 @@ export class FileExplorer extends ExplorerView {
 
   async addFolder(name: string) {
     await this.executeCommand('File: New Folder');
-    await this.provideUserInput(name);
+    await this.typeText(name);
+    await this.page.keyboard.press('Enter');
   }
 
   async addNestedProject(rootFolder: string, projectName: string) {

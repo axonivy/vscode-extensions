@@ -17,6 +17,7 @@ import {
   toProgressOptions
 } from './project-request';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
+import { setStatusBarMessage } from '../../base/status-bar-message';
 
 export class IvyEngineApi {
   private readonly API_PATH = 'api/web-ide';
@@ -64,7 +65,7 @@ export class IvyEngineApi {
     await this.get(DEACTIVATE_PROJECTS_REQUEST, params);
     await this.get(DEPLOY_PROJECTS_REQUEST, params);
     await this.get(ACTIVATE_PROJECTS_REQUEST, params);
-    this.setStatusBarMessage(DEPLOY_PROJECTS_REQUEST);
+    setStatusBarMessage('Finished: ' + DEPLOY_PROJECTS_REQUEST.description);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
@@ -120,9 +121,5 @@ export class IvyEngineApi {
         resolve(await deleteRequest(url, params));
       })
     );
-  }
-
-  private setStatusBarMessage(projectRequest: ProjectRequest) {
-    vscode.window.setStatusBarMessage(`Successfully completed: ${projectRequest.description}`, 5_000);
   }
 }

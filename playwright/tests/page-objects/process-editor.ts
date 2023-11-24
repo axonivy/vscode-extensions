@@ -28,10 +28,6 @@ export class ProcessEditor extends Editor {
     return this.viewFrameLoactor().locator(type);
   }
 
-  async typeText(text: string) {
-    await this.page.keyboard.type(text);
-  }
-
   async openInscriptionView(pid?: string) {
     if (pid) {
       await this.locatorForPID(pid).dblclick();
@@ -49,6 +45,7 @@ export class ProcessEditor extends Editor {
 
   async startProcessAndAssertExecuted(startEvent: Locator, executedElement: Locator) {
     await startEvent.click();
+    await expect(startEvent).toHaveClass(/selected/);
     const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
     await playButton.click();
     await expect(executedElement).toHaveClass(/executed/);

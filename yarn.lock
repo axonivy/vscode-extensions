@@ -3581,10 +3581,10 @@
   resolved "https://npmjs-registry.ivyteam.io/@vscode/codicons/-/codicons-0.0.25.tgz#4ebc3e2c9e707ac46aea0becceda79f7738c647c"
   integrity sha512-uqPhTdADjwoCh5Ufbv0M6TZiiP2mqbfJVB4grhVx1k+YeP03LDMOHBWPsNwGKn4/0S5Mq9o1w1GeftvR031Gzg==
 
-"@vscode/test-electron@^2.3.4":
-  version "2.3.4"
-  resolved "https://npmjs-registry.ivyteam.io/@vscode/test-electron/-/test-electron-2.3.4.tgz#d0ed1de72d347221cdf71426b0c7e21136f4791f"
-  integrity sha512-eWzIqXMhvlcoXfEFNWrVu/yYT5w6De+WZXR/bafUQhAp8+8GkQo95Oe14phwiRUPv8L+geAKl/QM2+PoT3YW3g==
+"@vscode/test-electron@^2.3.8":
+  version "2.3.8"
+  resolved "https://npmjs-registry.ivyteam.io/@vscode/test-electron/-/test-electron-2.3.8.tgz#06a7c50b38cfac0ede833905e088d55c61cd12d3"
+  integrity sha512-b4aZZsBKtMGdDljAsOPObnAi7+VWIaYl3ylCz1jTs+oV6BZ4TNHcVNC3xUn0azPeszBmwSBDQYfFESIaUQnrOg==
   dependencies:
     http-proxy-agent "^4.0.1"
     https-proxy-agent "^5.0.0"

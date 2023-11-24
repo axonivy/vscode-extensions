@@ -35,12 +35,12 @@ export class VariablesEditor extends Editor {
     const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
     await keyField.click({ delay: 100 });
     await expect(keyField).toBeFocused();
-    await this.typeText(key);
+    await this.typeText(key, 100);
 
     const valueField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="2"][current-value=""]');
     await valueField.click({ delay: 100 });
     await expect(valueField).toBeFocused();
-    await this.typeText(value);
+    await this.typeText(value, 100);
   }
 
   async addParentNode(parent: string) {
@@ -48,15 +48,11 @@ export class VariablesEditor extends Editor {
     const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
     await keyField.click({ delay: 100 });
     await expect(keyField).toBeFocused();
-    await this.typeText(parent);
+    await this.typeText(parent, 100);
   }
 
   async clickButton(label: string) {
     const button = this.viewFrameLoactor().locator(`vscode-button[aria-label="${label}"]`).last();
     await button.click();
-  }
-
-  async typeText(text: string) {
-    await this.page.keyboard.type(text, { delay: 100 });
   }
 }

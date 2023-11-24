@@ -1,11 +1,15 @@
 import { Page, expect } from '@playwright/test';
-import { executeCommand } from '../utils/command';
 
 export abstract class PageObject {
   constructor(readonly page: Page) {}
 
   async executeCommand(command: string) {
-    await executeCommand(this.page, command);
+    await expect(this.page.locator('div.command-center')).toBeAttached();
+    await this.page.keyboard.press('F1');
+    await expect(this.page.locator('.quick-input-list')).toBeVisible();
+    await this.typeText(command);
+    await this.page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
+    await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
 
   async isExplorerActionItemChecked() {
@@ -21,21 +25,24 @@ export abstract class PageObject {
   }
 
   async provideUserInput(input?: string) {
-    const options = { delay: 50 };
-    await this.page.locator('.quick-input-widget').click(options);
+    await this.page.locator('div.quick-input-box').click();
     if (input) {
-      await this.page.keyboard.type(input, options);
+      await this.typeText(input);
     }
     await this.page.keyboard.press('Enter');
   }
 
   async closeAllTabs() {
-    await executeCommand(this.page, 'View: Close All Editor Groups');
+    await this.executeCommand('View: Close All Editor Groups');
     await expect(this.page.locator('div.tab')).toBeHidden();
   }
 
   async isTabWithNameVisible(name: string) {
     const tabSelector = `div.tab:has-text("${name}")`;
     await expect(this.page.locator(tabSelector)).toBeVisible();
+  }
+
+  async typeText(text: string, delay = 10) {
+    await this.page.keyboard.type(text, { delay });
   }
 }

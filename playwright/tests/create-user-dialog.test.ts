@@ -21,7 +21,7 @@ test.describe('Create User Dialog', () => {
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Successfully completed: Deploy Ivy Projects');
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test.afterEach(async () => {

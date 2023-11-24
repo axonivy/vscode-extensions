@@ -1,7 +1,10 @@
 import { Locator, Page, expect } from '@playwright/test';
+import { PageObject } from './page-object';
 
-export class InscriptionView {
-  constructor(readonly page: Page, readonly parent: Locator) {}
+export class InscriptionView extends PageObject {
+  constructor(page: Page, readonly parent: Locator) {
+    super(page);
+  }
 
   async assertViewVisible() {
     await expect(this.parent).toBeVisible();
@@ -28,7 +31,7 @@ export class InscriptionView {
   }
 
   async writeToMonacoEditorWithCompletion(input: string, expectedCompletion: string) {
-    await this.page.keyboard.type(input);
+    await this.typeText(input);
     const contentAssist = this.monacoContentAssist();
     await expect(contentAssist).toBeVisible();
     await expect(contentAssist).toContainText(expectedCompletion);
