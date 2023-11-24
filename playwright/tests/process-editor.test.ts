@@ -2,7 +2,7 @@ import { expect, test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { defaultWorkspacePath } from './workspaces/workspace';
-import { Page, chromium } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { getCtrlOrMeta } from './utils/keyboard';
 import { OutputView } from './page-objects/output-view';
 
@@ -16,12 +16,6 @@ test.describe('Process Editor', () => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
     await outputView.checkIfEngineStarted();
-
-    const browser = await chromium.launch();
-    const page2 = await browser.newPage();
-
-    await page2.goto(`http://${process.env.OPENVSCODE_SERVER_HOST ?? 'localhost'}:8080/`);
-    await page.waitForTimeout(5_000);
   });
 
   test.beforeEach(async () => {

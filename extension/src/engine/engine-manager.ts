@@ -71,6 +71,7 @@ export class IvyEngineManager {
           const host = process.env.OPENVSCODE_SERVER_HOST ?? 'localhost';
           outputChannel.append(host);
           const engineUrl = output.split('Go to ')[1].split(' to see')[0].replace('localhost', host);
+          outputChannel.append(engineUrl);
           resolve(engineUrl);
         }
         outputChannel.append(output);
