@@ -1,5 +1,4 @@
 {
     "engine.runEmbedded": true,
-    "window.zoomLevel": -1,
-    "security.workspace.trust.enabled": false
+    "window.zoomLevel": -1
 }
