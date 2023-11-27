@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 export class PageObject {
   constructor(readonly page: Page) {}
@@ -7,8 +7,7 @@ export class PageObject {
     await expect(this.page.locator('div.command-center')).toBeAttached();
     await this.page.keyboard.press('F1');
     await expect(this.page.locator('.quick-input-list')).toBeVisible();
-    await this.page
-      .locator('div.quick-input-box')
+    await this.quickInputBox()
       .locator('input.input')
       .fill('>' + command);
     await this.page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
@@ -28,11 +27,10 @@ export class PageObject {
   }
 
   async provideUserInput(input?: string) {
-    const inputBox = this.page.locator('div.quick-input-box');
     if (input) {
-      await inputBox.locator('input.input').fill(input);
+      await this.quickInputBox().locator('input.input').fill(input);
     }
-    await inputBox.press('Enter');
+    await this.quickInputBox().press('Enter');
   }
 
   async closeAllTabs() {
@@ -47,5 +45,9 @@ export class PageObject {
 
   async typeText(text: string, delay = 5) {
     await this.page.keyboard.type(text, { delay });
+  }
+
+  quickInputBox(): Locator {
+    return this.page.locator('div.quick-input-box');
   }
 }

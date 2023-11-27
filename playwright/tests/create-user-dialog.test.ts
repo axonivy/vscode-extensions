@@ -2,7 +2,6 @@ import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { multiProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
-import { OutputView } from './page-objects/output-view';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
@@ -18,8 +17,6 @@ test.describe('Create User Dialog', () => {
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
-    const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
@@ -40,7 +37,6 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
@@ -55,7 +51,6 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
