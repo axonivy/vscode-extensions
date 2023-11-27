@@ -2,6 +2,7 @@ import { Browser, ElectronApplication, Page, test as base, chromium } from '@pla
 import { defaultWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
 import path from 'path';
+import { PageObject } from '../page-objects/page-object';
 
 let electronApp: ElectronApplication;
 let browser: Browser;
@@ -47,5 +48,6 @@ async function launchBrowser(workspace: string): Promise<Page> {
   const page = await browser.newPage();
   await page.goto(`http://localhost:3000/?folder=/home/workspace/${path.basename(workspace)}`);
   await page.waitForLoadState('networkidle');
+  await new PageObject(page).closeAllTabs();
   return page;
 }

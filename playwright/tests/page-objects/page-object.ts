@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-export abstract class PageObject {
+export class PageObject {
   constructor(readonly page: Page) {}
 
   async executeCommand(command: string) {
