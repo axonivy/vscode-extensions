@@ -42,7 +42,7 @@ export class PageObject {
     await expect(this.page.locator(tabSelector)).toBeVisible();
   }
 
-  async typeText(text: string, delay = 10) {
+  async typeText(text: string, delay = 5) {
     await this.page.keyboard.type(text, { delay });
   }
 }

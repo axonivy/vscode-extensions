@@ -40,14 +40,20 @@ async function close() {
 
 async function launchElectron(workspace: string, testTitle: string): Promise<Page> {
   electronApp = await launchElectronApp(workspace, testTitle);
-  return await electronApp.firstWindow();
+  const page = await electronApp.firstWindow();
+  await initialize(page);
+  return page;
 }
 
 async function launchBrowser(workspace: string): Promise<Page> {
   browser = await chromium.launch();
   const page = await browser.newPage();
   await page.goto(`http://localhost:3000/?folder=/home/workspace/${path.basename(workspace)}`);
+  await initialize(page);
+  return page;
+}
+
+async function initialize(page: Page) {
   await page.waitForLoadState('networkidle');
   await new PageObject(page).closeAllTabs();
-  return page;
 }
