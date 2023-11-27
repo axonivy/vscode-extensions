@@ -15,7 +15,7 @@ test.describe('Create User Dialog', () => {
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'src_hd');
   const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
 
-  test.beforeEach(async ({}, testInfo) => {
+  test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
@@ -40,6 +40,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
@@ -48,12 +49,13 @@ test.describe('Create User Dialog', () => {
 
   test('Add Offline Dialog', async () => {
     const name = 'testOfflineDialog';
-    await explorer.addUserDialog(projectName, name, 'ch.ivyteam.test', 'Offline Dialog');
+    await explorer.addUserDialog(projectName, name, 'ch.ivyteam.test.offline', 'Offline Dialog');
     await explorer.hasNode(`${name}.rddescriptor`);
     await explorer.hasNode(`${name}.xhtml`);
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     processEditor = getProcessEditor(name + 'Process');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');

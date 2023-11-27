@@ -47,7 +47,7 @@ export class ProcessEditor extends Editor {
     await startEvent.click();
     await expect(startEvent).toHaveClass(/selected/);
     const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
-    await playButton.click();
+    await playButton.click({ force: true });
     await expect(executedElement).toHaveClass(/executed/);
   }
 }
