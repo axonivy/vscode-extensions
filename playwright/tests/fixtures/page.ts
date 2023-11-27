@@ -54,6 +54,7 @@ async function launchBrowser(workspace: string): Promise<Page> {
 }
 
 async function initialize(page: Page) {
-  await page.waitForLoadState('networkidle');
-  await new PageObject(page).closeAllTabs();
+  const pageObject = new PageObject(page);
+  await pageObject.hasStatusMessage('Axon Ivy Extension activated');
+  await pageObject.closeAllTabs();
 }

@@ -7,7 +7,10 @@ export class PageObject {
     await expect(this.page.locator('div.command-center')).toBeAttached();
     await this.page.keyboard.press('F1');
     await expect(this.page.locator('.quick-input-list')).toBeVisible();
-    await this.typeText(command);
+    await this.page
+      .locator('div.quick-input-box')
+      .locator('input.input')
+      .fill('>' + command);
     await this.page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
     await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
@@ -25,11 +28,11 @@ export class PageObject {
   }
 
   async provideUserInput(input?: string) {
-    await this.page.locator('div.quick-input-box').click();
+    const inputBox = this.page.locator('div.quick-input-box');
     if (input) {
-      await this.typeText(input);
+      await inputBox.locator('input.input').fill(input);
     }
-    await this.page.keyboard.press('Enter');
+    await inputBox.press('Enter');
   }
 
   async closeAllTabs() {

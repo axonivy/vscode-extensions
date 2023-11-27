@@ -9,6 +9,7 @@ import { activateProcessEditor } from './process-editor/ivy-extension';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
 import { NewUserDialogParams } from './project-explorer/new-user-dialog';
+import { setStatusBarMessage } from './base/status-bar-message';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -40,6 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
   });
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));
+  setStatusBarMessage('Axon Ivy Extension activated');
 }
 
 export async function deactivate() {
