@@ -16,7 +16,6 @@ export abstract class ExplorerView extends View {
   }
 
   async isHidden() {
-    await this.page.waitForLoadState('networkidle');
     await expect(this.tabLocator).toBeHidden();
   }
 
