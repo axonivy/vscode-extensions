@@ -53,7 +53,7 @@ export abstract class ExplorerView extends View {
     await expect(selected).toContainText(name);
   }
 
-  async doubleClickExpandable(name: string) {
+  async doubleClickNode(name: string) {
     await this.viewLocator.getByText(name).dblclick();
   }
 }

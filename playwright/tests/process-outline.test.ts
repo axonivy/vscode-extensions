@@ -52,11 +52,11 @@ test.describe('Process Outline', () => {
     await explorer.selectNode('start.ivp');
     await expect(start).toHaveClass(/selected/);
 
-    await explorer.doubleClickExpandable('Sub 1');
+    await explorer.doubleClickNode('Sub 1');
     await explorer.hasNode('Accept Request');
     await explorer.selectNode('Accept Request');
     await expect(ut).toBeVisible();
-    await explorer.doubleClickExpandable('Sub 1');
+    await explorer.doubleClickNode('Sub 1');
 
     await explorer.selectNode('start.ivp');
     await expect(start).toBeVisible();

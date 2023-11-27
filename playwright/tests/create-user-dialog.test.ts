@@ -12,13 +12,13 @@ test.describe('Create User Dialog', () => {
   let processEditor: ProcessEditor;
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'src_hd');
-  const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     explorer = new FileExplorer(page);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    processEditor = new ProcessEditor(page);
   });
 
   test.afterEach(async () => {
@@ -37,8 +37,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
-    processEditor = getProcessEditor(name + 'Process');
-    await processEditor.openEditorFile();
+    await explorer.doubleClickNode(`${name}Process.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
     await expect(start).toBeVisible();
   });
@@ -51,8 +50,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
-    processEditor = getProcessEditor(name + 'Process');
-    await processEditor.openEditorFile();
+    await explorer.doubleClickNode(`${name}Process.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
     await expect(start).toBeVisible();
   });
