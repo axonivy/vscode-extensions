@@ -37,8 +37,8 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
     registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
     registerCmd(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
-    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'Html Dialog'));
-    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'Offline Dialog'));
+    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSF'));
+    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSFOffline'));
     registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }

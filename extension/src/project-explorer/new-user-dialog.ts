@@ -2,9 +2,9 @@ import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf } from './util';
 
-export type DialogType = 'Html Dialog' | 'Offline Dialog';
+export type DialogType = 'JSF' | 'JSFOffline';
 
-const templates = [
+const layouts = [
   'Page Responsive Grid 2 Columns',
   'Page Responsive Grid 4 Columns',
   'Page Responsive Top Labels',
@@ -12,17 +12,17 @@ const templates = [
   'Component',
   'Page'
 ] as const;
-type Template = (typeof templates)[number];
-
-const layouts = ['frame-10', 'frame-10-right', 'frame-10-full-width', 'basic-10'] as const;
 type Layout = (typeof layouts)[number];
+
+const templates = ['frame-10', 'frame-10-right', 'frame-10-full-width', 'basic-10'] as const;
+type Template = (typeof templates)[number];
 
 export interface NewUserDialogParams {
   namespace: string;
   name: string;
   type: DialogType;
-  template: Template;
-  layout?: Layout;
+  template?: Template;
+  layout: Layout;
   projectDir: string;
 }
 
@@ -42,18 +42,18 @@ async function collectNewUserDialogParams(type: DialogType, projectDir: string):
   if (!namespace) {
     return;
   }
-  if (type === 'Offline Dialog') {
-    return { name, namespace, type, template: 'Page', projectDir };
-  }
-  const template = await collectTemplate();
-  if (!template) {
-    return;
-  }
-  if (template === 'Component') {
-    return { name, namespace, type, template, projectDir };
+  if (type === 'JSFOffline') {
+    return { name, namespace, type, layout: 'Page', projectDir };
   }
   const layout = await collectLayout();
   if (!layout) {
+    return;
+  }
+  if (layout === 'Component') {
+    return { name, namespace, type, layout, projectDir };
+  }
+  const template = await collectTemplate();
+  if (!template) {
     return;
   }
   return { name, namespace, type, template: template, layout, projectDir };
@@ -78,21 +78,21 @@ async function collectNamespace(projectDir: string): Promise<string | undefined>
   });
 }
 
-async function collectTemplate(): Promise<Template> {
+async function collectLayout(): Promise<Layout> {
   return (await vscode.window.showQuickPick(
-    templates.filter(t => t !== 'Page'),
+    layouts.filter(t => t !== 'Page'),
     {
-      title: 'Select View Type',
+      title: 'Select Layout',
       ignoreFocusOut: true
     }
-  )) as Template;
+  )) as Layout;
 }
 
-async function collectLayout(): Promise<Layout> {
-  return (await vscode.window.showQuickPick(layouts, {
-    title: 'Select Layout',
+async function collectTemplate(): Promise<Template> {
+  return (await vscode.window.showQuickPick(templates, {
+    title: 'Select Template',
     ignoreFocusOut: true
-  })) as Layout;
+  })) as Template;
 }
 
 function validateUserDialogName(value: string): string | undefined {
