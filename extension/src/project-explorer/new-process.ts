@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { executeCommand } from '../base/commands';
-import path from 'path';
+import { resolveNamespaceFromPath } from './util';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
 
@@ -26,7 +26,7 @@ async function collectNewProcessParams(
   projectDir: string,
   kind: ProcessKind
 ): Promise<NewProcessParams | undefined> {
-  const resolvedNamespace = await resolveNamespaceFromPath(selectedUri, projectDir);
+  const resolvedNamespace = await resolveNamespaceFromPath(selectedUri, projectDir, 'processes');
   const placeHolder = 'newProcessName';
   const nameWithNamespace = await vscode.window.showInputBox({
     title: 'Process Name',
@@ -44,17 +44,6 @@ async function collectNewProcessParams(
   const name = nameWithNamespace.substring(nameStartIndex, nameWithNamespace.length);
   const namespace = nameWithNamespace.substring(0, nameStartIndex);
   return { name, kind, path: projectDir, namespace };
-}
-
-async function resolveNamespaceFromPath(selectedUri: vscode.Uri, projectDir: string): Promise<string | undefined> {
-  const fileStat = await vscode.workspace.fs.stat(selectedUri);
-  const selectedPath = fileStat.type === vscode.FileType.File ? path.dirname(selectedUri.path) : selectedUri.path;
-  const processPath = path.join(projectDir, 'processes') + path.sep;
-  if (selectedPath.startsWith(processPath)) {
-    const namespace = selectedPath.replace(processPath, '').replaceAll(path.sep, '/');
-    return namespace + '/';
-  }
-  return undefined;
 }
 
 function validateNameWithNamespace(value: string): string | undefined {

@@ -1,6 +1,6 @@
 import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
-import { defaultNamespaceOf } from './util';
+import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
 
 export type DialogType = 'JSF' | 'JSFOffline';
 
@@ -26,19 +26,23 @@ export interface NewUserDialogParams {
   projectDir: string;
 }
 
-export async function addNewUserDialog(projectDir: string, type: DialogType) {
-  const input = await collectNewUserDialogParams(type, projectDir);
+export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType) {
+  const input = await collectNewUserDialogParams(selectedUri, type, projectDir);
   if (input) {
     executeCommand('engine.createUserDialog', input);
   }
 }
 
-async function collectNewUserDialogParams(type: DialogType, projectDir: string): Promise<NewUserDialogParams | undefined> {
+async function collectNewUserDialogParams(
+  selectedUri: vscode.Uri,
+  type: DialogType,
+  projectDir: string
+): Promise<NewUserDialogParams | undefined> {
   const name = await collectName();
   if (!name) {
     return;
   }
-  const namespace = await collectNamespace(projectDir);
+  const namespace = await collectNamespace(selectedUri, projectDir);
   if (!namespace) {
     return;
   }
@@ -68,11 +72,13 @@ async function collectName(): Promise<string | undefined> {
   });
 }
 
-async function collectNamespace(projectDir: string): Promise<string | undefined> {
-  const namespace = await defaultNamespaceOf(projectDir);
+async function collectNamespace(selectedUri: vscode.Uri, projectDir: string): Promise<string | undefined> {
+  const namespaceFromPath = await resolveNamespaceFromPath(selectedUri, projectDir, 'src_hd');
+  const namespace = namespaceFromPath ? namespaceFromPath : await defaultNamespaceOf(projectDir);
   return vscode.window.showInputBox({
     title: 'User Dialog Namespace',
     value: namespace,
+    valueSelection: [namespace.length, -1],
     ignoreFocusOut: true,
     validateInput: validateNamespace
   });

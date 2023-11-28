@@ -89,7 +89,7 @@ export class IvyProjectExplorer {
   private async addUserDialog(selection: TreeSelection, type: DialogType) {
     treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(async projectDir =>
       projectDir
-        ? addNewUserDialog(projectDir, type)
+        ? addNewUserDialog(await treeSelectionToUri(selection), projectDir, type)
         : vscode.window.showWarningMessage('Add User Dialog: no valid Axon Ivy Project selected.')
     );
   }
