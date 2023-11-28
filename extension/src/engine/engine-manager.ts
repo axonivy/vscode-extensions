@@ -52,7 +52,7 @@ export class IvyEngineManager {
 
   private async startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
     const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
-    outputChannel.show();
+    outputChannel.show(true);
     const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
     const engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine', 'bin', executable).fsPath;
     const env = {

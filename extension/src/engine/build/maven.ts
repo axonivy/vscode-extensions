@@ -21,10 +21,9 @@ export class MavenBuilder {
 
   async buildProject(ivyProjectDir: string) {
     const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
-    this.outputChannel.show();
+    this.outputChannel.show(true);
     childProcess.on('error', (error: Error) => {
       this.outputChannel.append(error.message);
-      this.outputChannel.show();
       throw error;
     });
     if (childProcess.stdout) {
