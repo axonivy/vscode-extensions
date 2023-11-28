@@ -5,8 +5,7 @@ export class BrowserView extends View {
   constructor(page: Page) {
     const outputViewData: ViewData = {
       tabSelector: 'li.action-item:has-text("Browser")',
-      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true',
-      viewName: 'Browser'
+      viewSelector: 'body > div > div:not([data-parent-flow-to-element-id]) >> visible = true'
     };
     super(outputViewData, page);
   }
