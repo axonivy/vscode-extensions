@@ -32,11 +32,13 @@ export class VariablesEditor extends Editor {
 
   async add(key: string, value: string) {
     await this.clickButton('Add');
-    const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]').locator('input');
-    await keyField.fill(key);
+    const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
+    await keyField.click({ delay: 100 });
+    await this.typeText(key, 100);
 
     const valueField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="2"][current-value=""]').locator('input');
-    await valueField.fill(value);
+    await valueField.click({ delay: 100 });
+    await this.typeText(value, 100);
   }
 
   async addParentNode(parent: string) {

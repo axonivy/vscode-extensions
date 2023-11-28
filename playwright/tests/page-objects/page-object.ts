@@ -30,6 +30,7 @@ export class PageObject {
     if (input) {
       await this.quickInputBox().locator('input.input').fill(input);
     }
+    await this.quickInputBox().click({ delay: 100 });
     await this.quickInputBox().press('Enter');
   }
 

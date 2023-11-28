@@ -14,6 +14,7 @@ test.describe('Create Process', () => {
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
   const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
+  const wait = async () => await page.waitForTimeout(3_000);
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
@@ -43,6 +44,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add nested business process', async () => {
+    await wait();
     await explorer.addProcess(projectName, 'parent1/parent2/child', 'Business Process');
     await explorer.hasNoNode('parent1');
     await explorer.hasNoNode('parent2');
@@ -53,6 +55,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add callable sub process', async () => {
+    await wait();
     await explorer.addProcess(projectName, 'testCallableSubProcess', 'Callable Sub Process');
     await explorer.hasNoNode('testCallableSubProcess.p.json');
     processEditor = getProcessEditor('testCallableSubProcess');
@@ -61,6 +64,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add web service process', async () => {
+    await wait();
     await explorer.addProcess(projectName, 'testWebServiceProcess', 'Web Service Process');
     await explorer.hasNoNode('testWebServiceProcess.p.json');
     processEditor = getProcessEditor('testWebServiceProcess');
