@@ -2,6 +2,7 @@ import { Browser, ElectronApplication, Page, test as base, chromium } from '@pla
 import { defaultWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
 import path from 'path';
+import { PageObject } from '../page-objects/page-object';
 
 let electronApp: ElectronApplication;
 let browser: Browser;
@@ -39,13 +40,21 @@ async function close() {
 
 async function launchElectron(workspace: string, testTitle: string): Promise<Page> {
   electronApp = await launchElectronApp(workspace, testTitle);
-  return await electronApp.firstWindow();
+  const page = await electronApp.firstWindow();
+  await initialize(page);
+  return page;
 }
 
 async function launchBrowser(workspace: string): Promise<Page> {
   browser = await chromium.launch();
   const page = await browser.newPage();
   await page.goto(`http://localhost:3000/?folder=/home/workspace/${path.basename(workspace)}`);
-  await page.waitForLoadState('networkidle');
+  await initialize(page);
   return page;
+}
+
+async function initialize(page: Page) {
+  const pageObject = new PageObject(page);
+  await pageObject.hasStatusMessage('Axon Ivy Extension activated');
+  await pageObject.closeAllTabs();
 }

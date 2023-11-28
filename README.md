@@ -36,7 +36,7 @@ Build the openvscode-server docker image using the Dockerfile located under `/bu
 
 Then run the container using
 
-- `docker run -it --init -p 3000:3000 -p 8080:8080 -p 8081:8081 -p 8082:8082  openvscodeserver --disable-workspace-trust `
+- `docker run -it --init -p 3000:3000 -p 8080:8080 -p 8081:8081 -p 8082:8082  openvscodeserver --disable-workspace-trust`
 
 Finally
 

@@ -16,7 +16,6 @@ export abstract class ExplorerView extends View {
   }
 
   async isHidden() {
-    await this.page.waitForLoadState('networkidle');
     await expect(this.tabLocator).toBeHidden();
   }
 
@@ -54,7 +53,7 @@ export abstract class ExplorerView extends View {
     await expect(selected).toContainText(name);
   }
 
-  async doubleClickExpandable(name: string) {
+  async doubleClickNode(name: string) {
     await this.viewLocator.getByText(name).dblclick();
   }
 }
@@ -66,7 +65,8 @@ export class FileExplorer extends ExplorerView {
 
   async addFolder(name: string) {
     await this.executeCommand('File: New Folder');
-    await this.provideUserInput(name);
+    await this.typeText(name);
+    await this.page.keyboard.press('Enter');
   }
 
   async addNestedProject(rootFolder: string, projectName: string) {
