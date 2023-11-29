@@ -4,6 +4,7 @@ import { expect } from 'playwright/test';
 import { Editor } from './editor';
 import { InscriptionView } from './inscription-view';
 import { Locator } from '@playwright/test';
+import { timeout } from '../utils/timeout';
 
 export class ProcessEditor extends Editor {
   constructor(page: Page, editorFile: string = 'ProcurementRequestUserTask.p.json') {
@@ -44,7 +45,7 @@ export class ProcessEditor extends Editor {
   }
 
   async startProcessAndAssertExecuted(startEvent: Locator, executedElement: Locator) {
-    await startEvent.click({ delay: 1_000 });
+    await startEvent.click({ delay: timeout });
     await expect(startEvent).toHaveClass(/selected/);
     const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
     await playButton.click();

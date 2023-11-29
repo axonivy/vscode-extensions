@@ -5,6 +5,7 @@ import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
+import { wait } from './utils/timeout';
 
 test.describe('Create User Dialog', () => {
   let page: Page;
@@ -19,6 +20,10 @@ test.describe('Create User Dialog', () => {
     explorer = new FileExplorer(page);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     processEditor = new ProcessEditor(page);
+  });
+
+  test.beforeEach(async () => {
+    await wait(page);
   });
 
   test.afterEach(async () => {

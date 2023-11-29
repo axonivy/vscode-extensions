@@ -2,10 +2,10 @@ import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { multiProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
-import { OutputView } from './page-objects/output-view';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
+import { wait } from './utils/timeout';
 
 test.describe('Create Process', () => {
   let page: Page;
@@ -14,15 +14,16 @@ test.describe('Create Process', () => {
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
   const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
-  const wait = async () => await page.waitForTimeout(3_000);
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
-    const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+  });
+
+  test.beforeEach(async () => {
+    await wait(page);
   });
 
   test.afterEach(async () => {
@@ -44,7 +45,6 @@ test.describe('Create Process', () => {
   });
 
   test('Add nested business process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'parent1/parent2/child', 'Business Process');
     await explorer.hasNoNode('parent1');
     await explorer.hasNoNode('parent2');
@@ -55,7 +55,6 @@ test.describe('Create Process', () => {
   });
 
   test('Add callable sub process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'testCallableSubProcess', 'Callable Sub Process');
     await explorer.hasNoNode('testCallableSubProcess.p.json');
     processEditor = getProcessEditor('testCallableSubProcess');
@@ -64,7 +63,6 @@ test.describe('Create Process', () => {
   });
 
   test('Add web service process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'testWebServiceProcess', 'Web Service Process');
     await explorer.hasNoNode('testWebServiceProcess.p.json');
     processEditor = getProcessEditor('testWebServiceProcess');
