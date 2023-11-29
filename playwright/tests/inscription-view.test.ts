@@ -13,7 +13,7 @@ test.describe('Inscription View', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
     const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
+    await outputView.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test.beforeEach(async () => {
