@@ -10,7 +10,7 @@ export class PageObject {
     await this.quickInputBox()
       .locator('input.input')
       .fill('>' + command);
-    await this.page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
+    await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).click();
     await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
 
@@ -50,5 +50,14 @@ export class PageObject {
 
   quickInputBox(): Locator {
     return this.page.locator('div.quick-input-box');
+  }
+
+  async saveAllFiles() {
+    await this.executeCommand('File: Save All Files');
+    await expect(this.page.locator('div.dirty')).toBeHidden();
+  }
+
+  async activeEditorHasText(text: string) {
+    await expect(this.page.locator('div.editor-container')).toContainText(text);
   }
 }

@@ -39,6 +39,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
+    await processEditor.activeEditorHasText('>Html Dialog</a>');
     await explorer.doubleClickNode(`${name}Process.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
     await expect(start).toBeVisible();
@@ -52,6 +53,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${name}Data.ivyClass`);
     await explorer.hasNode(`${name}Process.p.json`);
     await explorer.isTabWithNameVisible(name + '.xhtml');
+    await processEditor.activeEditorHasText('>Offline Html Dialog</a>');
     await explorer.doubleClickNode(`${name}Process.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
     await expect(start).toBeVisible();

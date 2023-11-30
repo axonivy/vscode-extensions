@@ -23,7 +23,7 @@ test.describe('Create Process', () => {
   });
 
   test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
+    await processEditor.closeAllTabs();
     await wait(page);
   });
 
@@ -38,6 +38,14 @@ test.describe('Create Process', () => {
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
+  });
+
+  test('Assert that process gets redeployed after editing', async () => {
+    await explorer.addProcess(projectName, 'addScriptToMe', 'Business Process');
+    const start = processEditor.locatorForElementType('g.start\\:requestStart');
+    await processEditor.appendActivityAndSave(start, 'Script');
+    const script = processEditor.locatorForElementType('g.script');
+    await processEditor.startProcessAndAssertExecuted(start, script);
   });
 
   test('Add nested business process', async () => {
