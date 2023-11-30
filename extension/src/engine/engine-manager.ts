@@ -124,6 +124,7 @@ export class IvyEngineManager {
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
+    await executeCommand('setContext', 'ivy:hasIvyProjects', true);
     if (!this.started) {
       await this.start();
     }
