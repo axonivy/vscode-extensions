@@ -4,7 +4,6 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { defaultWorkspacePath } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { getCtrlOrMeta } from './utils/keyboard';
-import { OutputView } from './page-objects/output-view';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
@@ -14,12 +13,11 @@ test.describe('Process Editor', () => {
 
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
-    const outputView = new OutputView(page);
-    await outputView.hasStatusMessage('Finished: Deploy Ivy Projects');
+    processEditor = new ProcessEditor(page);
+    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test.beforeEach(async () => {
-    processEditor = new ProcessEditor(page);
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });
