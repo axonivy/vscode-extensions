@@ -154,7 +154,7 @@ export class IvyEngineManager {
 
   async stop() {
     if (this.childProcess) {
-      this.stopEmbeddedEngine();
+      await this.stopEmbeddedEngine();
     }
   }
 

@@ -46,7 +46,7 @@ export class IvyProjectExplorer {
   }
 
   private defineFileWatchers() {
-    vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(() => this.refresh());
+    vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(async () => await this.refresh());
     vscode.workspace.createFileSystemWatcher('**/*', true, true, false).onDidDelete(e =>
       this.treeDataProvider
         .getIvyProjects()
