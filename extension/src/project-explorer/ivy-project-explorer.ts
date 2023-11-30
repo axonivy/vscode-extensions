@@ -23,7 +23,9 @@ export class IvyProjectExplorer {
     this.treeDataProvider.onDidCreateTreeItem(entry => {
       this.revealActiveEntry(entry);
     });
-    this.hasIvyProjects().then(hasIvyProjects => this.setProjectExplorerActivationCondition(hasIvyProjects));
+    this.hasIvyProjects().then(hasIvyProjects =>
+      this.setProjectExplorerActivationCondition(hasIvyProjects).then(() => this.activateEngineExtension(hasIvyProjects))
+    );
   }
 
   private registerCommands(context: vscode.ExtensionContext) {
@@ -70,8 +72,8 @@ export class IvyProjectExplorer {
   private async refresh() {
     this.treeDataProvider.refresh();
     const hasIvyProjects = await this.hasIvyProjects();
-    this.setProjectExplorerActivationCondition(hasIvyProjects);
-    this.activateEngineExtension(hasIvyProjects);
+    await this.setProjectExplorerActivationCondition(hasIvyProjects);
+    await this.activateEngineExtension(hasIvyProjects);
   }
 
   private async execute(command: Command, selection: TreeSelection) {
@@ -94,13 +96,13 @@ export class IvyProjectExplorer {
     );
   }
 
-  private setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
-    executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
+  private async setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
+    await executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
-  private activateEngineExtension(hasIvyProjects: boolean) {
+  private async activateEngineExtension(hasIvyProjects: boolean) {
     if (hasIvyProjects) {
-      executeCommand('engine.startIvyEngineManager');
+      await executeCommand('engine.startIvyEngineManager');
     }
   }
 
