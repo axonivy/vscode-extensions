@@ -22,12 +22,9 @@ test.describe('Create Process', () => {
     await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
-  test.beforeEach(async () => {
-    await wait(page);
-  });
-
   test.afterEach(async () => {
     await processEditor.revertAndCloseEditor();
+    await wait(page);
   });
 
   test.afterAll(async () => {

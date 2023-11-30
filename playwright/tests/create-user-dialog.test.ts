@@ -22,12 +22,9 @@ test.describe('Create User Dialog', () => {
     processEditor = new ProcessEditor(page);
   });
 
-  test.beforeEach(async () => {
-    await wait(page);
-  });
-
   test.afterEach(async () => {
     await explorer.closeAllTabs();
+    await wait(page);
   });
 
   test.afterAll(async () => {
