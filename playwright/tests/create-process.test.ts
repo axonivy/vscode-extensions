@@ -2,10 +2,10 @@ import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { multiProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
-import { OutputView } from './page-objects/output-view';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
+import { wait } from './utils/timeout';
 
 test.describe('Create Process', () => {
   let page: Page;
@@ -13,20 +13,18 @@ test.describe('Create Process', () => {
   let processEditor: ProcessEditor;
   const projectName = 'prebuiltProject';
   const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
-  const getProcessEditor = (processName: string) => new ProcessEditor(page, `${processName}.p.json`);
-  const wait = async () => await page.waitForTimeout(3_000);
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
-    const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    processEditor = new ProcessEditor(page);
+    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test.afterEach(async () => {
     await processEditor.revertAndCloseEditor();
+    await wait(page);
   });
 
   test.afterAll(async () => {
@@ -36,7 +34,6 @@ test.describe('Create Process', () => {
   test('Add business process and execute it', async () => {
     await explorer.addProcess(projectName, 'testBusinessProcess', 'Business Process');
     await explorer.hasNoNode('testBusinessProcess.p.json');
-    processEditor = getProcessEditor('testBusinessProcess');
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
@@ -44,30 +41,24 @@ test.describe('Create Process', () => {
   });
 
   test('Add nested business process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'parent1/parent2/child', 'Business Process');
     await explorer.hasNoNode('parent1');
     await explorer.hasNoNode('parent2');
     await explorer.hasNoNode('child.p.json');
-    processEditor = getProcessEditor('child');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await expect(start).toBeVisible();
   });
 
   test('Add callable sub process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'testCallableSubProcess', 'Callable Sub Process');
     await explorer.hasNoNode('testCallableSubProcess.p.json');
-    processEditor = getProcessEditor('testCallableSubProcess');
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
     await expect(start).toBeVisible();
   });
 
   test('Add web service process', async () => {
-    await wait();
     await explorer.addProcess(projectName, 'testWebServiceProcess', 'Web Service Process');
     await explorer.hasNoNode('testWebServiceProcess.p.json');
-    processEditor = getProcessEditor('testWebServiceProcess');
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
     await expect(start).toBeVisible();
   });

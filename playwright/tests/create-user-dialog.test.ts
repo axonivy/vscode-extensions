@@ -5,6 +5,7 @@ import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
+import { wait } from './utils/timeout';
 
 test.describe('Create User Dialog', () => {
   let page: Page;
@@ -23,6 +24,7 @@ test.describe('Create User Dialog', () => {
 
   test.afterEach(async () => {
     await explorer.closeAllTabs();
+    await wait(page);
   });
 
   test.afterAll(async () => {

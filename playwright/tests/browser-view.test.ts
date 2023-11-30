@@ -1,7 +1,6 @@
 import { Page, expect, test } from '@playwright/test';
 import { pageFor } from './fixtures/page';
 import { defaultWorkspacePath } from './workspaces/workspace';
-import { OutputView } from './page-objects/output-view';
 import { BrowserView } from './page-objects/browser-view';
 
 test.describe('Browser View', () => {
@@ -11,8 +10,7 @@ test.describe('Browser View', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
     browserView = new BrowserView(page);
-    const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
+    await browserView.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test('Toolbar', async () => {

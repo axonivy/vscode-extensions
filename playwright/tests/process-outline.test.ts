@@ -3,7 +3,6 @@ import { pageFor } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { defaultWorkspacePath } from './workspaces/workspace';
 import { Page } from '@playwright/test';
-import { OutputView } from './page-objects/output-view';
 import { OutlineExplorerView } from './page-objects/explorer-view';
 
 test.describe('Process Outline', () => {
@@ -12,12 +11,11 @@ test.describe('Process Outline', () => {
 
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
-    const outputView = new OutputView(page);
-    await outputView.checkIfEngineStarted();
+    processEditor = new ProcessEditor(page, 'ProcessOutline.p.json');
+    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
 
   test.beforeEach(async () => {
-    processEditor = new ProcessEditor(page, 'ProcessOutline.p.json');
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });

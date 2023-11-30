@@ -124,6 +124,7 @@ export class IvyEngineManager {
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
+    await executeCommand('setContext', 'ivy:hasIvyProjects', true);
     if (!this.started) {
       await this.start();
     }
@@ -154,7 +155,7 @@ export class IvyEngineManager {
 
   async stop() {
     if (this.childProcess) {
-      this.stopEmbeddedEngine();
+      await this.stopEmbeddedEngine();
     }
   }
 

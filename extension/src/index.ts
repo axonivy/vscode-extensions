@@ -14,8 +14,6 @@ import { setStatusBarMessage } from './base/status-bar-message';
 let ivyEngineManager: IvyEngineManager;
 
 export async function activate(context: vscode.ExtensionContext) {
-  const projectExplorer = new IvyProjectExplorer(context);
-
   ivyEngineManager = new IvyEngineManager(context);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
@@ -34,11 +32,7 @@ export async function activate(context: vscode.ExtensionContext) {
   registerCmd('engine.openEngineCockpit', () => ivyEngineManager.openEngineCockpit());
   registerCmd('engine.startProcess', (processStartUri: string) => ivyEngineManager.startProcess(processStartUri));
   registerCmd('engine.deleteProject', (ivyProjectDirectory: string) => ivyEngineManager.deleteProject(ivyProjectDirectory));
-  projectExplorer.hasIvyProjects().then(hasIvyProjcts => {
-    if (hasIvyProjcts) {
-      ivyEngineManager.start();
-    }
-  });
+  new IvyProjectExplorer(context);
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));
   setStatusBarMessage('Axon Ivy Extension activated');
