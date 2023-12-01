@@ -57,8 +57,14 @@ export class PageObject {
   }
 
   async saveAllFiles() {
-    await this.executeCommand('File: Save All Files');
-    await expect(this.page.locator('div.dirty')).toBeHidden();
+    const dirtyLocator = this.page.locator('div.dirty');
+    if (await dirtyLocator.isHidden()) {
+      return;
+    }
+    await expect(async () => {
+      this.executeCommand('File: Save All Files');
+      expect(await dirtyLocator.isHidden()).toBeTruthy();
+    }).toPass();
   }
 
   async activeEditorHasText(text: string) {
