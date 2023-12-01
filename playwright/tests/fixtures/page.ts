@@ -21,7 +21,6 @@ export const test = base.extend<{ page: Page; pageFor(workspace: string): Promis
 });
 
 export async function pageFor(workspace: string, testTitle: string): Promise<Page> {
-  console.log('hello ****', process.env.RUN_IN_BRWOSER, runInBrowser);
   await close();
   if (runInBrowser) {
     return launchBrowser(workspace);

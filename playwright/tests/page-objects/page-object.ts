@@ -10,7 +10,7 @@ export class PageObject {
     await this.quickInputBox()
       .locator('input.input')
       .fill('>' + command);
-    await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).click();
+    await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).click({ force: true });
     await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
 

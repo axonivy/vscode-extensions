@@ -1,7 +1,7 @@
 import { ElectronApplication, _electron } from '@playwright/test';
 import { downloadAndUnzipVSCode } from '@vscode/test-electron';
 import * as path from 'path';
-import { downloadVersion } from './download-vscode';
+import { downloadVersion } from './download-version';
 
 const args = [
   '--disable-updates',
