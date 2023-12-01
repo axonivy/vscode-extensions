@@ -1,6 +1,7 @@
 import { ElectronApplication, _electron } from '@playwright/test';
 import { downloadAndUnzipVSCode } from '@vscode/test-electron';
 import * as path from 'path';
+import { downloadVersion } from './download-vscode';
 
 const args = [
   '--disable-updates',
@@ -14,7 +15,7 @@ const args = [
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
   return await _electron.launch({
-    executablePath: await downloadAndUnzipVSCode('stable'),
+    executablePath: await downloadAndUnzipVSCode(downloadVersion),
     args: [...args, workspacePath],
     recordVideo: {
       dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))

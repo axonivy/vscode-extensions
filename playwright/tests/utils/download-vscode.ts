@@ -1,3 +1,6 @@
 import { downloadAndUnzipVSCode } from '@vscode/test-electron';
+import { DownloadVersion } from '@vscode/test-electron/out/download';
 
-downloadAndUnzipVSCode('stable');
+export const downloadVersion: DownloadVersion = process.env.CI || process.env.RUN_STABLE_VERSION ? 'stable' : 'insiders';
+
+downloadAndUnzipVSCode(downloadVersion);
