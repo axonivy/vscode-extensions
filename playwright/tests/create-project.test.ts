@@ -15,7 +15,7 @@ test.describe('Create Project', () => {
     removeFromWorkspace(empty, rootFolder);
   });
 
-  test.only('Add Project and execute init Process', async ({ pageFor }) => {
+  test('Add Project and execute init Process', async ({ pageFor }) => {
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
@@ -26,6 +26,5 @@ test.describe('Create Project', () => {
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
-    await processEditor.revertAndCloseEditor();
   });
 });
