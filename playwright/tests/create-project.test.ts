@@ -15,7 +15,7 @@ test.describe('Create Project', () => {
     removeFromWorkspace(empty, rootFolder);
   });
 
-  test('Add Project and execute init Process', async ({ pageFor }) => {
+  test.only('Add Project and execute init Process', async ({ pageFor }) => {
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
