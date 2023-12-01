@@ -62,7 +62,9 @@ export class PageObject {
       return;
     }
     await expect(async () => {
-      this.executeCommand('File: Save All Files');
+      if (await dirtyLocator.isVisible()) {
+        await this.executeCommand('File: Save All Files');
+      }
       expect(await dirtyLocator.isHidden()).toBeTruthy();
     }).toPass();
   }
