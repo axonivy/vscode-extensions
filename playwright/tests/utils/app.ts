@@ -14,7 +14,7 @@ const args = [
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
   return await _electron.launch({
-    executablePath: await downloadAndUnzipVSCode('insiders'),
+    executablePath: await downloadAndUnzipVSCode('stable'),
     args: [...args, workspacePath],
     recordVideo: {
       dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))

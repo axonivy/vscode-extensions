@@ -58,6 +58,5 @@ export class ProcessEditor extends Editor {
     await activities.click();
     const newItemButton = this.viewFrameLoactor().locator('#activity-group').getByText(activityName, { exact: true });
     await newItemButton.click();
-    await this.saveAllFiles();
   }
 }

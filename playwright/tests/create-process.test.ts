@@ -45,6 +45,8 @@ test.describe('Create Process', () => {
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.appendActivityAndSave(start, 'Script');
     const script = processEditor.locatorForElementType('g.script');
+    await expect(script).toHaveClass(/selected/);
+    await processEditor.saveAllFiles();
     await processEditor.startProcessAndAssertExecuted(start, script);
   });
 
