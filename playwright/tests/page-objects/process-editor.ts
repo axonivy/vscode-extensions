@@ -51,7 +51,7 @@ export class ProcessEditor extends Editor {
     await expect(executedElement).toHaveClass(/executed/);
   }
 
-  async appendActivityAndSave(target: Locator, activityName: string) {
+  async appendActivity(target: Locator, activityName: string) {
     await target.click();
     await expect(target).toHaveClass(/selected/);
     const activities = this.viewFrameLoactor().getByTitle('Activities (A)');
