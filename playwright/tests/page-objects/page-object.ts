@@ -26,6 +26,10 @@ export class PageObject {
     await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
   }
 
+  async hasAnyStatusMessage() {
+    await expect(this.page.locator('#status\\.extensionMessage')).toBeVisible();
+  }
+
   async provideUserInput(input?: string) {
     if (input) {
       await this.quickInputBox().locator('input.input').fill(input);
