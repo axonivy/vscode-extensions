@@ -21,7 +21,7 @@ test.describe('Process Outline', () => {
   });
 
   test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
+    await processEditor.closeAllTabs();
   });
 
   test('Verify that Process Outline Explorer lists several elements', async () => {
@@ -35,7 +35,7 @@ test.describe('Process Outline', () => {
     await explorer.hasNoNode('unknown');
     await explorer.hasNoNode('Accept Request');
 
-    await processEditor.revertAndCloseEditor();
+    await processEditor.closeAllTabs();
     await explorer.hasNoNode('start.ivp');
     await explorer.closeView();
   });

@@ -17,7 +17,8 @@
     "lint:ci": "lerna run lint -- -o eslint.xml -f checkstyle",
     "package": "lerna run package",
     "test:playwright": "yarn -s --cwd playwright ui-tests",
-    "test:playwright:browser": "RUN_IN_BRWOSER=true yarn -s --cwd playwright ui-tests",
+    "test:playwright:stable": "RUN_STABLE_VERSION=true yarn test:playwright",
+    "test:playwright:browser": "RUN_IN_BRWOSER=true yarn test:playwright",
     "test:playwright:download:vscode": "yarn -s --cwd playwright download:vscode",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u"
   },

@@ -15,7 +15,7 @@ export class Editor extends View {
 
   async revertAndCloseEditor() {
     if (await this.tabLocator.isVisible()) {
-      await this.tabLocator.click();
+      await this.tabLocator.click({ delay: 500 });
       await this.executeCommand('View: Revert and Close Editor');
     }
     await expect(this.tabLocator).toBeHidden();

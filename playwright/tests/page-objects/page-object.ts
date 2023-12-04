@@ -10,7 +10,7 @@ export class PageObject {
     await this.quickInputBox()
       .locator('input.input')
       .fill('>' + command);
-    await this.page.locator(`.focused .quick-input-list-entry:has-text("${command}")`).click();
+    await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).click({ force: true });
     await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
 
@@ -24,6 +24,10 @@ export class PageObject {
 
   async hasStatusMessage(message: string, timeout?: number) {
     await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
+  }
+
+  async hasAnyStatusMessage() {
+    await expect(this.page.locator('#status\\.extensionMessage')).toBeVisible();
   }
 
   async provideUserInput(input?: string) {
@@ -50,5 +54,22 @@ export class PageObject {
 
   quickInputBox(): Locator {
     return this.page.locator('div.quick-input-box');
+  }
+
+  async saveAllFiles() {
+    const dirtyLocator = this.page.locator('div.dirty');
+    if (await dirtyLocator.isHidden()) {
+      return;
+    }
+    await expect(async () => {
+      if (await dirtyLocator.isVisible()) {
+        await this.executeCommand('File: Save All Files');
+      }
+      expect(await dirtyLocator.isHidden()).toBeTruthy();
+    }).toPass();
+  }
+
+  async activeEditorHasText(text: string) {
+    await expect(this.page.locator('div.editor-container')).toContainText(text);
   }
 }
