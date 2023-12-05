@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
 import path from 'path';
-import { deleteRequest, getRequest, postRequest } from './request';
+import { deleteRequest, getRequest, pollWithProgress, postRequest } from './request';
 import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
 import {
@@ -32,7 +32,9 @@ export class IvyEngineApi {
   }
 
   private async devContextPathRequest(engineUrl: string): Promise<string> {
-    const systemRequestUrl = engineUrl + path.join('system', this.API_PATH, 'dev-context-path');
+    const baseSystemUrl = engineUrl + 'system/';
+    await pollWithProgress(baseSystemUrl, 'Waiting for Axon Ivy Engine to be ready.');
+    const systemRequestUrl = baseSystemUrl + path.join(this.API_PATH, 'dev-context-path');
     const sessionId = this.sessionId();
     const params = { sessionId };
     return getRequest(systemRequestUrl, params, { username: 'admin', password: 'admin' });
