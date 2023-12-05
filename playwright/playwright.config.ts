@@ -7,7 +7,7 @@ export default defineConfig({
     trace: 'retain-on-failure'
   },
   testDir: './tests',
-  workers: process.env.RUN_IN_BRWOSER ? 2 : 1,
+  workers: process.env.RUN_IN_BRWOSER ? 3 : 1,
   retries: process.env.CI ? 2 : 0,
   timeout: process.env.CI ? 120_000 : 60_000,
   expect: { timeout: 30_000 },
