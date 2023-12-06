@@ -6,18 +6,17 @@ import fs from 'fs';
 export default class IvyEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
   static readonly viewType = 'ivy.glspDiagram';
-  private webSocketAddress?: string;
 
   constructor(
     protected readonly extensionContext: vscode.ExtensionContext,
     protected override readonly glspVscodeConnector: GlspVscodeConnector
   ) {
     super(glspVscodeConnector);
-    this.webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   }
 
   setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string) {
     const webview = webviewPanel.webview;
+    const webSocketAddress = process.env.WEB_SOCKET_ADDRESS_CLIENT ?? '';
     webviewPanel.webview.options = {
       enableScripts: true
     };
@@ -25,7 +24,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     webview.onDidReceiveMessage(message => {
       switch (message.command) {
         case 'ready':
-          webview.postMessage({ command: 'connect.to.web.sockets', server: this.webSocketAddress ?? '' });
+          webview.postMessage({ command: 'connect.to.web.sockets', server: webSocketAddress });
           webview.postMessage({ command: 'theme', theme: vsCodeThemeToInscriptionMonacoTheme(vscode.window.activeColorTheme) });
           break;
         case 'startProcess':
@@ -65,7 +64,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       `script-src 'nonce-${nonce}';` +
       `worker-src ${webview.cspSource};` +
       `font-src ${webview.cspSource};` +
-      `connect-src ${webview.cspSource} ${this.webSocketAddress}`;
+      `connect-src ${webview.cspSource} ${webSocketAddress}`;
 
     webviewPanel.webview.html = `
       <!DOCTYPE html>
