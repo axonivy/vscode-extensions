@@ -9,12 +9,10 @@ export function toWebSocketUrl(engineUrl: string): URL {
   return url;
 }
 
-export function resolveClientEngineHost(url: string): string {
-  if (process.env.CODESPACES === 'true' && engineUrl && url.startsWith(engineUrl)) {
-    const codespaceUrl = new URL(url);
-    codespaceUrl.host = codespaceEngineHost;
-    codespaceUrl.port = '';
-    return codespaceUrl.toString();
+export function resolveClientEngineHost(url: URL): URL {
+  if (process.env.CODESPACES === 'true' && engineUrl && url.hostname === new URL(engineUrl).hostname) {
+    url.host = codespaceEngineHost;
+    url.port = '';
   }
   return url;
 }

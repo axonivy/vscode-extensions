@@ -4,12 +4,12 @@ import { YamlEditorProvider } from './config-editor/editor-provider';
 import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
 import { IvyEngineManager } from './engine/engine-manager';
 import { Command, registerCommand } from './base/commands';
-import { activateIvyBrowser } from './engine/browser/ivy-browser';
 import { activateProcessEditor } from './process-editor/ivy-extension';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
 import { NewUserDialogParams } from './project-explorer/new-user-dialog';
 import { setStatusBarMessage } from './base/status-bar-message';
+import { activateIvyBrowser } from './browser/ivy-browser';
 
 let ivyEngineManager: IvyEngineManager;
 
