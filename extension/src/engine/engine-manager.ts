@@ -10,14 +10,13 @@ import { engineRunEmbedded, engineUrl } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../base/status-bar-message';
 import { CREATE_PROJECT_REQUEST } from './api/project-request';
+import { resolveClientEngineHost, toWebSocketUrl } from '../base/url-util';
 
 export class IvyEngineManager {
-  private static readonly WEB_SOCKET_ADDRESS_KEY = 'WEB_SOCKET_ADDRESS';
   private childProcess: ChildProcess;
-  private engineUrl: Promise<string>;
+  private engineUrl: string;
   private ivyEngineApi: IvyEngineApi;
-  private devContextPath: Promise<string>;
-  private webSocketAddress: string;
+  private devContextPath: string;
   private extensionUri: vscode.Uri;
   private readonly mavenBuilder: MavenBuilder;
   private started = false;
@@ -32,13 +31,15 @@ export class IvyEngineManager {
       return;
     }
     this.started = true;
-    this.engineUrl = this.resolveEngineUrl();
-    this.ivyEngineApi = new IvyEngineApi(await this.engineUrl);
-    this.devContextPath = this.ivyEngineApi.devContextPath;
+    this.engineUrl = await this.resolveEngineUrl();
+    this.ivyEngineApi = new IvyEngineApi(this.engineUrl);
+    this.devContextPath = await this.ivyEngineApi.devContextPath;
+    this.devContextPath += this.devContextPath.endsWith('/') ? '' : '/';
     await this.initProjects();
     this.deployProjects();
-    this.webSocketAddress = this.toWebSocketAddress((await this.engineUrl).slice(0, -1) + (await this.devContextPath) + '/');
-    process.env[IvyEngineManager.WEB_SOCKET_ADDRESS_KEY] = this.webSocketAddress;
+    const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
+    process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
+    process.env['WEB_SOCKET_ADDRESS_CLIENT'] = resolveClientEngineHost(websocketUrl).toString();
     executeCommand('process-editor.activate');
   }
 
@@ -145,10 +146,6 @@ export class IvyEngineManager {
     this.ivyEngineApi.deleteProject(ivyProjectDirectory);
   }
 
-  public async devWfUiUri() {
-    return this.fullUri(await this.devContextPath);
-  }
-
   async ivyProjectDirectories() {
     return (await executeCommand('ivyProjects.getIvyProjects')) as string[];
   }
@@ -160,7 +157,7 @@ export class IvyEngineManager {
   }
 
   async openDevWfUi() {
-    await this.openInInternalBrowser(await this.devContextPath);
+    await this.openInInternalBrowser(this.devContextPath);
   }
 
   async openEngineCockpit() {
@@ -172,12 +169,12 @@ export class IvyEngineManager {
   }
 
   private async openInInternalBrowser(postfix: string) {
-    executeCommand('engine.ivyBrowserOpen', [await this.fullUri(postfix)]);
+    await executeCommand('engine.ivyBrowserOpen', this.fullUri(postfix));
   }
 
-  private async fullUri(postfix: string) {
+  private fullUri(postfix: string) {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    return (await this.engineUrl) + postfix;
+    return this.engineUrl + postfix;
   }
 
   private async stopEmbeddedEngine() {
@@ -196,12 +193,5 @@ export class IvyEngineManager {
     console.log('Waiting for shutdown of Axon Ivy Engine');
     await shutdown;
     console.log('End waiting for Axon Ivy Engine shutdown');
-  }
-
-  private toWebSocketAddress(engineUrl: string) {
-    if (engineUrl.startsWith('https://')) {
-      return engineUrl.replace('https', 'wss');
-    }
-    return engineUrl.replace('http', 'ws');
   }
 }

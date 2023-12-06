@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
-import { registerCommand, executeCommand } from '../../base/commands';
 import { IvyBrowserViewProvider } from './ivy-browser-view-provider';
+import { executeCommand, registerCommand } from '../base/commands';
+import { resolveClientEngineHost } from '../base/url-util';
 
 export async function activateIvyBrowser(context: vscode.ExtensionContext, baseUri: string) {
   const provider = new IvyBrowserViewProvider(context.extensionUri, baseUri);
@@ -16,6 +17,8 @@ export async function activateIvyBrowser(context: vscode.ExtensionContext, baseU
           prompt: 'Enter url',
           value: 'https://dev.axonivy.com/'
         })) ?? '';
+    } else {
+      url = resolveClientEngineHost(new URL(url)).toString();
     }
     provider.refreshWebviewHtml(url);
     executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
