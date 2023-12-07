@@ -1,8 +1,24 @@
 import * as vscode from 'vscode';
 
-const config = vscode.workspace.getConfiguration();
+const configs = () => vscode.workspace.getConfiguration();
 
-export const engineRunEmbedded = config.get<boolean>('engine.runEmbedded');
-export const engineUrl = config.get<string>('engine.url');
-export const projectExcludePattern = config.get<string>('project.excludePattern');
-export const projectMaximumNumber = config.get<number>('project.maximumNumber');
+export namespace config {
+  export const engineRunByExtension = () => configs().get<boolean>('engine.runByExtension');
+  export const engineDirectory = () => configs().get<string>('engine.directory');
+  export const engineUrl = () => configs().get<string>('engine.url');
+  export const projectExcludePattern = () => configs().get<string>('project.excludePattern');
+  export const projectMaximumNumber = () => configs().get<number>('project.maximumNumber');
+
+  export async function setEngineDirectory() {
+    const selection = await vscode.window.showOpenDialog({
+      canSelectFiles: false,
+      canSelectFolders: true,
+      canSelectMany: false,
+      title: 'Select Engine Directory'
+    });
+    if (!selection) {
+      return;
+    }
+    await configs().update('engine.directory', selection[0].fsPath, true);
+  }
+}

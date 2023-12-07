@@ -1,29 +1,28 @@
-import { ChildProcess, execFile } from 'child_process';
 import * as vscode from 'vscode';
-import Os from 'os';
 import { executeCommand } from '../base/commands';
 import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
 import { NewProjectParams } from '../project-explorer/new-project';
-import { engineRunEmbedded, engineUrl } from '../base/configurations';
+import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../base/status-bar-message';
 import { CREATE_PROJECT_REQUEST } from './api/project-request';
 import { resolveClientEngineHost, toWebSocketUrl } from '../base/url-util';
+import { EngineRunner } from './engine-runner';
 
 export class IvyEngineManager {
-  private childProcess: ChildProcess;
   private engineUrl: string;
   private ivyEngineApi: IvyEngineApi;
   private devContextPath: string;
-  private extensionUri: vscode.Uri;
   private readonly mavenBuilder: MavenBuilder;
   private started = false;
+  private engineRunner: EngineRunner;
 
   constructor(context: vscode.ExtensionContext) {
-    this.extensionUri = context.extensionUri;
-    this.mavenBuilder = new MavenBuilder(this.extensionUri);
+    const embeddedEngineDirectory = vscode.Uri.joinPath(context.extensionUri, 'AxonIvyEngine');
+    this.mavenBuilder = new MavenBuilder(embeddedEngineDirectory);
+    this.engineRunner = new EngineRunner(embeddedEngineDirectory);
   }
 
   async start() {
@@ -44,39 +43,11 @@ export class IvyEngineManager {
   }
 
   private async resolveEngineUrl() {
-    const runEmbeddedEngine = engineRunEmbedded;
-    if (runEmbeddedEngine) {
-      return await this.startEmbeddedEngine(this.extensionUri);
+    if (config.engineRunByExtension()) {
+      await this.engineRunner.start();
+      return this.engineRunner.engineUrl;
     }
-    return engineUrl ?? '';
-  }
-
-  private async startEmbeddedEngine(extensionUri: vscode.Uri): Promise<string> {
-    const outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
-    outputChannel.show(true);
-    const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-    const engineLauncherScriptPath = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine', 'bin', executable).fsPath;
-    const env = {
-      env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true' }
-    };
-    console.log('Start ' + engineLauncherScriptPath);
-    this.childProcess = execFile(engineLauncherScriptPath, env);
-    this.childProcess.on('error', function (error: Error) {
-      outputChannel.append(error.message);
-      throw error;
-    });
-
-    return new Promise(resolve => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.childProcess.stdout?.on('data', function (data: any) {
-        const output = data.toString() as string;
-        if (output && output.startsWith('Go to http')) {
-          const engineUrl = output.split('Go to ')[1].split(' to see')[0];
-          resolve(engineUrl);
-        }
-        outputChannel.append(output);
-      });
-    });
+    return config.engineUrl() ?? '';
   }
 
   private async initProjects() {
@@ -151,9 +122,7 @@ export class IvyEngineManager {
   }
 
   async stop() {
-    if (this.childProcess) {
-      await this.stopEmbeddedEngine();
-    }
+    await this.engineRunner.stop();
   }
 
   async openDevWfUi() {
@@ -175,23 +144,5 @@ export class IvyEngineManager {
   private fullUri(postfix: string) {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
     return this.engineUrl + postfix;
-  }
-
-  private async stopEmbeddedEngine() {
-    console.log("Send 'shutdown' to Axon Ivy Engine");
-    const shutdown = new Promise<void>(resolve => {
-      this.childProcess.on('exit', function (code: number) {
-        console.log('Axon Ivy Engine has shutdown with exit code ' + code);
-        resolve();
-      });
-    });
-    if (Os.platform() === 'win32') {
-      this.childProcess.stdin?.write('shutdown\n');
-    } else {
-      this.childProcess.kill('SIGINT');
-    }
-    console.log('Waiting for shutdown of Axon Ivy Engine');
-    await shutdown;
-    console.log('End waiting for Axon Ivy Engine shutdown');
   }
 }

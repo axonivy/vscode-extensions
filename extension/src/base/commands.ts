@@ -28,6 +28,8 @@ type EngineCommand =
   | 'engine.openInExternalBrowser'
   | 'engine.startProcess'
   | 'engine.deleteProject'
+  | 'engine.downloadDevEngine'
+  | 'engine.setEngineDirectory'
   | 'process-editor.activate';
 type ProjectViewCommand =
   | 'ivyProjects.refreshEntry'

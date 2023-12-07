@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { projectExcludePattern, projectMaximumNumber } from '../base/configurations';
+import { config } from '../base/configurations';
 
 export interface Entry {
   uri: vscode.Uri;
@@ -29,8 +29,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   constructor() {
     this.openTabPaths = this.currentOpenTabPaths();
-    this.excludePattern = projectExcludePattern ?? '';
-    this.maxResults = projectMaximumNumber ?? 50;
+    this.excludePattern = config.projectExcludePattern() ?? '';
+    this.maxResults = config.projectMaximumNumber() ?? 50;
     this.ivyProjects = this.findIvyProjects();
   }
 

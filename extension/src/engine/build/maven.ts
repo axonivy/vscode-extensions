@@ -3,24 +3,21 @@ import { exec } from 'child_process';
 import fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import path from 'path';
-import { projectExcludePattern } from '../../base/configurations';
+import { config } from '../../base/configurations';
 
 const IVY_ENGINE_VERSION = '11.3.0';
 
 export class MavenBuilder {
   private readonly outputChannel: vscode.OutputChannel;
-  private readonly buildCommand: string;
   private readonly xmlParser = new XMLParser();
   private readonly excludePattern: string;
-  constructor(extensionUri: vscode.Uri) {
-    const engineDir = vscode.Uri.joinPath(extensionUri, 'AxonIvyEngine').fsPath;
-    this.buildCommand = `mvn process-test-classes --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDir} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
+  constructor(private readonly embeddedEngineDirectory: vscode.Uri) {
     this.outputChannel = vscode.window.createOutputChannel('Axon Ivy Maven');
-    this.excludePattern = projectExcludePattern ?? '';
+    this.excludePattern = config.projectExcludePattern() ?? '';
   }
 
   async buildProject(ivyProjectDir: string) {
-    const childProcess = exec(this.buildCommand, { cwd: ivyProjectDir });
+    const childProcess = exec(this.buildCommand(), { cwd: ivyProjectDir });
     this.outputChannel.show(true);
     childProcess.on('error', (error: Error) => {
       this.outputChannel.append(error.message);
@@ -38,6 +35,12 @@ export class MavenBuilder {
         resolve();
       });
     });
+  }
+
+  private buildCommand(): string {
+    const configEngineDirectory = config.engineDirectory();
+    const engineDirectory = configEngineDirectory ? vscode.Uri.file(configEngineDirectory) : this.embeddedEngineDirectory;
+    return `mvn process-test-classes --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDirectory.fsPath} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
   }
 
   async buildProjects() {
