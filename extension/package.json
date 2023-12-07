@@ -1,9 +1,9 @@
 {
-  "name": "ivy-extension",
+  "name": "designer",
   "private": true,
   "version": "11.3.0",
   "description": "This extensions provides a state of the art process modelling tool that enables you to turn your business processes into real and fully functional web applications.",
-  "publisher": "AxonIvy",
+  "publisher": "axon-ivy",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
   "repository": {
@@ -12,7 +12,7 @@
   "icon": "assets/ivy-logo.png",
   "displayName": "Axon Ivy Designer",
   "engines": {
-    "vscode": "^1.54.0"
+    "vscode": "^1.75.0"
   },
   "scripts": {
     "build": "webpack --mode=development",
@@ -46,7 +46,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "typescript": "~5.2.2",
-    "vsce": "1.79.5",
+    "vsce": "^2.15.0",
     "vscode-config-editor-webview": "11.3.0",
     "vscode-process-editor-webview": "11.3.0",
     "webpack": "^5.75.0",
