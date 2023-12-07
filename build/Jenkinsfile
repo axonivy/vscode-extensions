@@ -47,8 +47,9 @@ pipeline {
     stage('Package') {
       steps {
         script {
-          sh 'yarn download:engine ' + params.engineDownloadUrl
           sh 'yarn package'
+          sh 'yarn download:engine ' + params.engineDownloadUrl
+          sh 'yarn package:with:engine'
           archiveArtifacts 'extension/**/*.vsix'
         }
       }
