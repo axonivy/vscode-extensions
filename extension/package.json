@@ -140,6 +140,16 @@
         "icon": "$(cloud-upload)"
       },
       {
+        "command": "engine.downloadDevEngine",
+        "title": "Download Dev Engine",
+        "category": "Axon Ivy"
+      },
+      {
+        "command": "engine.setEngineDirectory",
+        "title": "Set Engine Directory Configuration",
+        "category": "Axon Ivy"
+      },
+      {
         "command": "ivyProjects.buildProject",
         "title": "Build Project",
         "category": "Axon Ivy",
@@ -202,22 +212,22 @@
       {
         "title": "Axon Ivy",
         "properties": {
-          "engine.runEmbedded": {
+          "engine.runByExtension": {
             "type": "boolean",
             "default": true,
-            "markdownDescription": "Configure whether a local Axon Ivy Engine will be run and used as the backend. If set true, you must specify `#engine.directory#`. If set false, you have to define `#engine.url#`.",
+            "markdownDescription": "Configure whether a local Axon Ivy Engine will be run by this extension. If set true, you must specify `#engine.directory#`. If set false, you have to define `#engine.url#`.",
             "order": 1000
           },
           "engine.directory": {
             "type": "string",
             "default": "",
-            "markdownDescription": "Specifies the path of a locally unzipped Axon Ivy Engine to be run as the backend. Only relevant if `#engine.runEmbedded#` is set to true.",
+            "markdownDescription": "[Set Engine Directory](command:engine.setEngineDirectory). Specifies the path of a locally unzipped Axon Ivy Engine to be run as the backend. Only relevant if `#engine.runByExtension#` is set to true. [Download Dev Engine](command:engine.downloadDevEngine)",
             "order": 1100
           },
           "engine.url": {
             "type": "string",
             "default": "http://localhost:8080/",
-            "markdownDescription": "Url of the Axon Ivy Engine that will be used as backend. Only relevant if `#engine.runEmbedded#` is set to false.",
+            "markdownDescription": "Url of the Axon Ivy Engine that will be used as backend. Only relevant if `#engine.runByExtension#` is set to false.",
             "order": 1200
           },
           "project.excludePattern": {

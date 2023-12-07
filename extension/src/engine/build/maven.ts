@@ -13,7 +13,7 @@ export class MavenBuilder {
   private readonly excludePattern: string;
   constructor(private readonly embeddedEngineDirectory: vscode.Uri) {
     this.outputChannel = vscode.window.createOutputChannel('Axon Ivy Maven');
-    this.excludePattern = config.projectExcludePattern ?? '';
+    this.excludePattern = config.projectExcludePattern() ?? '';
   }
 
   async buildProject(ivyProjectDir: string) {
@@ -38,7 +38,8 @@ export class MavenBuilder {
   }
 
   private buildCommand(): string {
-    const engineDirectory = config.engineDirectory ? vscode.Uri.file(config.engineDirectory) : this.embeddedEngineDirectory;
+    const configEngineDirectory = config.engineDirectory();
+    const engineDirectory = configEngineDirectory ? vscode.Uri.file(configEngineDirectory) : this.embeddedEngineDirectory;
     return `mvn process-test-classes --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDirectory.fsPath} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
   }
 

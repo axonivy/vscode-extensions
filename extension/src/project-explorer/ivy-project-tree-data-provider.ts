@@ -29,8 +29,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   constructor() {
     this.openTabPaths = this.currentOpenTabPaths();
-    this.excludePattern = config.projectExcludePattern ?? '';
-    this.maxResults = config.projectMaximumNumber ?? 50;
+    this.excludePattern = config.projectExcludePattern() ?? '';
+    this.maxResults = config.projectMaximumNumber() ?? 50;
     this.ivyProjects = this.findIvyProjects();
   }
 
