@@ -205,26 +205,32 @@
           "engine.runEmbedded": {
             "type": "boolean",
             "default": true,
-            "description": "Start embedded Axon Ivy Engine. If set false you have to define host & port where your Engine runs.",
-            "order": 0
+            "markdownDescription": "Configure whether a local Axon Ivy Engine will be run and used as the backend. If set true, you must specify `#engine.directory#`. If set false, you have to define `#engine.url#`.",
+            "order": 1000
+          },
+          "engine.directory": {
+            "type": "string",
+            "default": "",
+            "markdownDescription": "Specifies the path of a locally unzipped Axon Ivy Engine to be run as the backend. Only relevant if `#engine.runEmbedded#` is set to true.",
+            "order": 1100
           },
           "engine.url": {
             "type": "string",
             "default": "http://localhost:8080/",
-            "description": "Url of the Axon Ivy Engine that will be used.",
-            "order": 1
+            "markdownDescription": "Url of the Axon Ivy Engine that will be used as backend. Only relevant if `#engine.runEmbedded#` is set to false.",
+            "order": 1200
           },
           "project.excludePattern": {
             "type": "string",
             "default": "**/target/**",
             "markdownDescription": "A Glob Pattern that is used to exclude Axon Ivy projects during detection. [Learn more about Glob Pattern](https://code.visualstudio.com/docs/editor/glob-patterns)",
-            "order": 2
+            "order": 2000
           },
           "project.maximumNumber": {
             "type": "integer",
             "default": 50,
             "markdownDescription": "Maximum number of Axon Ivy projects that will be detected.",
-            "order": 3
+            "order": 2100
           }
         }
       }
@@ -387,23 +393,28 @@
       "explorer.new": [
         {
           "command": "ivyProjects.addBusinessProcess",
-          "group": "1_new@1"
+          "group": "1_new@1",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.addCallableSubProcess",
-          "group": "1_new@2"
+          "group": "1_new@2",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.addWebServiceProcess",
-          "group": "1_new@2"
+          "group": "1_new@2",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.addNewHtmlDialog",
-          "group": "2_new@1"
+          "group": "2_new@1",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.addNewOfflineDialog",
-          "group": "2_new@2"
+          "group": "2_new@2",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.addNewProject",
@@ -413,15 +424,18 @@
       "explorer.run": [
         {
           "command": "ivyProjects.buildAndDeployProject",
-          "group": "run@3"
+          "group": "run@3",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.buildProject",
-          "group": "run@1"
+          "group": "run@1",
+          "when": "ivy:hasIvyProjects"
         },
         {
           "command": "ivyProjects.deployProject",
-          "group": "run@2"
+          "group": "run@2",
+          "when": "ivy:hasIvyProjects"
         }
       ]
     },
