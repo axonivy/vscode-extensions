@@ -3,6 +3,7 @@
 
 .gitignore
 webpack.config.js
+eslint.xml
 
 **/node_modules
 
