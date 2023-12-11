@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/java:17-bookworm
+FROM mcr.microsoft.com/devcontainers/base:bookworm
 
 ARG IVY_ENGINE_DOWNLOAD_URL
 ARG IVY_HOME=/usr/lib/axonivy-engine
