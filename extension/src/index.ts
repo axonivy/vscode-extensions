@@ -11,6 +11,7 @@ import { NewUserDialogParams } from './project-explorer/new-user-dialog';
 import { setStatusBarMessage } from './base/status-bar-message';
 import { activateIvyBrowser } from './browser/ivy-browser';
 import { config } from './base/configurations';
+import { addDevContainer } from './dev-container/command';
 
 let ivyEngineManager: IvyEngineManager;
 const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine.zip';
@@ -36,6 +37,7 @@ export async function activate(context: vscode.ExtensionContext) {
   registerCmd('engine.deleteProject', (ivyProjectDirectory: string) => ivyEngineManager.deleteProject(ivyProjectDirectory));
   registerCmd('engine.downloadDevEngine', () => vscode.env.openExternal(vscode.Uri.parse(devEnginePermalink)));
   registerCmd('engine.setEngineDirectory', () => config.setEngineDirectory());
+  registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
   new IvyProjectExplorer(context);
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));

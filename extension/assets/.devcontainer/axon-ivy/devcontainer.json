@@ -1,0 +1,24 @@
+{
+  "name": "Axon Ivy Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "IVY_ENGINE_DOWNLOAD_URL": "https://dev.axonivy.com/permalink/dev/axonivy-engine.zip"
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "true"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["axon-ivy.designer"],
+      "settings": {
+        "engine.runByExtension": true,
+        "engine.directory": "/usr/lib/axonivy-engine"
+      }
+    }
+  }
+}

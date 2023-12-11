@@ -1,6 +1,7 @@
 {
   "name": "designer",
   "private": true,
+  "preview": true,
   "version": "11.3.0",
   "description": "This extensions provides a state of the art process modelling tool that enables you to turn your business processes into real and fully functional web applications.",
   "publisher": "axon-ivy",
@@ -206,6 +207,11 @@
       {
         "command": "ivyProjects.revealInExplorer",
         "title": "Reveal in Explorer",
+        "category": "Axon Ivy"
+      },
+      {
+        "command": "ivy.addDevContainer",
+        "title": "Add Dev Container",
         "category": "Axon Ivy"
       }
     ],

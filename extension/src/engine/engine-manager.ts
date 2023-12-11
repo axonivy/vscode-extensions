@@ -43,11 +43,15 @@ export class IvyEngineManager {
   }
 
   private async resolveEngineUrl() {
+    let engineUrl = config.engineUrl() ?? '';
     if (config.engineRunByExtension()) {
       await this.engineRunner.start();
-      return this.engineRunner.engineUrl;
+      engineUrl = this.engineRunner.engineUrl;
     }
-    return config.engineUrl() ?? '';
+    const url = new URL(engineUrl);
+    process.env['ENGINE_HOST'] = url.host;
+    process.env['ENGINE_PORT'] = url.port;
+    return engineUrl;
   }
 
   private async initProjects() {
