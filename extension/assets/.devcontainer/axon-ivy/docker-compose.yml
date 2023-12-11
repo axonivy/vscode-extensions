@@ -1,0 +1,22 @@
+services:
+  ivyEngine:
+    image: axonivy/axonivy-engine:dev
+    restart: unless-stopped
+    volumes:
+      - ../../..:/workspaces:cached
+      - ivy-home:${IVY_HOME}
+    environment:
+      JAVA_OPTS_IVY_SYSTEM: -Ddev.mode=true
+
+  devcontainer:
+    image: mcr.microsoft.com/devcontainers/java:17-bullseye
+    depends_on:
+      - ivyEngine
+    volumes:
+      - ../../..:/workspaces:cached
+      - ivy-home:${IVY_HOME}
+    command: sleep infinity
+    network_mode: service:ivyEngine
+
+volumes:
+  ivy-home:

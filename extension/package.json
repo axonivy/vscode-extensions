@@ -207,6 +207,11 @@
         "command": "ivyProjects.revealInExplorer",
         "title": "Reveal in Explorer",
         "category": "Axon Ivy"
+      },
+      {
+        "command": "ivy.addDevContainer",
+        "title": "Add Dev Container",
+        "category": "Axon Ivy"
       }
     ],
     "configuration": [
