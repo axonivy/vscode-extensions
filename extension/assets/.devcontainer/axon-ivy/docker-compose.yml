@@ -9,7 +9,7 @@ services:
       JAVA_OPTS_IVY_SYSTEM: -Ddev.mode=true
 
   devcontainer:
-    image: mcr.microsoft.com/devcontainers/java:17-bullseye
+    image: mcr.microsoft.com/devcontainers/java:17-bookworm
     depends_on:
       - ivyEngine
     volumes:
