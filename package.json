@@ -17,6 +17,7 @@
     "lint:ci": "lerna run lint -- -o eslint.xml -f checkstyle",
     "package": "lerna run package",
     "package:with:engine": "lerna run package:with:engine",
+    "publish:next": "lerna run publish:next",
     "test:playwright": "yarn -s --cwd playwright ui-tests",
     "test:playwright:stable": "RUN_STABLE_VERSION=true yarn test:playwright",
     "test:playwright:browser": "RUN_IN_BRWOSER=true yarn test:playwright",

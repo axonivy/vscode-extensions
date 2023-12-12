@@ -1,9 +1,9 @@
 {
-  "name": "designer",
+  "name": "designer-11",
   "private": true,
   "preview": true,
   "version": "11.3.0",
-  "description": "This extensions provides a state of the art process modelling tool that enables you to turn your business processes into real and fully functional web applications.",
+  "description": "This extension enables you to turn your business processes into real and fully functional web applications.",
   "publisher": "axon-ivy",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
@@ -11,7 +11,7 @@
     "url": "https://github.com/axonivy/vscode-extensions"
   },
   "icon": "assets/ivy-logo.png",
-  "displayName": "Axon Ivy Designer",
+  "displayName": "Axon Ivy Designer 11",
   "engines": {
     "vscode": "^1.75.0"
   },
@@ -20,8 +20,9 @@
     "build:production": "webpack --mode=production",
     "clean": "rimraf lib dist",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "package": "vsce package --yarn",
-    "package:with:engine": "yarn package -o ${npm_package_name}-with-engine-${npm_package_version}.vsix",
+    "package": "bash -c 'vsce package -o ${npm_package_name}.vsix --no-update-package-json --no-git-tag-version --yarn ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")'",
+    "package:with:engine": "bash -c 'vsce package -o ${npm_package_name}-with-engine.vsix --no-update-package-json --no-git-tag-version --yarn ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")'",
+    "publish:next": "bash -c 'vsce publish --yarn --no-update-package-json --no-git-tag-version ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")'",
     "prepare": "yarn clean && yarn build",
     "watch": "webpack --watch --mode development"
   },
