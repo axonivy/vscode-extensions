@@ -20,8 +20,8 @@
     "build:production": "webpack --mode=production",
     "clean": "rimraf lib dist",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "package": "vsce package --yarn",
-    "package:with:engine": "yarn package -o ${npm_package_name}-with-engine-${npm_package_version}.vsix",
+    "package": "vsce package -o ${npm_package_name}.vsix --no-update-package-json --no-git-tag-version --yarn ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")",
+    "package:with:engine": "yarn package -o ${npm_package_name}-with-engine.vsix",
     "publish:next": "vsce publish --yarn --no-update-package-json --no-git-tag-version ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")",
     "prepare": "yarn clean && yarn build",
     "watch": "webpack --watch --mode development"
