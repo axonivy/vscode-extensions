@@ -47,7 +47,7 @@ pipeline {
 
     stage('Publish to VS Code Marketplace') {
       when{
-        params.publishToMarket
+        expression { params.publishToMarket }
       }
       steps {
         script {
