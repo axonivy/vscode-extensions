@@ -52,7 +52,9 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'marketplace.visualstudio.com', variable: 'VSCE_PAT')]) {
           script {
-            sh 'yarn publish:next'
+            sh '''#!/bin/bash
+                yarn publish:next
+            '''
           }
         }
       }
