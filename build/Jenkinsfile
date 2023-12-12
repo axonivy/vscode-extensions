@@ -52,7 +52,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'marketplace.visualstudio.com', variable: 'VSCE_PAT')]) {
           script {
-            sh "yarn publish:next"
+            sh 'yarn publish:next'
           }
         }
       }
@@ -61,9 +61,9 @@ pipeline {
     stage('Package') {
       steps {
         script {
-          sh "yarn package"
+          sh 'yarn package'
           sh 'yarn download:engine ' + params.engineDownloadUrl
-          sh "yarn package:with:engine"
+          sh 'yarn package:with:engine'
           archiveArtifacts 'extension/**/*.vsix'
         }
       }
