@@ -50,8 +50,10 @@ pipeline {
         expression { params.publishToMarket }
       }
       steps {
-        script {
-          sh 'yarn publish:next'
+        withCredentials([string(credentialsId: 'marketplace.visualstudio.com', variable: 'VSCE_PAT')]) {
+          script {
+            sh 'yarn publish:next'
+          }
         }
       }
     }
