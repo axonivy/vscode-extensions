@@ -40,7 +40,7 @@ export class MavenBuilder {
   private buildCommand(): string {
     const configEngineDirectory = config.engineDirectory();
     const engineDirectory = configEngineDirectory ? vscode.Uri.file(configEngineDirectory) : this.embeddedEngineDirectory;
-    return `mvn process-test-classes --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDirectory.fsPath} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
+    return `mvn package --batch-mode -Dmaven.test.skip=true -Divy.engine.directory=${engineDirectory.fsPath} -Divy.engine.version=${IVY_ENGINE_VERSION} -Dstyle.color=never`;
   }
 
   async buildProjects() {
