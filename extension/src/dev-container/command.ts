@@ -8,6 +8,6 @@ export async function addDevContainer(extensionUri: vscode.Uri) {
   await vscode.workspace.fs.copy(
     vscode.Uri.joinPath(extensionUri, 'assets', '.devcontainer'),
     vscode.Uri.joinPath(ws.uri, '.devcontainer'),
-    { overwrite: true }
+    { overwrite: false }
   );
 }
