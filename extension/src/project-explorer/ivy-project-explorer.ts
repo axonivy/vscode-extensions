@@ -53,7 +53,9 @@ export class IvyProjectExplorer {
         .then(projects => this.deleteProjectOnEngine(e, projects))
         .then(() => this.refresh())
     );
-    vscode.workspace.createFileSystemWatcher('**/*.p.json', true, false, true).onDidChange(e => this.execute('engine.deployProject', e));
+    vscode.workspace
+      .createFileSystemWatcher('**/{cms,config,dataclasses,processes,src,src_hd,webContent}/**/*', true, false, true)
+      .onDidChange(e => this.execute('engine.deployProject', e));
   }
 
   private deleteProjectOnEngine(uri: vscode.Uri, ivyProjects: string[]) {
