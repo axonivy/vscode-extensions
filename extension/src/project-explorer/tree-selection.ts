@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { Entry } from './ivy-project-tree-data-provider';
 import { Command, executeCommand } from '../base/commands';
 import path from 'path';
+import fs from 'fs';
 
 export type TreeSelection = Entry | vscode.Uri | undefined;
 
@@ -27,9 +28,12 @@ export async function treeSelectionToUri(selection: TreeSelection): Promise<vsco
 async function selectionFromExplorer(): Promise<vscode.Uri> {
   const originalClipboard = await vscode.env.clipboard.readText();
   await executeCommand('copyFilePath');
-  const filePath = await vscode.env.clipboard.readText();
-  vscode.env.clipboard.writeText(originalClipboard);
-  return vscode.Uri.file(filePath);
+  const selectedFile = vscode.Uri.file(await vscode.env.clipboard.readText());
+  await vscode.env.clipboard.writeText(originalClipboard);
+  if (!fs.existsSync(selectedFile.fsPath)) {
+    throw Error('No valid directory selected.');
+  }
+  return selectedFile;
 }
 
 async function findMatchingProject(ivyProjects: Promise<string[]>, selectedUri: vscode.Uri): Promise<string | undefined> {
