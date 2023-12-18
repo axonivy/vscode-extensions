@@ -5,8 +5,3 @@ export type ElementId = {
 };
 
 export type SelectedElement = ElementId | undefined;
-
-export interface ProcessEditorConnector {
-  getSelectedElement(): SelectedElement;
-  onSelectedElement(listener: (selectedElement: SelectedElement) => void): void;
-}
