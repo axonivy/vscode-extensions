@@ -35,7 +35,7 @@ export class IvyEngineManager {
     this.devContextPath = await this.ivyEngineApi.devContextPath;
     this.devContextPath += this.devContextPath.endsWith('/') ? '' : '/';
     await this.initProjects();
-    this.deployProjects();
+    await this.deployProjects();
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
     process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
     process.env['WEB_SOCKET_ADDRESS_CLIENT'] = resolveClientEngineHost(websocketUrl).toString();

@@ -14,14 +14,11 @@ import {
 import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
-import { ProcessEditorConnector, SelectedElement } from '../base/process-editor-connector';
+import { SelectedElement } from '../base/process-editor-connector';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 
-export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument>
-  extends GlspVscodeConnector
-  implements ProcessEditorConnector
-{
+export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
   protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<{ client: GlspVscodeClient<D> }>();
@@ -52,19 +49,6 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 
   onSelectedElement(listener: (selectedElement: SelectedElement) => void) {
     this.onSelectedElementUpdate(listener);
-  }
-
-  getSelectedElement(): SelectedElement {
-    for (const [id, client] of this.clientMap) {
-      if (client.webviewPanel.active) {
-        const pids = this.clientSelectionMap.get(id)?.selectedElementsIDs || [];
-        const ivyClient = client as IvyGlspClient;
-        if (pids.length > 0) {
-          return this.newSelectedElement(ivyClient, pids[0]);
-        }
-      }
-    }
-    return undefined;
   }
 
   private newSelectedElement(client: IvyGlspClient, pid: string): SelectedElement {

@@ -3,11 +3,10 @@ import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
-import { ProcessEditorConnector } from '../base/process-editor-connector';
 import { IvyProcessOutlineProvider } from './ivy-process-outline';
 import { registerCommand } from '../base/commands';
 
-export async function activateProcessEditor(context: vscode.ExtensionContext): Promise<ProcessEditorConnector> {
+export function activateProcessEditor(context: vscode.ExtensionContext) {
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   if (!webSocketAddress) {
@@ -53,5 +52,4 @@ export async function activateProcessEditor(context: vscode.ExtensionContext): P
   registerCommand('ivyProcessOutline.selectElement', context, pid => ivyProcessOutline.select(pid));
 
   configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
-  return ivyVscodeConnector;
 }
