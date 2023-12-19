@@ -14,7 +14,7 @@ import { config } from './base/configurations';
 import { addDevContainer } from './dev-container/command';
 
 let ivyEngineManager: IvyEngineManager;
-const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine.zip';
+const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip';
 
 export async function activate(context: vscode.ExtensionContext) {
   ivyEngineManager = new IvyEngineManager(context);
