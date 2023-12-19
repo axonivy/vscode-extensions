@@ -10,7 +10,7 @@ This extension can be used locally or in a [Dev Container](https://code.visualst
 
 Install Java SE 17 and Maven 3.9
 
-Download the [Axon Ivy Dev Engine](https://dev.axonivy.com/permalink/dev/axonivy-engine.zip), unzip it and configure the `Engine Directory` under settings, see:
+Download the [Axon Ivy Dev Engine](https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip), unzip it and configure the `Engine Directory` under settings, see:
 ![Engine Directory Settings](extension/assets/readme/engine-directory-setting.png)
 
 ### Dev Container

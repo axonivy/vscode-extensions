@@ -172,7 +172,8 @@
       {
         "command": "engine.buildAndDeployProjects",
         "title": "Build and Deploy all Projects",
-        "category": "Axon Ivy"
+        "category": "Axon Ivy",
+        "icon": "$(tools)"
       },
       {
         "command": "ivyProjects.addBusinessProcess",
@@ -343,12 +344,12 @@
         },
         {
           "command": "engine.deployProjects",
-          "when": "view == ivyProjects || view == workbench.explorer.fileView",
-          "group": "navigation@2"
+          "when": "view == ivyProjects || view == workbench.explorer.fileView"
         },
         {
           "command": "engine.buildAndDeployProjects",
-          "when": "view == ivyProjects || view == workbench.explorer.fileView"
+          "when": "view == ivyProjects || view == workbench.explorer.fileView",
+          "group": "navigation@2"
         }
       ],
       "explorer/context": [
