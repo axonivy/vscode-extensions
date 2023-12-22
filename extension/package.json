@@ -38,7 +38,6 @@
     "@types/vscode-webview": "^1.54.0",
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
-    "adm-zip": "^0.5.10",
     "eslint": "^8.54.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.0",
