@@ -1,6 +1,7 @@
 .sprotty > div:focus-visible {
   outline: none;
 }
-.sprotty svg.sprotty-graph {
+.sprotty svg.sprotty-graph,
+.sprotty svg.sprotty-empty {
   border: none;
 }
