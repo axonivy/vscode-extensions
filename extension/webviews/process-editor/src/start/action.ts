@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { IActionHandler, SModelElement } from '@eclipse-glsp/client';
 import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode } from '@axonivy/process-editor';
-import { IvyIcons } from '@axonivy/editor-icons/lib';
+import { IvyIcons } from '@axonivy/editor-icons';
 import { VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
 
 export interface StartProcessAction {

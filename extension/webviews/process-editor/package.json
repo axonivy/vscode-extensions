@@ -24,11 +24,10 @@
     "inversify": "^6.0.1"
   },
   "devDependencies": {
-    "@vscode/codicons": "^0.0.25",
+    "@vscode/codicons": "^0.0.35",
     "path-browserify": "^1.0.1",
-    "reflect-metadata": "^0.1.13",
-    "vite": "^5.0.0",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite": "^5.0.11",
+    "vite-tsconfig-paths": "^4.2.3"
   },
   "type": "module",
   "scripts": {

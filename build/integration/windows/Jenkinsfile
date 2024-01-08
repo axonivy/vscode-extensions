@@ -23,7 +23,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        nodejs(nodeJSInstallationName: '18.17.1') {
+        nodejs(nodeJSInstallationName: '20.10.0') {
           bat 'yarn update:axonivy:next'
           bat 'yarn install'
           bat 'yarn build:production'
@@ -34,7 +34,7 @@ pipeline {
 
     stage('Playwright Tests') {
       steps {
-        nodejs(nodeJSInstallationName: '18.17.1') {
+        nodejs(nodeJSInstallationName: '20.10.0') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             bat 'yarn test:playwright:download:vscode'
             bat 'yarn test:playwright'
