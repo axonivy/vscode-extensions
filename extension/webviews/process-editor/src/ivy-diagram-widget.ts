@@ -6,7 +6,8 @@ import {
   GLSPActionDispatcher
 } from '@eclipse-glsp/client';
 import { GLSPDiagramWidget, VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
-import { EnableInscriptionAction, EnableViewportAction } from '@axonivy/process-editor-protocol';
+import { EnableViewportAction } from '@axonivy/process-editor-protocol';
+import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
 
 @injectable()
