@@ -38,7 +38,7 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
         if (this.actionDispatcher instanceof GLSPActionDispatcher) {
           this.actionDispatcher
             .onceModelInitialized()
-            .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ server: event.data.server })));
+            .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { server: event.data.server } })));
         }
       }
     });
