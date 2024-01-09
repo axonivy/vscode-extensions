@@ -5,14 +5,19 @@ import {
   RequestTypeHintsAction,
   GLSPActionDispatcher
 } from '@eclipse-glsp/client';
-import { GLSPDiagramWidget, VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
+import { GLSPDiagramWidget } from '@eclipse-glsp/vscode-integration-webview';
 import { EnableViewportAction } from '@axonivy/process-editor-protocol';
 import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
+import { Messenger } from 'vscode-messenger-webview';
+import { NotificationType, HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
+
+const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
+const InitializeServerRequest: RequestType<string, void> = { method: 'initializeServer' };
 
 @injectable()
 export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
-  @inject(VsCodeApi) protected vsCodeApi: VsCodeApi;
+  @inject(Messenger) protected messenger: Messenger;
 
   override dispatchInitialActions() {
     if (this.modelSource instanceof DiagramServerProxy) {
@@ -31,16 +36,15 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
     this.actionDispatcher.dispatch(EnableToolPaletteAction.create());
     this.actionDispatcher.dispatch(EnableViewportAction.create());
 
-    this.vsCodeApi.postMessage({ command: 'ready' });
+    this.messenger.onRequest(InitializeServerRequest, server => this.initServer(server));
+    this.messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
+  }
 
-    window.addEventListener('message', (event: MessageEvent<{ command: string; server: string }>) => {
-      if (event.data.command === 'connect.to.web.sockets') {
-        if (this.actionDispatcher instanceof GLSPActionDispatcher) {
-          this.actionDispatcher
-            .onceModelInitialized()
-            .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { server: event.data.server } })));
-        }
-      }
-    });
+  private initServer(server: string) {
+    if (this.actionDispatcher instanceof GLSPActionDispatcher) {
+      this.actionDispatcher
+        .onceModelInitialized()
+        .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { server } })));
+    }
   }
 }

@@ -21,18 +21,32 @@ import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { MonacoEditorUtil } from '@axonivy/inscription-editor';
 import { MonacoUtil } from '@axonivy/inscription-core';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import { Messenger, VsCodeApi as WebviewVsCodeApi } from 'vscode-messenger-webview';
+import { NotificationType } from 'vscode-messenger-common';
 
-export type Message =
-  | {
-      command: 'connect.to.web.sockets';
-      webSocketAddress: string;
-    }
-  | {
-      command: 'theme';
-      theme: 'dark' | 'light';
-    };
+type ColorTheme = 'dark' | 'light';
+const ColorThemeChangedNotification: NotificationType<ColorTheme> = { method: 'colorThemeChanged' };
 
 class IvyGLSPStarter extends GLSPStarter {
+  private readonly messenger = new Messenger(this.vscodeApi as WebviewVsCodeApi);
+
+  constructor() {
+    super();
+    this.messenger.start();
+    this.initMonaco();
+  }
+
+  private initMonaco() {
+    MonacoUtil.initStandalone(editorWorker).then(() => MonacoEditorUtil.initMonaco(reactMonaco, 'light'));
+    this.messenger.onNotification(ColorThemeChangedNotification, this.updateMonacoTheme);
+  }
+
+  private updateMonacoTheme(theme: ColorTheme) {
+    MonacoUtil.monacoInitialized().then(() =>
+      reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(theme))
+    );
+  }
+
   createContainer(diagramIdentifier: GLSPDiagramIdentifier): Container {
     const container = createIvyDiagramContainer(diagramIdentifier.clientId);
     container.load(ivyBreakpointModule);
@@ -43,6 +57,7 @@ class IvyGLSPStarter extends GLSPStarter {
 
   protected override addVscodeBindings(container: Container, diagramIdentifier: GLSPDiagramIdentifier) {
     container.bind(VsCodeApi).toConstantValue(this.vscodeApi);
+    container.bind(Messenger).toConstantValue(this.messenger);
     // own IvyGLSPDiagramWidget
     container.bind(IvyGLSPDiagramWidget).toSelf().inSingletonScope();
     container.bind(GLSPDiagramWidget).toService(IvyGLSPDiagramWidget);
@@ -62,18 +77,5 @@ class IvyGLSPStarter extends GLSPStarter {
 }
 
 export function launch() {
-  MonacoUtil.initStandalone(editorWorker).then(() => MonacoEditorUtil.initMonaco(reactMonaco, 'light'));
-  const handleMessages = (event: MessageEvent<Message>) => {
-    const message = event.data;
-    switch (message.command) {
-      case 'theme':
-        MonacoUtil.monacoInitialized().then(() => {
-          reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(message.theme));
-        });
-        break;
-    }
-  };
-
-  window.addEventListener('message', handleMessages);
   new IvyGLSPStarter();
 }

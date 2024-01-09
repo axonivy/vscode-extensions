@@ -2,7 +2,8 @@ import { inject, injectable } from 'inversify';
 import { IActionHandler, SModelElement } from '@eclipse-glsp/client';
 import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode } from '@axonivy/process-editor';
 import { IvyIcons } from '@axonivy/editor-icons';
-import { VsCodeApi } from '@eclipse-glsp/vscode-integration-webview';
+import { HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
+import { Messenger } from 'vscode-messenger-webview';
 
 export interface StartProcessAction {
   kind: typeof StartProcessAction.KIND;
@@ -22,12 +23,14 @@ export namespace StartProcessAction {
   }
 }
 
+const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' };
+
 @injectable()
 export class StartProcessActionHandler implements IActionHandler {
-  constructor(@inject(VsCodeApi) private vscodeapi: VsCodeApi) {}
+  constructor(@inject(Messenger) private messenger: Messenger) {}
 
   handle(action: StartProcessAction) {
-    this.vscodeapi.postMessage({ command: 'startProcess', processStartUri: action.processStartUri });
+    this.messenger.sendRequest(StartProcessRequest, HOST_EXTENSION, action.processStartUri);
   }
 }
 
