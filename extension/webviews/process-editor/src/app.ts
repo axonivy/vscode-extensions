@@ -11,9 +11,9 @@ import {
   GLSPDiagramWidgetFactory,
   GLSPStarter,
   GLSPVscodeDiagramServer,
-  VsCodeApi
+  VsCodeApi,
+  CopyPasteHandlerProvider
 } from '@eclipse-glsp/vscode-integration-webview';
-import { CopyPasteHandlerProvider } from '@eclipse-glsp/vscode-integration-webview/lib/copy-paste-handler-provider';
 import { Container } from 'inversify';
 import { IvyGLSPDiagramWidget } from './ivy-diagram-widget';
 import ivyStartActionModule from './start/di.config';
