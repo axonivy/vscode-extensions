@@ -12,6 +12,7 @@ import { setStatusBarMessage } from './base/status-bar-message';
 import { activateIvyBrowser } from './browser/ivy-browser';
 import { config } from './base/configurations';
 import { addDevContainer } from './dev-container/command';
+import { messenger } from './messenger';
 
 let ivyEngineManager: IvyEngineManager;
 const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip';
@@ -42,6 +43,7 @@ export async function activate(context: vscode.ExtensionContext) {
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));
   setStatusBarMessage('Axon Ivy Extension activated');
+  return messenger.diagnosticApi();
 }
 
 export async function deactivate() {

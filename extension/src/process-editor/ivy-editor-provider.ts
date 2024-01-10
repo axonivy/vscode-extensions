@@ -2,8 +2,8 @@ import { executeCommand } from '../base/commands';
 import { GlspVscodeConnector, GlspEditorProvider, DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 import fs from 'fs';
-import { Messenger } from 'vscode-messenger';
 import { NotificationType, RequestType, MessageParticipant } from 'vscode-messenger-common';
+import { messenger } from '../messenger';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
@@ -13,9 +13,6 @@ const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' 
 export default class IvyEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
   static readonly viewType = 'ivy.glspDiagram';
-  private readonly messenger = new Messenger({ ignoreHiddenViews: false });
-  private messageParticipant: MessageParticipant;
-  private toDispose = new DisposableCollection();
 
   constructor(
     protected readonly extensionContext: vscode.ExtensionContext,
@@ -31,20 +28,19 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       enableScripts: true
     };
 
-    this.messageParticipant = this.messenger.registerWebviewPanel(webviewPanel);
-    this.toDispose.push(
-      this.messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(webSocketAddress), {
-        sender: this.messageParticipant
+    const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
+    const toDispose = new DisposableCollection(
+      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(webSocketAddress, messageParticipant), {
+        sender: messageParticipant
       }),
-      this.messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
-        sender: this.messageParticipant
-      })
+      messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
+        sender: messageParticipant
+      }),
+      vscode.window.onDidChangeActiveColorTheme(theme =>
+        messenger.sendNotification(ColorThemeChangedNotification, messageParticipant, this.vsCodeThemeToMonacoTheme(theme))
+      )
     );
-    vscode.window.onDidChangeActiveColorTheme(theme =>
-      this.messenger.sendNotification(ColorThemeChangedNotification, this.messageParticipant, this.vsCodeThemeToMonacoTheme(theme))
-    );
-
-    webviewPanel.onDidDispose(() => this.toDispose.dispose());
+    webviewPanel.onDidDispose(() => toDispose.dispose());
 
     const nonce = getNonce();
 
@@ -85,11 +81,11 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       </html>`;
   }
 
-  private async handleWebviewReadyNotification(server: string) {
-    await this.messenger.sendRequest(InitializeServerRequest, this.messageParticipant, server);
-    this.messenger.sendNotification(
+  private async handleWebviewReadyNotification(server: string, messageParticipant: MessageParticipant) {
+    await messenger.sendRequest(InitializeServerRequest, messageParticipant, server);
+    messenger.sendNotification(
       ColorThemeChangedNotification,
-      this.messageParticipant,
+      messageParticipant,
       this.vsCodeThemeToMonacoTheme(vscode.window.activeColorTheme)
     );
   }
