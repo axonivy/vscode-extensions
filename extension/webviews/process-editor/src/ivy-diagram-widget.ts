@@ -11,9 +11,13 @@ import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
 import { Messenger } from 'vscode-messenger-webview';
 import { NotificationType, HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
+import { WebSocketMessageWriter } from './message-writer';
+import { WebSocketMessageReader } from './message-reader';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeServerRequest: RequestType<string, void> = { method: 'initializeServer' };
+export const InscriptionWebSocketMessage: NotificationType<string> = { method: 'inscriptionWebSocketMessage' };
+export const IvyScriptWebSocketMessage: NotificationType<string> = { method: 'ivyScriptWebSocketMessage' };
 
 @injectable()
 export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
@@ -42,9 +46,18 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
 
   private initServer(server: string) {
     if (this.actionDispatcher instanceof GLSPActionDispatcher) {
-      this.actionDispatcher
-        .onceModelInitialized()
-        .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { server } })));
+      this.actionDispatcher.onceModelInitialized().finally(() => {
+        const ivyScript = {
+          reader: new WebSocketMessageReader(this.messenger, IvyScriptWebSocketMessage),
+          writer: new WebSocketMessageWriter(this.messenger, IvyScriptWebSocketMessage)
+        };
+        const inscription = {
+          reader: new WebSocketMessageReader(this.messenger, InscriptionWebSocketMessage),
+          writer: new WebSocketMessageWriter(this.messenger, InscriptionWebSocketMessage)
+        };
+        console.log(server);
+        this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { ivyScript, inscription } }));
+      });
     }
   }
 }

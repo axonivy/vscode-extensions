@@ -28,20 +28,24 @@
   },
   "main": "./dist/extension.js",
   "dependencies": {
+    "@eclipse-glsp/protocol": "1.1.0-RC10",
     "@eclipse-glsp/vscode-integration": "1.1.0-RC10",
     "axios": "^1.6.5",
     "fast-xml-parser": "^4.3.2",
     "vscode-messenger": "^0.4.5",
-    "vscode-messenger-common": "^0.4.5"
+    "vscode-messenger-common": "^0.4.5",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",
     "@types/vscode-webview": "^1.57.4",
     "@vscode/vsce": "^2.22.0",
+    "@types/ws": "^8.5.10",
     "vscode-config-editor-webview": "11.3.0",
     "vscode-process-editor-webview": "11.3.0",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "bufferutil": "^4.0.8"
   },
   "activationEvents": [
     "onStartupFinished"

@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import { NotificationType, RequestType, MessageParticipant } from 'vscode-messenger-common';
 import { messenger } from '../messenger';
+import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketConnectionForwarder } from '../websocket-connection-forwarder';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
@@ -30,6 +31,8 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 
     const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
     const toDispose = new DisposableCollection(
+      new WebSocketConnectionForwarder(webSocketAddress + 'ivy-inscription-lsp', messageParticipant, InscriptionWebSocketMessage),
+      new WebSocketConnectionForwarder(webSocketAddress + 'ivy-script-lsp', messageParticipant, IvyScriptWebSocketMessage),
       messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(webSocketAddress, messageParticipant), {
         sender: messageParticipant
       }),
