@@ -18,7 +18,6 @@ const config = {
 
   externals: {
     vscode: 'commonjs vscode',
-    bufferutil: 'bufferutil',
     'utf-8-validate': 'utf-8-validate'
   },
   resolve: {
