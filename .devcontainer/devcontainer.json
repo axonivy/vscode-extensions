@@ -1,0 +1,28 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "postCreateCommand": "yarn && yarn build && mkdir -p container-workspace",
+  "containerEnv": {
+    "CONTAINER_WORKSPACE": "${workspaceFolder}/container-workspace"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "true",
+      "jdkDistro": "tem"
+    },
+    "ghcr.io/axonivy/devcontainer-features/engine:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "alphabotsec.vscode-eclipse-keybindings",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        "engine.directory": "/usr/lib/axonivy-engine"
+      }
+    }
+  }
+}

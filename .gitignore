@@ -39,3 +39,4 @@ gen-webpack.config.js
 *.vsix
 dist/
 AxonIvyEngine/
+container-workspace/
