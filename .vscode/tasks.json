@@ -2,13 +2,36 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "clean & build extension",
+      "label": "Watch",
       "type": "shell",
-      "command": "yarn extension:clean && yarn extension:build",
+      "command": "yarn watch",
+      "isBackground": true,
+      "problemMatcher": {
+        "base": "$tsc-watch",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "vscode-process-editor-webview: vite",
+          "endsPattern": "vscode-process-editor-webview: built in"
+        }
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"
       }
+    },
+    {
+      "label": "Terminate All Tasks",
+      "command": "echo ${input:terminate}",
+      "type": "shell",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
     }
   ]
 }

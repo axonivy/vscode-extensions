@@ -1,3 +1,5 @@
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/axonivy/vscode-extensions)
+
 # VS Code extension
 
 The available VS Code extension can be found under `/extension`.
@@ -9,21 +11,19 @@ The available VS Code extension can be found under `/extension`.
 - `yarn download:engine`: download and unpack the latest master engine
 - `yarn package`: package the extension as .vsix file
 
-## VS Code dev env
+## Debugging the extension
 
-Simply run the `Start VSCode Extension` launch config.
+Make sure that all packages are installed, i.e. run `yarn`. Building and packaging are not needed. Simply start the `Run Extension` launch config, which will also activate the watch mode.
 
 ## Connect to another Ivy Engine
 
-If you do not want to use the embedded engine as backend, you can define an alternative under `VS Code Settings / Axon Ivy`.
-
-Simply uncheck `Run Embedded Engine` and set `Engine Url` you want to use.
+If you do not want to use the embedded engine as backend, you can define an alternative under `VS Code Settings / Axon Ivy`. Simply uncheck `Engine: Run By Extension` and set `Engine: Url` you want to use.
 
 ## Integration Tests
 
 Playwright tests can be executed against VSCode Insiders or openvscode-server
 
-### VSCode Insiders
+### VS Code Insiders
 
 - `yarn test:playwright:download:vscode`: download latest VSCode Insiders
 - `yarn test:playwright`: run all tests against electron app

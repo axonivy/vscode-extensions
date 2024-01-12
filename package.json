@@ -22,7 +22,8 @@
     "test:playwright:stable": "RUN_STABLE_VERSION=true yarn test:playwright",
     "test:playwright:browser": "RUN_IN_BRWOSER=true yarn test:playwright",
     "test:playwright:download:vscode": "yarn -s --cwd playwright download:vscode",
-    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u"
+    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
+    "watch": "lerna run watch --parallel"
   },
   "devDependencies": {
     "@types/node": "^20.10.7",
