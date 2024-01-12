@@ -8,7 +8,7 @@ import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../base/status-bar-message';
 import { CREATE_PROJECT_REQUEST } from './api/project-request';
-import { resolveClientEngineHost, toWebSocketUrl } from '../base/url-util';
+import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
 
 export class IvyEngineManager {
@@ -38,7 +38,6 @@ export class IvyEngineManager {
     await this.deployProjects();
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
     process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
-    process.env['WEB_SOCKET_ADDRESS_CLIENT'] = resolveClientEngineHost(websocketUrl).toString();
     executeCommand('process-editor.activate');
   }
 

@@ -8,7 +8,7 @@ import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketForwar
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const InitializeServerRequest: RequestType<string, void> = { method: 'initializeServer' };
+const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
 const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' };
 
 export default class IvyEditorProvider extends GlspEditorProvider {
@@ -24,7 +24,6 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 
   setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string) {
     const webview = webviewPanel.webview;
-    const webSocketAddress = process.env.WEB_SOCKET_ADDRESS_CLIENT ?? '';
     webviewPanel.webview.options = {
       enableScripts: true
     };
@@ -33,7 +32,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     const toDispose = new DisposableCollection(
       new WebSocketForwarder('ivy-inscription-lsp', messageParticipant, InscriptionWebSocketMessage),
       new WebSocketForwarder('ivy-script-lsp', messageParticipant, IvyScriptWebSocketMessage),
-      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(webSocketAddress, messageParticipant), {
+      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(messageParticipant), {
         sender: messageParticipant
       }),
       messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
@@ -84,8 +83,8 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       </html>`;
   }
 
-  private async handleWebviewReadyNotification(server: string, messageParticipant: MessageParticipant) {
-    await messenger.sendRequest(InitializeServerRequest, messageParticipant, server);
+  private async handleWebviewReadyNotification(messageParticipant: MessageParticipant) {
+    await messenger.sendRequest(InitializeConnectionRequest, messageParticipant);
     messenger.sendNotification(
       ColorThemeChangedNotification,
       messageParticipant,
