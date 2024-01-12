@@ -37,7 +37,7 @@
   "devDependencies": {
     "@types/vscode": "^1.85.0",
     "@types/vscode-webview": "^1.57.4",
-    "vsce": "^2.15.0",
+    "@vscode/vsce": "^2.22.0",
     "vscode-config-editor-webview": "11.3.0",
     "vscode-process-editor-webview": "11.3.0",
     "webpack": "^5.89.0",
