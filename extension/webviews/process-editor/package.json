@@ -16,10 +16,10 @@
     "url": "https://github.com/axonivy/glsp-editor-client"
   },
   "dependencies": {
-    "@axonivy/editor-icons": "~11.3.0-next.927",
-    "@axonivy/process-editor": "~11.3.0-next.880",
-    "@axonivy/process-editor-inscription": "~11.3.0-next.880",
-    "@axonivy/process-editor-protocol": "~11.3.0-next.880",
+    "@axonivy/editor-icons": "~11.3.0-next.939",
+    "@axonivy/process-editor": "~11.3.0-next.884",
+    "@axonivy/process-editor-inscription": "~11.3.0-next.884",
+    "@axonivy/process-editor-protocol": "~11.3.0-next.884",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC10",
     "inversify": "^6.0.1",
     "vscode-messenger-webview": "^0.4.5",
