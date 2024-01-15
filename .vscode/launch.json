@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Start VSCode Extension",
+      "name": "Run Extension",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
@@ -12,7 +12,8 @@
       ],
       "outFiles": ["${workspaceFolder}/extension/dist/**/*.js"],
       "sourceMaps": true,
-      "preLaunchTask": "clean & build extension"
+      "preLaunchTask": "Watch",
+      "postDebugTask": "Terminate All Tasks"
     }
   ]
 }
