@@ -2993,7 +2993,7 @@
 
 "@types/ws@^8.5.10":
   version "8.5.10"
-  resolved "https://npmjs-registry.ivyteam.io/@types/ws/-/ws-8.5.10.tgz#4acfb517970853fa6574a3a6886791d04a396787"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.10.tgz#4acfb517970853fa6574a3a6886791d04a396787"
   integrity sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==
   dependencies:
     "@types/node" "*"
@@ -3739,7 +3739,7 @@ buffer@^5.5.0:
 
 bufferutil@^4.0.8:
   version "4.0.8"
-  resolved "https://npmjs-registry.ivyteam.io/bufferutil/-/bufferutil-4.0.8.tgz#1de6a71092d65d7766c4d8a522b261a6e787e8ea"
+  resolved "https://registry.yarnpkg.com/bufferutil/-/bufferutil-4.0.8.tgz#1de6a71092d65d7766c4d8a522b261a6e787e8ea"
   integrity sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==
   dependencies:
     node-gyp-build "^4.3.0"
@@ -6876,7 +6876,7 @@ node-fetch@2.6.7, node-fetch@^2.6.7:
 
 node-gyp-build@^4.3.0:
   version "4.8.0"
-  resolved "https://npmjs-registry.ivyteam.io/node-gyp-build/-/node-gyp-build-4.8.0.tgz#3fee9c1731df4581a3f9ead74664369ff00d26dd"
+  resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.8.0.tgz#3fee9c1731df4581a3f9ead74664369ff00d26dd"
   integrity sha512-u6fs2AEUljNho3EYTJNBfImO5QTo/J/1Etd+NVdCj7qWKUSN/bSLkZwhDv7I+w/MSC6qJ4cknepkAYykDdK8og==
 
 node-gyp@^10.0.0:
@@ -9197,7 +9197,7 @@ vscode-ws-jsonrpc@^3.0.0:
 
 vscode-ws-jsonrpc@^3.1.0:
   version "3.1.0"
-  resolved "https://npmjs-registry.ivyteam.io/vscode-ws-jsonrpc/-/vscode-ws-jsonrpc-3.1.0.tgz#7c1870807ccd9e36efa95bed93874310f5949e72"
+  resolved "https://registry.yarnpkg.com/vscode-ws-jsonrpc/-/vscode-ws-jsonrpc-3.1.0.tgz#7c1870807ccd9e36efa95bed93874310f5949e72"
   integrity sha512-Z3as2O9rml9rYMYjZQABeCtYEqmRa0TJRUOe6MElXDswNvXiJnu7+vqyy4c6GX+/8SfI0C+sDBJ7naM5wHz0gA==
   dependencies:
     vscode-jsonrpc "~8.2.0"
@@ -9444,7 +9444,7 @@ write-pkg@4.0.0:
 
 ws@^8.13.0, ws@^8.16.0:
   version "8.16.0"
-  resolved "https://npmjs-registry.ivyteam.io/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.16.0.tgz#d1cd774f36fbc07165066a60e40323eab6446fd4"
   integrity sha512-HS0c//TP7Ina87TfiPUz1rQzMhHrl/SG2guqRcTOIUYD2q8uhUdNHZYJUaQ8aTGPzCh+c6oawMKW35nFl1dxyQ==
 
 xml2js@^0.5.0:
