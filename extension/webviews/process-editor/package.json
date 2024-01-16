@@ -22,9 +22,9 @@
     "@axonivy/process-editor-protocol": "~11.3.0-next.884",
     "@eclipse-glsp/vscode-integration-webview": "1.1.0-RC10",
     "inversify": "^6.0.1",
+    "vscode-jsonrpc": "^8.2.0",
     "vscode-messenger-webview": "^0.4.5",
-    "vscode-messenger-common": "^0.4.5",
-    "vscode-ws-jsonrpc": "^3.1.0"
+    "vscode-messenger-common": "^0.4.5"
   },
   "devDependencies": {
     "@vscode/codicons": "^0.0.35",

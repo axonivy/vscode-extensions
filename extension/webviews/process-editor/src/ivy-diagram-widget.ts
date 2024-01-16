@@ -11,7 +11,8 @@ import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
 import { Messenger } from 'vscode-messenger-webview';
 import { NotificationType, HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
-import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
+import { IvyMessageWriter } from './message-writer';
+import { IvyMessageReader } from './message-reader';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
@@ -46,26 +47,17 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
   private initConnection() {
     if (this.actionDispatcher instanceof GLSPActionDispatcher) {
       this.actionDispatcher.onceModelInitialized().finally(() => {
-        const ivyScript = {
-          reader: new WebSocketMessageReader(this.wrapWebSocket(IvyScriptWebSocketMessage)),
-          writer: new WebSocketMessageWriter(this.wrapWebSocket(IvyScriptWebSocketMessage))
-        };
-        const inscription = {
-          reader: new WebSocketMessageReader(this.wrapWebSocket(InscriptionWebSocketMessage)),
-          writer: new WebSocketMessageWriter(this.wrapWebSocket(InscriptionWebSocketMessage))
-        };
+        const ivyScript = this.toMessageConnection(IvyScriptWebSocketMessage);
+        const inscription = this.toMessageConnection(InscriptionWebSocketMessage);
         this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { ivyScript, inscription } }));
       });
     }
   }
 
-  private wrapWebSocket(notificationType: NotificationType<string>): IWebSocket {
+  private toMessageConnection(notificationType: NotificationType<string>) {
     return {
-      send: content => this.messenger.sendNotification(notificationType, HOST_EXTENSION, content),
-      onMessage: callback => this.messenger.onNotification(notificationType, callback),
-      onError: () => {},
-      onClose: () => {},
-      dispose: () => {}
+      reader: new IvyMessageReader(this.messenger, notificationType),
+      writer: new IvyMessageWriter(this.messenger, notificationType)
     };
   }
 }
