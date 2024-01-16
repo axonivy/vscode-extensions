@@ -11,8 +11,8 @@ import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
 import { Messenger } from 'vscode-messenger-webview';
 import { NotificationType, HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
-import { IvyMessageWriter } from './message-writer';
-import { IvyMessageReader } from './message-reader';
+import { WebviewMessageWriter } from './message-writer';
+import { WebviewMessageReader } from './message-reader';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
@@ -56,8 +56,8 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
 
   private toMessageConnection(notificationType: NotificationType<string>) {
     return {
-      reader: new IvyMessageReader(this.messenger, notificationType),
-      writer: new IvyMessageWriter(this.messenger, notificationType)
+      reader: new WebviewMessageReader(this.messenger, notificationType),
+      writer: new WebviewMessageWriter(this.messenger, notificationType)
     };
   }
 }

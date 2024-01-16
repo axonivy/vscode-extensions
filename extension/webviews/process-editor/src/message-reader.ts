@@ -2,7 +2,7 @@ import { Disposable, DataCallback, AbstractMessageReader, MessageReader } from '
 import { NotificationType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 
-export class IvyMessageReader extends AbstractMessageReader implements MessageReader {
+export class WebviewMessageReader extends AbstractMessageReader implements MessageReader {
   protected state: 'initial' | 'listening' | 'closed' = 'initial';
   protected callback: DataCallback | undefined;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

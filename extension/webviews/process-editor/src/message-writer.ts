@@ -2,7 +2,7 @@ import { Message, AbstractMessageWriter, MessageWriter } from 'vscode-jsonrpc';
 import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 
-export class IvyMessageWriter extends AbstractMessageWriter implements MessageWriter {
+export class WebviewMessageWriter extends AbstractMessageWriter implements MessageWriter {
   protected errorCount = 0;
 
   constructor(private readonly messenger: Messenger, private readonly notificationType: NotificationType<string>) {
