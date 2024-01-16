@@ -11,9 +11,13 @@ import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { injectable, inject } from 'inversify';
 import { Messenger } from 'vscode-messenger-webview';
 import { NotificationType, HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
+import { WebviewMessageWriter } from './message-writer';
+import { WebviewMessageReader } from './message-reader';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const InitializeServerRequest: RequestType<string, void> = { method: 'initializeServer' };
+const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
+const InscriptionWebSocketMessage: NotificationType<string> = { method: 'inscriptionWebSocketMessage' };
+const IvyScriptWebSocketMessage: NotificationType<string> = { method: 'ivyScriptWebSocketMessage' };
 
 @injectable()
 export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
@@ -36,15 +40,24 @@ export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {
     this.actionDispatcher.dispatch(EnableToolPaletteAction.create());
     this.actionDispatcher.dispatch(EnableViewportAction.create());
 
-    this.messenger.onRequest(InitializeServerRequest, server => this.initServer(server));
+    this.messenger.onRequest(InitializeConnectionRequest, () => this.initConnection());
     this.messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
   }
 
-  private initServer(server: string) {
+  private initConnection() {
     if (this.actionDispatcher instanceof GLSPActionDispatcher) {
-      this.actionDispatcher
-        .onceModelInitialized()
-        .finally(() => this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { server } })));
+      this.actionDispatcher.onceModelInitialized().finally(() => {
+        const ivyScript = this.toMessageConnection(IvyScriptWebSocketMessage);
+        const inscription = this.toMessageConnection(InscriptionWebSocketMessage);
+        this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { ivyScript, inscription } }));
+      });
     }
+  }
+
+  private toMessageConnection(notificationType: NotificationType<string>) {
+    return {
+      reader: new WebviewMessageReader(this.messenger, notificationType),
+      writer: new WebviewMessageWriter(this.messenger, notificationType)
+    };
   }
 }

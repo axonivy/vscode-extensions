@@ -4,10 +4,11 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import { NotificationType, RequestType, MessageParticipant } from 'vscode-messenger-common';
 import { messenger } from '../messenger';
+import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketForwarder } from '../websocket-forwarder';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const InitializeServerRequest: RequestType<string, void> = { method: 'initializeServer' };
+const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
 const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' };
 
 export default class IvyEditorProvider extends GlspEditorProvider {
@@ -23,14 +24,15 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 
   setUpWebview(_document: vscode.CustomDocument, webviewPanel: vscode.WebviewPanel, _token: vscode.CancellationToken, clientId: string) {
     const webview = webviewPanel.webview;
-    const webSocketAddress = process.env.WEB_SOCKET_ADDRESS_CLIENT ?? '';
     webviewPanel.webview.options = {
       enableScripts: true
     };
 
     const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
     const toDispose = new DisposableCollection(
-      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(webSocketAddress, messageParticipant), {
+      new WebSocketForwarder('ivy-inscription-lsp', messageParticipant, InscriptionWebSocketMessage),
+      new WebSocketForwarder('ivy-script-lsp', messageParticipant, IvyScriptWebSocketMessage),
+      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(messageParticipant), {
         sender: messageParticipant
       }),
       messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
@@ -62,7 +64,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       `script-src 'nonce-${nonce}';` +
       `worker-src ${webview.cspSource};` +
       `font-src ${webview.cspSource};` +
-      `connect-src ${webview.cspSource} ${webSocketAddress}`;
+      `connect-src ${webview.cspSource}`;
 
     webviewPanel.webview.html = `
       <!DOCTYPE html>
@@ -81,8 +83,8 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       </html>`;
   }
 
-  private async handleWebviewReadyNotification(server: string, messageParticipant: MessageParticipant) {
-    await messenger.sendRequest(InitializeServerRequest, messageParticipant, server);
+  private async handleWebviewReadyNotification(messageParticipant: MessageParticipant) {
+    await messenger.sendRequest(InitializeConnectionRequest, messageParticipant);
     messenger.sendNotification(
       ColorThemeChangedNotification,
       messageParticipant,
