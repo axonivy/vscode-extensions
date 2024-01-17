@@ -42,6 +42,7 @@ type ProjectViewCommand =
   | 'ivyProjects.buildProject'
   | 'ivyProjects.deployProject'
   | 'ivyProjects.buildAndDeployProject'
+  | 'ivyProjects.addProcess'
   | 'ivyProjects.addBusinessProcess'
   | 'ivyProjects.addCallableSubProcess'
   | 'ivyProjects.addWebServiceProcess'

@@ -1,31 +1,40 @@
 import * as vscode from 'vscode';
 import { executeCommand } from '../base/commands';
 import { resolveNamespaceFromPath } from './util';
+import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
+import { InscriptionActionHandler } from '../inscription-action-handler';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
 
 export interface NewProcessParams {
   name: string;
-  kind: ProcessKind;
   namespace: string;
   path: string;
+  kind?: ProcessKind;
+  pid?: string;
+}
+
+export class NewProcessActionHandler implements InscriptionActionHandler {
+  actionId = 'newProcess' as const;
+  handle(actionArgs: InscriptionActionArgs) {
+    const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
+    if (tabInput instanceof vscode.TabInputCustom) {
+      executeCommand('ivyProjects.addProcess', tabInput, actionArgs.context.pid);
+    }
+  }
 }
 
 const prompt =
   'Enter the new process name e.g. "myProcess". You can also specify its directory name in the form "parentDirectory/subDirectory/myProcess".';
 
-export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind: ProcessKind) {
-  const input = await collectNewProcessParams(selectedUri, projectDir, kind);
+export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind?: ProcessKind, pid?: string) {
+  const input = await collectNewProcessParams(selectedUri, projectDir);
   if (input) {
-    executeCommand('engine.createProcess', input);
+    executeCommand('engine.createProcess', { pid, kind, ...input });
   }
 }
 
-async function collectNewProcessParams(
-  selectedUri: vscode.Uri,
-  projectDir: string,
-  kind: ProcessKind
-): Promise<NewProcessParams | undefined> {
+async function collectNewProcessParams(selectedUri: vscode.Uri, projectDir: string): Promise<NewProcessParams | undefined> {
   const resolvedNamespace = await resolveNamespaceFromPath(selectedUri, projectDir, 'processes');
   const placeHolder = 'newProcessName';
   const nameWithNamespace = await vscode.window.showInputBox({
@@ -43,7 +52,7 @@ async function collectNewProcessParams(
   const nameStartIndex = nameWithNamespace.lastIndexOf('/') + 1;
   const name = nameWithNamespace.substring(nameStartIndex, nameWithNamespace.length);
   const namespace = nameWithNamespace.substring(0, nameStartIndex);
-  return { name, kind, path: projectDir, namespace };
+  return { name, path: projectDir, namespace };
 }
 
 function validateNameWithNamespace(value: string): string | undefined {
