@@ -6,8 +6,8 @@ import { messenger } from './messenger';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { ActionHandlers } from './inscription-action-handler';
 
-export const InscriptionWebSocketMessage: NotificationType<string> = { method: 'inscriptionWebSocketMessage' };
-export const IvyScriptWebSocketMessage: NotificationType<string> = { method: 'ivyScriptWebSocketMessage' };
+export const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
+export const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
 export class WebSocketForwarder implements vscode.Disposable {
   private readonly toDispose = new DisposableCollection();
@@ -16,7 +16,7 @@ export class WebSocketForwarder implements vscode.Disposable {
   constructor(
     wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp',
     private readonly messageParticipant: MessageParticipant,
-    private readonly notificationType: NotificationType<string>
+    private readonly notificationType: NotificationType<unknown>
   ) {
     this.webSocket = new WebSocket(buildWebSocketUrl(wsEndPoint));
     this.webSocket.onopen = () => {
@@ -35,16 +35,26 @@ export class WebSocketForwarder implements vscode.Disposable {
     });
   }
 
-  private handleClientMessage(message: string) {
-    const obj = JSON.parse(message);
-    if (obj?.method === 'action') {
-      const handler = this.actionHandlerFor(obj.params);
+  private handleClientMessage(message: unknown) {
+    if (this.isAction(message)) {
+      const handler = this.actionHandlerFor(message.params);
       if (handler) {
-        handler.handle(obj.params);
+        handler.handle(message.params);
         return;
       }
     }
-    this.webSocket.send(message);
+    this.webSocket.send(JSON.stringify(message));
+  }
+
+  private isAction(obj: unknown): obj is { method: string; params: InscriptionActionArgs } {
+    return (
+      typeof obj === 'object' &&
+      obj !== null &&
+      'method' in obj &&
+      obj.method === 'action' &&
+      'params' in obj &&
+      typeof obj.params === 'object'
+    );
   }
 
   private actionHandlerFor(action: InscriptionActionArgs) {
