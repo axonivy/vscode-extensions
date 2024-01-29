@@ -34,8 +34,8 @@ export class InscriptionView extends PageObject {
     await this.typeText(input);
     const contentAssist = this.monacoContentAssist();
     await expect(contentAssist).toBeVisible();
-    await expect(contentAssist).toContainText(expectedCompletion);
-    await this.page.keyboard.press('Enter');
+    await contentAssist.getByText(expectedCompletion, { exact: true }).click();
+    await expect(contentAssist).toBeHidden();
   }
 
   monacoContentAssist(): Locator {

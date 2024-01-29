@@ -25,7 +25,10 @@ test.describe('Engine', () => {
     const settingsView = new SettingsView(page);
     await settingsView.openDefaultSettings();
     await settingsView.containsSetting('"engine.runByExtension": true');
+    await settingsView.containsSetting('"engine.directory": ""');
     await settingsView.containsSetting('"engine.url": "http://localhost:8080/"');
+    await settingsView.containsSetting('"project.excludePattern": "**/target/**"');
+    await settingsView.containsSetting('"project.maximumNumber": 50');
   });
 
   test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
