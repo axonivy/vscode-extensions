@@ -1,10 +1,9 @@
 pipeline {
   agent {
-    label { label 'windows-build02' }
+    label { label 'windows-build03' }
   }
 
   tools {
-    jdk 'temurin-jdk-17.0.9.9'
     maven '3.9'
   }
 
