@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label { label 'windows-build01 || windows-build03' }
+    label { label 'windows-build03' }
   }
 
   tools {

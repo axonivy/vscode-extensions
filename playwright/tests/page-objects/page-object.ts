@@ -26,6 +26,10 @@ export class PageObject {
     await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
   }
 
+  async hasNoStatusMessage() {
+    await expect(this.page.locator('#status\\.extensionMessage')).toBeHidden();
+  }
+
   async hasAnyStatusMessage() {
     await expect(this.page.locator('#status\\.extensionMessage')).toBeVisible();
   }

@@ -48,11 +48,13 @@ test.describe('Create Process', () => {
 
   test('Assert that process gets redeployed after editing', async () => {
     await explorer.addProcess(projectName, processName, 'Business Process');
+    await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.appendActivity(start, 'Script');
     const script = processEditor.locatorForElementType('g.script');
     await expect(script).toHaveClass(/selected/);
     await processEditor.saveAllFiles();
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     await processEditor.startProcessAndAssertExecuted(start, script);
   });
 
