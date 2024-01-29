@@ -16,8 +16,8 @@ import { WebviewMessageReader } from './message-reader';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
-const InscriptionWebSocketMessage: NotificationType<string> = { method: 'inscriptionWebSocketMessage' };
-const IvyScriptWebSocketMessage: NotificationType<string> = { method: 'ivyScriptWebSocketMessage' };
+const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
+const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
 @injectable()
 export abstract class IvyGLSPDiagramWidget extends GLSPDiagramWidget {

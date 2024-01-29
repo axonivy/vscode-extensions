@@ -9,7 +9,7 @@ export const DEACTIVATE_PROJECTS_REQUEST: Readonly<ProjectRequest> = {
 };
 export const ACTIVATE_PROJECTS_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'activate-projects', description: 'Activate Ivy Project' };
 export const DEPLOY_PROJECTS_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'deploy-projects', description: 'Deploy Ivy Projects' };
-export const CREATE_PROCESS_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'create-process', description: 'Create new Process' };
+export const CREATE_PROCESS_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'process', description: 'Create new Process' };
 export const CREATE_PROJECT_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'create-project', description: 'Create new Project' };
 export const CREATE_USER_DIALOG_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'hd', description: 'Create User Dialog' };
 export const DELETE_PROJECT_REQUEST: Readonly<ProjectRequest> = { sourcePath: 'delete-project', description: 'Delete Project' };

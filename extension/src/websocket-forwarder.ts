@@ -3,9 +3,11 @@ import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import vscode from 'vscode';
 import { NotificationType, MessageParticipant } from 'vscode-messenger-common';
 import { messenger } from './messenger';
+import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
+import { ActionHandlers } from './inscription-action-handler';
 
-export const InscriptionWebSocketMessage: NotificationType<string> = { method: 'inscriptionWebSocketMessage' };
-export const IvyScriptWebSocketMessage: NotificationType<string> = { method: 'ivyScriptWebSocketMessage' };
+export const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
+export const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
 export class WebSocketForwarder implements vscode.Disposable {
   private readonly toDispose = new DisposableCollection();
@@ -14,7 +16,7 @@ export class WebSocketForwarder implements vscode.Disposable {
   constructor(
     wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp',
     private readonly messageParticipant: MessageParticipant,
-    private readonly notificationType: NotificationType<string>
+    private readonly notificationType: NotificationType<unknown>
   ) {
     this.webSocket = new WebSocket(buildWebSocketUrl(wsEndPoint));
     this.webSocket.onopen = () => {
@@ -24,13 +26,39 @@ export class WebSocketForwarder implements vscode.Disposable {
 
   private initialize(): void {
     this.toDispose.push(
-      messenger.onNotification(this.notificationType, message => this.webSocket.send(message), {
+      messenger.onNotification(this.notificationType, message => this.handleClientMessage(message), {
         sender: this.messageParticipant
       })
     );
     this.webSocket.on('message', msg => {
       messenger.sendNotification(this.notificationType, this.messageParticipant, msg.toString());
     });
+  }
+
+  private handleClientMessage(message: unknown) {
+    if (this.isAction(message)) {
+      const handler = this.actionHandlerFor(message.params);
+      if (handler) {
+        handler.handle(message.params);
+        return;
+      }
+    }
+    this.webSocket.send(JSON.stringify(message));
+  }
+
+  private isAction(obj: unknown): obj is { method: string; params: InscriptionActionArgs } {
+    return (
+      typeof obj === 'object' &&
+      obj !== null &&
+      'method' in obj &&
+      obj.method === 'action' &&
+      'params' in obj &&
+      typeof obj.params === 'object'
+    );
+  }
+
+  private actionHandlerFor(action: InscriptionActionArgs) {
+    return ActionHandlers.find(handler => handler.actionId === action.actionId);
   }
 
   dispose(): void {

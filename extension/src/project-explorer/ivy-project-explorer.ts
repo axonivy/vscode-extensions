@@ -35,11 +35,12 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.buildProject`, (selection: TreeSelection) => this.execute('engine.buildProject', selection));
     registerCmd(`${VIEW_ID}.deployProject`, (selection: TreeSelection) => this.execute('engine.deployProject', selection));
     registerCmd(`${VIEW_ID}.buildAndDeployProject`, (selection: TreeSelection) => this.execute('engine.buildAndDeployProject', selection));
-    registerCmd(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess('Business Process', selection));
-    registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess('Callable Sub Process', selection));
-    registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess('Web Service Process', selection));
+    registerCmd(`${VIEW_ID}.addProcess`, (selection: TreeSelection, pid: string) => this.addProcess(selection, undefined, pid));
+    registerCmd(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Business Process'));
+    registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Callable Sub Process'));
+    registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Web Service Process'));
     registerCmd(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
-    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSF'));
+    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection, pid: string) => this.addUserDialog(selection, 'JSF', pid));
     registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSFOffline'));
     registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
@@ -82,18 +83,18 @@ export class IvyProjectExplorer {
     executeTreeSelectionCommand(command, selection, this.treeDataProvider.getIvyProjects());
   }
 
-  private async addProcess(kind: ProcessKind, selection: TreeSelection) {
+  private async addProcess(selection: TreeSelection, kind?: ProcessKind, pid?: string) {
     treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(async projectDir =>
       projectDir
-        ? addNewProcess(await treeSelectionToUri(selection), projectDir, kind)
+        ? addNewProcess(await treeSelectionToUri(selection), projectDir, kind, pid)
         : vscode.window.showWarningMessage('Add Process: no valid Axon Ivy Project selected.')
     );
   }
 
-  private async addUserDialog(selection: TreeSelection, type: DialogType) {
+  private async addUserDialog(selection: TreeSelection, type: DialogType, pid?: string) {
     treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects()).then(async projectDir =>
       projectDir
-        ? addNewUserDialog(await treeSelectionToUri(selection), projectDir, type)
+        ? addNewUserDialog(await treeSelectionToUri(selection), projectDir, type, pid)
         : vscode.window.showWarningMessage('Add User Dialog: no valid Axon Ivy Project selected.')
     );
   }

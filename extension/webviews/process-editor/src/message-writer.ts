@@ -5,7 +5,7 @@ import { Messenger } from 'vscode-messenger-webview';
 export class WebviewMessageWriter extends AbstractMessageWriter implements MessageWriter {
   protected errorCount = 0;
 
-  constructor(private readonly messenger: Messenger, private readonly notificationType: NotificationType<string>) {
+  constructor(private readonly messenger: Messenger, private readonly notificationType: NotificationType<unknown>) {
     super();
   }
 
@@ -13,8 +13,7 @@ export class WebviewMessageWriter extends AbstractMessageWriter implements Messa
 
   async write(msg: Message): Promise<void> {
     try {
-      const content = JSON.stringify(msg);
-      this.messenger.sendNotification(this.notificationType, HOST_EXTENSION, content);
+      this.messenger.sendNotification(this.notificationType, HOST_EXTENSION, msg);
     } catch (e) {
       this.errorCount++;
       this.fireError(e, msg, this.errorCount);

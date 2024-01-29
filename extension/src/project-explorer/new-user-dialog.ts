@@ -1,6 +1,8 @@
 import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
+import { InscriptionActionHandler } from '../inscription-action-handler';
+import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 
 export type DialogType = 'JSF' | 'JSFOffline';
 
@@ -24,12 +26,23 @@ export interface NewUserDialogParams {
   template?: Template;
   layout: Layout;
   projectDir: string;
+  pid?: string;
 }
 
-export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType) {
+export class NewHtmlDialogActionHandler implements InscriptionActionHandler {
+  actionId = 'newHtmlDialog' as const;
+  handle(actionArgs: InscriptionActionArgs) {
+    const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
+    if (tabInput instanceof vscode.TabInputCustom) {
+      executeCommand('ivyProjects.addNewHtmlDialog', tabInput, actionArgs.context.pid);
+    }
+  }
+}
+
+export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType, pid?: string) {
   const input = await collectNewUserDialogParams(selectedUri, type, projectDir);
   if (input) {
-    executeCommand('engine.createUserDialog', input);
+    executeCommand('engine.createUserDialog', { pid, ...input });
   }
 }
 
