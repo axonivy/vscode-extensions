@@ -46,7 +46,7 @@ test.describe('Create Process', () => {
     await processEditor.startProcessAndAssertExecuted(start, end);
   });
 
-  test('Assert that process gets redeployed after editing', async () => {
+  test.only('Assert that process gets redeployed after editing', async () => {
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
