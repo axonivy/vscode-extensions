@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label 'windows'
+    label { label 'windows-build05' }
   }
 
   tools {
