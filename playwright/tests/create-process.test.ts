@@ -8,7 +8,7 @@ import path from 'path';
 import { wait } from './utils/timeout';
 import { randomInt } from 'crypto';
 
-test.describe('Create Process', () => {
+test.describe.only('Create Process', () => {
   let page: Page;
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
@@ -46,7 +46,7 @@ test.describe('Create Process', () => {
     await processEditor.startProcessAndAssertExecuted(start, end);
   });
 
-  test.only('Assert that process gets redeployed after editing', async () => {
+  test('Assert that process gets redeployed after editing', async () => {
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
