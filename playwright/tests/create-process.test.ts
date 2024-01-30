@@ -37,15 +37,6 @@ test.describe.only('Create Process', () => {
     cleanUp();
   });
 
-  test('Add business process and execute it', async () => {
-    await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasNode(`${processName}.p.json`);
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
-    const start = processEditor.locatorForElementType('g.start\\:requestStart');
-    const end = processEditor.locatorForElementType('g.end\\:taskEnd');
-    await processEditor.startProcessAndAssertExecuted(start, end);
-  });
-
   test('Assert that process gets redeployed after editing', async () => {
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasNoStatusMessage();
@@ -56,6 +47,15 @@ test.describe.only('Create Process', () => {
     await processEditor.saveAllFiles();
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     await processEditor.startProcessAndAssertExecuted(start, script);
+  });
+
+  test('Add business process and execute it', async () => {
+    await explorer.addProcess(projectName, processName, 'Business Process');
+    await explorer.hasNode(`${processName}.p.json`);
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    const start = processEditor.locatorForElementType('g.start\\:requestStart');
+    const end = processEditor.locatorForElementType('g.end\\:taskEnd');
+    await processEditor.startProcessAndAssertExecuted(start, end);
   });
 
   test('Add nested business process', async () => {
