@@ -76,7 +76,7 @@ test.describe.only(() => {
     test('Add business process and execute it', async () => {
       await explorer.addProcess(projectName, processName, 'Business Process');
       await explorer.hasNode(`${processName}.p.json`);
-      await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+      await explorer.hasNoStatusMessage();
       const start = processEditor.locatorForElementType('g.start\\:requestStart');
       const end = processEditor.locatorForElementType('g.end\\:taskEnd');
       await processEditor.startProcessAndAssertExecuted(start, end);
@@ -84,6 +84,7 @@ test.describe.only(() => {
 
     test('Assert that process gets redeployed after editing', async () => {
       await explorer.addProcess(projectName, processName, 'Business Process');
+      await explorer.hasNode(`${processName}.p.json`);
       await explorer.hasNoStatusMessage();
       const start = processEditor.locatorForElementType('g.start\\:requestStart');
       await processEditor.appendActivity(start, 'Script');
