@@ -39,7 +39,9 @@ export class WebSocketForwarder implements vscode.Disposable {
     if (this.isAction(message)) {
       const handler = this.actionHandlerFor(message.params);
       if (handler) {
-        handler.handle(message.params);
+        handler.handle(message.params, (type: string) =>
+          messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }))
+        );
         return;
       }
     }

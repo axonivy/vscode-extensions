@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { executeCommand } from '../base/commands';
 import { resolveNamespaceFromPath } from './util';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
-import { InscriptionActionHandler } from '../inscription-action-handler';
+import { InscriptionActionHandler, SendInscriptionNotification } from '../inscription-action-handler';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
 
@@ -16,10 +16,12 @@ export interface NewProcessParams {
 
 export class NewProcessActionHandler implements InscriptionActionHandler {
   actionId = 'newProcess' as const;
-  handle(actionArgs: InscriptionActionArgs) {
+  async handle(actionArgs: InscriptionActionArgs, sendInscriptionNotification: SendInscriptionNotification): Promise<void> {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
     if (tabInput instanceof vscode.TabInputCustom) {
-      executeCommand('ivyProjects.addProcess', tabInput, actionArgs.context.pid);
+      await executeCommand('ivyProjects.addProcess', tabInput, actionArgs.context.pid);
+      sendInscriptionNotification('dataChanged');
+      sendInscriptionNotification('validation');
     }
   }
 }
@@ -30,7 +32,7 @@ const prompt =
 export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind?: ProcessKind, pid?: string) {
   const input = await collectNewProcessParams(selectedUri, projectDir);
   if (input) {
-    executeCommand('engine.createProcess', { pid, kind, ...input });
+    await executeCommand('engine.createProcess', { pid, kind, ...input });
   }
 }
 
@@ -51,7 +53,7 @@ async function collectNewProcessParams(selectedUri: vscode.Uri, projectDir: stri
   }
   const nameStartIndex = nameWithNamespace.lastIndexOf('/') + 1;
   const name = nameWithNamespace.substring(nameStartIndex, nameWithNamespace.length);
-  const namespace = nameWithNamespace.substring(0, nameStartIndex);
+  const namespace = nameWithNamespace.substring(0, nameStartIndex - 1);
   return { name, path: projectDir, namespace };
 }
 
