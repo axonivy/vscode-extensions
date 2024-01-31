@@ -1,7 +1,7 @@
 import { Page, expect, test } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
-import { defaultWorkspacePath } from './workspaces/workspace';
+import { prebuiltWorkspacePath } from './workspaces/workspace';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
@@ -10,7 +10,7 @@ test.describe('Inscription View', () => {
   let processEditor: ProcessEditor;
 
   test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
+    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page);
     await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });

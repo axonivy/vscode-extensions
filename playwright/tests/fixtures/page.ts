@@ -1,5 +1,5 @@
 import { Browser, ElectronApplication, Page, test as base, chromium } from '@playwright/test';
-import { defaultWorkspacePath } from '../workspaces/workspace';
+import { prebuiltWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
 import path from 'path';
 import { PageObject } from '../page-objects/page-object';
@@ -10,7 +10,7 @@ const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
 export const test = base.extend<{ page: Page; pageFor(workspace: string): Promise<Page> }>({
   page: async ({}, use, testInfo) => {
-    const page = await pageFor(defaultWorkspacePath, testInfo.title);
+    const page = await pageFor(prebuiltWorkspacePath, testInfo.title);
     await use(page);
     await close();
   },

@@ -1,8 +1,8 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/11.2.1/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/11.2.2/process.json",
   "id" : "15254DCE818AD7A2",
   "config" : {
-    "data" : "workflow.humantask.ProcurementRequest"
+    "data" : "prebuiltProject.Data"
   },
   "elements" : [ {
       "id" : "f0",
@@ -11,15 +11,13 @@
       "config" : {
         "signature" : "start",
         "request" : {
-          "name" : "2.1: <%=ivy.cms.co(\"/ProcessDescriptions/procurementRequest\")%> (<%=ivy.cms.co(\"/ProcessDescriptions/userTaskExample\")%>)",
-          "description" : "<%=ivy.cms.co(\"/ProcessDescriptions/procurementRequestUserTaskDescription\")%>",
           "category" : "human",
           "customFields" : [
             { "name" : "cssIcon", "value" : "fa fa-female" }
           ]
         },
         "permission" : {
-          "role" : "Employee"
+          "anonymous" : false
         },
         "task" : {
           "category" : "Input/Procurement"
@@ -49,16 +47,6 @@
       "id" : "f3",
       "type" : "DialogCall",
       "name" : "Enter Request",
-      "config" : {
-        "dialog" : "workflow.humantask.EnterRequest:start()",
-        "output" : {
-          "map" : {
-            "out" : "result.procurementRequestData",
-            "out.activityLog" : "in.activityLog.add(result.logEntry)",
-            "out.totalPrice" : "result.procurementRequestData.amount * result.procurementRequestData.pricePerUnit"
-          }
-        }
-      },
       "visual" : {
         "at" : { "x" : 224, "y" : 192 }
       },
@@ -70,25 +58,8 @@
       "type" : "UserTask",
       "name" : "Verify Request",
       "config" : {
-        "dialog" : "workflow.humantask.VerifyRequest:start(workflow.humantask.ProcurementRequest)",
-        "call" : {
-          "map" : {
-            "param.procurementRequest" : "in"
-          }
-        },
         "task" : {
-          "name" : "<%=ivy.cms.co(\"/TaskDescriptions/verifyRequest\")%>: <%=in.amount%> <%=ivy.cms.co(\"/Dialogs/procurementRequest/piecesOf\")%> '<%=in.description%>' <%=ivy.cms.co(\"/Dialogs/procurementRequest/forTotal\")%> <%=in.totalPrice%><%=ivy.cms.co(\"/TaskDescriptions/currencySymbol\")%>",
-          "category" : "Review/Procurement",
-          "responsible" : {
-            "activator" : "Manager"
-          }
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.activityLog" : "in.activityLog.add(result.logEntry)",
-            "out.dataOkManager" : "result.dataOk"
-          }
+          "category" : "Review/Procurement"
         }
       },
       "visual" : {
@@ -102,25 +73,8 @@
       "type" : "UserTask",
       "name" : "Accept Request",
       "config" : {
-        "dialog" : "workflow.humantask.AcceptRequest:start(workflow.humantask.ProcurementRequest)",
-        "call" : {
-          "map" : {
-            "param.procurementRequest" : "in"
-          }
-        },
         "task" : {
-          "name" : "<%=ivy.cms.co(\"/TaskDescriptions/acceptRequest\")%>: <%=in.amount%> <%=ivy.cms.co(\"/Dialogs/procurementRequest/piecesOf\")%> '<%=in.description%>' <%=ivy.cms.co(\"/Dialogs/procurementRequest/forTotal\")%> <%=in.totalPrice%><%=ivy.cms.co(\"/TaskDescriptions/currencySymbol\")%>",
-          "category" : "Accept/Procurement",
-          "responsible" : {
-            "activator" : "Executive Manager"
-          }
-        },
-        "output" : {
-          "map" : {
-            "out" : "in",
-            "out.accepted" : "result.accepted",
-            "out.activityLog" : "in.activityLog.add(result.logEntry)"
-          }
+          "category" : "Accept/Procurement"
         }
       },
       "visual" : {
@@ -134,23 +88,7 @@
       "type" : "EMail",
       "name" : "Notify Requester",
       "config" : {
-        "headers" : {
-          "subject" : "<%=ivy.cms.co(\"/Emails/yourRequestHasBeen\")%> <%=(in.accepted ? ivy.cms.co(\"/Emails/accepted\") : ivy.cms.co(\"/Emails/declined\"))%>: <%=in.amount%> <%=ivy.cms.co(\"/Dialogs/procurementRequest/piecesOf\")%> '<%=in.description%>' <%=ivy.cms.co(\"/Dialogs/procurementRequest/forTotal\")%> <%=in.totalPrice%> <%=ivy.cms.co(\"/Dialogs/procurementRequest/currencySymbol\")%>",
-          "from" : "<%=ivy.cms.co(\"/Emails/senderMail\")%>",
-          "to" : "<%=in.requester.email%>"
-        },
         "message" : {
-          "body" : [
-            " <html> ",
-            "  <style type=\"text/css\">",
-            "         <%=ivy.cms.co(\"/Styles/Classic\")%>",
-            "  </style>",
-            "  ",
-            "  <%=ivy.cms.co(\"/Images/Logo\")%>",
-            "",
-            "  <%=ivy.cms.co(\"/Emails/procurementRequestNotification\")%>",
-            "</html>"
-          ],
           "contentType" : "text/html"
         },
         "exceptionHandler" : ">> Ignore Exception"
@@ -166,11 +104,6 @@
       "id" : "f11",
       "type" : "Alternative",
       "name" : "Verified?",
-      "config" : {
-        "conditions" : {
-          "f8" : "in.dataOkManager"
-        }
-      },
       "visual" : {
         "at" : { "x" : 512, "y" : 320 },
         "labelOffset" : { "x" : 61, "y" : 13 }

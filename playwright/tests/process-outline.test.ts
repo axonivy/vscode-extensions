@@ -1,7 +1,7 @@
 import { expect, test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
-import { defaultWorkspacePath } from './workspaces/workspace';
+import { prebuiltWorkspacePath } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { OutlineExplorerView } from './page-objects/explorer-view';
 
@@ -10,7 +10,7 @@ test.describe('Process Outline', () => {
   let page: Page;
 
   test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(defaultWorkspacePath, testInfo.titlePath[1]);
+    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page, 'ProcessOutline.p.json');
     await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
   });
