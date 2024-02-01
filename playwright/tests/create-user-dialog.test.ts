@@ -1,12 +1,11 @@
 import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
-import { multiProjectWorkspacePath, removeFromWorkspace } from './workspaces/workspace';
+import { multiProjectWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 import { wait } from './utils/timeout';
-import { randomInt } from 'crypto';
 
 test.describe('Create User Dialog', () => {
   let page: Page;
@@ -25,7 +24,7 @@ test.describe('Create User Dialog', () => {
   });
 
   test.beforeEach(async () => {
-    userDialogName = 'hd' + randomInt(10_000).toString();
+    userDialogName = randomArtefactName();
   });
 
   test.afterEach(async () => {

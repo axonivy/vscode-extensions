@@ -34,8 +34,12 @@ export class View extends PageObject {
     await expect(this.viewLocator).toBeVisible();
   }
 
-  async isActive() {
+  async isChecked() {
     await expect(this.tabLocator).toHaveClass(/checked/);
+  }
+
+  async isInactive() {
+    await expect(this.tabLocator).not.toHaveClass(/active/);
   }
 
   async isDirty() {

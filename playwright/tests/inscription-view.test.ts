@@ -1,15 +1,20 @@
 import { Page, expect, test } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
-import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
 test.describe('Inscription View', () => {
   let page: Page;
   let processEditor: ProcessEditor;
+  const cleanUp = () => {
+    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd');
+    removeFromWorkspace(prebuiltWorkspacePath, 'processes');
+  };
 
   test.beforeAll(async ({}, testInfo) => {
+    cleanUp();
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page);
     await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
@@ -22,6 +27,10 @@ test.describe('Inscription View', () => {
 
   test.afterEach(async () => {
     await processEditor.revertAndCloseEditor();
+  });
+
+  test.afterAll(() => {
+    cleanUp();
   });
 
   test('Check Process Editor Connector', async () => {
@@ -77,10 +86,32 @@ test.describe('Inscription View', () => {
     await expect(monacoEditor).toHaveText('ivy.log.debug(Object)');
   });
 
-  test('Create new HD on User Dialog ', async () => {
+  test('Create new Sub Process', async () => {
+    const inscriptionView = await processEditor.openInscriptionView('15254DCE818AD7A2-f5');
+    await inscriptionView.accordionFor('Process Call').click();
+    const processStartField = inscriptionView.inputFieldFor('Process start');
+    await expect(processStartField).toBeEmpty();
+    await inscriptionView.click('Create new Sub Process');
+    const processName = randomArtefactName();
+    await inscriptionView.provideUserInput(processName);
+    await processEditor.isInactive();
+    await processEditor.tabLocator.click();
+    await expect(processStartField).toHaveValue(`${processName}:call()`);
+  });
+
+  test('Create new Html Dialog', async () => {
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
-    const callAccordion = inscriptionView.accordionFor('Call');
-    await callAccordion.click();
-    console.log(callAccordion);
+    await inscriptionView.accordionFor('Call').click();
+    const dialogField = inscriptionView.inputFieldFor('Dialog');
+    await expect(dialogField).toBeEmpty();
+    await inscriptionView.click('Create new Html Dialog');
+    const userDialogName = randomArtefactName();
+    await inscriptionView.provideUserInput(userDialogName);
+    await inscriptionView.provideUserInput();
+    await inscriptionView.provideUserInput();
+    await inscriptionView.provideUserInput();
+    await processEditor.isInactive();
+    await processEditor.tabLocator.click();
+    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
   });
 });
