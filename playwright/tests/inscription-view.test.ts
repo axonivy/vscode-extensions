@@ -76,4 +76,11 @@ test.describe('Inscription View', () => {
     await inscriptionView.writeToMonacoEditorWithCompletion('.de', 'debug(Object)');
     await expect(monacoEditor).toHaveText('ivy.log.debug(Object)');
   });
+
+  test('Create new HD on User Dialog ', async () => {
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
+    const callAccordion = inscriptionView.accordionFor('Call');
+    await callAccordion.click();
+    console.log(callAccordion);
+  });
 });

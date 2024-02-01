@@ -51,22 +51,7 @@
         "at" : { "x" : 224, "y" : 192 }
       },
       "connect" : [
-        { "id" : "f6", "to" : "f5", "via" : [ { "x" : 224, "y" : 320 } ], "var" : "in1" }
-      ]
-    }, {
-      "id" : "f5",
-      "type" : "UserTask",
-      "name" : "Verify Request",
-      "config" : {
-        "task" : {
-          "category" : "Review/Procurement"
-        }
-      },
-      "visual" : {
-        "at" : { "x" : 384, "y" : 320 }
-      },
-      "connect" : [
-        { "id" : "f12", "to" : "f11", "condition" : "ivp==\"TaskA.ivp\"" }
+        { "id" : "f12", "to" : "f5", "via" : [ { "x" : 224, "y" : 320 } ] }
       ]
     }, {
       "id" : "f7",
@@ -121,20 +106,6 @@
           } }
       ]
     }, {
-      "id" : "f14",
-      "type" : "ProcessAnnotation",
-      "name" : [
-        "Combines a Task Switch Event",
-        "and a User Dialog Step."
-      ],
-      "visual" : {
-        "at" : { "x" : 312, "y" : 392 },
-        "size" : { "width" : 176, "height" : 44 }
-      },
-      "connect" : [
-        { "id" : "f15", "to" : "f5" }
-      ]
-    }, {
       "id" : "f16",
       "type" : "ProcessAnnotation",
       "name" : [
@@ -146,6 +117,16 @@
         "at" : { "x" : 352, "y" : 48 },
         "size" : { "width" : 576, "height" : 60 }
       }
+    }, {
+      "id" : "f5",
+      "type" : "SubProcessCall",
+      "name" : "Call the Sub",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 320 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f11" }
+      ]
     } ],
   "layout" : {
     "lanes" : [ {
