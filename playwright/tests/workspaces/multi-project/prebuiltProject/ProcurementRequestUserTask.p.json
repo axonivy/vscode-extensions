@@ -51,7 +51,7 @@
         "at" : { "x" : 224, "y" : 192 }
       },
       "connect" : [
-        { "id" : "f12", "to" : "f5", "via" : [ { "x" : 224, "y" : 320 } ] }
+        { "id" : "f12", "to" : "f5" }
       ]
     }, {
       "id" : "f7",
@@ -122,10 +122,10 @@
       "type" : "SubProcessCall",
       "name" : "Call the Sub",
       "visual" : {
-        "at" : { "x" : 352, "y" : 320 }
+        "at" : { "x" : 376, "y" : 192 }
       },
       "connect" : [
-        { "id" : "f6", "to" : "f11" }
+        { "id" : "f6", "to" : "f11", "via" : [ { "x" : 376, "y" : 320 } ] }
       ]
     } ],
   "layout" : {
