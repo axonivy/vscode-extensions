@@ -82,8 +82,8 @@ test.describe('Inscription View', () => {
     await expect(monacoEditor).toHaveText('');
     await inscriptionView.writeToMonacoEditorWithCompletion('iv', 'ivy');
     await inscriptionView.writeToMonacoEditorWithCompletion('.l', 'log');
-    await inscriptionView.writeToMonacoEditorWithCompletion('.de', 'debug(Object)');
-    await expect(monacoEditor).toHaveText('ivy.log.debug(Object)');
+    await inscriptionView.writeToMonacoEditorWithCompletion('.de', 'debug(Object,Throwable)');
+    await expect(monacoEditor).toHaveText('ivy.log.debug(Object,Throwable)');
   });
 
   test('Create new Sub Process', async () => {
