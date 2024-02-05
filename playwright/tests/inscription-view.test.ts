@@ -94,6 +94,7 @@ test.describe('Inscription View', () => {
     await inscriptionView.click('Create new Sub Process');
     const processName = randomArtefactName();
     await inscriptionView.provideUserInput(processName);
+    await processEditor.isDirty();
     await processEditor.isInactive();
     await processEditor.tabLocator.click();
     await expect(processStartField).toHaveValue(`${processName}:call()`);
@@ -110,6 +111,7 @@ test.describe('Inscription View', () => {
     await inscriptionView.provideUserInput();
     await inscriptionView.provideUserInput();
     await inscriptionView.provideUserInput();
+    await processEditor.isDirty();
     await processEditor.isInactive();
     await processEditor.tabLocator.click();
     await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
