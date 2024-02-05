@@ -21,6 +21,7 @@ test.describe('Create Project', () => {
     await explorer.addNestedProject(rootFolder, projectName);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     await explorer.hasStatusMessage('Finished: Create new Project', 60_000);
+    await explorer.hasAnyStatusMessage();
 
     const processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
