@@ -37,6 +37,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add business process and execute it', async () => {
+    await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasNode(`${processName}.p.json`);
     await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
@@ -46,9 +47,11 @@ test.describe('Create Process', () => {
   });
 
   test('Assert that process gets redeployed after editing', async () => {
+    await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasNoStatusMessage();
+    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
+    await processEditor.hasNoStatusMessage();
     await processEditor.appendActivity(start, 'Script');
     const script = processEditor.locatorForElementType('g.script');
     await expect(script).toHaveClass(/selected/);
