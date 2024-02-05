@@ -4,7 +4,7 @@ export default defineConfig({
   use: {
     headless: process.env.CI ? true : false,
     permissions: ['clipboard-read'],
-    trace: 'on'
+    trace: 'retain-on-failure'
   },
   testDir: './tests',
   workers: process.env.RUN_IN_BRWOSER ? 2 : 1,

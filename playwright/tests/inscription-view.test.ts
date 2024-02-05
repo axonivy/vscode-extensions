@@ -65,7 +65,7 @@ test.describe('Inscription View', () => {
     await expect(element).toHaveText(newDisplayName);
   });
 
-  test.only('Monaco Editor completion', async () => {
+  test('Monaco Editor completion', async () => {
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
