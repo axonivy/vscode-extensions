@@ -101,6 +101,7 @@ test.describe('Inscription View', () => {
   });
 
   test('Create new Html Dialog', async () => {
+    await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     await inscriptionView.accordionFor('Call').click();
     const dialogField = inscriptionView.inputFieldFor('Dialog');
