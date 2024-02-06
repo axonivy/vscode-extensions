@@ -22,6 +22,10 @@ export class InscriptionView extends PageObject {
     return this.parent.getByLabel(label, { exact: true });
   }
 
+  async clickButton(label: string) {
+    await this.parent.getByRole('button', { name: label }).click();
+  }
+
   monacoEditor(): Locator {
     return this.parent.locator('.view-lines.monaco-mouse-cursor-text');
   }
@@ -34,7 +38,7 @@ export class InscriptionView extends PageObject {
     await this.typeText(input);
     const contentAssist = this.monacoContentAssist();
     await expect(contentAssist).toBeVisible();
-    await contentAssist.getByText(expectedCompletion, { exact: true }).click();
+    await contentAssist.getByText(expectedCompletion, { exact: true }).locator('span.highlight').click();
     await expect(contentAssist).toBeHidden();
   }
 

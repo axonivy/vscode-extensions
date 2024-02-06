@@ -15,7 +15,7 @@ test.describe('Engine', () => {
     page = fixturePage;
     const outputview = new OutputView(page);
     await outputview.isTabVisible();
-    await outputview.isActive();
+    await outputview.isChecked();
     await outputview.isViewVisible();
     await outputview.checkIfEngineStarted();
   });
