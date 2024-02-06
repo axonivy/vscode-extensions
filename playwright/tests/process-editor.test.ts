@@ -14,7 +14,7 @@ test.describe('Process Editor', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page);
-    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await processEditor.hasDeployProjectStatusMessage();
   });
 
   test.beforeEach(async () => {

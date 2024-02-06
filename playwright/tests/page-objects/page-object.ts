@@ -26,6 +26,10 @@ export class PageObject {
     await expect(this.page.locator('#status\\.extensionMessage')).toHaveText(message, { timeout });
   }
 
+  async hasDeployProjectStatusMessage() {
+    await this.hasStatusMessage('Finished: Deploy Ivy Projects');
+  }
+
   async hasNoStatusMessage() {
     await expect(this.page.locator('#status\\.extensionMessage')).toBeHidden();
   }

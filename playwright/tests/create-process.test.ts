@@ -19,7 +19,7 @@ test.describe('Create Process', () => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await explorer.hasDeployProjectStatusMessage();
   });
 
   test.beforeEach(async () => {
@@ -39,7 +39,7 @@ test.describe('Create Process', () => {
   test('Add business process and execute it', async () => {
     await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await explorer.hasDeployProjectStatusMessage();
     await explorer.hasNode(`${processName}.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
@@ -49,13 +49,13 @@ test.describe('Create Process', () => {
   test('Assert that process gets redeployed after editing', async () => {
     await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await explorer.hasDeployProjectStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.hasNoStatusMessage();
     await processEditor.appendActivity(start, 'Script');
     await processEditor.isDirty();
     await processEditor.saveAllFiles();
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await explorer.hasDeployProjectStatusMessage();
     const script = processEditor.locatorForElementType('g.script');
     await expect(script).toHaveClass(/selected/);
     await processEditor.startProcessAndAssertExecuted(start, script);

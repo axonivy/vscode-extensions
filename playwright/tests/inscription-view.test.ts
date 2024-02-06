@@ -17,7 +17,7 @@ test.describe('Inscription View', () => {
     cleanUp();
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page);
-    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await processEditor.hasDeployProjectStatusMessage();
   });
 
   test.beforeEach(async () => {
@@ -92,7 +92,7 @@ test.describe('Inscription View', () => {
     await inscriptionView.accordionFor('Process Call').click();
     const processStartField = inscriptionView.inputFieldFor('Process start');
     await expect(processStartField).toBeEmpty();
-    await inscriptionView.click('Create new Sub Process');
+    await inscriptionView.clickButton('Create new Sub Process');
     const processName = randomArtefactName();
     await inscriptionView.provideUserInput(processName);
     await processEditor.isDirty();
@@ -107,7 +107,7 @@ test.describe('Inscription View', () => {
     await inscriptionView.accordionFor('Call').click();
     const dialogField = inscriptionView.inputFieldFor('Dialog');
     await expect(dialogField).toBeEmpty();
-    await inscriptionView.click('Create new Html Dialog');
+    await inscriptionView.clickButton('Create new Html Dialog');
     const userDialogName = randomArtefactName();
     await inscriptionView.provideUserInput(userDialogName);
     await inscriptionView.provideUserInput();

@@ -12,7 +12,7 @@ test.describe('Process Outline', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page, 'ProcessOutline.p.json');
-    await processEditor.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await processEditor.hasDeployProjectStatusMessage();
   });
 
   test.beforeEach(async () => {

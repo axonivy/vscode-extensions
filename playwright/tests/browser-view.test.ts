@@ -10,7 +10,7 @@ test.describe('Browser View', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     browserView = new BrowserView(page);
-    await browserView.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await browserView.hasDeployProjectStatusMessage();
   });
 
   test('Toolbar', async () => {

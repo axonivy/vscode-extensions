@@ -19,7 +19,7 @@ test.describe('Create User Dialog', () => {
     cleanUp();
     page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
     explorer = new FileExplorer(page);
-    await explorer.hasStatusMessage('Finished: Deploy Ivy Projects');
+    await explorer.hasDeployProjectStatusMessage();
     processEditor = new ProcessEditor(page);
   });
 
