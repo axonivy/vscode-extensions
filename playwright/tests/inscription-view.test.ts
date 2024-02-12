@@ -2,6 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
+import { ProblemsView } from './page-objects/problems-view';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
@@ -117,5 +118,26 @@ test.describe('Inscription View', () => {
     await processEditor.isInactive();
     await processEditor.tabLocator.click();
     await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
+  });
+
+  test('Check existing validation', async () => {
+    const callSub = processEditor.locatorForPID('15254DCE818AD7A2-f5');
+    await processEditor.hasWarning(callSub);
+    const problemsView = await ProblemsView.initProblemsView(page);
+    await problemsView.hasWarning('SubProcessCall target is not defined.');
+  });
+
+  test('Check live validation', async () => {
+    const pid = '15254DCE818AD7A2-f15';
+    const script = processEditor.locatorForPID(pid);
+    await processEditor.hasNoValidationMarker(script);
+    const inscriptionView = await processEditor.openInscriptionView(pid);
+    await inscriptionView.accordionFor('Script').click();
+    const monacoEditor = inscriptionView.monacoEditor();
+    await monacoEditor.click();
+    await monacoEditor.pressSequentially('make test error');
+    await processEditor.hasError(script);
+    const problemsView = await ProblemsView.initProblemsView(page);
+    await problemsView.hasError("Output code: Unexpected token: identifier 'error'");
   });
 });

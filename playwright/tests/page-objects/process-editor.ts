@@ -59,4 +59,17 @@ export class ProcessEditor extends Editor {
     const newItemButton = this.viewFrameLoactor().locator('#activity-group').getByText(activityName, { exact: true });
     await newItemButton.click();
   }
+
+  async hasWarning(element: Locator) {
+    await expect(element).toHaveClass(/warning/);
+  }
+
+  async hasError(element: Locator) {
+    await expect(element).toHaveClass(/error/);
+  }
+
+  async hasNoValidationMarker(element: Locator) {
+    await expect(element).not.toHaveClass(/warning/);
+    await expect(element).not.toHaveClass(/error/);
+  }
 }
