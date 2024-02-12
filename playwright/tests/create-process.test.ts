@@ -6,6 +6,7 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 import { wait } from './utils/timeout';
+import { linuxCondition } from './utils/skip';
 
 test.describe('Create Process', () => {
   let page: Page;
@@ -47,6 +48,7 @@ test.describe('Create Process', () => {
   });
 
   test('Assert that process gets redeployed after editing', async () => {
+    test.skip(linuxCondition);
     await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasDeployProjectStatusMessage();
