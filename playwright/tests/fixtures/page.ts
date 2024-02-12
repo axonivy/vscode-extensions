@@ -1,7 +1,6 @@
 import { Browser, ElectronApplication, Page, test as base, chromium } from '@playwright/test';
 import { prebuiltWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
-import path from 'path';
 import { PageObject } from '../page-objects/page-object';
 
 let electronApp: ElectronApplication;

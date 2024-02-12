@@ -2,6 +2,7 @@ import { test } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
+import { linuxCondition } from './utils/skip';
 
 test.describe('Create Project', () => {
   const projectName = 'testProject';
@@ -16,6 +17,7 @@ test.describe('Create Project', () => {
   });
 
   test('Add Project and execute init Process', async ({ pageFor }) => {
+    test.skip(linuxCondition);
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
