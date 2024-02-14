@@ -27,14 +27,14 @@ test.describe('Problems View', () => {
     const trigger = processEditor.locatorForPID('18D9CDFA8F58DA2B-f3');
     await processEditor.hasWarning(trigger);
     const problemsView = await ProblemsView.initProblemsView(page);
-    await problemsView.hasWarning('TriggerCall target is not defined.');
+    await problemsView.hasWarning('TriggerCall target is not defined.', '18D9CDFA8F58DA2B-f3');
   });
 
   test('Check existing error', async () => {
     const script = processEditor.locatorForPID('18D9CDFA8F58DA2B-f5');
     await processEditor.hasError(script);
     const problemsView = await ProblemsView.initProblemsView(page);
-    await problemsView.hasError('Output code: A statement is expected, not an expression (maybe missing semicolon)');
+    await problemsView.hasError('Output code: A statement is expected, not an expression (maybe missing semicolon)', '18D9CDFA8F58DA2B-f5');
   });
 
   test('Check live validation', async () => {
@@ -48,6 +48,6 @@ test.describe('Problems View', () => {
     await monacoEditor.pressSequentially('make test error');
     await processEditor.hasError(script);
     const problemsView = await ProblemsView.initProblemsView(page);
-    await problemsView.hasError("Output code: Unexpected token: identifier 'error'");
+    await problemsView.hasError("Output code: Unexpected token: identifier 'error'", '18D9CDFA8F58DA2B-f7');
   });
 });
