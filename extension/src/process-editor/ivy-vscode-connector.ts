@@ -9,7 +9,8 @@ import {
   NavigateToExternalTargetAction,
   SModelRootSchema,
   SelectionState,
-  ServerMessageAction
+  ServerMessageAction,
+  SetMarkersAction
 } from '@eclipse-glsp/vscode-integration';
 import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
@@ -17,6 +18,11 @@ import IvyEditorProvider from './ivy-editor-provider';
 import { SelectedElement } from '../base/process-editor-connector';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
+const severityMap = new Map([
+  ['info', vscode.DiagnosticSeverity.Information],
+  ['warning', vscode.DiagnosticSeverity.Warning],
+  ['error', vscode.DiagnosticSeverity.Error]
+]);
 
 export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
@@ -151,5 +157,22 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     }
     // Do not propagate action
     return { processedMessage: undefined, messageChanged: true };
+  }
+
+  protected override handleSetMarkersAction(
+    message: ActionMessage<SetMarkersAction>,
+    client: GlspVscodeClient<D> | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _origin: MessageOrigin
+  ): MessageProcessingResult {
+    if (client) {
+      const updatedDiagnostics = message.action.markers.map(marker => {
+        const diagnostic = new vscode.Diagnostic(new vscode.Range(0, 0, 0, 0), marker.description, severityMap.get(marker.kind));
+        diagnostic.source = marker.elementId;
+        return diagnostic;
+      });
+      this.diagnostics.set(client.document.uri, updatedDiagnostics);
+    }
+    return { processedMessage: message, messageChanged: false };
   }
 }

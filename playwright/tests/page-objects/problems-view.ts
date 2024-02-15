@@ -18,17 +18,18 @@ export class ProblemsView extends View {
     return problemsView;
   }
 
-  private async hasMaker(message: string, type: 'error' | 'warning') {
+  private async hasMaker(message: string, pid: string, type: 'error' | 'warning') {
     const marker = this.viewLocator.locator(`div.monaco-tl-row:has-text("${message}")`);
     await expect(marker).toBeVisible();
     await expect(marker.locator(`div.marker-icon.${type}`)).toBeVisible();
+    await expect(marker).toContainText(pid);
   }
 
-  async hasWarning(message: string) {
-    this.hasMaker(message, 'warning');
+  async hasWarning(message: string, pid: string) {
+    this.hasMaker(message, pid, 'warning');
   }
 
-  async hasError(message: string) {
-    this.hasMaker(message, 'error');
+  async hasError(message: string, pid: string) {
+    this.hasMaker(message, pid, 'error');
   }
 }
