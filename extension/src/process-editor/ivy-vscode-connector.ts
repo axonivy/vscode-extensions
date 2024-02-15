@@ -1,21 +1,22 @@
 import {
   ActionMessage,
-  Args,
+  GModelRootSchema,
   GlspVscodeClient,
   GlspVscodeConnector,
   GlspVscodeConnectorOptions,
+  MessageAction,
   MessageOrigin,
   MessageProcessingResult,
   NavigateToExternalTargetAction,
-  SModelRootSchema,
   SelectionState,
-  ServerMessageAction,
-  SetMarkersAction
+  SetMarkersAction,
+  Writable
 } from '@eclipse-glsp/vscode-integration';
-import { Action, InitializeResult, SetModelAction } from '@eclipse-glsp/protocol';
+import { SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
 import IvyEditorProvider from './ivy-editor-provider';
 import { SelectedElement } from '../base/process-editor-connector';
+import { Messenger } from 'vscode-messenger';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 const severityMap = new Map([
@@ -32,7 +33,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
-
+    (this as Writable<GlspVscodeConnector>).messenger = new Messenger({ ignoreHiddenViews: false });
     this.onSelectionUpdate(selection => this.selectionChange(selection));
     this.modelLoading = vscode.window.createStatusBarItem();
     this.modelLoading.text = '$(loading~spin) Model loading';
@@ -42,15 +43,15 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return this.onDidChangeActiveGlspEditorEventEmitter.event;
   }
 
-  override async registerClient(client: GlspVscodeClient<D>): Promise<InitializeResult> {
+  override async registerClient(client: GlspVscodeClient<D>): Promise<void> {
     this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
 
-    client.webviewPanel.onDidChangeViewState(e => {
+    client.webviewEndpoint.webviewPanel.onDidChangeViewState(e => {
       if (e.webviewPanel.active) {
         this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
       }
     });
-    return super.registerClient(client);
+    super.registerClient(client);
   }
 
   onSelectedElement(listener: (selectedElement: SelectedElement) => void) {
@@ -73,7 +74,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   private toSelectedElement(pids: string[]): SelectedElement {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, client] of this.clientMap) {
-      if (client.webviewPanel.active) {
+      if (client.webviewEndpoint.webviewPanel.active) {
         const ivyClient = client as IvyGlspClient;
         if (pids.length > 0) {
           return this.newSelectedElement(ivyClient, pids[0]);
@@ -83,42 +84,22 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return undefined;
   }
 
-  public override sendActionToClient(clientId: string, action: Action) {
-    super.sendActionToClient(clientId, action);
-  }
-
-  protected override handleNavigateToExternalTargetAction(message: ActionMessage<NavigateToExternalTargetAction>): MessageProcessingResult {
-    const { uri, args } = message.action.target;
+  protected override handleNavigateToExternalTargetAction(
+    message: ActionMessage<NavigateToExternalTargetAction>,
+    _client: GlspVscodeClient<D> | undefined,
+    _origin: MessageOrigin
+  ) {
+    const { args } = message.action.target;
     const absolutePath = args?.['absolutePath'] as string;
     if (absolutePath) {
       this.openWithProcessEditor(absolutePath);
-    } else {
-      this.showTextDocument(uri, args);
+      return { processedMessage: undefined, messageChanged: true };
     }
-
-    // Do not propagate action
-    return { processedMessage: undefined, messageChanged: true };
+    return super.handleNavigateToExternalTargetAction(message, _client, _origin);
   }
 
   private openWithProcessEditor(absolutePath: string) {
     vscode.commands.executeCommand('vscode.openWith', vscode.Uri.parse(absolutePath), IvyEditorProvider.viewType);
-  }
-  private showTextDocument(uri: string, args: Args | undefined) {
-    const SHOW_OPTIONS = 'jsonOpenerOptions';
-    let showOptions = { ...args };
-
-    // Give server the possibility to provide options through the `showOptions` field by providing a
-    // stringified version of the `TextDocumentShowOptions`
-    // See: https://code.visualstudio.com/api/references/vscode-api#TextDocumentShowOptions
-    const showOptionsField = args?.[SHOW_OPTIONS];
-    if (showOptionsField) {
-      showOptions = { ...args, ...JSON.parse(showOptionsField.toString()) };
-    }
-
-    vscode.window.showTextDocument(vscode.Uri.parse(uri), showOptions).then(
-      () => undefined, // onFulfilled: Do nothing.
-      () => undefined // onRejected: Do nothing - This is needed as error handling in case the navigationTarget does not exist.
-    );
   }
 
   protected override processMessage(message: unknown, origin: MessageOrigin): MessageProcessingResult {
@@ -127,7 +108,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
         const action = message.action;
         const client = this.clientMap.get(message.clientId);
         const ivyClient = client as IvyGlspClient;
-        const newRoot = action.newRoot as SModelRootSchema & { args: { app: string; pmv: string } };
+        const newRoot = action.newRoot as GModelRootSchema & { args: { app: string; pmv: string } };
         ivyClient.app = newRoot.args.app;
         ivyClient.pmv = newRoot.args.pmv;
       }
@@ -135,7 +116,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
     return super.processMessage(message, origin);
   }
 
-  protected override handleServerMessageAction(message: ActionMessage<ServerMessageAction>): MessageProcessingResult {
+  protected override handleMessageAction(message: ActionMessage<MessageAction>): MessageProcessingResult {
     switch (message.action.severity) {
       case 'ERROR':
       case 'FATAL':

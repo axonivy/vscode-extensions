@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { IActionHandler, SModelElement } from '@eclipse-glsp/client';
+import { IActionHandler, GModelElement } from '@eclipse-glsp/client';
 import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode } from '@axonivy/process-editor';
 import { IvyIcons } from '@axonivy/editor-icons';
 import { HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
@@ -36,7 +36,7 @@ export class StartProcessActionHandler implements IActionHandler {
 
 @injectable()
 export class StarProcessQuickActionProvider extends SingleQuickActionProvider {
-  singleQuickAction(element: SModelElement): QuickAction | undefined {
+  singleQuickAction(element: GModelElement): QuickAction | undefined {
     if (element instanceof StartEventNode && element.type === EventStartTypes.START) {
       const processStartUri = (element.args['processStartUri'] as string) ?? '';
       return {

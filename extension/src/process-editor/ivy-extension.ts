@@ -5,8 +5,9 @@ import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
 import { IvyProcessOutlineProvider } from './ivy-process-outline';
 import { registerCommand } from '../base/commands';
+import { Messenger } from 'vscode-messenger';
 
-export function activateProcessEditor(context: vscode.ExtensionContext) {
+export function activateProcessEditor(context: vscode.ExtensionContext): Messenger {
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   if (!webSocketAddress) {
@@ -52,4 +53,5 @@ export function activateProcessEditor(context: vscode.ExtensionContext) {
   registerCommand('ivyProcessOutline.selectElement', context, pid => ivyProcessOutline.select(pid));
 
   configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
+  return ivyVscodeConnector.messenger;
 }

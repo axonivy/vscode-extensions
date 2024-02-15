@@ -39,7 +39,7 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
 
   private readProcessFile(client: GlspVscodeClient<vscode.CustomDocument>) {
     this.client = client;
-    this.client.webviewPanel.onDidDispose(() => {
+    this.client.webviewEndpoint.webviewPanel.onDidDispose(() => {
       this.client = undefined;
       this.text = '';
       this.refresh();
@@ -103,11 +103,11 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   select(pid: string) {
     if (this.client) {
       const clientId = this.client.clientId;
-      this.ivyGlspConnector.sendActionToClient(clientId, SelectAllAction.create(false));
-      this.ivyGlspConnector.sendActionToClient(clientId, JumpAction.create({ elementId: this.parentPid(pid) }));
-      this.ivyGlspConnector.sendActionToClient(clientId, SelectAction.create({ selectedElementsIDs: [pid] }));
-      this.ivyGlspConnector.sendActionToClient(clientId, MoveIntoViewportAction.create({ elementIds: [pid] }));
-      this.client.webviewPanel.reveal();
+      this.ivyGlspConnector.dispatchAction(SelectAllAction.create(false), clientId);
+      this.ivyGlspConnector.dispatchAction(JumpAction.create({ elementId: this.parentPid(pid) }), clientId);
+      this.ivyGlspConnector.dispatchAction(SelectAction.create({ selectedElementsIDs: [pid] }), clientId);
+      this.ivyGlspConnector.dispatchAction(MoveIntoViewportAction.create({ elementIds: [pid] }), clientId);
+      this.client.webviewEndpoint.webviewPanel.reveal();
     }
   }
 
