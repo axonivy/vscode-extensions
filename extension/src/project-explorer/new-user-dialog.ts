@@ -34,7 +34,7 @@ export class NewHtmlDialogActionHandler implements InscriptionActionHandler {
   async handle(actionArgs: InscriptionActionArgs, sendInscriptionNotification: SendInscriptionNotification) {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
     if (tabInput instanceof vscode.TabInputCustom) {
-      await executeCommand('ivyProjects.addNewHtmlDialog', tabInput, actionArgs.context.pid);
+      await executeCommand('ivyProjects.addNewHtmlDialog', tabInput, [], actionArgs.context.pid);
       sendInscriptionNotification('dataChanged');
       sendInscriptionNotification('validation');
     }

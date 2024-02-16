@@ -7,9 +7,9 @@ import { NewProjectParams } from '../project-explorer/new-project';
 import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../base/status-bar-message';
-import { CREATE_PROJECT_REQUEST } from './api/project-request';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
+import { CREATE_PROJECT } from './api/api-constants';
 
 export class IvyEngineManager {
   private engineUrl: string;
@@ -108,7 +108,7 @@ export class IvyEngineManager {
     await this.ivyEngineApi.initProjects([path]);
     await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
     await this.buildAndDeployProject(path);
-    setStatusBarMessage('Finished: ' + CREATE_PROJECT_REQUEST.description);
+    setStatusBarMessage('Finished: ' + CREATE_PROJECT.description);
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
