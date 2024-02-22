@@ -1,31 +1,30 @@
 import 'reflect-metadata';
 import * as vscode from 'vscode';
-import { YamlEditorProvider } from './config-editor/editor-provider';
-import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
-import { IvyEngineManager } from './engine/engine-manager';
+import { Messenger, MessengerDiagnostic } from 'vscode-messenger';
 import { Command, registerCommand } from './base/commands';
+import { config } from './base/configurations';
+import { setStatusBarMessage } from './base/status-bar-message';
+import { activateIvyBrowser } from './browser/ivy-browser';
+import { YamlEditorProvider } from './config-editor/editor-provider';
+import { addDevContainer } from './dev-container/command';
+import { IvyEngineManager } from './engine/engine-manager';
 import { activateProcessEditor } from './process-editor/ivy-extension';
+import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
 import { NewUserDialogParams } from './project-explorer/new-user-dialog';
-import { setStatusBarMessage } from './base/status-bar-message';
-import { activateIvyBrowser } from './browser/ivy-browser';
-import { config } from './base/configurations';
-import { addDevContainer } from './dev-container/command';
-import { Deferred } from '@eclipse-glsp/vscode-integration';
-import { Messenger, MessengerDiagnostic } from 'vscode-messenger';
 
 let ivyEngineManager: IvyEngineManager;
 const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip';
 
 export async function activate(context: vscode.ExtensionContext): Promise<MessengerDiagnostic> {
-  const deferredMessenger = new Deferred<Messenger>();
+  const messenger = new Messenger({ ignoreHiddenViews: false });
 
   ivyEngineManager = new IvyEngineManager(context);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
   registerCmd('engine.startIvyEngineManager', () => ivyEngineManager.start());
-  registerCmd('process-editor.activate', () => deferredMessenger.resolve(activateProcessEditor(context)));
+  registerCmd('process-editor.activate', () => activateProcessEditor(context, messenger));
   registerCmd('engine.deployProjects', () => ivyEngineManager.deployProjects());
   registerCmd('engine.buildProjects', () => ivyEngineManager.buildProjects());
   registerCmd('engine.buildAndDeployProjects', () => ivyEngineManager.buildAndDeployProjects());
@@ -47,7 +46,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   context.subscriptions.push(YamlEditorProvider.register(context));
   setStatusBarMessage('Axon Ivy Extension activated');
 
-  const messenger = await deferredMessenger.promise;
   return messenger.diagnosticApi();
 }
 

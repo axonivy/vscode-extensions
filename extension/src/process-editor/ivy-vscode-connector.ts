@@ -1,3 +1,4 @@
+import { SetModelAction } from '@eclipse-glsp/protocol';
 import {
   ActionMessage,
   GModelRootSchema,
@@ -9,14 +10,11 @@ import {
   MessageProcessingResult,
   NavigateToExternalTargetAction,
   SelectionState,
-  SetMarkersAction,
-  Writable
+  SetMarkersAction
 } from '@eclipse-glsp/vscode-integration';
-import { SetModelAction } from '@eclipse-glsp/protocol';
 import * as vscode from 'vscode';
-import IvyEditorProvider from './ivy-editor-provider';
 import { SelectedElement } from '../base/process-editor-connector';
-import { Messenger } from 'vscode-messenger';
+import IvyEditorProvider from './ivy-editor-provider';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 const severityMap = new Map([
@@ -33,7 +31,6 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
-    (this as Writable<GlspVscodeConnector>).messenger = new Messenger({ ignoreHiddenViews: false });
     this.onSelectionUpdate(selection => this.selectionChange(selection));
     this.modelLoading = vscode.window.createStatusBarItem();
     this.modelLoading.text = '$(loading~spin) Model loading';
