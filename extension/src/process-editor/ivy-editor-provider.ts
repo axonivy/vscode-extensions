@@ -7,7 +7,7 @@ import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketForwar
 import { Messenger } from 'vscode-messenger';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
-const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
+const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
 const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' };
 
@@ -35,9 +35,13 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       const toDispose = new DisposableCollection(
         new WebSocketForwarder('ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage),
         new WebSocketForwarder('ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
-        messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(messenger, messageParticipant), {
-          sender: messageParticipant
-        }),
+        messenger.onNotification(
+          WebviewConnectionReadyNotification,
+          () => this.handleWebviewReadyNotification(messenger, messageParticipant),
+          {
+            sender: messageParticipant
+          }
+        ),
         messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
           sender: messageParticipant
         }),

@@ -15,6 +15,7 @@ import { NotificationType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 import ivyStartActionModule from './start/di.config';
 import { ivyStartupDiagramModule } from './startup';
+import noopContextMenuServiceModule from './context-menu/di.config';
 
 type ColorTheme = 'dark' | 'light';
 const ColorThemeChangedNotification: NotificationType<ColorTheme> = { method: 'colorThemeChanged' };
@@ -39,6 +40,7 @@ class IvyGLSPStarter extends GLSPStarter {
   createContainer(...containerConfiguration: ContainerConfiguration): Container {
     return createIvyDiagramContainer(
       'sprotty',
+      noopContextMenuServiceModule,
       ...containerConfiguration,
       ivyBreakpointModule,
       ivyStartActionModule,
