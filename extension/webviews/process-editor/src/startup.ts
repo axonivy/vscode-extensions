@@ -4,13 +4,13 @@ import { ContainerModule, inject, injectable } from 'inversify';
 import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
 import { EnableViewportAction } from '@axonivy/process-editor-protocol';
 import { RequestTypeHintsAction } from '@eclipse-glsp/vscode-integration';
-import { WebviewReadyNotification } from '@eclipse-glsp/vscode-integration-webview';
 import { HOST_EXTENSION, NotificationType, RequestType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 import './index.css';
 import { WebviewMessageReader } from './message-reader';
 import { WebviewMessageWriter } from './message-writer';
 
+const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
 const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
@@ -26,7 +26,7 @@ export class StandaloneDiagramStartup implements IDiagramStartup {
     this.actionDispatcher.dispatch(EnableViewportAction.create());
 
     this.messenger.onRequest(InitializeConnectionRequest, () => this.initConnection());
-    this.messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
+    this.messenger.sendNotification(WebviewConnectionReadyNotification, HOST_EXTENSION);
   }
 
   private initConnection() {
