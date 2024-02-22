@@ -3,8 +3,8 @@ import { GlspVscodeConnector, GlspEditorProvider, DisposableCollection } from '@
 import * as vscode from 'vscode';
 import fs from 'fs';
 import { NotificationType, RequestType, MessageParticipant } from 'vscode-messenger-common';
-import { messenger } from '../messenger';
 import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketForwarder } from '../websocket-forwarder';
+import { Messenger } from 'vscode-messenger';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
@@ -28,22 +28,25 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       enableScripts: true
     };
 
-    const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
-    const toDispose = new DisposableCollection(
-      new WebSocketForwarder('ivy-inscription-lsp', messageParticipant, InscriptionWebSocketMessage),
-      new WebSocketForwarder('ivy-script-lsp', messageParticipant, IvyScriptWebSocketMessage),
-      messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(messageParticipant), {
-        sender: messageParticipant
-      }),
-      messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
-        sender: messageParticipant
-      }),
-      vscode.window.onDidChangeActiveColorTheme(theme =>
-        messenger.sendNotification(ColorThemeChangedNotification, messageParticipant, this.vsCodeThemeToMonacoTheme(theme))
-      )
-    );
-    webviewPanel.onDidDispose(() => toDispose.dispose());
-
+    const client = this.glspVscodeConnector['clientMap'].get(clientId);
+    const messenger = this.glspVscodeConnector.messenger;
+    const messageParticipant = client?.webviewEndpoint.messageParticipant;
+    if (messageParticipant) {
+      const toDispose = new DisposableCollection(
+        new WebSocketForwarder('ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage),
+        new WebSocketForwarder('ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
+        messenger.onNotification(WebviewReadyNotification, () => this.handleWebviewReadyNotification(messenger, messageParticipant), {
+          sender: messageParticipant
+        }),
+        messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), {
+          sender: messageParticipant
+        }),
+        vscode.window.onDidChangeActiveColorTheme(theme =>
+          messenger.sendNotification(ColorThemeChangedNotification, messageParticipant, this.vsCodeThemeToMonacoTheme(theme))
+        )
+      );
+      webviewPanel.onDidDispose(() => toDispose.dispose());
+    }
     const nonce = getNonce();
 
     const manifest = JSON.parse(fs.readFileSync(this.getAppUri('build.manifest.json').fsPath, 'utf8'));
@@ -83,7 +86,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
       </html>`;
   }
 
-  private async handleWebviewReadyNotification(messageParticipant: MessageParticipant) {
+  private async handleWebviewReadyNotification(messenger: Messenger, messageParticipant: MessageParticipant) {
     await messenger.sendRequest(InitializeConnectionRequest, messageParticipant);
     messenger.sendNotification(
       ColorThemeChangedNotification,

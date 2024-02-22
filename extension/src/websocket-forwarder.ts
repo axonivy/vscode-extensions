@@ -2,9 +2,9 @@ import { WebSocket } from 'ws';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import vscode from 'vscode';
 import { NotificationType, MessageParticipant } from 'vscode-messenger-common';
-import { messenger } from './messenger';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { ActionHandlers } from './inscription-action-handler';
+import { Messenger } from 'vscode-messenger';
 
 export const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 export const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
@@ -15,6 +15,7 @@ export class WebSocketForwarder implements vscode.Disposable {
 
   constructor(
     wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp',
+    private readonly messenger: Messenger,
     private readonly messageParticipant: MessageParticipant,
     private readonly notificationType: NotificationType<unknown>
   ) {
@@ -26,12 +27,12 @@ export class WebSocketForwarder implements vscode.Disposable {
 
   private initialize(): void {
     this.toDispose.push(
-      messenger.onNotification(this.notificationType, message => this.handleClientMessage(message), {
+      this.messenger.onNotification(this.notificationType, message => this.handleClientMessage(message), {
         sender: this.messageParticipant
       })
     );
     this.webSocket.on('message', msg => {
-      messenger.sendNotification(this.notificationType, this.messageParticipant, msg.toString());
+      this.messenger.sendNotification(this.notificationType, this.messageParticipant, msg.toString());
     });
   }
 
@@ -40,7 +41,7 @@ export class WebSocketForwarder implements vscode.Disposable {
       const handler = this.actionHandlerFor(message.params);
       if (handler) {
         handler.handle(message.params, (type: string) =>
-          messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }))
+          this.messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }))
         );
         return;
       }

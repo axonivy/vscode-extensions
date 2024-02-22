@@ -1,12 +1,13 @@
-import { configureDefaultCommands, SocketGlspVscodeServer } from '@eclipse-glsp/vscode-integration';
+import { configureDefaultCommands, GlspVscodeConnector, SocketGlspVscodeServer, Writable } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
 import IvyEditorProvider from './ivy-editor-provider';
 import { IvyVscodeConnector } from './ivy-vscode-connector';
 import { IvyProcessOutlineProvider } from './ivy-process-outline';
 import { registerCommand } from '../base/commands';
+import { Messenger } from 'vscode-messenger';
 
-export function activateProcessEditor(context: vscode.ExtensionContext) {
+export function activateProcessEditor(context: vscode.ExtensionContext, messenger: Messenger): void {
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   if (!webSocketAddress) {
@@ -25,6 +26,8 @@ export function activateProcessEditor(context: vscode.ExtensionContext) {
     server: workflowServer,
     logging: true
   });
+  // use our own custom messenger which may have a different configuration
+  (ivyVscodeConnector as Writable<GlspVscodeConnector>).messenger = messenger;
 
   const customEditorProvider = vscode.window.registerCustomEditorProvider(
     IvyEditorProvider.viewType,
