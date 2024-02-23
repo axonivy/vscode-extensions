@@ -3,6 +3,7 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
 import { linuxCondition } from './utils/skip';
+import { ProblemsView } from './page-objects/problems-view';
 
 test.describe('Create Project', () => {
   const projectName = 'testProject';
@@ -24,6 +25,9 @@ test.describe('Create Project', () => {
     await explorer.hasDeployProjectStatusMessage();
     await explorer.hasStatusMessage('Finished: Create new Project', 60_000);
     await explorer.hasNoStatusMessage();
+
+    const problemsView = await ProblemsView.initProblemsView(page);
+    await problemsView.hasNoMarker();
 
     const processEditor = new ProcessEditor(page, 'BusinessProcess.p.json');
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
