@@ -54,7 +54,7 @@ async function launchBrowser(workspace: string): Promise<Page> {
 
 async function initialize(page: Page) {
   const pageObject = new PageObject(page);
-  await pageObject.hasAnyStatusMessage();
+  await pageObject.statusProblemsVisible();
   await pageObject.saveAllFiles();
   await pageObject.closeAllTabs();
 }

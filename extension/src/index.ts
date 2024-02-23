@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { Messenger, MessengerDiagnostic } from 'vscode-messenger';
 import { Command, registerCommand } from './base/commands';
 import { config } from './base/configurations';
-import { setStatusBarMessage } from './base/status-bar-message';
 import { activateIvyBrowser } from './browser/ivy-browser';
 import { YamlEditorProvider } from './config-editor/editor-provider';
 import { addDevContainer } from './dev-container/command';
@@ -44,8 +43,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   new IvyProjectExplorer(context);
   activateIvyBrowser(context, '');
   context.subscriptions.push(YamlEditorProvider.register(context));
-  setStatusBarMessage('Axon Ivy Extension activated');
-
   return messenger.diagnosticApi();
 }
 

@@ -34,8 +34,8 @@ export class PageObject {
     await expect(this.page.locator('#status\\.extensionMessage')).toBeHidden();
   }
 
-  async hasAnyStatusMessage() {
-    await expect(this.page.locator('#status\\.extensionMessage')).toBeVisible();
+  async statusProblemsVisible() {
+    await expect(this.page.locator('#status\\.problems')).toBeVisible();
   }
 
   async provideUserInput(input?: string) {
