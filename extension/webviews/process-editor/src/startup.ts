@@ -2,7 +2,7 @@ import { EnableToolPaletteAction, GLSPActionDispatcher, IDiagramStartup, TYPES }
 import { ContainerModule, inject, injectable } from 'inversify';
 
 import { EnableInscriptionAction } from '@axonivy/process-editor-inscription';
-import { EnableViewportAction } from '@axonivy/process-editor-protocol';
+import { EnableViewportAction, UpdatePaletteItems } from '@axonivy/process-editor-protocol';
 import { RequestTypeHintsAction } from '@eclipse-glsp/vscode-integration';
 import { HOST_EXTENSION, NotificationType, RequestType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
@@ -20,11 +20,14 @@ export class StandaloneDiagramStartup implements IDiagramStartup {
   @inject(Messenger) protected messenger: Messenger;
   @inject(GLSPActionDispatcher) protected actionDispatcher: GLSPActionDispatcher;
 
-  async postRequestModel(): Promise<void> {
+  async preRequestModel(): Promise<void> {
     this.actionDispatcher.dispatch(RequestTypeHintsAction.create());
     this.actionDispatcher.dispatch(EnableToolPaletteAction.create());
     this.actionDispatcher.dispatch(EnableViewportAction.create());
+  }
 
+  async postRequestModel(): Promise<void> {
+    this.actionDispatcher.dispatch(UpdatePaletteItems.create());
     this.messenger.onRequest(InitializeConnectionRequest, () => this.initConnection());
     this.messenger.sendNotification(WebviewConnectionReadyNotification, HOST_EXTENSION);
   }

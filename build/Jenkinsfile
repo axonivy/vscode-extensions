@@ -23,7 +23,7 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          // sh 'yarn update:axonivy:next'
+          sh 'yarn update:axonivy:next'
           sh 'yarn install'
           sh 'yarn build:production'
         }
