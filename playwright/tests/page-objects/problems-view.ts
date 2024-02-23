@@ -32,4 +32,9 @@ export class ProblemsView extends View {
   async hasError(message: string, pid: string) {
     this.hasMaker(message, pid, 'error');
   }
+
+  async hasNoMarker() {
+    const marker = this.viewLocator.locator('div.monaco-tl-row');
+    await expect(marker).not.toBeAttached();
+  }
 }

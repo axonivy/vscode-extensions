@@ -103,12 +103,14 @@ export class IvyEngineManager {
     if (!this.started) {
       await this.start();
     }
-    await this.ivyEngineApi.createProject(newProjectParams);
     const path = newProjectParams.path;
-    await this.ivyEngineApi.initProjects([path]);
-    await this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' });
-    await this.buildAndDeployProject(path);
-    setStatusBarMessage('Finished: ' + CREATE_PROJECT.description);
+    this.ivyEngineApi
+      .createProject(newProjectParams)
+      .then(() => this.ivyEngineApi.initProjects([path]))
+      .then(() => this.buildProject(path))
+      .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
+      .then(() => this.deployProject(path))
+      .then(() => setStatusBarMessage('Finished: ' + CREATE_PROJECT.description));
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
