@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { IActionHandler, GModelElement } from '@eclipse-glsp/client';
 import { EventStartTypes, QuickAction, SingleQuickActionProvider, StartEventNode } from '@axonivy/process-editor';
-import { IvyIcons } from '@axonivy/editor-icons';
+import { IvyIcons } from '@axonivy/ui-icons';
 import { HOST_EXTENSION, RequestType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 
