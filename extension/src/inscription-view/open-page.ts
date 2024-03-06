@@ -3,17 +3,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { InscriptionActionHandler } from '../inscription-action-handler';
+import { executeCommand } from '../base/commands';
 
 export class OpenPageActionHandler implements InscriptionActionHandler {
   actionId = 'openPage' as const;
   async handle(actionArgs: InscriptionActionArgs): Promise<void> {
     const path = actionArgs.payload.toString();
     if (isUrl(path)) {
-      openUrlInBrowser(path);
-    } else if (isDocumentPath(path)) {
-      openInExplorer(path);
+      openUrlInIntegratedBrowser(path);
     } else {
-      vscode.window.showInformationMessage('The entered url is not valid.');
+      openInExplorer(await getValideFilePath(path));
     }
   }
 }
@@ -22,20 +21,33 @@ function isUrl(absolutePath: string) {
   return /^https?:\/\//i.test(absolutePath);
 }
 
-function openUrlInBrowser(absolutePath: string) {
-  vscode.env.openExternal(vscode.Uri.parse(absolutePath));
-}
-
-function isDocumentPath(absolutePath: string) {
-  const normalizedPath = path.normalize(absolutePath);
-  if (fs.existsSync(normalizedPath)) {
-    const stats = fs.statSync(normalizedPath);
-    return stats.isFile();
+async function getValideFilePath(pathString: string) {
+  if (fs.existsSync(pathString)) {
+    return pathString;
   }
-
-  return false;
+  const projectFolder = await getProjectFolder();
+  if (typeof projectFolder === 'string' && fs.existsSync(path.join(projectFolder, pathString))) {
+    return path.join(projectFolder, pathString);
+  }
+  return null;
 }
 
-function openInExplorer(absolutePath: string) {
-  vscode.commands.executeCommand('vscode.openFolder', vscode.Uri.file(absolutePath));
+async function openUrlInIntegratedBrowser(absolutePath: string) {
+  await executeCommand('engine.ivyBrowserOpen', vscode.Uri.parse(absolutePath));
+}
+
+function openInExplorer(absolutePath: string | null) {
+  if (absolutePath) {
+    vscode.commands.executeCommand('vscode.open', vscode.Uri.file(absolutePath));
+  } else {
+    vscode.window.showInformationMessage('The entered url is not valid.');
+  }
+}
+
+async function getProjectFolder() {
+  const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
+  const path = tabInput.uri.fsPath.toString();
+  const ivyProjects = (await executeCommand('ivyProjects.getIvyProjects')) as string[];
+  const projectFolder = ivyProjects.find(ivyProject => path.startsWith(ivyProject));
+  return projectFolder;
 }
