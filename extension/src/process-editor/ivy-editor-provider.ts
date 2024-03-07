@@ -60,6 +60,11 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     const relativeRootPath = manifest[rootHtmlKey]['file'] as string;
     const indexJs = webview.asWebviewUri(this.getAppUri(relativeRootPath));
 
+    const dynamicImports = manifest[rootHtmlKey]['dynamicImports'] as Array<string>;
+    const jsUris = dynamicImports
+      .map(i => manifest[i]['file'] as string)
+      .map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath)));
+
     const relativeCssFilePaths = manifest[rootHtmlKey]['css'] as string[];
     const cssUris = relativeCssFilePaths.map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath)));
     cssUris.push(webview.asWebviewUri(vscode.Uri.joinPath(this.extensionContext.extensionUri, 'css', 'inscription-editor.css')));
@@ -86,6 +91,7 @@ export default class IvyEditorProvider extends GlspEditorProvider {
           <div id="${clientId}_container" class="main-widget"></div>
           <div id="inscription"></div>
           <script nonce="${nonce}" type="module" src="${indexJs}"></script>
+          ${jsUris.map(jsUri => `<script nonce="${nonce}" type="module" src="${jsUri}"></script>`).join('\n')}
         </body>
       </html>`;
   }
