@@ -24,12 +24,12 @@
     react "^18.2.0"
     yaml "^2.3.1"
 
-"@axonivy/inscription-core@~11.3.0-next.1009":
-  version "11.3.0-next.1009"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-core/-/inscription-core-11.3.0-next.1009.tgz#e175a1cea271bbf70eb6a260bc1f41209b054f78"
-  integrity sha512-0DnLLKQWXMBJtHNfvB+NSNQRoa3TS0K22EAfvlVby2B4qDAbk0thtq6fWtUj4QTRaGvGuESDsp3WEdAPb8n0kQ==
+"@axonivy/inscription-core@~11.3.0-next.1014":
+  version "11.3.0-next.1016"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-core/-/inscription-core-11.3.0-next.1016.tgz#929609c0112bf89429c27ead78133951bcbe8a6c"
+  integrity sha512-mbtrFVqhWYC0ZbFZynuB5WActpAVwToDpPYG1+mBNQmeYGxPcxzd6mA6RFPm+z+1qv2stQ8aXtWZrPW26LYf3g==
   dependencies:
-    "@axonivy/inscription-protocol" "11.3.0-next.1009+26e8690"
+    "@axonivy/inscription-protocol" "11.3.0-next.1016+a8751c9f"
     monaco-editor "^0.44.0"
     monaco-editor-workers "^0.44.0"
     monaco-languageclient "^6.6.1"
@@ -37,12 +37,12 @@
     vscode-languageserver-protocol "^3.17.5"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/inscription-editor@~11.3.0-next.1009":
-  version "11.3.0-next.1009"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-editor/-/inscription-editor-11.3.0-next.1009.tgz#ca9357a4603b1a42a5a7b3c6fe196eb3626105b8"
-  integrity sha512-WKToG1cM9bRguchuo+sxKj/WiMGL3DgXoFotv0MV4SuSgzfP7UgjwB/uCeHlu9o+3ONcqcOrkLp3xAaCZc1LFw==
+"@axonivy/inscription-editor@~11.3.0-next.1014":
+  version "11.3.0-next.1016"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-editor/-/inscription-editor-11.3.0-next.1016.tgz#f091871333aa950b5d67a9e6c22755f8a575892d"
+  integrity sha512-SQ/IPpUv7jRyEjoAS4I/7QCTeowV24U9UCXZYAr8fRaj54Ri29UZlpvucTv4VrwKYKOEo2jzopaEqhL99Odoxw==
   dependencies:
-    "@axonivy/inscription-protocol" "11.3.0-next.1009+26e8690"
+    "@axonivy/inscription-protocol" "11.3.0-next.1016+a8751c9f"
     "@monaco-editor/react" "^4.6.0"
     "@radix-ui/react-accordion" "^1.1.2"
     "@radix-ui/react-checkbox" "^1.0.4"
@@ -63,37 +63,37 @@
     react-aria "^3.31.0"
     react-error-boundary "^4.0.12"
 
-"@axonivy/inscription-protocol@11.3.0-next.1009+26e8690", "@axonivy/inscription-protocol@~11.3.0-next.1009":
-  version "11.3.0-next.1009"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-protocol/-/inscription-protocol-11.3.0-next.1009.tgz#c143c1aa698217c4697260ee21edb0bdf8a14922"
-  integrity sha512-atuIjpmfLDIf6bZxuvtsjm2AxGaJnXsp0Evh57RxlgoA5U+5nA+z8QZe5yKeMcAPLO3IZO6Trg10OlB1RiGJsw==
+"@axonivy/inscription-protocol@11.3.0-next.1016+a8751c9f", "@axonivy/inscription-protocol@~11.3.0-next.1014":
+  version "11.3.0-next.1016"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-protocol/-/inscription-protocol-11.3.0-next.1016.tgz#ded4029b5c8a570f6b46db3ddd068f2053799c89"
+  integrity sha512-0jvVZMnbA0Ldswi6vLLEFpMfdwXOX0cW6X5pIhTATo124VVDlFpN6bFRbP+2RRKNPQLANltJByH2rtSmPdRJsg==
 
-"@axonivy/process-editor-inscription@~11.3.0-next.970":
-  version "11.3.0-next.970"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.3.0-next.970.tgz#4d9dd5360eb527a463ae9f6ca186bfb972bd0f5a"
-  integrity sha512-a3ogGfp9McrJqMaGPVxpr9oO6AhJvgosgRltMelHOY6+VtF4C1zxsG3HUjO9vO1S/rivKJVUkPcdUp3GdnXrMg==
+"@axonivy/process-editor-inscription@~11.3.0-next.972":
+  version "11.3.0-next.972"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.3.0-next.972.tgz#231af68a8708c69eeeb63be5259488b7d3f384ca"
+  integrity sha512-w+T+IxMF3px1p/5jLvgk9PW75X0lTBf4zhGHRJaQfXtsO8KK9l7B5700k1ee4dPEWaeBGoxoXdIWi20JrXa+Zw==
   dependencies:
-    "@axonivy/inscription-core" "~11.3.0-next.1009"
-    "@axonivy/inscription-editor" "~11.3.0-next.1009"
-    "@axonivy/inscription-protocol" "~11.3.0-next.1009"
-    "@axonivy/process-editor" "11.3.0-next.970+7dfabd5"
+    "@axonivy/inscription-core" "~11.3.0-next.1014"
+    "@axonivy/inscription-editor" "~11.3.0-next.1014"
+    "@axonivy/inscription-protocol" "~11.3.0-next.1014"
+    "@axonivy/process-editor" "11.3.0-next.972+da95239"
     "@eclipse-glsp/client" "~2.1.0"
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@axonivy/process-editor-protocol@11.3.0-next.970+7dfabd5", "@axonivy/process-editor-protocol@~11.3.0-next.970":
-  version "11.3.0-next.970"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.3.0-next.970.tgz#f25666ce18340ad510592b5bfab89f81fb171e6c"
-  integrity sha512-WvzyiNRUWZnkZW+ZQds6ngQPjJpLmr1xpskJBY791JVWrAu6V+cubcKlTzERaHE8FKErceLc+78S9qs0fAqZsw==
+"@axonivy/process-editor-protocol@11.3.0-next.972+da95239", "@axonivy/process-editor-protocol@~11.3.0-next.972":
+  version "11.3.0-next.972"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.3.0-next.972.tgz#fffd2877b2d71cb1fe661d2b27acd85311e3a95c"
+  integrity sha512-oLI9dKcAQGjFQLPUS64qTIUu4zRPASOEcDqQfmfXh1Rvn/PavxhSPM1An+eoRODjcaoJ6QIXgsmG+8vriOVw8g==
   dependencies:
     "@eclipse-glsp/protocol" "~2.1.0"
 
-"@axonivy/process-editor@11.3.0-next.970+7dfabd5", "@axonivy/process-editor@~11.3.0-next.970":
-  version "11.3.0-next.970"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.3.0-next.970.tgz#9cb83bf58b617a20bc3780cb9d850759232333ff"
-  integrity sha512-QeWTtwfn8kWxTP/RZf9rGPtpNQW0clVpEQST7xfPCQiOjpGCNHtBrm/oAe0r8d5YMlmy9RiXtL5RPN6kEnfu3A==
+"@axonivy/process-editor@11.3.0-next.972+da95239", "@axonivy/process-editor@~11.3.0-next.972":
+  version "11.3.0-next.972"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.3.0-next.972.tgz#1fd61e09ebf1a02db0804a3deff6db9ea970f472"
+  integrity sha512-Kofe6crnUT5s9Y+t2D5P08YkDqxze2d+x/2BL9kSITtbxhBGQT5SIHP/aldWl50tsXY9esd4/jUj0zTD1EQAZA==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.3.0-next.970+7dfabd5"
+    "@axonivy/process-editor-protocol" "11.3.0-next.972+da95239"
     "@axonivy/ui-icons" "~11.3.0-next.67"
     "@eclipse-glsp/client" "~2.1.0"
     showdown "^2.1.0"

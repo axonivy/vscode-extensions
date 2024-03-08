@@ -16,9 +16,9 @@
     "url": "https://github.com/axonivy/glsp-editor-client"
   },
   "dependencies": {
-    "@axonivy/process-editor": "~11.3.0-next.970",
-    "@axonivy/process-editor-inscription": "~11.3.0-next.970",
-    "@axonivy/process-editor-protocol": "~11.3.0-next.970",
+    "@axonivy/process-editor": "~11.3.0-next.972",
+    "@axonivy/process-editor-inscription": "~11.3.0-next.972",
+    "@axonivy/process-editor-protocol": "~11.3.0-next.972",
     "@eclipse-glsp/vscode-integration-webview": "2.1.1",
     "inversify": "^6.0.1",
     "vscode-jsonrpc": "^8.2.0",

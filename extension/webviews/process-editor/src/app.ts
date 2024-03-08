@@ -9,7 +9,7 @@ import { ivyInscriptionModule } from '@axonivy/process-editor-inscription';
 import { ContainerConfiguration } from '@eclipse-glsp/client';
 import { GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
 import { Container } from 'inversify';
-import * as reactMonaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import { NotificationType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
@@ -26,15 +26,15 @@ class IvyGLSPStarter extends GLSPStarter {
     this.initMonaco();
   }
 
-  private initMonaco() {
-    MonacoUtil.initStandalone(editorWorker).then(() => MonacoEditorUtil.initMonaco(reactMonaco, 'light'));
-    this.messenger.onNotification(ColorThemeChangedNotification, this.updateMonacoTheme);
+  private async initMonaco() {
+    const isMonacoReady = MonacoUtil.initStandalone(editorWorker);
+    this.messenger.onNotification(ColorThemeChangedNotification, theme => this.updateMonacoTheme(theme, isMonacoReady));
+    await isMonacoReady;
+    await MonacoEditorUtil.configureInstance(monaco, 'light');
   }
 
-  private updateMonacoTheme(theme: ColorTheme) {
-    MonacoUtil.monacoInitialized().then(() =>
-      reactMonaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(theme))
-    );
+  private updateMonacoTheme(theme: ColorTheme, isMonacoReady: Promise<void>) {
+    isMonacoReady.then(() => monaco.editor.defineTheme(MonacoEditorUtil.DEFAULT_THEME_NAME, MonacoEditorUtil.themeData(theme)));
   }
 
   createContainer(...containerConfiguration: ContainerConfiguration): Container {
