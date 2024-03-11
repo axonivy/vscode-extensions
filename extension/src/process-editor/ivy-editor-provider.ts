@@ -1,10 +1,10 @@
 import { executeCommand } from '../base/commands';
 import { GlspVscodeConnector, GlspEditorProvider, DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
-import fs from 'fs';
 import { NotificationType, RequestType, MessageParticipant } from 'vscode-messenger-common';
 import { InscriptionWebSocketMessage, IvyScriptWebSocketMessage, WebSocketForwarder } from '../websocket-forwarder';
 import { Messenger } from 'vscode-messenger';
+import { findEditorWorker, findRootEntry, parseBuildManifest } from '../base/build-manifest';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
@@ -53,28 +53,29 @@ export default class IvyEditorProvider extends GlspEditorProvider {
     }
     const nonce = getNonce();
 
-    const manifest = JSON.parse(fs.readFileSync(this.getAppUri('build.manifest.json').fsPath, 'utf8'));
+    const manifest = parseBuildManifest(this.getAppUri('build.manifest.json').fsPath);
+    const rootEntry = findRootEntry(manifest)!;
 
-    const rootHtmlKey = this.findRootHtmlKey(manifest);
+    const relevantScriptFiles = rootEntry.chunk.dynamicImports
+      ? new Set<string>([rootEntry.source, ...rootEntry.chunk.dynamicImports])
+      : [rootEntry.source];
 
-    const relativeRootPath = manifest[rootHtmlKey]['file'] as string;
-    const indexJs = webview.asWebviewUri(this.getAppUri(relativeRootPath));
+    const scriptSources = Array.from(relevantScriptFiles)
+      .map(chunk => manifest[chunk])
+      .filter(chunk => !chunk.isDynamicEntry)
+      .map(chunk => webview.asWebviewUri(this.getAppUri(chunk.file)));
 
-    const dynamicImports = manifest[rootHtmlKey]['dynamicImports'] as Array<string>;
-    const jsUris = dynamicImports
-      .map(i => manifest[i]['file'] as string)
-      .map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath)));
-
-    const relativeCssFilePaths = manifest[rootHtmlKey]['css'] as string[];
-    const cssUris = relativeCssFilePaths.map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath)));
+    const cssUris = rootEntry.chunk.css?.map(relativePath => webview.asWebviewUri(this.getAppUri(relativePath))) ?? [];
     cssUris.push(webview.asWebviewUri(vscode.Uri.joinPath(this.extensionContext.extensionUri, 'css', 'inscription-editor.css')));
+
+    const editorWorkerLocation = webview.asWebviewUri(findEditorWorker(this.getAppUri(), manifest)!);
 
     const contentSecurityPolicy =
       `default-src 'none';` +
       `style-src 'unsafe-inline' ${webview.cspSource};` +
       `img-src ${webview.cspSource} https: data:;` +
-      `script-src 'nonce-${nonce}';` +
-      `worker-src ${webview.cspSource};` +
+      `script-src 'nonce-${nonce}' *;` +
+      `worker-src ${webview.cspSource} blob: data:;` +
       `font-src ${webview.cspSource};` +
       `connect-src ${webview.cspSource}`;
 
@@ -86,12 +87,12 @@ export default class IvyEditorProvider extends GlspEditorProvider {
           <meta http-equiv="Content-Security-Policy" content="${contentSecurityPolicy}">
           <meta name="viewport" content="width=device-width, height=device-height">
           ${cssUris.map(cssUri => `<link rel="stylesheet" type="text/css" href="${cssUri}" />`).join('\n')}
+          <script nonce="${nonce}" id="_editorWorkerLocation">globalThis.editorWorkerLocation = "${editorWorkerLocation}";</script>
         </head>
         <body>
           <div id="${clientId}_container" class="main-widget"></div>
           <div id="inscription"></div>
-          <script nonce="${nonce}" type="module" src="${indexJs}"></script>
-          ${jsUris.map(jsUri => `<script nonce="${nonce}" type="module" src="${jsUri}"></script>`).join('\n')}
+          ${scriptSources.map(jsUri => `<script nonce="${nonce}" type="module" src="${jsUri}"></script>`).join('\n')}
         </body>
       </html>`;
   }
@@ -114,10 +115,6 @@ export default class IvyEditorProvider extends GlspEditorProvider {
 
   private getAppUri(...pathSegments: string[]) {
     return vscode.Uri.joinPath(this.extensionContext.extensionUri, 'webviews', 'process-editor', 'dist', ...pathSegments);
-  }
-
-  private findRootHtmlKey(buildManifest: object) {
-    return Object.keys(buildManifest).filter(key => key.endsWith('index.html'))[0];
   }
 }
 
