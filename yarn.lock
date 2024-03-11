@@ -24,7 +24,7 @@
     react "^18.2.0"
     yaml "^2.3.1"
 
-"@axonivy/inscription-core@11.3.0-next.1028+1c12a00", "@axonivy/inscription-core@~11.3.0-next.1026":
+"@axonivy/inscription-core@11.3.0-next.1028+1c12a00", "@axonivy/inscription-core@~11.3.0-next.1028":
   version "11.3.0-next.1028"
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-core/-/inscription-core-11.3.0-next.1028.tgz#ff14fc707a204f3a70bcc465f827ab3cc7f2474d"
   integrity sha512-jegqhf7+p4cjuMG14RBHyWVb0RXVp4YITd7E4M6c5FtuIiDWN61PXjBr6lmDB0Ecy0L5cjY8IZx3Kmn7Xc/V5A==
@@ -36,7 +36,7 @@
     monaco-languageclient "^6.6.1"
     vscode-languageserver-protocol "^3.17.5"
 
-"@axonivy/inscription-editor@~11.3.0-next.1026":
+"@axonivy/inscription-editor@~11.3.0-next.1028":
   version "11.3.0-next.1028"
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-editor/-/inscription-editor-11.3.0-next.1028.tgz#68be23c209450b018432a0419a85473bc292bc50"
   integrity sha512-QN3Th2tPyrguL2HJNIrSfiUAFTvBJhT5uCuZU3yUpnqQ7xPFRkcj8RGnITy9IMFBWB0D+aIo6r6GoQ3pt5KrXA==
@@ -62,7 +62,7 @@
     react-aria "^3.31.0"
     react-error-boundary "^4.0.12"
 
-"@axonivy/inscription-protocol@11.3.0-next.1028+1c12a00", "@axonivy/inscription-protocol@~11.3.0-next.1026":
+"@axonivy/inscription-protocol@11.3.0-next.1028+1c12a00", "@axonivy/inscription-protocol@~11.3.0-next.1028":
   version "11.3.0-next.1028"
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-protocol/-/inscription-protocol-11.3.0-next.1028.tgz#b5ca50e14e0efbe2b2d68bf6708f1472443186e4"
   integrity sha512-PhSPBWUakO5xqypGtXe5IqNTXkcftgTaZg0JPahTSRAxi6+7VGoUrBaxTFWl44X1YtY2lH6YTZTzDSAHNsEvGQ==
@@ -75,32 +75,32 @@
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/process-editor-inscription@~11.3.0-next.982":
-  version "11.3.0-next.982"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.3.0-next.982.tgz#3baa9e479ae80f4a3c0b47cde058e7f3eae1b373"
-  integrity sha512-xj5npJ8WP+x1m2TXQOpxup/SXkziNk9XcnpQmKqbPi5RsziQ1N4bWNa/m9ZTreVQ4fP6jo9/7sHc5fNy/vNqcQ==
+"@axonivy/process-editor-inscription@~11.3.0-next.984":
+  version "11.3.0-next.984"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.3.0-next.984.tgz#d93ad65de41cb54ba20b83d33c73fdb496eca214"
+  integrity sha512-dwBECsndSpAhWZ3GrIsnmSDd7i/zobjp+aRw5kiu1+cWyDnCaeMImc/Esbkj3PXiFCRjKWnkIZLDdEBVD8lLmw==
   dependencies:
-    "@axonivy/inscription-core" "~11.3.0-next.1026"
-    "@axonivy/inscription-editor" "~11.3.0-next.1026"
-    "@axonivy/inscription-protocol" "~11.3.0-next.1026"
-    "@axonivy/process-editor" "11.3.0-next.982+cf4ae16"
+    "@axonivy/inscription-core" "~11.3.0-next.1028"
+    "@axonivy/inscription-editor" "~11.3.0-next.1028"
+    "@axonivy/inscription-protocol" "~11.3.0-next.1028"
+    "@axonivy/process-editor" "11.3.0-next.984+17db562"
     "@eclipse-glsp/client" "~2.1.0"
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@axonivy/process-editor-protocol@11.3.0-next.982+cf4ae16", "@axonivy/process-editor-protocol@~11.3.0-next.982":
-  version "11.3.0-next.982"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.3.0-next.982.tgz#a4ef3d3eba24616487fd11545c4af748d6abeb7a"
-  integrity sha512-9shKq7V7I2u83V1EJ6DAxk4ywWvJpkQqly2viVOsx7QQ7MVM6ZIJN7dkDMHSSNYS3nT+METw29FDfRA1uiPqFA==
+"@axonivy/process-editor-protocol@11.3.0-next.984+17db562", "@axonivy/process-editor-protocol@~11.3.0-next.984":
+  version "11.3.0-next.984"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.3.0-next.984.tgz#9f69d337767462fcf2040caf4fe66ab4ee1c9da9"
+  integrity sha512-78mJ1GbTS9hml7emvYfpsksgZZdAVTOzhIdok4Xy2py8yv6l54GKBtblsZKGxB5iZ2iZYzhFq7jeDCMihTDeiw==
   dependencies:
     "@eclipse-glsp/protocol" "~2.1.0"
 
-"@axonivy/process-editor@11.3.0-next.982+cf4ae16", "@axonivy/process-editor@~11.3.0-next.982":
-  version "11.3.0-next.982"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.3.0-next.982.tgz#1f97c635a68799ddc6d389cf1306bb0dc1d0379a"
-  integrity sha512-lzGDv2mI3BKK+2s/E6BnQdNzu25RviOoDaU7cHTGynkU9tkVkGOHb9c7YvuYsbCTV9OdeyJ/xzWDxw7MwitLBQ==
+"@axonivy/process-editor@11.3.0-next.984+17db562", "@axonivy/process-editor@~11.3.0-next.984":
+  version "11.3.0-next.984"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.3.0-next.984.tgz#2805345c3d6e40e48c22dcea5780db7bbb528646"
+  integrity sha512-Ai60YpT1LMi6dauddlXgBKdINoGi5GDqPw27B5NVACpFSVSEmRZMlnr4EVhIaZRmRYBe5d4YxmIUfn5mUN/OSQ==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.3.0-next.982+cf4ae16"
+    "@axonivy/process-editor-protocol" "11.3.0-next.984+17db562"
     "@axonivy/ui-icons" "~11.3.0-next.81"
     "@eclipse-glsp/client" "~2.1.0"
     showdown "^2.1.0"
@@ -4326,7 +4326,7 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   dependencies:
     domelementtype "^2.3.0"
 
-domutils@^3.0.1:
+domutils@^3.0.1, domutils@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/domutils/-/domutils-3.1.0.tgz#c47f551278d3dc4b0b1ab8cbb42d751a6f0d824e"
   integrity sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==
@@ -4429,7 +4429,7 @@ enquirer@~2.3.6:
   dependencies:
     ansi-colors "^4.1.1"
 
-entities@^4.2.0, entities@^4.4.0:
+entities@^4.2.0, entities@^4.4.0, entities@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
@@ -5465,6 +5465,16 @@ htmlparser2@^8.0.1:
     domhandler "^5.0.3"
     domutils "^3.0.1"
     entities "^4.4.0"
+
+htmlparser2@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-9.1.0.tgz#cdb498d8a75a51f739b61d3f718136c369bc8c23"
+  integrity sha512-5zfg6mHUoaer/97TxnGpxmbR7zJtPwIYFMZ/H5ucTlPZhKvtum05yiPK3Mgai3a0DyVxv7qYqoweaEd2nrYQzQ==
+  dependencies:
+    domelementtype "^2.3.0"
+    domhandler "^5.0.3"
+    domutils "^3.1.0"
+    entities "^4.5.0"
 
 http-cache-semantics@^4.1.1:
   version "4.1.1"

@@ -5,27 +5,29 @@ body {
   overflow: hidden;
 }
 
-body {
+#process-editor {
   display: grid;
-  grid-template-areas: 'sprotty inscription';
-  grid-auto-columns: minmax(250px, 100%) min-content;
-  grid-auto-rows: 1fr 0;
-}
-#sprotty {
-  grid-area: sprotty;
-  height: 100vh;
-}
-#inscription {
-  grid-area: inscription;
-  background-color: var(--glsp-editor-background);
-  height: 100vh;
-}
-#inscription.hidden {
-  display: none;
+  grid-template-columns: 1fr auto; /* Adjust the auto value based on sidebar width */
+  grid-template-rows: auto 1fr; /* Adjust based on toolbar height */
+  height: 100vh; /* Full viewport height */
 }
 
+#sprotty,
 .main-widget {
-  position: relative;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  position: relative; /* to ensure that absolute positioning of elements within the diagram work relative to the diagram. */
+}
+
+#ivy-tool-bar {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+#inscription-ui {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3; /* Spanning across both the rows */
+  background-color: var(--glsp-editor-background);
 }
 
 .sprotty svg {

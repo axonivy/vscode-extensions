@@ -37,6 +37,11 @@ export function findEditorWorkerWrapperChunk(manifest: ViteManifest): ViteManife
   return Object.entries(manifest).find(entry => entry[0].endsWith(EDITOR_WORKER_ENTRY))?.[1];
 }
 
+export function findRootHtml(appPath: vscode.Uri, manifest: ViteManifest): vscode.Uri {
+  const rootEntry = findRootEntry(manifest);
+  return vscode.Uri.joinPath(appPath, rootEntry.chunk.src ?? rootEntry.source);
+}
+
 export function findEditorWorker(appPath: vscode.Uri, manifest: ViteManifest): vscode.Uri | undefined {
   // Finding the location of the editor worker is a bit tricky as Vite automatically generates a wrapper for it
   // But for web views we need the actual code so we can turn it into a blob URL later on
