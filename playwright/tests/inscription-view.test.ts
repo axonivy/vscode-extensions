@@ -2,11 +2,13 @@ import { Page, expect, test } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
+import { BrowserView } from './page-objects/browser-view';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
 test.describe('Inscription View', () => {
   let page: Page;
+  let browserView: BrowserView;
   let processEditor: ProcessEditor;
   const cleanUp = () => {
     removeFromWorkspace(prebuiltWorkspacePath, 'src_hd');
@@ -63,6 +65,37 @@ test.describe('Inscription View', () => {
     await inputField.blur();
     await expect(inputField).toHaveText(newDisplayName);
     await expect(element).toHaveText(newDisplayName);
+  });
+
+  test('OpenPage-Action - valid file - Means/Document Table', async () => {
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
+    const generalAccordion = inscriptionView.accordionFor('General');
+    await expect(generalAccordion).toBeVisible();
+    await generalAccordion.click();
+
+    await inscriptionView.clickButton('Means / Documents');
+    await inscriptionView.clickButton('Add row');
+
+    const firstRowURLCell = inscriptionView.cellInsideTable(0, 3);
+    await firstRowURLCell.click();
+    await page.keyboard.type('pom.xml');
+    await inscriptionView.cellInsideTable(0, 2).click();
+    await inscriptionView.clickButton('Open URL');
+    const activeTabElement = await page.$('.tab.active');
+    expect(activeTabElement).not.toBeNull();
+    expect(await activeTabElement?.getAttribute('data-resource-name')).toEqual('pom.xml');
+
+    const closeButtonOfActiveTab = await activeTabElement?.$('.action-label.codicon.codicon-close');
+    await closeButtonOfActiveTab?.click();
+  });
+
+  test('OpenPage-Action in Browers - Open Help', async () => {
+    browserView = new BrowserView(page);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
+    await inscriptionView.clickButton('Open Help for User Dialog');
+    expect((await browserView.input().inputValue()).toString()).toMatch(
+      /^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/
+    );
   });
 
   test('Monaco Editor completion', async () => {

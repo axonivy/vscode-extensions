@@ -22,6 +22,11 @@ export class InscriptionView extends PageObject {
     return this.parent.getByLabel(label, { exact: true });
   }
 
+  cellInsideTable(tableCount: number, cellCount: number): Locator {
+    const firstTable = this.parent.getByRole('table').nth(tableCount);
+    return firstTable.getByRole('cell').nth(cellCount);
+  }
+
   async clickButton(label: string) {
     await this.parent.getByRole('button', { name: label }).click();
   }
