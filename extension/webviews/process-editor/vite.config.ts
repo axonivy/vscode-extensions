@@ -7,7 +7,16 @@ export default defineConfig(() => {
     build: {
       manifest: 'build.manifest.json',
       outDir: 'dist',
-      chunkSizeWarningLimit: 5000
+      chunkSizeWarningLimit: 5000,
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('monaco-languageclient' || id.includes('vscode'))) {
+              return 'monaco-chunk';
+            }
+          }
+        }
+      }
     },
     server: {
       port: 3000,
