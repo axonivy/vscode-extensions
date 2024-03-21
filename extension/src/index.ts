@@ -13,6 +13,7 @@ import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
 import { NewUserDialogParams } from './project-explorer/new-user-dialog';
+import FormEditorProvider from './form-editor/form-editor-provider';
 
 let ivyEngineManager: IvyEngineManager;
 const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip';
@@ -25,6 +26,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
   registerCmd('engine.startIvyEngineManager', () => ivyEngineManager.start());
   registerCmd('process-editor.activate', () => activateProcessEditor(context, messenger));
+  registerCmd('form-editor.activate', () => FormEditorProvider.register(context, messenger));
   registerCmd('engine.deployProjects', () => ivyEngineManager.deployProjects());
   registerCmd('engine.buildProjects', () => ivyEngineManager.buildProjects());
   registerCmd('engine.buildAndDeployProjects', () => ivyEngineManager.buildAndDeployProjects());

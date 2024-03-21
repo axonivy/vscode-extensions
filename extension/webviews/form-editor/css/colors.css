@@ -1,0 +1,42 @@
+body {
+  color-scheme: light;
+  padding: 0;
+}
+
+body:where(.vscode-dark, .vscode-high-contrast:not(.vscode-high-contrast-light)) {
+  color-scheme: dark;
+
+  --body: #ffffff;
+  --background: #2c2c2c;
+  --N25: #333333;
+  --N50: #202020;
+  --N75: #202020;
+  --N100: #4a4a4a;
+  --N200: #4f4f4f;
+  --N300: #606060;
+  --N400: #b0b0b0;
+  --N500: #757575;
+  --N600: #a3a3a3;
+  --N700: #858585;
+  --N800: #a3a3a3;
+  --N900: #a3a3a3;
+  --P50: #272727;
+  --P75: #97c4d4;
+  --P300: #6ba6ff;
+  --P500: #004e69;
+  --error-color: #ee4a52;
+  --warning-color: #ffac5e;
+  --success-color: #47c46b;
+  --transparent: rgba(0, 0, 0, 0);
+
+  --basic-border: 1px solid var(--N200);
+  --activ-border: 1px solid var(--P300);
+  --dashed-border: 1px dashed var(--N400);
+  --warning-border: 1px solid var(--warning-color);
+  --error-border: 1px solid var(--error-color);
+  --editor-shadow: 0px 9px 27px rgba(0, 0, 0, 0.07), 0px 3.75998px 11.28px rgba(0, 0, 0, 0.0503198),
+    0px 2.01027px 6.0308px rgba(0, 0, 0, 0.0417275), 0px 1.12694px 3.38082px rgba(0, 0, 0, 0.035),
+    0px 0.598509px 1.79553px rgba(0, 0, 0, 0.0282725), 0px 0.249053px 0.747159px rgba(0, 0, 0, 0.0196802);
+  --focus-shadow: 0 0 0 1px var(--body);
+  --popover-shadow: 0px 6.5px 10px 0px #0000001a;
+}

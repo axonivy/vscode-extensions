@@ -39,6 +39,7 @@ export class IvyEngineManager {
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
     process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
     executeCommand('process-editor.activate');
+    executeCommand('form-editor.activate');
   }
 
   private async resolveEngineUrl() {

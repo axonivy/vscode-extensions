@@ -70,6 +70,15 @@
             "filenamePattern": "*.p.json"
           }
         ]
+      },
+      {
+        "viewType": "ivy.formEditor",
+        "displayName": "Axon Ivy Form Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.f.json"
+          }
+        ]
       }
     ],
     "commands": [
