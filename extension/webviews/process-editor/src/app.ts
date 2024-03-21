@@ -45,16 +45,10 @@ export function launch() {
   new IvyGLSPStarter();
 }
 
-declare global {
-  // Must be set in the IvyEditorProvider when the webview HTML code is generated
-  const editorWorkerLocation: string;
-}
+// Must be set in the IvyEditorProvider when the webview HTML code is generated
+declare const editorWorkerLocation: string;
 
-async function initMonaco(): Promise<void> {
-  // Packaging with Vite has it's own handling of web workers so it can be properly accessed without any custom configuration.
-  // We therefore import the worker here and to trigger the generation in the 'dist' directory.
-  //
-  await import('monaco-editor/esm/vs/editor/editor.worker?worker');
+async function initMonaco(): Promise<unknown> {
   //
   // According to the documentation (https://code.visualstudio.com/api/extension-guides/webview#using-web-workers) web worker
   // support within web views is limited. So we cannot access the script directly or through fetching directly without running into:
@@ -66,19 +60,34 @@ async function initMonaco(): Promise<void> {
   // > "Could not create web worker(s). Falling back to loading web worker code in main thread, which might cause UI freezes."
   // > "You must define a function MonacoEnvironment.getWorkerUrl or MonacoEnvironment.getWorker"
   //
-  // So what we do is we expose the editor worker location as Webview Uri in our IvyEditorProvider and store it in the 'editorWorkerLocation' variable.
-  // From there, we fetch the script properly and create a blob worker from that.
+  // So what we do instead is to expose the editor worker location as Webview Uri in our IvyEditorProvider and store it in the 'editorWorkerLocation' variable.
+  // We then fetch the script stored at that location and translate it into a blob as blob and data URLs are supported for workers.
   //
+  // Packaging with Vite has it's own handling of web workers so it can be properly accessed without any custom configuration.
+  // We therefore trigger the generation of the necessary script file here through the import so that we can later expose the generated file under the
+  // 'editorWorkerLocation' variable:
+  import('monaco-editor/esm/vs/editor/editor.worker?worker');
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const script = await fetch((globalThis as any).editorWorkerLocation);
-  const blob = await script.blob();
-  class BlobWorker extends Worker {
-    constructor(workerId?: string, label?: string, url = URL.createObjectURL(blob)) {
-      super(url, { name: workerId ?? label });
-      this.addEventListener('error', () => {
-        URL.revokeObjectURL(url);
-      });
-    }
+  if (!editorWorkerLocation) {
+    console.warn('Could not find editor worker location for web worker creation. Initialize without dedicated web worker support.');
+    return MonacoEditorUtil.configureInstance({ theme: 'light', worker: { skip: true } });
   }
-  MonacoEditorUtil.configureInstance({ theme: 'light', worker: { workerConstructor: BlobWorker } });
+  try {
+    const script = await fetch(editorWorkerLocation);
+    if (script.status === 404) {
+      throw Error('File not found ' + editorWorkerLocation);
+    }
+    const blob = await script.blob();
+    class BlobWorker extends Worker {
+      constructor(workerId?: string, label?: string, url = URL.createObjectURL(blob)) {
+        super(url, { name: workerId ?? label });
+        this.addEventListener('error', () => URL.revokeObjectURL(url));
+      }
+    }
+    return MonacoEditorUtil.configureInstance({ theme: 'light', worker: { workerConstructor: BlobWorker } });
+  } catch (error) {
+    console.error('Problem with retrieving the editor worker script. Initialize without dedicated web worker support.', error);
+    return MonacoEditorUtil.configureInstance({ theme: 'light', worker: { skip: true } });
+  }
 }

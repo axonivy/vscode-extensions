@@ -1,18 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Inscription Editor for Axon Ivy Process Elements" />
-    <title>Process Editor</title>
-  </head>
 
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="sprotty" class="main-widget"></div>
-    <div id="inscription"></div>
-    <script type="module" src="/src/index.ts"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Inscription Editor for Axon Ivy Process Elements" />
+  <title>Process Editor</title>
+  <style>
+    #process-editor {
+      height: 100%;
+    }
+
+    /* from https://cssloaders.github.io/, licensed under MIT */
+    .page-loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      animation: rotate 1s linear infinite;
+    }
+
+    .page-loader::before {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #a5a5a5;
+      animation: prixClipFix 2s linear infinite;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes prixClipFix {
+      0% {
+        clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+      }
+
+      25% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+      }
+
+      50% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+      }
+
+      75% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+      }
+
+      100% {
+        clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="process-editor">
+    <header id="ivy-tool-bar"></header>
+    <main id="sprotty" class="main-widget">
+      <!-- Add some placeholder content for better UX while loading -->
+      <!-- As soon as the diagram is loaded all content within 'sprotty' will be overwritten -->
+      <div class="ivy-viewport-bar" style="visibility: visible; opacity: 1;">
+        <div class="viewport-bar">
+          <div class="viewport-bar-tools" style="width: 167px; height: 36px;">
+          </div>
+        </div>
+      </div>
+      <div class="ivy-tool-bar" style="visibility: visible; opacity: 1;">
+        <div class="tool-bar-header">
+          <div class="left-buttons">
+            <span class="tool-bar-button clicked" title="Selection Tool" id="btn_default_tools">
+              <i class="ivy ivy-selection-tool"></i></span>
+            <span class="tool-bar-button" title="Marquee Tool (Shift)" id="btn_marquee_tools">
+              <i class="ivy ivy-multi-selection"></i></span>
+          </div>
+        </div>
+        <div class="tool-bar-progress-container">
+          <div class="progress-bit"></div>
+        </div>
+      </div>
+      <div tabindex="0" style="width: 100%; height: 100%;">
+        <div class="page-loader" role="progressbar"></div>
+        <svg class="sprotty-graph" style="height: 100%; width: 100%;"></svg>
+      </div>
+    </main>
+    <aside id="inscription-ui"></aside>
+  </div>
+  <script async type="module" src="/src/index.ts"></script>
+</body>
+
 </html>
