@@ -29,8 +29,8 @@ export function parseBuildManifest(path: string): ViteManifest {
 }
 
 export function findRootEntry(manifest: ViteManifest): ViteManifestEntry {
-  const rootEntry = Object.entries(manifest).find(entry => entry[1].isEntry);
-  return { source: rootEntry![0], chunk: rootEntry![1] };
+  const [source, chunk] = Object.entries(manifest).find(entry => entry[1].isEntry)!;
+  return { source, chunk };
 }
 
 export function findEditorWorkerWrapperChunk(manifest: ViteManifest): ViteManifestChunk | undefined {
