@@ -8,13 +8,14 @@ import { Messenger } from 'vscode-messenger';
 
 export const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 export const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
+export const FormWebSocketMessage: NotificationType<unknown> = { method: 'formWebSocketMessage' };
 
 export class WebSocketForwarder implements vscode.Disposable {
   private readonly toDispose = new DisposableCollection();
   private readonly webSocket: WebSocket;
 
   constructor(
-    wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp',
+    wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp' | 'ivy-form-lsp',
     private readonly messenger: Messenger,
     private readonly messageParticipant: MessageParticipant,
     private readonly notificationType: NotificationType<unknown>

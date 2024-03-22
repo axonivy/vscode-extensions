@@ -36,7 +36,8 @@ type EngineCommand =
   | 'engine.deleteProject'
   | 'engine.downloadDevEngine'
   | 'engine.setEngineDirectory'
-  | 'process-editor.activate';
+  | 'process-editor.activate'
+  | 'form-editor.activate';
 type ProjectViewCommand =
   | 'ivyProjects.refreshEntry'
   | 'ivyProjects.buildProject'

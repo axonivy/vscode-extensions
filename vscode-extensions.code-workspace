@@ -9,8 +9,16 @@
       "path": "extension"
     },
     {
-      "name": "webviews",
-      "path": "extension/webviews"
+      "name": "webview/config-editor",
+      "path": "extension/webviews/config-editor"
+    },
+    {
+      "name": "webview/process-editor",
+      "path": "extension/webviews/process-editor"
+    },
+    {
+      "name": "webview/form-editor",
+      "path": "extension/webviews/form-editor"
     },
     {
       "name": "playwright",
