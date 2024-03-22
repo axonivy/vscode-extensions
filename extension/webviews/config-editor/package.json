@@ -5,13 +5,12 @@
   "dependencies": {
     "@axonivy/config-editor": "~11.3.0-next.56",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vscode-webview-common": "*"
   },
   "devDependencies": {
     "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
-    "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.0.11"
+    "@types/react-dom": "^18.2.18"
   },
   "type": "module",
   "scripts": {

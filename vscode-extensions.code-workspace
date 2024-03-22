@@ -9,6 +9,10 @@
       "path": "extension"
     },
     {
+      "name": "webview/common",
+      "path": "extension/webviews/webview-common"
+    },
+    {
       "name": "webview/config-editor",
       "path": "extension/webviews/config-editor"
     },
