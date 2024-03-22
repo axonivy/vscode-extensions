@@ -1,0 +1,27 @@
+{
+  "name": "vscode-webview-common",
+  "private": true,
+  "version": "11.3.0",
+  "description": "VSCode extension common code for webviews",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "dependencies": {
+    "vscode-jsonrpc": "^8.2.0",
+    "vscode-messenger-webview": "^0.4.5",
+    "vscode-messenger-common": "^0.4.5"
+  },
+  "devDependencies": {
+    "vite": "^5.2.2",
+    "vite-tsconfig-paths": "^4.3.2",
+    "@vitejs/plugin-react": "^4.2.1"
+  },
+  "type": "module",
+  "module": "lib/index",
+  "types": "lib/index",
+  "scripts": {
+    "build": "tsc",
+    "build:production": "yarn build",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "prepare": "yarn clean && yarn build",
+    "clean": "rimraf lib"
+  }
+}

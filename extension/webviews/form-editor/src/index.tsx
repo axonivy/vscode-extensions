@@ -1,10 +1,9 @@
-import '../css/colors.css';
+import 'vscode-webview-common/css/colors.css';
 import { App, ClientContextProvider, QueryProvider, initQueryClient } from '@axonivy/form-editor';
 import { FormClientJsonRpc } from '@axonivy/form-editor-core';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import { WebviewMessageReader } from './message-reader';
-import { WebviewMessageWriter } from './message-writer';
+import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
 import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
 import { VsCodeApi, Messenger } from 'vscode-messenger-webview';
 
