@@ -5,15 +5,15 @@ import { Command, registerCommand } from './base/commands';
 import { config } from './base/configurations';
 import { setStatusBarMessage } from './base/status-bar-message';
 import { activateIvyBrowser } from './browser/ivy-browser';
-import { YamlEditorProvider } from './config-editor/editor-provider';
+import { VariableEditorProvider } from './editors/config-editor/variable-editor-provider';
 import { addDevContainer } from './dev-container/command';
 import { IvyEngineManager } from './engine/engine-manager';
-import { activateProcessEditor } from './process-editor/ivy-extension';
+import { activateProcessEditor } from './editors/process-editor/activte-process-editor';
 import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
 import { NewProcessParams } from './project-explorer/new-process';
 import { NewProjectParams } from './project-explorer/new-project';
 import { NewUserDialogParams } from './project-explorer/new-user-dialog';
-import FormEditorProvider from './form-editor/form-editor-provider';
+import FormEditorProvider from './editors/form-editor/form-editor-provider';
 
 let ivyEngineManager: IvyEngineManager;
 const devEnginePermalink = 'https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip';
@@ -45,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
   new IvyProjectExplorer(context);
   activateIvyBrowser(context, '');
-  context.subscriptions.push(YamlEditorProvider.register(context));
+  context.subscriptions.push(VariableEditorProvider.register(context, messenger));
   setStatusBarMessage('Axon Ivy Extension activated');
 
   return messenger.diagnosticApi();

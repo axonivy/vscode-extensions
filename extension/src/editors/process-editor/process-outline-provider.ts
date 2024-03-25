@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { IvyVscodeConnector } from './ivy-vscode-connector';
+import { ProcessVscodeConnector } from './process-vscode-connector';
 import { GlspVscodeClient, SelectAction, SelectAllAction } from '@eclipse-glsp/vscode-integration';
 import { JumpAction, MoveIntoViewportAction } from '@axonivy/process-editor-protocol';
 
@@ -16,7 +16,7 @@ type Element = {
   elements?: Element[];
 };
 
-export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Element> {
+export class ProcessOutlineProvider implements vscode.TreeDataProvider<Element> {
   private _onDidChangeTreeData: vscode.EventEmitter<Element | undefined> = new vscode.EventEmitter<Element | undefined>();
   readonly onDidChangeTreeData: vscode.Event<Element | undefined> = this._onDidChangeTreeData.event;
 
@@ -24,7 +24,7 @@ export class IvyProcessOutlineProvider implements vscode.TreeDataProvider<Elemen
   private tree?: Process;
   private text = '';
 
-  constructor(private context: vscode.ExtensionContext, private ivyGlspConnector: IvyVscodeConnector) {
+  constructor(private context: vscode.ExtensionContext, private ivyGlspConnector: ProcessVscodeConnector) {
     this.ivyGlspConnector.onDidChangeActiveGlspEditor(e => this.readProcessFile(e.client));
   }
 

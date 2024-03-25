@@ -1,10 +1,10 @@
 import { configureDefaultCommands, GlspVscodeConnector, SocketGlspVscodeServer, Writable } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
 
-import IvyEditorProvider from './ivy-editor-provider';
-import { IvyVscodeConnector } from './ivy-vscode-connector';
-import { IvyProcessOutlineProvider } from './ivy-process-outline';
-import { registerCommand } from '../base/commands';
+import ProcessEditorProvider from './process-editor-provider';
+import { ProcessVscodeConnector } from './process-vscode-connector';
+import { ProcessOutlineProvider } from './process-outline-provider';
+import { registerCommand } from '../../base/commands';
 import { Messenger } from 'vscode-messenger';
 
 export function activateProcessEditor(context: vscode.ExtensionContext, messenger: Messenger): void {
@@ -22,7 +22,7 @@ export function activateProcessEditor(context: vscode.ExtensionContext, messenge
   });
 
   // Initialize GLSP-VSCode connector with server wrapper
-  const ivyVscodeConnector = new IvyVscodeConnector({
+  const ivyVscodeConnector = new ProcessVscodeConnector({
     server: workflowServer,
     logging: true
   });
@@ -30,8 +30,8 @@ export function activateProcessEditor(context: vscode.ExtensionContext, messenge
   (ivyVscodeConnector as Writable<GlspVscodeConnector>).messenger = messenger;
 
   const customEditorProvider = vscode.window.registerCustomEditorProvider(
-    IvyEditorProvider.viewType,
-    new IvyEditorProvider(context, ivyVscodeConnector),
+    ProcessEditorProvider.viewType,
+    new ProcessEditorProvider(context, ivyVscodeConnector),
     {
       webviewOptions: { retainContextWhenHidden: true },
       supportsMultipleEditorsPerDocument: false
@@ -41,7 +41,7 @@ export function activateProcessEditor(context: vscode.ExtensionContext, messenge
   context.subscriptions.push(workflowServer, ivyVscodeConnector, customEditorProvider);
   workflowServer.start();
 
-  const ivyProcessOutline = new IvyProcessOutlineProvider(context, ivyVscodeConnector);
+  const ivyProcessOutline = new ProcessOutlineProvider(context, ivyVscodeConnector);
   const treeView = vscode.window.createTreeView('ivyProcessOutline', { treeDataProvider: ivyProcessOutline, showCollapseAll: true });
   context.subscriptions.push(treeView);
   ivyVscodeConnector.onSelectedElement(selectedElement => {

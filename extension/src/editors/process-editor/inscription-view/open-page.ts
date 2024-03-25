@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
-import { InscriptionActionHandler } from '../inscription-action-handler';
-import { executeCommand } from '../base/commands';
+import { InscriptionActionHandler } from './action-handlers';
+import { executeCommand } from '../../../base/commands';
 
 export class OpenPageActionHandler implements InscriptionActionHandler {
   actionId = 'openPage' as const;

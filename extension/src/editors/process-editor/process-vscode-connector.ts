@@ -13,8 +13,8 @@ import {
   SetMarkersAction
 } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
-import { SelectedElement } from '../base/process-editor-connector';
-import IvyEditorProvider from './ivy-editor-provider';
+import { SelectedElement } from '../../base/process-editor-connector';
+import ProcessEditorProvider from './process-editor-provider';
 
 type IvyGlspClient = GlspVscodeClient & { app: string; pmv: string };
 const severityMap = new Map([
@@ -23,7 +23,7 @@ const severityMap = new Map([
   ['error', vscode.DiagnosticSeverity.Error]
 ]);
 
-export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
+export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
   protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<{ client: GlspVscodeClient<D> }>();
@@ -96,7 +96,7 @@ export class IvyVscodeConnector<D extends vscode.CustomDocument = vscode.CustomD
   }
 
   private openWithProcessEditor(absolutePath: string) {
-    vscode.commands.executeCommand('vscode.openWith', vscode.Uri.parse(absolutePath), IvyEditorProvider.viewType);
+    vscode.commands.executeCommand('vscode.openWith', vscode.Uri.parse(absolutePath), ProcessEditorProvider.viewType);
   }
 
   protected override processMessage(message: unknown, origin: MessageOrigin): MessageProcessingResult {
