@@ -11,5 +11,4 @@ assets/readme
 
 lib/
 webviews/
-!webviews/config-editor/dist/
-!webviews/process-editor/dist/
+!webviews/*/dist/

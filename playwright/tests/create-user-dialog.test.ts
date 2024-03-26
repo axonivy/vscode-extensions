@@ -13,7 +13,7 @@ test.describe('Create User Dialog', () => {
   let processEditor: ProcessEditor;
   let userDialogName: string;
   const projectName = 'prebuiltProject';
-  const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'src_hd');
+  const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'src_hd', 'ch');
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
