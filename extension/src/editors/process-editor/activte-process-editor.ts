@@ -14,10 +14,10 @@ export function activateProcessEditor(context: vscode.ExtensionContext, messenge
     throw Error('No Ivy Engine Url available');
   }
   const workflowServer = new SocketGlspVscodeServer({
-    clientId: 'ivy-web-ide-glsp-process',
-    clientName: 'ivy-web-ide-glsp-process',
+    clientId: 'ivy-glsp-web-ide-process-editor',
+    clientName: 'ivy-glsp-web-ide-process-editor',
     connectionOptions: {
-      webSocketAddress: webSocketAddress + 'ivy-web-ide-glsp-process'
+      webSocketAddress: webSocketAddress + 'ivy-glsp-web-ide-process-editor'
     }
   });
 
