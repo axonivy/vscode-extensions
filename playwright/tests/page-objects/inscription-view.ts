@@ -15,7 +15,7 @@ export class InscriptionView extends PageObject {
   }
 
   accordionFor(name: string): Locator {
-    return this.parent.locator(`.accordion-trigger:has-text("${name}")`);
+    return this.parent.locator(`.ui-accordion-trigger:has-text("${name}")`);
   }
 
   inputFieldFor(label: string): Locator {
