@@ -10,7 +10,7 @@
     "vscode-messenger-common": "^0.4.5"
   },
   "devDependencies": {
-    "vite": "^5.2.2",
+    "vite": "^5.2.8",
     "vite-tsconfig-paths": "^4.3.2",
     "@vitejs/plugin-react": "^4.2.1"
   },

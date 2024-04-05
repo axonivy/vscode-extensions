@@ -18,6 +18,10 @@ export class InscriptionView extends PageObject {
     return this.parent.locator(`.ui-accordion-trigger:has-text("${name}")`);
   }
 
+  sectionFor(name: string): Locator {
+    return this.parent.locator(`.ui-collapsible-trigger:has-text("${name}")`);
+  }
+
   inputFieldFor(label: string): Locator {
     return this.parent.getByLabel(label, { exact: true });
   }

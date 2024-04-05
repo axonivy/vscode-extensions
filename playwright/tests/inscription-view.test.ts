@@ -104,6 +104,7 @@ test.describe('Inscription View', () => {
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
     await outputAccordion.click();
+    await inscriptionView.sectionFor('Code').click();
     const monacoEditor = inscriptionView.monacoEditor();
     await expect(monacoEditor).toBeVisible();
 
@@ -123,7 +124,8 @@ test.describe('Inscription View', () => {
   test('Create new Sub Process', async () => {
     const inscriptionView = await processEditor.openInscriptionView('15254DCE818AD7A2-f5');
     await inscriptionView.accordionFor('Process Call').click();
-    const processStartField = inscriptionView.inputFieldFor('Process start');
+    await inscriptionView.sectionFor('Process start').click();
+    const processStartField = inscriptionView.parent.getByRole('combobox');
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
     const processName = randomArtefactName();
@@ -138,7 +140,8 @@ test.describe('Inscription View', () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     await inscriptionView.accordionFor('Call').click();
-    const dialogField = inscriptionView.inputFieldFor('Dialog');
+    await inscriptionView.sectionFor('Dialog').click();
+    const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
     const userDialogName = randomArtefactName();

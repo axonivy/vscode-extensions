@@ -21,13 +21,12 @@ body:where(.vscode-dark, .vscode-high-contrast:not(.vscode-high-contrast-light))
   --N800: #a3a3a3;
   --N900: #a3a3a3;
   --P50: #272727;
-  --P75: #97c4d4;
-  --P300: #6ba6ff;
+  --P75: #7e7e7e;
+  --P300: #fafafa;
   --P500: #004e69;
   --error-color: #ee4a52;
   --warning-color: #ffac5e;
   --success-color: #47c46b;
-  --transparent: rgba(0, 0, 0, 0);
 
   --basic-border: 1px solid var(--N200);
   --activ-border: 1px solid var(--P300);
@@ -39,4 +38,11 @@ body:where(.vscode-dark, .vscode-high-contrast:not(.vscode-high-contrast-light))
     0px 0.598509px 1.79553px rgba(0, 0, 0, 0.0282725), 0px 0.249053px 0.747159px rgba(0, 0, 0, 0.0196802);
   --focus-shadow: 0 0 0 1px var(--body);
   --popover-shadow: 0px 6.5px 10px 0px #0000001a;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
 }
