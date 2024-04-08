@@ -17,8 +17,15 @@ export async function launchElectronApp(workspacePath: string, testTitle: string
   return await _electron.launch({
     executablePath: await downloadAndUnzipVSCode(downloadVersion),
     args: [...args, workspacePath],
-    recordVideo: {
-      dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))
-    }
+    recordVideo: recordVideo(testTitle)
   });
+}
+
+function recordVideo(testTitle: string) {
+  if (process.platform == 'win32') {
+    return;
+  }
+  return {
+    dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))
+  };
 }
