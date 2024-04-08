@@ -8,8 +8,8 @@
     "ui-tests": "playwright test"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.1",
-    "@vscode/test-electron": "^2.3.8",
+    "@playwright/test": "^1.43.0",
+    "@vscode/test-electron": "^2.3.9",
     "ts-node": "^10.9.2"
   }
 }

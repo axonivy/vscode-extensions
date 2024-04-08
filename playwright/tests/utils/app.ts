@@ -18,8 +18,7 @@ export async function launchElectronApp(workspacePath: string, testTitle: string
     executablePath: await downloadAndUnzipVSCode(downloadVersion),
     args: [...args, workspacePath],
     recordVideo: {
-      dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_')),
-      size: { height: 800, width: 800 }
+      dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))
     }
   });
 }
