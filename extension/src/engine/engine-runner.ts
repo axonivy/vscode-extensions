@@ -4,6 +4,7 @@ import Os from 'os';
 import { config } from '../base/configurations';
 import fs from 'fs';
 import { executeCommand } from '../base/commands';
+import { downloadDevEngine } from '../base/download-engine';
 
 export class EngineRunner {
   private childProcess: ChildProcess;
@@ -63,7 +64,7 @@ export class EngineRunner {
           return this.engineDirectory();
         }
         if (answer === 'Download Dev Engine') {
-          if (await executeCommand('engine.downloadDevEngine')) {
+          if (await downloadDevEngine()) {
             return this.askForEngineDirectory();
           }
         }

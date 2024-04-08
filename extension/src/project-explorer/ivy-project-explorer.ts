@@ -6,6 +6,7 @@ import path from 'path';
 import { addNewProject } from './new-project';
 import { TreeSelection, executeTreeSelectionCommand, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
 import { DialogType, addNewUserDialog } from './new-user-dialog';
+import { ivyEngineManager } from '../engine/engine-manager';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -65,7 +66,7 @@ export class IvyProjectExplorer {
     const filePath = uri.fsPath;
     for (const project of ivyProjects) {
       if (project === filePath || project.startsWith(uri.fsPath + path.sep)) {
-        executeCommand('engine.deleteProject', project);
+        ivyEngineManager.deleteProject(project);
       }
     }
   }
@@ -109,7 +110,7 @@ export class IvyProjectExplorer {
 
   private async activateEngineExtension(hasIvyProjects: boolean) {
     if (hasIvyProjects) {
-      await executeCommand('engine.startIvyEngineManager');
+      await ivyEngineManager.start();
     }
   }
 

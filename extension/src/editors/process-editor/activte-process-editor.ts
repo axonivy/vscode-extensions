@@ -5,9 +5,9 @@ import ProcessEditorProvider from './process-editor-provider';
 import { ProcessVscodeConnector } from './process-vscode-connector';
 import { ProcessOutlineProvider } from './process-outline-provider';
 import { registerCommand } from '../../base/commands';
-import { Messenger } from 'vscode-messenger';
+import { messenger } from '../../base/messenger';
 
-export function activateProcessEditor(context: vscode.ExtensionContext, messenger: Messenger): void {
+export function activateProcessEditor(context: vscode.ExtensionContext): void {
   // Wrap server with quickstart component
   const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
   if (!webSocketAddress) {

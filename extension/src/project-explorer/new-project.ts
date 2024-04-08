@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import { executeCommand } from '../base/commands';
 import path from 'path';
 import { TreeSelection, treeSelectionToUri } from './tree-selection';
+import { ivyEngineManager } from '../engine/engine-manager';
 
 export interface NewProjectParams {
   name: string;
@@ -15,7 +15,7 @@ export async function addNewProject(selection: TreeSelection) {
   const selectedUri = await treeSelectionToUri(selection);
   const input = await collectNewProjectParams(selectedUri);
   if (input) {
-    executeCommand('engine.createProject', input);
+    ivyEngineManager.createProject(input);
   }
 }
 

@@ -3,8 +3,8 @@ import { Messenger } from 'vscode-messenger';
 import { WebSocketForwarder } from '../websocket-forwarder';
 import { MessageParticipant, NotificationType, RequestType } from 'vscode-messenger-common';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
-import { executeCommand } from '../../base/commands';
 import { SendInscriptionNotification, handleActionLocal } from './inscription-view/action-handlers';
+import { ivyEngineManager } from '../../engine/engine-manager';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
@@ -24,7 +24,7 @@ export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.We
     messenger.onNotification(WebviewConnectionReadyNotification, () => handleWebviewReadyNotification(messenger, messageParticipant), {
       sender: messageParticipant
     }),
-    messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), { sender: messageParticipant }),
+    messenger.onRequest(StartProcessRequest, startUri => ivyEngineManager.startProcess(startUri), { sender: messageParticipant }),
     vscode.window.onDidChangeActiveColorTheme(theme =>
       messenger.sendNotification(ColorThemeChangedNotification, messageParticipant, vsCodeThemeToMonacoTheme(theme))
     )

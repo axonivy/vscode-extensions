@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { executeCommand } from '../base/commands';
 import { resolveNamespaceFromPath } from './util';
+import { ivyEngineManager } from '../engine/engine-manager';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process';
 
@@ -18,7 +18,7 @@ const prompt =
 export async function addNewProcess(selectedUri: vscode.Uri, projectDir: string, kind?: ProcessKind, pid?: string) {
   const input = await collectNewProcessParams(selectedUri, projectDir);
   if (input) {
-    await executeCommand('engine.createProcess', { pid, kind, ...input });
+    await ivyEngineManager.createProcess({ pid, kind, ...input });
   }
 }
 

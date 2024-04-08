@@ -10,16 +10,20 @@ import { setStatusBarMessage } from '../base/status-bar-message';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
 import { CREATE_PROJECT } from './api/api-constants';
+import { activateProcessEditor } from '../editors/process-editor/activte-process-editor';
+import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 
-export class IvyEngineManager {
+class IvyEngineManager {
   private engineUrl: string;
   private ivyEngineApi: IvyEngineApi;
   private devContextPath: string;
-  private readonly mavenBuilder: MavenBuilder;
+  private mavenBuilder: MavenBuilder;
   private started = false;
   private engineRunner: EngineRunner;
+  private context: vscode.ExtensionContext;
 
-  constructor(context: vscode.ExtensionContext) {
+  public initalize(context: vscode.ExtensionContext) {
+    this.context = context;
     const embeddedEngineDirectory = vscode.Uri.joinPath(context.extensionUri, 'AxonIvyEngine');
     this.mavenBuilder = new MavenBuilder(embeddedEngineDirectory);
     this.engineRunner = new EngineRunner(embeddedEngineDirectory);
@@ -38,8 +42,8 @@ export class IvyEngineManager {
     await this.deployProjects();
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
     process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
-    executeCommand('process-editor.activate');
-    executeCommand('form-editor.activate');
+    activateProcessEditor(this.context);
+    FormEditorProvider.register(this.context);
   }
 
   private async resolveEngineUrl() {
@@ -152,3 +156,5 @@ export class IvyEngineManager {
     return this.engineUrl + postfix;
   }
 }
+
+export const ivyEngineManager = new IvyEngineManager();

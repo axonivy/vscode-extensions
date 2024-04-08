@@ -6,7 +6,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   private view?: vscode.WebviewView;
 
-  constructor(private readonly extensionUri: vscode.Uri, private url: string) {}
+  constructor(private readonly extensionUri: vscode.Uri, private url?: string) {}
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this.view = webviewView;
@@ -103,8 +103,33 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     return webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, ...pathSegments));
   }
 
+  async openInInternalBrowser(url?: string) {
+    if (!url) {
+      url =
+        (await vscode.window.showInputBox({
+          prompt: 'Enter url',
+          value: 'https://dev.axonivy.com/'
+        })) ?? '';
+    } else {
+      url = this.resolveClientEngineHost(new URL(url)).toString();
+    }
+    this.refreshWebviewHtml(url);
+    executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
+  }
+
+  private resolveClientEngineHost(url: URL): URL {
+    if (process.env.CODESPACES === 'true' && url.host === process.env.ENGINE_HOST) {
+      const codespaceEngineHost = `${process.env.CODESPACE_NAME}-${process.env.ENGINE_PORT}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+      url.host = codespaceEngineHost;
+      url.port = '';
+    }
+    return url;
+  }
+
   openInExternalBrowser() {
-    vscode.env.openExternal(vscode.Uri.parse(this.url));
+    if (this.url) {
+      vscode.env.openExternal(vscode.Uri.parse(this.url));
+    }
   }
 }
 
