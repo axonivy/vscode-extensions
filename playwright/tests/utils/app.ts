@@ -9,8 +9,7 @@ const args = [
   '--extensionDevelopmentPath=' + path.resolve(__dirname, '../../../extension/'),
   '--new-window',
   '--skip-release-notes',
-  '--skip-welcome',
-  '--no-sandbox'
+  '--skip-welcome'
 ];
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
