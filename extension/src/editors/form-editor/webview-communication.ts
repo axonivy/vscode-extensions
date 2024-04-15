@@ -15,7 +15,7 @@ export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.We
   }
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new WebSocketForwarder('ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage),
+    new FormEditorWebSocketForwarder('ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage),
     messenger.onNotification(
       WebviewReadyNotification,
       () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
@@ -24,3 +24,16 @@ export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.We
   );
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
+
+export class FormEditorWebSocketForwarder extends WebSocketForwarder {
+  protected override handleClientMessage(message: unknown) {
+    if (this.isSaveData(message)) {
+      message.method = 'saveDataAndBuild';
+    }
+    super.handleClientMessage(message);
+  }
+
+  isSaveData = (obj: unknown): obj is { method: string } => {
+    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'saveData';
+  };
+}
