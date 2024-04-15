@@ -124,7 +124,6 @@ test.describe('Inscription View', () => {
   test('Create new Sub Process', async () => {
     const inscriptionView = await processEditor.openInscriptionView('15254DCE818AD7A2-f5');
     await inscriptionView.accordionFor('Process Call').click();
-    await inscriptionView.sectionFor('Process start').click();
     const processStartField = inscriptionView.parent.getByRole('combobox');
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
@@ -140,7 +139,6 @@ test.describe('Inscription View', () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     await inscriptionView.accordionFor('Call').click();
-    await inscriptionView.sectionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
