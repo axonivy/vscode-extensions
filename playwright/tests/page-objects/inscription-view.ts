@@ -11,7 +11,7 @@ export class InscriptionView extends PageObject {
   }
 
   header(): Locator {
-    return this.parent.locator('.header-title');
+    return this.parent.locator('.header');
   }
 
   accordionFor(name: string): Locator {
