@@ -11,7 +11,7 @@ test.describe('Inscription View', () => {
   let browserView: BrowserView;
   let processEditor: ProcessEditor;
   const cleanUp = () => {
-    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd');
+    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd', 'prebuiltProject');
     removeFromWorkspace(prebuiltWorkspacePath, 'processes');
   };
 
@@ -123,7 +123,7 @@ test.describe('Inscription View', () => {
 
   test('Create new Sub Process', async () => {
     const inscriptionView = await processEditor.openInscriptionView('15254DCE818AD7A2-f5');
-    await inscriptionView.accordionFor('Process Call').click();
+    await inscriptionView.accordionFor('Process').click();
     const processStartField = inscriptionView.parent.getByRole('combobox');
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
@@ -138,7 +138,7 @@ test.describe('Inscription View', () => {
   test('Create new Html Dialog', async () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
-    await inscriptionView.accordionFor('Call').click();
+    await inscriptionView.accordionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
