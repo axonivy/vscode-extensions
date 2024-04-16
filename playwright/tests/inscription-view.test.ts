@@ -11,7 +11,7 @@ test.describe('Inscription View', () => {
   let browserView: BrowserView;
   let processEditor: ProcessEditor;
   const cleanUp = () => {
-    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd');
+    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd', 'prebuiltProject');
     removeFromWorkspace(prebuiltWorkspacePath, 'processes');
   };
 
