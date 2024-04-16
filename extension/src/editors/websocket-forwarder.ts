@@ -24,9 +24,11 @@ export class WebSocketForwarder implements vscode.Disposable {
         sender: this.messageParticipant
       })
     );
-    this.webSocket.on('message', msg => {
-      this.messenger.sendNotification(this.notificationType, this.messageParticipant, msg.toString());
-    });
+    this.webSocket.on('message', msg => this.handleServerMessage(msg.toString()));
+  }
+
+  protected handleServerMessage(message: string) {
+    this.messenger.sendNotification(this.notificationType, this.messageParticipant, message);
   }
 
   protected handleClientMessage(message: unknown) {
