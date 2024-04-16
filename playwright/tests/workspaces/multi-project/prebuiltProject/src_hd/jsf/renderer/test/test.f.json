@@ -1,20 +1,29 @@
 {
-  "$schema": "https://json-schema.axonivy.com/form/11.3.0/form.json",
-  "id": "a5c1d16e-1d08-4e1f-a9f0-436c553a3881",
-  "config": {
-    "renderer": "JSF",
-    "theme": "freya-ivy"
+  "$schema" : "https://json-schema.axonivy.com/form/11.3.0/form.json",
+  "id" : "a5c1d16e-1d08-4e1f-a9f0-436c553a3881",
+  "config" : {
+    "renderer" : "JSF",
+    "theme" : "freya-ivy"
   },
-  "components": [
-    {
-      "id": "Text-a80b1ff7-e54f-4d39-8e7e-81ab9797443b",
-      "type": "Text",
-      "config": {
-        "lgSpan": "6",
-        "mdSpan": "12",
-        "type": "RAW",
-        "content": "This is my test"
-      }
+  "components" : [ {
+    "id" : "Text-a80b1ff7-e54f-4d39-8e7e-81ab9797443b",
+    "type" : "Text",
+    "config" : {
+      "lgSpan" : "6",
+      "mdSpan" : "12",
+      "type" : "RAW",
+      "content" : "This is my test"
     }
-  ]
+  }, {
+    "id" : "Input-1109eb9a-0dca-4ba8-8109-62e66f1c197d",
+    "type" : "Input",
+    "config" : {
+      "lgSpan" : "6",
+      "mdSpan" : "12",
+      "label" : "",
+      "required" : false,
+      "value" : "",
+      "type" : "TEXT"
+    }
+  } ]
 }
