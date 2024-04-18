@@ -205,6 +205,11 @@
         "category": "Axon Ivy"
       },
       {
+        "command": "ivyProjects.addNewForm",
+        "title": "New Form",
+        "category": "Axon Ivy"
+      },
+      {
         "command": "ivyProjects.addNewOfflineDialog",
         "title": "New Offline Dialog",
         "category": "Axon Ivy"
@@ -408,8 +413,12 @@
           "group": "2_new@1"
         },
         {
-          "command": "ivyProjects.addNewOfflineDialog",
+          "command": "ivyProjects.addNewForm",
           "group": "2_new@2"
+        },
+        {
+          "command": "ivyProjects.addNewOfflineDialog",
+          "group": "2_new@3"
         }
       ],
       "explorer.new": [
@@ -434,8 +443,13 @@
           "when": "ivy:hasIvyProjects"
         },
         {
-          "command": "ivyProjects.addNewOfflineDialog",
+          "command": "ivyProjects.addNewForm",
           "group": "2_new@2",
+          "when": "ivy:hasIvyProjects"
+        },
+        {
+          "command": "ivyProjects.addNewOfflineDialog",
+          "group": "2_new@3",
           "when": "ivy:hasIvyProjects"
         },
         {
