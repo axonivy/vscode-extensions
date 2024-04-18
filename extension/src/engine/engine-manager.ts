@@ -94,8 +94,9 @@ export class IvyEngineManager {
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
     const hdPath = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
-    const xhtmlUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + '.xhtml');
-    executeCommand('vscode.open', xhtmlUri);
+    const viewExtension = newUserDialogParams.type === 'Form' ? '.f.json' : '.xhtml';
+    const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + viewExtension);
+    executeCommand('vscode.open', viewUri);
     this.buildAndDeployProject(newUserDialogParams.projectDir);
   }
 

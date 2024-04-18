@@ -2,7 +2,7 @@ import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
 
-export type DialogType = 'JSF' | 'JSFOffline';
+export type DialogType = 'JSF' | 'JSFOffline' | 'Form';
 
 const layouts = [
   'Page Responsive Grid 2 Columns',
@@ -22,7 +22,7 @@ export interface NewUserDialogParams {
   name: string;
   type: DialogType;
   template?: Template;
-  layout: Layout;
+  layout?: Layout;
   projectDir: string;
   pid?: string;
 }
@@ -46,6 +46,9 @@ async function collectNewUserDialogParams(
   const namespace = await collectNamespace(selectedUri, projectDir);
   if (!namespace) {
     return;
+  }
+  if (type === 'Form') {
+    return { name, namespace, type, projectDir };
   }
   if (type === 'JSFOffline') {
     return { name, namespace, type, layout: 'Page', projectDir };

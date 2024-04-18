@@ -49,6 +49,7 @@ type ProjectViewCommand =
   | 'ivyProjects.addWebServiceProcess'
   | 'ivyProjects.addNewProject'
   | 'ivyProjects.addNewHtmlDialog'
+  | 'ivyProjects.addNewFormDialog'
   | 'ivyProjects.addNewOfflineDialog'
   | 'ivyProjects.getIvyProjects'
   | 'ivyProjects.revealInExplorer';
