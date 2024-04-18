@@ -43,7 +43,7 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
       this.addUserDialog(selection, 'JSF', pid)
     );
-    registerCmd(`${VIEW_ID}.addNewForm`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
+    registerCmd(`${VIEW_ID}.addNewFormDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
       this.addUserDialog(selection, 'Form', pid)
     );
     registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSFOffline'));

@@ -205,8 +205,8 @@
         "category": "Axon Ivy"
       },
       {
-        "command": "ivyProjects.addNewForm",
-        "title": "New Form",
+        "command": "ivyProjects.addNewFormDialog",
+        "title": "New Form Dialog",
         "category": "Axon Ivy"
       },
       {
@@ -413,7 +413,7 @@
           "group": "2_new@1"
         },
         {
-          "command": "ivyProjects.addNewForm",
+          "command": "ivyProjects.addNewFormDialog",
           "group": "2_new@2"
         },
         {
@@ -443,7 +443,7 @@
           "when": "ivy:hasIvyProjects"
         },
         {
-          "command": "ivyProjects.addNewForm",
+          "command": "ivyProjects.addNewFormDialog",
           "group": "2_new@2",
           "when": "ivy:hasIvyProjects"
         },
