@@ -9,6 +9,9 @@ export const multiProjectWorkspacePath = path.resolve(__dirname, './multi-projec
 export const empty = path.resolve(__dirname, './empty');
 
 export function removeFromWorkspace(...paths: string[]) {
+  if (process.env.CI) {
+    return;
+  }
   fs.rmSync(path.resolve(...paths), { recursive: true, force: true });
 }
 
