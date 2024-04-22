@@ -12,24 +12,25 @@ export class VariablesEditor extends Editor {
   }
 
   override async isViewVisible() {
-    const header = this.viewFrameLoactor().locator(
-      "//div[contains(@class, 'master-toolbar')]/div/div[contains(text(), 'Variables Editor')]"
-    );
+    const header = this.viewFrameLoactor().locator('.master-toolbar > div > div');
+    expect(header).toHaveText('Variables Editor');
     await expect(header).toBeVisible();
   }
 
   async hasKey(key: string) {
-    const field = this.viewFrameLoactor().locator(`//td/div/span[contains(text(), '${key}')]`);
+    const field = this.viewFrameLoactor().locator('td > div > span');
+    expect(field).toHaveText(key);
     await expect(field).toBeVisible();
   }
 
   async hasValue(value: string) {
-    const field = this.viewFrameLoactor().locator(`//td/div[contains(text(), '${value}')]`);
+    const field = this.viewFrameLoactor().locator('td:nth-child(2) > div');
+    expect(field).toHaveText(value);
     await expect(field).toBeVisible();
   }
 
   async selectFirstRow() {
-    const firstRow = this.viewFrameLoactor().locator('//tbody/tr');
+    const firstRow = this.viewFrameLoactor().locator('tbody > tr');
     await firstRow.click();
   }
 

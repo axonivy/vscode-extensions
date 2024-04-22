@@ -3,7 +3,7 @@ import { Locator, Page, expect } from '@playwright/test';
 export class PageObject {
   constructor(readonly page: Page) {}
 
-  async executeCommand(command: string, ...options: Array<string>) {
+  async executeCommand(command: string, ...userInputs: Array<string>) {
     await expect(this.page.locator('div.command-center')).toBeAttached();
     await this.page.keyboard.press('F1');
     await expect(this.page.locator('.quick-input-list')).toBeVisible();
@@ -11,9 +11,8 @@ export class PageObject {
       .locator('input.input')
       .fill('>' + command);
     await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true });
-    for (const option of options) {
-      await this.quickInputBox().locator('input.input').fill(option);
-      await this.page.locator(`.quick-input-list-entry:has-text("${option}")`).click({ force: true });
+    for (const userInput of userInputs) {
+      this.provideUserInput(userInput);
     }
     await expect(this.page.locator('.quick-input-list')).not.toBeVisible();
   }
