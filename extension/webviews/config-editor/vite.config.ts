@@ -1,10 +1,19 @@
-import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: 'dist',
-    manifest: 'build.manifest.json'
-  }
+export default defineConfig(() => {
+  const config = {
+    plugins: [tsconfigPaths()],
+    build: {
+      manifest: 'build.manifest.json',
+      outDir: 'dist',
+      chunkSizeWarningLimit: 5000
+    },
+    server: {
+      port: 3001,
+      open: false
+    },
+    base: './'
+  };
+  return config;
 });
