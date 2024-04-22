@@ -6,6 +6,7 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 import { wait } from './utils/timeout';
+import { FormEditor } from './page-objects/form-editor';
 
 test.describe('Create User Dialog', () => {
   let page: Page;
@@ -24,6 +25,7 @@ test.describe('Create User Dialog', () => {
   });
 
   test.beforeEach(async () => {
+    await explorer.executeCommand('Collapse Folders in Explorer');
     userDialogName = randomArtefactName();
   });
 
@@ -60,5 +62,26 @@ test.describe('Create User Dialog', () => {
     await explorer.doubleClickNode(`${userDialogName}Process.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
     await expect(start).toBeVisible();
+  });
+
+  test('Add Form Dialog', async () => {
+    await explorer.hasNoStatusMessage();
+    await explorer.addUserDialog(projectName, userDialogName, 'ch.ivyteam.test.form', 'Form Dialog');
+    await explorer.hasNode(`${userDialogName}.rddescriptor`);
+    await explorer.hasNode(`${userDialogName}.f.json`);
+    await explorer.hasNode(`${userDialogName}Data.ivyClass`);
+    await explorer.hasNode(`${userDialogName}Process.p.json`);
+    await explorer.isTabWithNameVisible(userDialogName + '.f.json');
+    await explorer.hasDeployProjectStatusMessage();
+    const formEditor = new FormEditor(page, `${userDialogName}.f.json`);
+    await formEditor.isViewVisible();
+    await explorer.doubleClickNode(`${userDialogName}Process.p.json`);
+    const start = processEditor.locatorForElementType('g.start\\:htmlDialogStart');
+    await expect(start).toBeVisible();
+    const xhtmlEditor = new FormEditor(page, `${userDialogName}.xhtml`);
+    await xhtmlEditor.openEditorFile();
+    await xhtmlEditor.isTabVisible();
+    await xhtmlEditor.activeEditorHasText('<h:form id="form">');
+    await xhtmlEditor.revertAndCloseEditor();
   });
 });

@@ -87,7 +87,7 @@ export class FileExplorer extends ExplorerView {
     await this.provideUserInput(processName);
   }
 
-  async addUserDialog(projectName: string, dialogName: string, namespace: string, kind: 'Html Dialog' | 'Offline Dialog') {
+  async addUserDialog(projectName: string, dialogName: string, namespace: string, kind: 'Html Dialog' | 'Offline Dialog' | 'Form Dialog') {
     await this.selectNode(projectName);
     await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(dialogName);
@@ -96,6 +96,10 @@ export class FileExplorer extends ExplorerView {
       await this.provideUserInput();
       await this.provideUserInput();
     }
+  }
+
+  async collapseFolders() {
+    await this.executeCommand('Collapse Folders in Explorer');
   }
 }
 
