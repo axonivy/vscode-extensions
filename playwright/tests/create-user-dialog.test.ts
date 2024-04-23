@@ -25,7 +25,6 @@ test.describe('Create User Dialog', () => {
   });
 
   test.beforeEach(async () => {
-    await explorer.executeCommand('Collapse Folders in Explorer');
     userDialogName = randomArtefactName();
   });
 
