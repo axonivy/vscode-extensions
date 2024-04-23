@@ -212,10 +212,10 @@
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.3.0-next.136.tgz#788dca7ce5eb67468b552635e5233a732c695b1a"
   integrity sha512-sKknrU5m2bJabUlaYwtYfJtvXKdfaEdWu+EbXOATvMI59Kx9XOOZa5LDCW8RyXeVf+KwgELOllyuzqa7eb8YNA==
 
-"@axonivy/variable-editor@~11.3.0-next.129":
-  version "11.3.0-next.129"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.3.0-next.129.tgz#e2eab1c8a76a330c0bd92cc0b56b611f17ef2f6a"
-  integrity sha512-EVgrxLRFxE24/0/nIpxgzfNzL5l5D7eERxpnMszmOVYGyPGO7ECsKHiX6cPbt6/NQp7sOuMNUG+w+fQeg8yNKQ==
+"@axonivy/variable-editor@~11.3.0-next.133":
+  version "11.3.0-next.133"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.3.0-next.133.tgz#9067f6c923041edadbb348453608eca4c7fcb27f"
+  integrity sha512-SJeDUTOYWLl4SpjDngOBMyZQqJu1zyIXmoFDZwxc44zTbufc3BuJc0PTMfK5W7twt3Oo24+m63QG93z5CuOV3A==
   dependencies:
     "@axonivy/ui-components" "11.3.0-next.134"
     "@axonivy/ui-icons" "11.3.0-next.134"
