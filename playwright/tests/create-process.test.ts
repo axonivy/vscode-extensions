@@ -26,7 +26,6 @@ test.describe('Create Process', () => {
   test.beforeEach(async () => {
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
-    await explorer.collapseFolders();
   });
 
   test.afterEach(async () => {

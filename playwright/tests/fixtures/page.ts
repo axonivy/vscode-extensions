@@ -1,7 +1,7 @@
 import { Browser, ElectronApplication, Page, test as base, chromium } from '@playwright/test';
 import { prebuiltWorkspacePath } from '../workspaces/workspace';
 import { launchElectronApp } from '../utils/app';
-import { PageObject } from '../page-objects/page-object';
+import { FileExplorer } from '../page-objects/explorer-view';
 
 let electronApp: ElectronApplication;
 let browser: Browser;
@@ -53,8 +53,9 @@ async function launchBrowser(workspace: string): Promise<Page> {
 }
 
 async function initialize(page: Page) {
-  const pageObject = new PageObject(page);
-  await pageObject.hasAnyStatusMessage();
-  await pageObject.saveAllFiles();
-  await pageObject.closeAllTabs();
+  const fileExplorer = new FileExplorer(page);
+  await fileExplorer.hasAnyStatusMessage();
+  await fileExplorer.saveAllFiles();
+  await fileExplorer.closeAllTabs();
+  await fileExplorer.collapseFolders();
 }
