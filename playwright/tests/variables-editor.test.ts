@@ -1,7 +1,7 @@
 import { Page, expect, test } from '@playwright/test';
-import { noEngineWorkspacePath } from './workspaces/workspace';
-import { VariablesEditor } from './page-objects/variables-editor';
 import { pageFor } from './fixtures/page';
+import { VariablesEditor } from './page-objects/variables-editor';
+import { noEngineWorkspacePath } from './workspaces/workspace';
 
 test.describe('Variables Editor', () => {
   let page: Page;
@@ -22,29 +22,28 @@ test.describe('Variables Editor', () => {
     await editor.revertAndCloseEditor();
   });
 
-  test('Check if initial key value pair is present', async () => {
-    expect(await editor.hasKey('hello'));
-    expect(await editor.hasValue('world'));
-  });
+  test('Read and write', async () => {
+    expect(await editor.hasKey('originalKey'));
+    expect(await editor.hasValue('originalValue'));
 
-  test('Delete initial key value pair', async () => {
-    expect((await editor.entries().all()).length).toBe(2);
-    await editor.clickButton('Delete');
-    expect((await editor.entries().all()).length).toBe(0);
-  });
+    await editor.selectFirstRow();
+    await editor.editInput('originalKey', 'newKey');
+    await editor.editInput('originalValue', 'newValue');
+    await page.waitForTimeout(300);
+    await editor.saveAllFiles();
+    await editor.executeCommand('View: Reopen Editor With Text');
+    await editor.activeEditorHasText(`Variables:
+  newKey: newValue
+`);
 
-  test('Add key value pairs', async () => {
-    await editor.add('newKey', 'newValue');
-    await editor.add('otherKey', 'otherValue');
-
-    expect(await editor.hasKey('newKey'));
-    expect(await editor.hasValue('newValue'));
-    expect(await editor.hasKey('otherKey'));
-    expect(await editor.hasValue('otherValue'));
-  });
-
-  test('Add parent node', async () => {
-    await editor.addParentNode('aParent');
-    expect(await editor.hasKey('aParent'));
+    await editor.executeCommand('Select All');
+    await editor.typeText(`Variables:
+  originalKey: originalValue
+`);
+    await page.waitForTimeout(300);
+    await editor.saveAllFiles();
+    await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
+    expect(await editor.hasKey('originalKey'));
+    expect(await editor.hasValue('originalValue'));
   });
 });

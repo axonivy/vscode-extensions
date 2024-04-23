@@ -1,6 +1,6 @@
-import { Locator, Page, expect } from '@playwright/test';
-import { ViewData } from './view';
+import { Page, expect } from '@playwright/test';
 import { Editor } from './editor';
+import { ViewData } from './view';
 
 export class VariablesEditor extends Editor {
   constructor(page: Page, editorFile = 'variables.yaml') {
@@ -12,43 +12,31 @@ export class VariablesEditor extends Editor {
   }
 
   override async isViewVisible() {
-    const header = this.viewFrameLoactor().locator('vscode-data-grid-cell:has-text("Key")');
+    const header = this.viewFrameLoactor().locator('.master-toolbar > div > div');
+    expect(header).toHaveText('Variables Editor');
     await expect(header).toBeVisible();
   }
 
   async hasKey(key: string) {
-    const field = this.viewFrameLoactor().locator(`vscode-text-field[grid-column="1"][current-value="${key}"]`);
+    const field = this.viewFrameLoactor().locator('td > div > span');
+    expect(field).toHaveText(key);
     await expect(field).toBeVisible();
   }
 
   async hasValue(value: string) {
-    const field = this.viewFrameLoactor().locator(`vscode-text-field[grid-column="2"][current-value="${value}"]`);
+    const field = this.viewFrameLoactor().locator('td:nth-child(2) > div');
+    expect(field).toHaveText(value);
     await expect(field).toBeVisible();
   }
 
-  entries(): Locator {
-    return this.viewFrameLoactor().locator('vscode-text-field');
+  async selectFirstRow() {
+    const firstRow = this.viewFrameLoactor().locator('tbody > tr');
+    await firstRow.click();
   }
 
-  async add(key: string, value: string) {
-    await this.clickButton('Add');
-    const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]');
-    await keyField.click({ delay: 300 });
-    await this.typeText(key, 100);
-
-    const valueField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="2"][current-value=""]').locator('input');
-    await valueField.click({ delay: 300 });
-    await this.typeText(value, 100);
-  }
-
-  async addParentNode(parent: string) {
-    await this.clickButton('Add Parent Node');
-    const keyField = this.viewFrameLoactor().locator('vscode-text-field[grid-column="1"][current-value=""]').locator('input');
-    await keyField.fill(parent);
-  }
-
-  async clickButton(label: string) {
-    const button = this.viewFrameLoactor().locator(`vscode-button[aria-label="${label}"]`).last();
-    await button.click();
+  async editInput(oldValue: string, newValue: string) {
+    const input = this.viewFrameLoactor().locator(`input[value='${oldValue}']`);
+    await input.clear();
+    await this.typeText(newValue);
   }
 }

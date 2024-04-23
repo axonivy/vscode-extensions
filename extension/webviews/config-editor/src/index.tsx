@@ -1,8 +1,9 @@
+import { VariableEditor } from '@axonivy/variable-editor';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import { YAMLVariablesTable } from '@axonivy/config-editor';
 import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
-import { VsCodeApi, Messenger } from 'vscode-messenger-webview';
+import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
+import 'vscode-webview-common/css/colors.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
@@ -16,10 +17,7 @@ const UpdateDocumentNotification: NotificationType<{ text: string }> = { method:
 export async function start({ text }: InitializeConnection): Promise<void> {
   createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <YAMLVariablesTable
-        content={text}
-        onChange={text => messenger.sendNotification(UpdateDocumentNotification, HOST_EXTENSION, { text })}
-      />
+      <VariableEditor content={text} onChange={text => messenger.sendNotification(UpdateDocumentNotification, HOST_EXTENSION, { text })} />
     </React.StrictMode>
   );
 }

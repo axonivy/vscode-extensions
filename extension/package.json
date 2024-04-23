@@ -54,8 +54,8 @@
   "contributes": {
     "customEditors": [
       {
-        "viewType": "yaml-variables-editor",
-        "displayName": "Variables Editor",
+        "viewType": "ivy.variableEditor",
+        "displayName": "Axon Ivy Variables Editor",
         "selector": [
           {
             "filenamePattern": "variables.yaml"
