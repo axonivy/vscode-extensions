@@ -2,7 +2,8 @@ import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
 
-export type DialogType = 'JSF' | 'JSFOffline' | 'Form';
+export const dialogTypes = ['JSF', 'JSFOffline', 'Form'] as const;
+export type DialogType = (typeof dialogTypes)[number];
 
 const layouts = [
   'Page Responsive Grid 2 Columns',
