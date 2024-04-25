@@ -13,9 +13,12 @@ test.describe('Variables Editor', () => {
 
   test.beforeEach(async () => {
     editor = new VariablesEditor(page);
-    await editor.openEditorFile();
-    await editor.isTabVisible();
-    await editor.isViewVisible();
+    await expect(async () => {
+      await editor.closeAllTabs();
+      await editor.openEditorFile();
+      await editor.isTabVisible();
+      await editor.isViewVisible();
+    }).toPass();
   });
 
   test.afterEach(async () => {
