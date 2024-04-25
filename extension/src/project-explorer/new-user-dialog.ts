@@ -2,7 +2,7 @@ import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
 
-export const dialogTypes = ['JSF', 'JSFOffline', 'Form'] as const;
+export const dialogTypes = ['JSF', 'Form', 'JSFOffline'] as const;
 export type DialogType = (typeof dialogTypes)[number];
 
 const layouts = [

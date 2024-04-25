@@ -63,7 +63,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 640, "y" : 440 }
+        "at" : { "x" : 640, "y" : 504 }
       },
       "connect" : [
         { "id" : "f10", "to" : "f9", "via" : [ { "x" : 800, "y" : 440 } ], "condition" : "ivp==\"TaskA.ivp\"" }
@@ -90,11 +90,11 @@
       "type" : "Alternative",
       "name" : "Verified?",
       "visual" : {
-        "at" : { "x" : 512, "y" : 320 },
+        "at" : { "x" : 512, "y" : 384 },
         "labelOffset" : { "x" : 61, "y" : 13 }
       },
       "connect" : [
-        { "id" : "f8", "to" : "f7", "via" : [ { "x" : 512, "y" : 440 } ], "label" : {
+        { "id" : "f8", "to" : "f7", "via" : [ { "x" : 512, "y" : 504 } ], "label" : {
             "name" : "Yes",
             "segment" : 0.85,
             "offset" : { "x" : 15 }
@@ -102,7 +102,7 @@
         { "id" : "f13", "to" : "f14", "via" : [ { "x" : 512, "y" : 192 } ], "label" : {
             "name" : "No",
             "segment" : 1.06,
-            "offset" : { "y" : 13 }
+            "offset" : { "x" : 3, "y" : 13 }
           } }
       ]
     }, {
@@ -125,7 +125,7 @@
         "at" : { "x" : 376, "y" : 192 }
       },
       "connect" : [
-        { "id" : "f6", "to" : "f11", "via" : [ { "x" : 376, "y" : 320 } ] }
+        { "id" : "f6", "to" : "f17" }
       ]
     }, {
       "id" : "f14",
@@ -136,6 +136,16 @@
       },
       "connect" : [
         { "id" : "f15", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "UserTask",
+      "name" : "User Task",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f11", "via" : [ { "x" : 376, "y" : 384 } ], "color" : "default" }
       ]
     } ],
   "layout" : {
