@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Command, executeCommand } from '../../../base/commands';
+import { executeCommand } from '../../../base/commands';
 import { InscriptionActionHandler, SendInscriptionNotification } from './action-handlers';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { DialogType, dialogTypes } from '../../../project-explorer/new-user-dialog';
