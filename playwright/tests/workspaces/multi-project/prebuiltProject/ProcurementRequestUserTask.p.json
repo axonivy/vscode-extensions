@@ -1,5 +1,5 @@
 {
-  "$schema" : "https://json-schema.axonivy.com/process/11.2.2/process.json",
+  "$schema" : "https://json-schema.axonivy.com/process/11.3.0/process.json",
   "id" : "15254DCE818AD7A2",
   "config" : {
     "data" : "prebuiltProject.Data"
@@ -63,7 +63,7 @@
         }
       },
       "visual" : {
-        "at" : { "x" : 640, "y" : 440 }
+        "at" : { "x" : 640, "y" : 504 }
       },
       "connect" : [
         { "id" : "f10", "to" : "f9", "via" : [ { "x" : 800, "y" : 440 } ], "condition" : "ivp==\"TaskA.ivp\"" }
@@ -80,7 +80,7 @@
       },
       "visual" : {
         "at" : { "x" : 800, "y" : 192 },
-        "size" : { "width" : 112, "height" : 48 }
+        "size" : { "height" : 48 }
       },
       "connect" : [
         { "id" : "f2", "to" : "f1" }
@@ -90,19 +90,19 @@
       "type" : "Alternative",
       "name" : "Verified?",
       "visual" : {
-        "at" : { "x" : 512, "y" : 320 },
+        "at" : { "x" : 512, "y" : 384 },
         "labelOffset" : { "x" : 61, "y" : 13 }
       },
       "connect" : [
-        { "id" : "f8", "to" : "f7", "via" : [ { "x" : 512, "y" : 440 } ], "label" : {
+        { "id" : "f8", "to" : "f7", "via" : [ { "x" : 512, "y" : 504 } ], "label" : {
             "name" : "Yes",
             "segment" : 0.85,
-            "offset" : { "x" : 15, "y" : 0 }
+            "offset" : { "x" : 15 }
           }, "var" : "in1" },
-        { "id" : "f13", "to" : "f9", "via" : [ { "x" : 512, "y" : 192 } ], "label" : {
+        { "id" : "f13", "to" : "f14", "via" : [ { "x" : 512, "y" : 192 } ], "label" : {
             "name" : "No",
             "segment" : 1.06,
-            "offset" : { "x" : 0, "y" : 13 }
+            "offset" : { "x" : 3, "y" : 13 }
           } }
       ]
     }, {
@@ -115,7 +115,7 @@
       ],
       "visual" : {
         "at" : { "x" : 352, "y" : 48 },
-        "size" : { "width" : 576, "height" : 60 }
+        "size" : { "width" : 576 }
       }
     }, {
       "id" : "f5",
@@ -125,7 +125,27 @@
         "at" : { "x" : 376, "y" : 192 }
       },
       "connect" : [
-        { "id" : "f6", "to" : "f11", "via" : [ { "x" : 376, "y" : 320 } ] }
+        { "id" : "f6", "to" : "f17" }
+      ]
+    }, {
+      "id" : "f14",
+      "type" : "DialogCall",
+      "name" : "Other Dialog",
+      "visual" : {
+        "at" : { "x" : 640, "y" : 192 }
+      },
+      "connect" : [
+        { "id" : "f15", "to" : "f9", "color" : "default" }
+      ]
+    }, {
+      "id" : "f17",
+      "type" : "UserTask",
+      "name" : "User Task",
+      "visual" : {
+        "at" : { "x" : 376, "y" : 288 }
+      },
+      "connect" : [
+        { "id" : "f18", "to" : "f11", "via" : [ { "x" : 376, "y" : 384 } ], "color" : "default" }
       ]
     } ],
   "layout" : {
