@@ -9,16 +9,11 @@ test.describe('Variables Editor', () => {
 
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(noEngineWorkspacePath, testInfo.titlePath[1]);
-  });
-
-  test.beforeEach(async () => {
     editor = new VariablesEditor(page);
-    await expect(async () => {
-      await editor.closeAllTabs();
-      await editor.openEditorFile();
-      await editor.isTabVisible();
-      await editor.isViewVisible();
-    }).toPass();
+    await editor.hasAnyStatusMessage();
+    await editor.openEditorFile();
+    await editor.isTabVisible();
+    await editor.isViewVisible();
   });
 
   test.afterEach(async () => {
@@ -35,15 +30,17 @@ test.describe('Variables Editor', () => {
     await page.waitForTimeout(300);
     await editor.saveAllFiles();
     await editor.executeCommand('View: Reopen Editor With Text');
-    await editor.activeEditorHasText(`Variables:
-  newKey: newValue
-`);
+    const newContent = `Variables:
+newKey: newValue
+  `;
+    await editor.activeEditorHasText(newContent);
 
-    await editor.executeCommand('Select All');
-    await editor.typeText(`Variables:
+    const originalContent = `Variables:
   originalKey: originalValue
-`);
-    await page.waitForTimeout(300);
+`;
+    await editor.executeCommand('Select All');
+    await editor.typeText(originalContent);
+    await editor.activeEditorHasText(originalContent);
     await editor.saveAllFiles();
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
     expect(await editor.hasKey('originalKey'));

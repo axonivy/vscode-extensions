@@ -47,6 +47,7 @@ async function launchElectron(workspace: string, testTitle: string): Promise<Pag
 async function launchBrowser(workspace: string): Promise<Page> {
   browser = await chromium.launch();
   const page = await browser.newPage();
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto(`http://localhost:3000/?folder=/home/workspace/${workspace.split('/tests/workspaces/')[1]}`);
   await initialize(page);
   return page;
