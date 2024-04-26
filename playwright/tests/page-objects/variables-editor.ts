@@ -36,7 +36,8 @@ export class VariablesEditor extends Editor {
 
   async editInput(oldValue: string, newValue: string) {
     const input = this.viewFrameLoactor().locator(`input[value='${oldValue}']`);
-    await input.clear();
-    await this.typeText(newValue);
+    await input.fill(newValue);
+    const updatedInput = this.viewFrameLoactor().locator(`input[value='${newValue}']`);
+    await expect(updatedInput).toBeVisible();
   }
 }
