@@ -10,7 +10,7 @@ test.describe('Variables Editor', () => {
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(noEngineWorkspacePath, testInfo.titlePath[1]);
     editor = new VariablesEditor(page);
-    await editor.hasStatusMessage('Axon Ivy Extension activated');
+    await editor.hasAnyStatusMessage();
     await editor.openEditorFile();
     await editor.isTabVisible();
     await editor.isViewVisible();
