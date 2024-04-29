@@ -1,16 +1,16 @@
 import { Page, expect, test } from '@playwright/test';
 import { pageFor } from './fixtures/page';
 import { VariablesEditor } from './page-objects/variables-editor';
-import { noEngineWorkspacePath } from './workspaces/workspace';
+import { prebuiltWorkspacePath } from './workspaces/workspace';
 
 test.describe('Variables Editor', () => {
   let page: Page;
   let editor: VariablesEditor;
 
   test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(noEngineWorkspacePath, testInfo.titlePath[1]);
+    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     editor = new VariablesEditor(page);
-    await editor.hasAnyStatusMessage();
+    await editor.hasDeployProjectStatusMessage();
     await editor.openEditorFile();
     await editor.isTabVisible();
     await editor.isViewVisible();
@@ -31,8 +31,8 @@ test.describe('Variables Editor', () => {
     await editor.saveAllFiles();
     await editor.executeCommand('View: Reopen Editor With Text');
     const newContent = `Variables:
-newKey: newValue
-  `;
+  newKey: newValue
+`;
     await editor.activeEditorHasText(newContent);
 
     const originalContent = `Variables:
