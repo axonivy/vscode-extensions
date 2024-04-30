@@ -4,9 +4,7 @@ import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 
-const userDialogPID1 = '15254DCE818AD7A2-f3';
-const userDialogPID2 = '15254DCE818AD7A2-f14';
-const userTaskPID = '15254DCE818AD7A2-f17';
+const userDialogPID = '15254DCE818AD7A2-f3';
 
 test.describe('Inscription View', () => {
   let page: Page;
@@ -38,7 +36,7 @@ test.describe('Inscription View', () => {
   });
 
   test('Check Process Editor Connector', async () => {
-    let element = processEditor.locatorForPID(userDialogPID1);
+    let element = processEditor.locatorForPID(userDialogPID);
     await expect(element).toBeVisible();
     await element.dblclick();
     const inscriptionView = processEditor.inscriptionView();
@@ -51,14 +49,14 @@ test.describe('Inscription View', () => {
   });
 
   test('Change User Dialog display name', async () => {
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const nameAccordion = inscriptionView.accordionFor('General');
     await expect(nameAccordion).toBeVisible();
     await nameAccordion.click();
 
     const inputField = inscriptionView.inputFieldFor('Display name');
     await expect(inputField).toHaveText('Enter Request');
-    const element = processEditor.locatorForPID(userDialogPID1);
+    const element = processEditor.locatorForPID(userDialogPID);
     await expect(element).toHaveText('Enter Request');
 
     const newDisplayName = 'a new display name for this test';
@@ -70,7 +68,7 @@ test.describe('Inscription View', () => {
   });
 
   test('OpenPage-Action - valid file - Means/Document Table', async () => {
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const generalAccordion = inscriptionView.accordionFor('General');
     await expect(generalAccordion).toBeVisible();
     await generalAccordion.click();
@@ -93,7 +91,7 @@ test.describe('Inscription View', () => {
 
   test('OpenPage-Action in Browers - Open Help', async () => {
     browserView = new BrowserView(page);
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     await inscriptionView.clickButton('Open Help for User Dialog');
     expect((await browserView.input().inputValue()).toString()).toMatch(
       /^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/
@@ -102,7 +100,7 @@ test.describe('Inscription View', () => {
 
   test('Monaco Editor completion', async () => {
     await processEditor.executeCommand('View: Toggle Panel Visibility');
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
     await outputAccordion.click();
@@ -137,58 +135,20 @@ test.describe('Inscription View', () => {
     await expect(processStartField).toHaveValue(`${processName}:call()`);
   });
 
-  test('Create Html Dialog', async () => {
+  test('Create new Html Dialog', async () => {
     await processEditor.hasNoStatusMessage();
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
+    const inscriptionView = await processEditor.openInscriptionView(userDialogPID);
     await inscriptionView.accordionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
     const userDialogName = randomArtefactName();
-    await inscriptionView.provideUserInput('JSF');
     await inscriptionView.provideUserInput(userDialogName);
     await inscriptionView.provideUserInput();
     await inscriptionView.provideUserInput();
     await inscriptionView.provideUserInput();
     await processEditor.isDirty();
     await processEditor.isInactive();
-    await processEditor.isTabWithNameVisible(`${userDialogName}.xhtml`);
-    await processEditor.tabLocator.click();
-    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
-  });
-
-  test('Create Form Dialog', async () => {
-    await processEditor.hasNoStatusMessage();
-    const inscriptionView = await processEditor.openInscriptionView(userDialogPID2);
-    await inscriptionView.accordionFor('Dialog').click();
-    const dialogField = inscriptionView.parent.getByRole('combobox');
-    await expect(dialogField).toBeEmpty();
-    await inscriptionView.clickButton('Create new Html Dialog');
-    const userDialogName = randomArtefactName();
-    await inscriptionView.provideUserInput('Form');
-    await inscriptionView.provideUserInput(userDialogName);
-    await inscriptionView.provideUserInput();
-    await processEditor.isDirty();
-    await processEditor.isInactive();
-    await processEditor.isTabWithNameVisible(`${userDialogName}.f.json`);
-    await processEditor.tabLocator.click();
-    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
-  });
-
-  test('Create Offline Dialog', async () => {
-    await processEditor.hasNoStatusMessage();
-    const inscriptionView = await processEditor.openInscriptionView(userTaskPID);
-    await inscriptionView.accordionFor('Dialog').click();
-    const dialogField = inscriptionView.parent.getByRole('combobox');
-    await expect(dialogField).toBeEmpty();
-    await inscriptionView.clickButton('Create new Html Dialog');
-    const userDialogName = randomArtefactName();
-    await inscriptionView.provideUserInput('JSFOffline');
-    await inscriptionView.provideUserInput(userDialogName);
-    await inscriptionView.provideUserInput();
-    await processEditor.isDirty();
-    await processEditor.isInactive();
-    await processEditor.isTabWithNameVisible(`${userDialogName}.xhtml`);
     await processEditor.tabLocator.click();
     await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
   });

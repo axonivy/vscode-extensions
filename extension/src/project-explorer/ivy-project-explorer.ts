@@ -46,9 +46,7 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.addNewFormDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
       this.addUserDialog(selection, 'Form', pid)
     );
-    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
-      this.addUserDialog(selection, 'JSFOffline', pid)
-    );
+    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection) => this.addUserDialog(selection, 'JSFOffline'));
     registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
