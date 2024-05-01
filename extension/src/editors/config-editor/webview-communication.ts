@@ -4,28 +4,46 @@ import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import { NotificationType } from 'vscode-messenger-common';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const UpdateNotification: NotificationType<{ text: string }> = { method: 'update' };
-const UpdateDocumentNotification: NotificationType<{ text: string }> = { method: 'updateDocument' };
+const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
+const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSocketMessage' };
 
 export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, document: vscode.TextDocument) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    messenger.onNotification(WebviewReadyNotification, () => updateWebview(document.getText()), { sender: messageParticipant }),
-    messenger.onNotification(UpdateDocumentNotification, ({ text }) => updateYamlDocument(text), { sender: messageParticipant }),
+    messenger.onNotification(WebviewReadyNotification, () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant), {
+      sender: messageParticipant
+    }),
+    messenger.onNotification(ConfigWebSocketMessage, msg => handleClientMessage(msg), { sender: messageParticipant }),
     webviewPanel.onDidChangeViewState(() => {
       if (webviewPanel.active) {
-        updateWebview(document.getText());
+        updateWebview();
       }
     })
   );
   webviewPanel.onDidDispose(() => toDispose.dispose());
 
-  const updateWebview = (text: string) => messenger.sendNotification(UpdateNotification, messageParticipant, { text });
-  const updateYamlDocument = (text: string) => {
-    const edit = new vscode.WorkspaceEdit();
-    // Just replace the entire document every time for this example extension.
-    // A more complete extension should compute minimal edits instead.
-    edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), text);
-    vscode.workspace.applyEdit(edit);
+  const handleClientMessage = (message: unknown) => {
+    if (isData(message)) {
+      const result = { jsonrpc: message.jsonrpc, id: message.id, result: { context: message.params, data: document.getText() } };
+      messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify(result));
+    }
+    if (isSaveData(message)) {
+      const edit = new vscode.WorkspaceEdit();
+      edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), message.params.data);
+      vscode.workspace.applyEdit(edit);
+      const result = { jsonrpc: message.jsonrpc, id: message.id, result: {} };
+      messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify(result));
+    }
   };
+
+  const isData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: unknown } => {
+    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'data';
+  };
+
+  const isSaveData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: { data: string } } => {
+    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'saveData';
+  };
+
+  const updateWebview = () =>
+    messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify({ method: 'onDataChanged' }));
 };

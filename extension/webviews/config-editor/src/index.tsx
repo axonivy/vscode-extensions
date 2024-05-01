@@ -1,23 +1,31 @@
-import { VariableEditor } from '@axonivy/variable-editor';
+import { ClientContextProvider, ClientJsonRpc, QueryProvider, VariableEditor, initQueryClient } from '@axonivy/variable-editor';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
 import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
 import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
+import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
 import 'vscode-webview-common/css/colors.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-type InitializeConnection = { text: string };
-
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const UpdateNotification: NotificationType<{ text: string }> = { method: 'update' };
-const UpdateDocumentNotification: NotificationType<{ text: string }> = { method: 'updateDocument' };
+const UpdateNotification: NotificationType<void> = { method: 'initializeConnection' };
+const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSocketMessage' };
 
-export async function start({ text }: InitializeConnection): Promise<void> {
+export async function start() {
+  const client = await ClientJsonRpc.startClient({
+    reader: new WebviewMessageReader(messenger, ConfigWebSocketMessage),
+    writer: new WebviewMessageWriter(messenger, ConfigWebSocketMessage)
+  });
+  const queryClient = initQueryClient();
   createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <VariableEditor content={text} onChange={text => messenger.sendNotification(UpdateDocumentNotification, HOST_EXTENSION, { text })} />
+      <ClientContextProvider client={client}>
+        <QueryProvider client={queryClient}>
+          <VariableEditor app={''} pmv={''} file='/variables.yaml' />
+        </QueryProvider>
+      </ClientContextProvider>
     </React.StrictMode>
   );
 }
