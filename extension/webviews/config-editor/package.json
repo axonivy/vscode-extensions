@@ -3,7 +3,7 @@
   "version": "11.4.0",
   "private": true,
   "dependencies": {
-    "@axonivy/variable-editor": "~11.3.0-next.149",
+    "@axonivy/variable-editor": "~11.4.0-next.159",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "vscode-webview-common": "11.4.0"
