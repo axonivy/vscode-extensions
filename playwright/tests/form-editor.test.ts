@@ -33,7 +33,7 @@ test.describe('Form Editor', () => {
   test('Edit input label', async () => {
     const input = editor.locatorFor('.block-input');
     await input.click();
-    const labelProperty = editor.locatorFor('[id=":re:-input"]');
+    const labelProperty = editor.locatorFor('#properties .ui-input').first();
     const newLabel = randomArtefactName();
     await labelProperty.fill(newLabel);
     await expect(input).toHaveText(newLabel);
