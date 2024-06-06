@@ -35,8 +35,9 @@ pipeline {
 
     stage('Playwright Tests') {
       agent {
-        dockerfile {
-          filename 'build/integration/Dockerfile'
+        docker {
+          image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
+          args '-e JENKINS_PIPELINE="linux"'
           reuseNode true
         }
       }

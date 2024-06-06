@@ -37,8 +37,8 @@ pipeline {
     stage('Playwright Tests') {
       steps {
         script {
-          docker.build('openvscode-server', '-f build/integration/openvscode-server/server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
-            docker.build('playwright', '-f build/integration/openvscode-server/playwright/Dockerfile .').inside("--network host") {
+          docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
+            docker.image('docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev').inside("--network host -e RUN_IN_BRWOSER=true") {
               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                 sh 'yarn test:playwright:browser'
               }
