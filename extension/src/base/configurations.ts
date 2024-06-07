@@ -8,6 +8,7 @@ export namespace config {
   export const engineUrl = () => configs().get<string>('engine.url');
   export const projectExcludePattern = () => configs().get<string>('project.excludePattern');
   export const projectMaximumNumber = () => configs().get<number>('project.maximumNumber');
+  export const projectUseMavenBuilder = () => configs().get<boolean>('project.useMavenBuilder');
 
   export async function setEngineDirectory() {
     const selection = await vscode.window.showOpenDialog({

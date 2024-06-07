@@ -9,6 +9,7 @@ import { setStatusBarMessage } from '../../base/status-bar-message';
 import {
   ACTIVATE_PROJECTS,
   API_PATH,
+  BUILD_PROJECTS,
   CREATE_PROCESS,
   CREATE_PROJECT,
   CREATE_USER_DIALOG,
@@ -17,7 +18,8 @@ import {
   DEPLOY_PROJECTS,
   DEV_CONTEXT,
   INIT_PROJECT,
-  Request
+  Request,
+  WATCH_PROJECTS
 } from './api-constants';
 
 export class IvyEngineApi {
@@ -51,6 +53,7 @@ export class IvyEngineApi {
     }
     const params = { projectDir: ivyProjectDirectories };
     await this.get(ACTIVATE_PROJECTS, params);
+    await this.get(WATCH_PROJECTS, params);
   }
 
   public async initProject(projectDir: string) {
@@ -65,6 +68,11 @@ export class IvyEngineApi {
     await this.get(DEPLOY_PROJECTS, params);
     await this.get(ACTIVATE_PROJECTS, params);
     setStatusBarMessage('Finished: ' + DEPLOY_PROJECTS.description);
+  }
+
+  public async buildProjects(ivyProjectDirectories: string[]) {
+    const params = { projectDir: ivyProjectDirectories };
+    this.get(BUILD_PROJECTS, params);
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<string> {

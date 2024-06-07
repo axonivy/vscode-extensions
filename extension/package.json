@@ -258,6 +258,12 @@
             "default": 50,
             "markdownDescription": "Maximum number of Axon Ivy projects that will be detected.",
             "order": 2100
+          },
+          "project.useMavenBuilder": {
+            "type": "boolean",
+            "default": true,
+            "markdownDescription": "Configure whether Maven Builder is used for building Axon Ivy Projects.",
+            "order": 2200
           }
         }
       }
