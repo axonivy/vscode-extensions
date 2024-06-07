@@ -65,11 +65,20 @@ export class IvyEngineManager {
   }
 
   public async buildProjects() {
-    await this.mavenBuilder.buildProjects();
+    if (config.projectUseMavenBuilder()) {
+      await this.mavenBuilder.buildProjects();
+      return;
+    }
+    const ivyProjectDirectories = await this.ivyProjectDirectories();
+    await this.ivyEngineApi.buildProjects(ivyProjectDirectories);
   }
 
   public async buildProject(ivyProjectDirectory: string) {
-    await this.mavenBuilder.buildProject(ivyProjectDirectory);
+    if (config.projectUseMavenBuilder()) {
+      await this.mavenBuilder.buildProject(ivyProjectDirectory);
+      return;
+    }
+    await this.ivyEngineApi.buildProjects([ivyProjectDirectory]);
   }
 
   public async deployProject(ivyProjectDirectory: string) {

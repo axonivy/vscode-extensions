@@ -8,7 +8,9 @@ export type SourcePath =
   | 'project/deactivate'
   | 'project/activate'
   | 'process'
-  | 'hd';
+  | 'hd'
+  | 'project/watch'
+  | 'project/build';
 export type Request = { path: SourcePath; description: string };
 
 export const DEV_CONTEXT: Readonly<Request> = { path: 'dev-security-context', description: 'Init dev Security Context' };
@@ -20,3 +22,5 @@ export const CREATE_PROCESS: Readonly<Request> = { path: 'process', description:
 export const CREATE_PROJECT: Readonly<Request> = { path: 'project', description: 'Create new Project' };
 export const CREATE_USER_DIALOG: Readonly<Request> = { path: 'hd', description: 'Create User Dialog' };
 export const DELETE_PROJECT: Readonly<Request> = { path: 'project', description: 'Delete Project' };
+export const WATCH_PROJECTS: Readonly<Request> = { path: 'project/watch', description: 'Watch Projects' };
+export const BUILD_PROJECTS: Readonly<Request> = { path: 'project/build', description: 'Build Projects' };
