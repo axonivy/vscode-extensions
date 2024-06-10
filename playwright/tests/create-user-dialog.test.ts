@@ -5,7 +5,6 @@ import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
-import { wait } from './utils/timeout';
 import { FormEditor } from './page-objects/form-editor';
 
 test.describe('Create User Dialog', () => {
@@ -26,11 +25,11 @@ test.describe('Create User Dialog', () => {
 
   test.beforeEach(async () => {
     userDialogName = randomArtefactName();
+    await explorer.hasNoStatusMessage();
   });
 
   test.afterEach(async () => {
     await explorer.closeAllTabs();
-    await wait(page);
   });
 
   test.afterAll(async () => {
@@ -64,7 +63,6 @@ test.describe('Create User Dialog', () => {
   });
 
   test('Add Form Dialog', async () => {
-    await explorer.hasNoStatusMessage();
     await explorer.addUserDialog(projectName, userDialogName, 'ch.ivyteam.test.form', 'Form Dialog');
     await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.f.json`);

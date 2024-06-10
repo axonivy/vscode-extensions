@@ -5,7 +5,6 @@ import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
-import { wait } from './utils/timeout';
 import { linuxCondition } from './utils/skip';
 
 test.describe('Create Process', () => {
@@ -26,11 +25,11 @@ test.describe('Create Process', () => {
   test.beforeEach(async () => {
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
+    await processEditor.hasNoStatusMessage();
   });
 
   test.afterEach(async () => {
     await processEditor.closeAllTabs();
-    await wait(page);
   });
 
   test.afterAll(async () => {
@@ -38,7 +37,6 @@ test.describe('Create Process', () => {
   });
 
   test('Add business process and execute it', async () => {
-    await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasDeployProjectStatusMessage();
     await explorer.hasNode(`${processName}.p.json`);
@@ -49,7 +47,6 @@ test.describe('Create Process', () => {
 
   test('Assert that process gets redeployed after editing', async () => {
     test.skip(linuxCondition);
-    await processEditor.hasNoStatusMessage();
     await explorer.addProcess(projectName, processName, 'Business Process');
     await explorer.hasDeployProjectStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
