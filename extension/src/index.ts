@@ -27,6 +27,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('engine.startIvyEngineManager', () => ivyEngineManager.start());
   registerCmd('process-editor.activate', () => activateProcessEditor(context, messenger));
   registerCmd('form-editor.activate', () => FormEditorProvider.register(context, messenger));
+  registerCmd('variables-editor.activate', () => VariableEditorProvider.register(context, messenger));
   registerCmd('engine.deployProjects', () => ivyEngineManager.deployProjects());
   registerCmd('engine.buildProjects', () => ivyEngineManager.buildProjects());
   registerCmd('engine.buildAndDeployProjects', () => ivyEngineManager.buildAndDeployProjects());
@@ -45,7 +46,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
   new IvyProjectExplorer(context);
   activateIvyBrowser(context, '');
-  context.subscriptions.push(VariableEditorProvider.register(context, messenger));
   setStatusBarMessage('Axon Ivy Extension activated');
 
   return messenger.diagnosticApi();

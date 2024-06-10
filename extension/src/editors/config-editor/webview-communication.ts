@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
-import { NotificationType } from 'vscode-messenger-common';
+import { MessageParticipant, NotificationType } from 'vscode-messenger-common';
+import { WebSocketForwarder } from '../websocket-forwarder';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
@@ -10,40 +11,39 @@ const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSo
 export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, document: vscode.TextDocument) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    messenger.onNotification(WebviewReadyNotification, () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant), {
-      sender: messageParticipant
-    }),
-    messenger.onNotification(ConfigWebSocketMessage, msg => handleClientMessage(msg), { sender: messageParticipant }),
-    webviewPanel.onDidChangeViewState(() => {
-      if (webviewPanel.active) {
-        updateWebview();
-      }
-    })
+    new VariableEditorWebSocketForwarder(messenger, messageParticipant, document),
+    messenger.onNotification(
+      WebviewReadyNotification,
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      { sender: messageParticipant }
+    )
   );
   webviewPanel.onDidDispose(() => toDispose.dispose());
+};
 
-  const handleClientMessage = (message: unknown) => {
-    if (isData(message)) {
-      const result = { jsonrpc: message.jsonrpc, id: message.id, result: { context: message.params, data: document.getText() } };
-      messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify(result));
+export class VariableEditorWebSocketForwarder extends WebSocketForwarder {
+  constructor(messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
+    super('ivy-config-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
+  }
+
+  protected override handleClientMessage(message: unknown) {
+    if (this.isSaveData(message)) {
+      this.writeTextDocument(message.params.data);
     }
-    if (isSaveData(message)) {
-      const edit = new vscode.WorkspaceEdit();
-      edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), message.params.data);
-      vscode.workspace.applyEdit(edit);
-      const result = { jsonrpc: message.jsonrpc, id: message.id, result: {} };
-      messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify(result));
-    }
-  };
+    super.handleClientMessage(message);
+  }
 
-  const isData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: unknown } => {
-    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'data';
-  };
-
-  const isSaveData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: { data: string } } => {
+  isSaveData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: { data: string } } => {
     return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'saveData';
   };
 
-  const updateWebview = () =>
-    messenger.sendNotification(ConfigWebSocketMessage, messageParticipant, JSON.stringify({ method: 'onDataChanged' }));
-};
+  writeTextDocument = (content: string) => {
+    const workspaceEdit = new vscode.WorkspaceEdit();
+    workspaceEdit.replace(
+      this.document.uri,
+      new vscode.Range(new vscode.Position(0, 0), new vscode.Position(this.document.lineCount + 1, 0)),
+      content
+    );
+    vscode.workspace.applyEdit(workspaceEdit);
+  };
+}

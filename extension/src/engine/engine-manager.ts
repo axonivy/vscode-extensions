@@ -40,6 +40,7 @@ export class IvyEngineManager {
     process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
     executeCommand('process-editor.activate');
     executeCommand('form-editor.activate');
+    executeCommand('variables-editor.activate');
   }
 
   private async resolveEngineUrl() {
