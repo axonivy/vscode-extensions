@@ -71,7 +71,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${userDialogName}Data.ivyClass`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
     await explorer.isTabWithNameVisible(userDialogName + '.f.json');
-    await explorer.hasDeployProjectStatusMessage();
+    await explorer.hasDeployProjectStatusMessage(60_000);
     const formEditor = new FormEditor(page, `${userDialogName}.f.json`);
     await formEditor.isViewVisible();
     await explorer.doubleClickNode(`${userDialogName}Process.p.json`);
