@@ -9,11 +9,13 @@ import 'vscode-webview-common/css/colors.css';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
+type InitializeConnection = { file: string };
+
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const UpdateNotification: NotificationType<void> = { method: 'initializeConnection' };
+const InitializeConnectionNotification: NotificationType<InitializeConnection> = { method: 'initializeConnection' };
 const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSocketMessage' };
 
-export async function start() {
+export async function start({ file }: InitializeConnection): Promise<void> {
   const client = await ClientJsonRpc.startClient({
     reader: new WebviewMessageReader(messenger, ConfigWebSocketMessage),
     writer: new WebviewMessageWriter(messenger, ConfigWebSocketMessage)
@@ -23,13 +25,13 @@ export async function start() {
     <React.StrictMode>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
-          <VariableEditor app={''} pmv={''} file='/variables.yaml' />
+          <VariableEditor app={''} pmv={''} file={file} />
         </QueryProvider>
       </ClientContextProvider>
     </React.StrictMode>
   );
 }
 
-messenger.onNotification(UpdateNotification, start);
+messenger.onNotification(InitializeConnectionNotification, start);
 messenger.start();
 messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
