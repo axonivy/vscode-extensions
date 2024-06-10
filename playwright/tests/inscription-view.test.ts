@@ -3,6 +3,7 @@ import { ProcessEditor } from './page-objects/process-editor';
 import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
+import { wait } from './utils/timeout';
 
 const userDialogPID1 = '15254DCE818AD7A2-f3';
 const userDialogPID2 = '15254DCE818AD7A2-f14';
@@ -79,9 +80,10 @@ test.describe('Inscription View', () => {
     await inscriptionView.clickButton('Add row');
 
     const firstRowURLCell = inscriptionView.cellInsideTable(0, 3);
-    await firstRowURLCell.click();
-    await page.keyboard.type('pom.xml');
+    await firstRowURLCell.locator('input').fill('pom.xml');
+    await wait(page);
     await inscriptionView.cellInsideTable(0, 2).click();
+    await wait(page);
     await inscriptionView.clickButton('Open URL');
     const activeTabElement = await page.$('.tab.active');
     expect(activeTabElement).not.toBeNull();
