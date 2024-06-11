@@ -22,7 +22,7 @@ test.describe('Create Project', () => {
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
-    await explorer.hasStatusMessage('Finished: Create new Project', 100_000);
+    await explorer.hasStatusMessage('Finished: Create new Project', 60_000);
     await explorer.hasNoStatusMessage();
 
     const problemsView = await ProblemsView.initProblemsView(page);
