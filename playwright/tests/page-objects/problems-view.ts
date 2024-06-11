@@ -26,11 +26,11 @@ export class ProblemsView extends View {
   }
 
   async hasWarning(message: string, pid: string) {
-    this.hasMaker(message, pid, 'warning');
+    await this.hasMaker(message, pid, 'warning');
   }
 
   async hasError(message: string, pid: string) {
-    this.hasMaker(message, pid, 'error');
+    await this.hasMaker(message, pid, 'error');
   }
 
   async hasNoMarker() {
