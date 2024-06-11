@@ -18,13 +18,13 @@ export class VariablesEditor extends Editor {
 
   async hasKey(key: string) {
     const field = this.viewFrameLoactor().locator('td > div > span');
-    expect(field).toHaveText(key);
+    await expect(field).toHaveText(key);
     await expect(field).toBeVisible();
   }
 
   async hasValue(value: string) {
     const field = this.viewFrameLoactor().locator('td:nth-child(2) > div');
-    expect(field).toHaveText(value);
+    await expect(field).toHaveText(value);
     await expect(field).toBeVisible();
   }
 
