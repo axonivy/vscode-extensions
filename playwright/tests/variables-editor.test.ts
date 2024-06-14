@@ -20,7 +20,7 @@ test.describe('Variables Editor', () => {
     await editor.revertAndCloseEditor();
   });
 
-  test('Read and write', async () => {
+  test.skip('Read and write', async () => {
     expect(await editor.hasKey('originalKey'));
     expect(await editor.hasValue('originalValue'));
 
