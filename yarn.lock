@@ -15,25 +15,25 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axonivy/form-editor-core@~11.4.0-next.113":
-  version "11.4.0-next.113"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.113.tgz#f805482e04756995e70069e374a2686a181517b3"
-  integrity sha512-zDBbuWfJA+CZsPsTXl8lDZM+Etv1Lj/2dgkgs/JDQTyfwLEi+gsMbUr6GEJQUitZqKAjdVuIn0k9ty6FaVTIaA==
+"@axonivy/form-editor-core@~11.4.0-next.116":
+  version "11.4.0-next.116"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.116.tgz#48f5d28a6a77d9aa897d4965f863eea9e9244c06"
+  integrity sha512-N+A6oYwcwgh4AFv9KNGN7F8dcpRW8kXo9USLY9W5ks8V/tan5cSIEN7CXw0kg0Mb4DfI1hbMQYDmgsEAxwkZkw==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.113+fbf6811"
+    "@axonivy/form-editor-protocol" "11.4.0-next.116+d7d96f2"
     "@axonivy/jsonrpc" "~11.4.0-next.160"
 
-"@axonivy/form-editor-protocol@11.4.0-next.113+fbf6811":
-  version "11.4.0-next.113"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.113.tgz#8eb6c2a2f48e8124df8ce8bb5a1a1073b73adfca"
-  integrity sha512-Lm7ep45+14MvDAZ75OOX9K18Ht1N3vdWdtfBDDgTjjbum3opAKmQNNCglxQ1mMomc6oWhUC/SN/Iiq/tjPlx6w==
+"@axonivy/form-editor-protocol@11.4.0-next.116+d7d96f2":
+  version "11.4.0-next.116"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.116.tgz#c0e594c0bfeaf739e4bc7e7f14abfe9ed8dae251"
+  integrity sha512-REvjQ+MuDaa3ydJqpsKTV9effobgLN4N0mC41bDKrPcMCaBDymA2+uFpTKaP5inVYvStje41XkMznhrMvyZwuw==
 
-"@axonivy/form-editor@~11.4.0-next.113":
-  version "11.4.0-next.113"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.113.tgz#d9c83d0df3765d645906c615c1e2d1270c28e032"
-  integrity sha512-v7gJyFjDpnQjPx+wf7WwUoewiVoIB9uhkAZsw1+k1prZ1ALVBhhn1RBX/rL1h9vPWg79DJjEZY68fZ90KkVYjw==
+"@axonivy/form-editor@~11.4.0-next.116":
+  version "11.4.0-next.116"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.116.tgz#31493a56e2556553b5f53316dba355f1f412cf2a"
+  integrity sha512-B6BlPPlNmUHkqvToKONKP9cxoeOQLiO1lDOYYG9renooPsIQ6M8OvLb5rlZF/2S0TMVGvAqksMetoSzKl6nvBQ==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.113+fbf6811"
+    "@axonivy/form-editor-protocol" "11.4.0-next.116+d7d96f2"
     "@axonivy/ui-components" "~11.4.0-next.160"
     "@axonivy/ui-icons" "~11.4.0-next.160"
     "@dnd-kit/core" "^6.1.0"
@@ -103,40 +103,40 @@
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/jsonrpc@~11.4.0-next.194":
-  version "11.4.0-next.202"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/jsonrpc/-/jsonrpc-11.4.0-next.202.tgz#ed5052b0709eb06b664aa84b9d8aea25671d1bc3"
-  integrity sha512-7VKmXI7tlbhnsEh+TuOq12ZivSX1/lQM0Wzk/7DbF4Hyzq2t8pNJeCd5dr7Lw/Vr6npLbyrhF75UahksLf+aPQ==
+"@axonivy/jsonrpc@~11.4.0-next.202":
+  version "11.4.0-next.204"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/jsonrpc/-/jsonrpc-11.4.0-next.204.tgz#aaeeaa04260e65e0e6049f16b4a9d151c9c68be7"
+  integrity sha512-l1j8vjWmotMq9b5GG1Mr4xkfA26hSlMfoDLBHIfuUT9AAWZbvTf/8tNfLYaf4DQDI3/HF5uMPhOajRtp/gO7hg==
   dependencies:
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/process-editor-inscription@~11.4.0-next.1059":
-  version "11.4.0-next.1059"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1059.tgz#1b80b7c09a42d30546cd32bc964bc7c41ed2d35d"
-  integrity sha512-fDdM6OIISSRjU9UThG0JQzaaOaxmnpQuqVzYxCHx853eFLTZVn+MK0pUiN/wsDb24YJ3FsLLqynnxHGTEdSBCA==
+"@axonivy/process-editor-inscription@~11.4.0-next.1063":
+  version "11.4.0-next.1063"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1063.tgz#1c9e9f15091e90e574e23932fae24328bb64bbd9"
+  integrity sha512-Gzpa8BWtwkdrvN8UeFsQaqgjlAf/ResUCry4IDBqJjsDmDFgAU8gSDCF4JSNkbhDdTaO0YeR/tZvPecBd5+B+g==
   dependencies:
     "@axonivy/inscription-core" "~11.4.0-next.1125"
     "@axonivy/inscription-editor" "~11.4.0-next.1125"
     "@axonivy/inscription-protocol" "~11.4.0-next.1125"
-    "@axonivy/process-editor" "11.4.0-next.1059+9ebd238"
+    "@axonivy/process-editor" "11.4.0-next.1063+3791c75"
     "@eclipse-glsp/client" "~2.1.0"
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@axonivy/process-editor-protocol@11.4.0-next.1059+9ebd238", "@axonivy/process-editor-protocol@~11.4.0-next.1059":
-  version "11.4.0-next.1059"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1059.tgz#4d56c84f0b2650f9b0de2686be4614ee0e727057"
-  integrity sha512-P9mVbdgEgXh8aXisa8FWa2vNuCs5D0N5fC2RfBtTSvj1WosOai0vlY2Ygj8+exl0fPaDOCDUY5DOVPO0d0XTCQ==
+"@axonivy/process-editor-protocol@11.4.0-next.1063+3791c75", "@axonivy/process-editor-protocol@~11.4.0-next.1063":
+  version "11.4.0-next.1063"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1063.tgz#3c5ecc03ecc465ebb4a6e5dd15feee407f32b071"
+  integrity sha512-uGt1nWKni42//YLWMvx2ikp2bTIiAushf14jIqiPwxxhVDCabMlchK8skeo9ZiGKQSXIfFGoZEw7sbb5nHdiZA==
   dependencies:
     "@eclipse-glsp/protocol" "~2.1.0"
 
-"@axonivy/process-editor@11.4.0-next.1059+9ebd238", "@axonivy/process-editor@~11.4.0-next.1059":
-  version "11.4.0-next.1059"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1059.tgz#d905ac29848481e4bd426a6fa687396d7c3f49fa"
-  integrity sha512-xYPznPIOZI3rh8PemcCk1uPZI055YTHt2IZC1ObW1P8+UJ9H2TeJYkCqHJ0I0ErLZLdQKEFK8k+GDHoloz3xSg==
+"@axonivy/process-editor@11.4.0-next.1063+3791c75", "@axonivy/process-editor@~11.4.0-next.1063":
+  version "11.4.0-next.1063"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1063.tgz#f1d750c9bb155b1c63a3d3a375d568ce6d097bb5"
+  integrity sha512-WvDOQ2mE2coTAI1PNUra3ms/8vOXqVVeNZbb8A1anZyiezMi9DYs4e6RO0ZHHyBVhuHEeypmmJSA5xY7K25tKg==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.4.0-next.1059+9ebd238"
+    "@axonivy/process-editor-protocol" "11.4.0-next.1063+3791c75"
     "@axonivy/ui-icons" "~11.4.0-next.160"
     "@eclipse-glsp/client" "~2.1.0"
     showdown "^2.1.0"
@@ -187,10 +187,10 @@
     react-resizable-panels "^2.0.13"
     sonner "^1.4.41"
 
-"@axonivy/ui-components@~11.4.0-next.194":
-  version "11.4.0-next.202"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-components/-/ui-components-11.4.0-next.202.tgz#f497e3a1a277b6e021795b4c40947e505de40c9d"
-  integrity sha512-3/gGIjx4FJeski77PYJmHQm3C8Y06jKGDdh6vaxwVGXlmgv4/lJ5IAayfqoeiSHy5frSv0cAVhtI/TbhIlodzQ==
+"@axonivy/ui-components@~11.4.0-next.202":
+  version "11.4.0-next.204"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-components/-/ui-components-11.4.0-next.204.tgz#cfdffb02c01b58449b2076a2a156c8e113262fec"
+  integrity sha512-RQN+E0J8hZXRAg1CwdA2iKHtwdSFWRbReHXwVRI/5oU4CfHf0OqLCMM4O+hu/PIHSBcpskXy8/qodas2DCXZmQ==
   dependencies:
     "@radix-ui/react-accordion" "^1.1.2"
     "@radix-ui/react-checkbox" "^1.0.4"
@@ -216,19 +216,19 @@
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.180.tgz#c4a8c6364dbe9d624d90f9cdfdb3056013aeb274"
   integrity sha512-YQgzEPLmJzGtsShiMbciLQogfsy8j2vub2aNlY2sHbMn7xuGDA5VF6+HS8bY8edx+szn5S8h2vJIDGxfCYk59A==
 
-"@axonivy/ui-icons@~11.4.0-next.194":
-  version "11.4.0-next.202"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.202.tgz#cb6effe03324fdcf4bf6514b86bb2995f91ab68c"
-  integrity sha512-qQayuwFG9Y3cda2rWs7JtJvTdE15r2hYKWfVcQUAIRMMLsQqcHRxS/NwJtbsh4vQRHOkvEj6Ey8fBA1GF+2CIQ==
+"@axonivy/ui-icons@~11.4.0-next.202":
+  version "11.4.0-next.204"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.204.tgz#3b531f7d9039b42834d68ea57247965f611bf606"
+  integrity sha512-esgQWyBSQFUldKJ0X8yOhdGtMwdoQP/fJTc5zeJgUHeoX8LEUaY7FYkx5+Wvc2751GItxMVmgO3pWeN3cXODWw==
 
-"@axonivy/variable-editor@~11.4.0-next.214":
-  version "11.4.0-next.214"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.214.tgz#394e3d620e8b434a5e811a670c0874a4bc7462e8"
-  integrity sha512-qdXoNb9o3tbjHjGJk4GXPlnv2+TErSZB1SeuF/LnFAbmd0k0HXiP4auXj8dxCXlZui5hp7au0tYcxRpulI1bng==
+"@axonivy/variable-editor@~11.4.0-next.226":
+  version "11.4.0-next.226"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.226.tgz#6e1a1dec5a52a03a25faddeec74d52f06cb5aa38"
+  integrity sha512-dvESH0jdVIj9ymTNfkbOvHfPGRNAOntKekIyH7pgjX7d3M1uoObic6h4hkrI2ecosV5riHd2LSKjimOg3OYmOQ==
   dependencies:
-    "@axonivy/jsonrpc" "~11.4.0-next.194"
-    "@axonivy/ui-components" "~11.4.0-next.194"
-    "@axonivy/ui-icons" "~11.4.0-next.194"
+    "@axonivy/jsonrpc" "~11.4.0-next.202"
+    "@axonivy/ui-components" "~11.4.0-next.202"
+    "@axonivy/ui-icons" "~11.4.0-next.202"
     "@tanstack/react-query" "5.32.1"
     "@tanstack/react-query-devtools" "5.32.1"
     react "^18.2.0"
