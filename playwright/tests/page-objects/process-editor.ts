@@ -16,16 +16,19 @@ export class ProcessEditor extends Editor {
 
   override async isViewVisible() {
     await this.isTabVisible();
-    const graph = this.viewFrameLoactor().locator('.sprotty-graph');
-    await expect(graph).toBeVisible();
+    await expect(this.graphLocator()).toBeVisible();
+  }
+
+  graphLocator() {
+    return this.viewFrameLoactor().locator('#sprotty .sprotty-graph');
   }
 
   locatorForPID(pid: string) {
-    return this.viewFrameLoactor().locator(`[id$="_${pid}"]`);
+    return this.graphLocator().locator(`[id$="_${pid}"]`);
   }
 
   locatorForElementType(type: string) {
-    return this.viewFrameLoactor().locator(type);
+    return this.graphLocator().locator(type);
   }
 
   async openInscriptionView(pid?: string) {
