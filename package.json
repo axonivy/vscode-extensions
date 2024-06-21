@@ -43,7 +43,9 @@
     "typescript": "^5.3.3"
   },
   "resolutions": {
-    "vscode-jsonrpc": "8.2.0"
+    "vscode-jsonrpc": "8.2.0",
+    "@eclipse-glsp/client": "2.2.0-next.349",
+    "@eclipse-glsp/protocol": "2.2.0-next.349"
   },
   "workspaces": [
     "extension",
