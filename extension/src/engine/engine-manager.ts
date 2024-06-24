@@ -99,7 +99,6 @@ export class IvyEngineManager {
 
   public async createProcess(newProcessParams: NewProcessParams) {
     await this.createAndOpenProcess(newProcessParams);
-    await this.ivyEngineApi.deployProjects([newProcessParams.path]);
   }
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
@@ -107,7 +106,6 @@ export class IvyEngineManager {
     const viewExtension = newUserDialogParams.type === 'Form' ? '.f.json' : '.xhtml';
     const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + viewExtension);
     executeCommand('vscode.open', viewUri);
-    this.buildAndDeployProject(newUserDialogParams.projectDir);
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
@@ -119,9 +117,8 @@ export class IvyEngineManager {
     this.ivyEngineApi
       .createProject(newProjectParams)
       .then(() => this.ivyEngineApi.initProjects([path]))
-      .then(() => this.buildProject(path))
+      .then(() => this.ivyEngineApi.watchProjects([path]))
       .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
-      .then(() => this.deployProject(path))
       .then(() => setStatusBarMessage('Finished: ' + CREATE_PROJECT.description));
   }
 

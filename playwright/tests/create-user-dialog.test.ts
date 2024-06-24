@@ -13,7 +13,11 @@ test.describe('Create User Dialog', () => {
   let processEditor: ProcessEditor;
   let userDialogName: string;
   const projectName = 'prebuiltProject';
-  const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'src_hd', 'ch');
+  const cleanUp = () => {
+    const projectPath = path.join(multiProjectWorkspacePath, projectName);
+    removeFromWorkspace(projectPath, 'src_hd', 'ch');
+    removeFromWorkspace(projectPath, 'src_dataClasses', 'ch');
+  };
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
@@ -69,7 +73,7 @@ test.describe('Create User Dialog', () => {
     await explorer.hasNode(`${userDialogName}Data.ivyClass`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
     await explorer.isTabWithNameVisible(userDialogName + '.f.json');
-    await explorer.hasDeployProjectStatusMessage(60_000);
+    await explorer.hasNoStatusMessage();
     const formEditor = new FormEditor(page, `${userDialogName}.f.json`);
     await formEditor.isViewVisible();
     await explorer.doubleClickNode(`${userDialogName}Process.p.json`);

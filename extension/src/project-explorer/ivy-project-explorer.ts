@@ -62,10 +62,7 @@ export class IvyProjectExplorer {
         .then(() => this.refresh())
     );
     vscode.workspace
-      .createFileSystemWatcher('**/{cms,config,dataclasses,webContent}/**/*', true, false, true)
-      .onDidChange(e => this.execute('engine.deployProject', e));
-    vscode.workspace
-      .createFileSystemWatcher('**/{processes,src_hd}/**/{*.p.json,*.xhtml}', true, false, true)
+      .createFileSystemWatcher('**/{cms,config,webContent}/**/*', true, false, true)
       .onDidChange(e => this.execute('engine.deployProject', e));
   }
 

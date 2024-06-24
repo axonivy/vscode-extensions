@@ -7,13 +7,11 @@ import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../../base/status-bar-message';
 import {
-  ACTIVATE_PROJECTS,
   API_PATH,
   BUILD_PROJECTS,
   CREATE_PROCESS,
   CREATE_PROJECT,
   CREATE_USER_DIALOG,
-  DEACTIVATE_PROJECTS,
   DELETE_PROJECT,
   DEPLOY_PROJECTS,
   DEV_CONTEXT,
@@ -51,9 +49,7 @@ export class IvyEngineApi {
     for (const ivyProjectDirectory of ivyProjectDirectories) {
       await this.initProject(ivyProjectDirectory);
     }
-    const params = { projectDir: ivyProjectDirectories };
-    await this.get(ACTIVATE_PROJECTS, params);
-    await this.get(WATCH_PROJECTS, params);
+    await this.watchProjects(ivyProjectDirectories);
   }
 
   public async initProject(projectDir: string) {
@@ -64,15 +60,17 @@ export class IvyEngineApi {
 
   public async deployProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
-    await this.get(DEACTIVATE_PROJECTS, params);
     await this.get(DEPLOY_PROJECTS, params);
-    await this.get(ACTIVATE_PROJECTS, params);
     setStatusBarMessage('Finished: ' + DEPLOY_PROJECTS.description);
   }
 
   public async buildProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
     this.get(BUILD_PROJECTS, params);
+  }
+
+  public async watchProjects(ivyProjectDirectories: string[]) {
+    await this.get(WATCH_PROJECTS, { projectDir: ivyProjectDirectories });
   }
 
   public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
