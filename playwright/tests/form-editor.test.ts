@@ -40,7 +40,7 @@ test.describe('Form Editor', () => {
     await editor.isDirty();
     await editor.saveAllFiles();
     await editor.isNotDirty();
-    const xhtmlEditor = new FormEditor(page, 'test.xhtml');
+    const xhtmlEditor = new FormEditor(page, 'testForm.xhtml');
     await xhtmlEditor.openEditorFile();
     await xhtmlEditor.isTabVisible();
     await xhtmlEditor.activeEditorHasText(`value="${newLabel}" />`);

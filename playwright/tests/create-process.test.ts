@@ -38,7 +38,7 @@ test.describe('Create Process', () => {
 
   test('Add business process and execute it', async () => {
     await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasDeployProjectStatusMessage();
+    await explorer.hasNoStatusMessage();
     await explorer.hasNode(`${processName}.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
@@ -48,13 +48,13 @@ test.describe('Create Process', () => {
   test('Assert that process gets redeployed after editing', async () => {
     test.skip(linuxCondition);
     await explorer.addProcess(projectName, processName, 'Business Process');
-    await explorer.hasDeployProjectStatusMessage();
+    await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.hasNoStatusMessage();
     await processEditor.appendActivity(start, 'Script');
     await processEditor.isDirty();
     await processEditor.saveAllFiles();
-    await explorer.hasDeployProjectStatusMessage();
+    await page.waitForTimeout(4000);
     const script = processEditor.locatorForElementType('g.script');
     await expect(script).toHaveClass(/selected/);
     await processEditor.startProcessAndAssertExecuted(start, script);
