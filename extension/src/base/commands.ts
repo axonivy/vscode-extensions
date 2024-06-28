@@ -18,27 +18,18 @@ export type Command =
   | 'ivy.addDevContainer';
 type VSCodeCommand = 'revealInExplorer' | 'setContext' | 'vscode.open' | 'copyFilePath';
 type EngineCommand =
-  | 'engine.startIvyEngineManager'
   | 'engine.deployProjects'
   | 'engine.buildProjects'
   | 'engine.deployProject'
   | 'engine.buildProject'
   | 'engine.buildAndDeployProject'
   | 'engine.buildAndDeployProjects'
-  | 'engine.createProcess'
-  | 'engine.createProject'
-  | 'engine.createUserDialog'
   | 'engine.openDevWfUi'
   | 'engine.openEngineCockpit'
   | 'engine.ivyBrowserOpen'
   | 'engine.openInExternalBrowser'
-  | 'engine.startProcess'
-  | 'engine.deleteProject'
   | 'engine.downloadDevEngine'
-  | 'engine.setEngineDirectory'
-  | 'process-editor.activate'
-  | 'form-editor.activate'
-  | 'variables-editor.activate';
+  | 'engine.setEngineDirectory';
 type ProjectViewCommand =
   | 'ivyProjects.refreshEntry'
   | 'ivyProjects.buildProject'

@@ -9,12 +9,13 @@ export class WebSocketForwarder implements vscode.Disposable {
   readonly webSocket: WebSocket;
 
   constructor(
-    wsEndPoint: 'ivy-inscription-lsp' | 'ivy-script-lsp' | 'ivy-form-lsp' | 'ivy-config-lsp',
+    websocketUrl: URL,
+    websocketEndpoint: 'ivy-inscription-lsp' | 'ivy-script-lsp' | 'ivy-form-lsp' | 'ivy-config-lsp',
     readonly messenger: Messenger,
     readonly messageParticipant: MessageParticipant,
     readonly notificationType: NotificationType<unknown>
   ) {
-    this.webSocket = new WebSocket(buildWebSocketUrl(wsEndPoint));
+    this.webSocket = new WebSocket(new URL(websocketEndpoint, websocketUrl));
     this.webSocket.onopen = () => this.initialize();
   }
 
@@ -39,12 +40,4 @@ export class WebSocketForwarder implements vscode.Disposable {
     this.toDispose.dispose();
     this.webSocket.close();
   }
-}
-
-function buildWebSocketUrl(endPoint: string) {
-  const baseUrl = process.env.WEB_SOCKET_ADDRESS ?? '';
-  if (baseUrl.endsWith('/')) {
-    return `${baseUrl}${endPoint}`;
-  }
-  return `${baseUrl}/${endPoint}`;
 }

@@ -5,19 +5,14 @@ import ProcessEditorProvider from './process-editor-provider';
 import { ProcessVscodeConnector } from './process-vscode-connector';
 import { ProcessOutlineProvider } from './process-outline-provider';
 import { registerCommand } from '../../base/commands';
-import { Messenger } from 'vscode-messenger';
+import { messenger } from '../..';
 
-export function activateProcessEditor(context: vscode.ExtensionContext, messenger: Messenger): void {
-  // Wrap server with quickstart component
-  const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
-  if (!webSocketAddress) {
-    throw Error('No Ivy Engine Url available');
-  }
+export function activateProcessEditor(context: vscode.ExtensionContext, websocketUrl: URL): void {
   const workflowServer = new SocketGlspVscodeServer({
     clientId: 'ivy-glsp-web-ide-process-editor',
     clientName: 'ivy-glsp-web-ide-process-editor',
     connectionOptions: {
-      webSocketAddress: webSocketAddress + 'ivy-glsp-web-ide-process-editor'
+      webSocketAddress: new URL('ivy-glsp-web-ide-process-editor', websocketUrl).toString()
     }
   });
 

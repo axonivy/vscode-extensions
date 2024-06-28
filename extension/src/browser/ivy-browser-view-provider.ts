@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { executeCommand } from '../base/commands';
+import { IvyEngineManager } from '../engine/engine-manager';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'ivyBrowserView';
@@ -24,7 +24,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case 'openHome':
-          executeCommand('engine.openDevWfUi');
+          IvyEngineManager.instance.openDevWfUi;
           break;
       }
     });

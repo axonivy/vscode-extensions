@@ -10,19 +10,38 @@ import { setStatusBarMessage } from '../base/status-bar-message';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
 import { CREATE_PROJECT } from './api/api-constants';
+import { activateProcessEditor } from '../editors/process-editor/activte-process-editor';
+import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
+import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 
 export class IvyEngineManager {
+  private static _instance: IvyEngineManager;
+
+  private readonly mavenBuilder: MavenBuilder;
+  private readonly engineRunner: EngineRunner;
   private engineUrl: string;
   private ivyEngineApi: IvyEngineApi;
   private devContextPath: string;
-  private readonly mavenBuilder: MavenBuilder;
   private started = false;
-  private engineRunner: EngineRunner;
 
-  constructor(context: vscode.ExtensionContext) {
+  private constructor(readonly context: vscode.ExtensionContext) {
     const embeddedEngineDirectory = vscode.Uri.joinPath(context.extensionUri, 'AxonIvyEngine');
     this.mavenBuilder = new MavenBuilder(embeddedEngineDirectory);
     this.engineRunner = new EngineRunner(embeddedEngineDirectory);
+  }
+
+  static init(context: vscode.ExtensionContext) {
+    if (!IvyEngineManager._instance) {
+      IvyEngineManager._instance = new IvyEngineManager(context);
+    }
+    return IvyEngineManager._instance;
+  }
+
+  public static get instance() {
+    if (IvyEngineManager._instance) {
+      return IvyEngineManager._instance;
+    }
+    throw new Error('IvyEngineManager has not been initialized');
   }
 
   async start() {
@@ -37,10 +56,9 @@ export class IvyEngineManager {
     await this.initProjects();
     await this.deployProjects();
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this.engineUrl));
-    process.env['WEB_SOCKET_ADDRESS'] = websocketUrl.toString();
-    executeCommand('process-editor.activate');
-    executeCommand('form-editor.activate');
-    executeCommand('variables-editor.activate');
+    activateProcessEditor(this.context, websocketUrl);
+    FormEditorProvider.register(this.context, websocketUrl);
+    VariableEditorProvider.register(this.context, websocketUrl);
   }
 
   private async resolveEngineUrl() {

@@ -1,6 +1,6 @@
-import { executeCommand } from '../base/commands';
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
+import { IvyEngineManager } from '../engine/engine-manager';
 
 export const dialogTypes = ['JSF', 'Form', 'JSFOffline'] as const;
 export type DialogType = (typeof dialogTypes)[number];
@@ -31,7 +31,7 @@ export interface NewUserDialogParams {
 export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType, pid?: string) {
   const input = await collectNewUserDialogParams(selectedUri, type, projectDir);
   if (input) {
-    await executeCommand('engine.createUserDialog', { pid, ...input });
+    await IvyEngineManager.instance.createUserDialog({ pid, ...input });
   }
 }
 

@@ -15,25 +15,25 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axonivy/form-editor-core@~11.4.0-next.116":
-  version "11.4.0-next.116"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.116.tgz#48f5d28a6a77d9aa897d4965f863eea9e9244c06"
-  integrity sha512-N+A6oYwcwgh4AFv9KNGN7F8dcpRW8kXo9USLY9W5ks8V/tan5cSIEN7CXw0kg0Mb4DfI1hbMQYDmgsEAxwkZkw==
+"@axonivy/form-editor-core@~11.4.0-next.120":
+  version "11.4.0-next.120"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.120.tgz#c3c6b5463f33feef99c7483a5b87aaa8104f317d"
+  integrity sha512-lq0hAJufvMEqeeq8giJubfTwcpK1v0ECMBMr9JZplxn/z9pfv01DxnU5fx6Hdso0TPrpcUJsvWx9MEuIoqNAtQ==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.116+d7d96f2"
+    "@axonivy/form-editor-protocol" "11.4.0-next.120+d096ff6"
     "@axonivy/jsonrpc" "~11.4.0-next.160"
 
-"@axonivy/form-editor-protocol@11.4.0-next.116+d7d96f2":
-  version "11.4.0-next.116"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.116.tgz#c0e594c0bfeaf739e4bc7e7f14abfe9ed8dae251"
-  integrity sha512-REvjQ+MuDaa3ydJqpsKTV9effobgLN4N0mC41bDKrPcMCaBDymA2+uFpTKaP5inVYvStje41XkMznhrMvyZwuw==
+"@axonivy/form-editor-protocol@11.4.0-next.120+d096ff6":
+  version "11.4.0-next.120"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.120.tgz#26d707f858da069a28f7f919f58a738b306d788a"
+  integrity sha512-M+M3INsHna2NiaFPteTw77goukbvc6qycDxqiqG3y/XhfDKJ5sHlTXUqeTXYLwG6loMeC6WlTXP5EPRMDyFaZA==
 
-"@axonivy/form-editor@~11.4.0-next.116":
-  version "11.4.0-next.116"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.116.tgz#31493a56e2556553b5f53316dba355f1f412cf2a"
-  integrity sha512-B6BlPPlNmUHkqvToKONKP9cxoeOQLiO1lDOYYG9renooPsIQ6M8OvLb5rlZF/2S0TMVGvAqksMetoSzKl6nvBQ==
+"@axonivy/form-editor@~11.4.0-next.120":
+  version "11.4.0-next.120"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.120.tgz#2a6db8b2be83ae2fb92a9fc5712cc1a9233ef4b6"
+  integrity sha512-aiwLgfUEoGJqtvN3qII+IEDKL0UiKN5qCuwKJDTXHYN9NbGUQxr2ZdjZare/pqzTkAbgDA1fuJtN/R9ctwQNeA==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.116+d7d96f2"
+    "@axonivy/form-editor-protocol" "11.4.0-next.120+d096ff6"
     "@axonivy/ui-components" "~11.4.0-next.160"
     "@axonivy/ui-icons" "~11.4.0-next.160"
     "@dnd-kit/core" "^6.1.0"
@@ -111,32 +111,32 @@
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/process-editor-inscription@~11.4.0-next.1076":
-  version "11.4.0-next.1076"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1076.tgz#8354a5868ecfa5723ce7f0099c313577f72a3c3d"
-  integrity sha512-WqyLADapKNmHJN1hFhbcBBmEMfPyobVBKfJzCL2TXhIA6kl5dBbtqVzDaZsrHrlRtN5qpvjPzZZZTUyNH50xFw==
+"@axonivy/process-editor-inscription@~11.4.0-next.1088":
+  version "11.4.0-next.1088"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1088.tgz#fc72359f65e56844abc18850d764baa16ef4aa75"
+  integrity sha512-PbYW1mQ2UeWlI0AiRp2w1uLlaBDlOfq/lgNLfgDFyt2DTzSCnzHB1E4voTK5tZ6Acj99eWhQtUMgtptnyzH0lw==
   dependencies:
     "@axonivy/inscription-core" "~11.4.0-next.1125"
     "@axonivy/inscription-editor" "~11.4.0-next.1125"
     "@axonivy/inscription-protocol" "~11.4.0-next.1125"
-    "@axonivy/process-editor" "11.4.0-next.1076+2a803ae"
+    "@axonivy/process-editor" "11.4.0-next.1088+82ecee2"
     "@eclipse-glsp/client" next
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@axonivy/process-editor-protocol@11.4.0-next.1076+2a803ae", "@axonivy/process-editor-protocol@~11.4.0-next.1076":
-  version "11.4.0-next.1076"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1076.tgz#01ec44dd51d274da5c419f7cb6f149f4f48817a3"
-  integrity sha512-O0rVcqxTvPdWmSKBKtIiFdNzdmZblzM2TwIGAnOfSErh5d28y1eED5XYNoOipsqyPWT8Oo6ud4G+BMwTUK4t6w==
+"@axonivy/process-editor-protocol@11.4.0-next.1088+82ecee2", "@axonivy/process-editor-protocol@~11.4.0-next.1088":
+  version "11.4.0-next.1088"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1088.tgz#57ba04b670838589d1b5ddf54c9260a340803daa"
+  integrity sha512-csEIwz1jDVuR7OtWKLStpH02AgiYPdcLXjlFwUHNeenTQrqMYDf1HIJXQZ84hIyOaf/t6t5RNjmNDxp0IeHPJg==
   dependencies:
     "@eclipse-glsp/protocol" next
 
-"@axonivy/process-editor@11.4.0-next.1076+2a803ae", "@axonivy/process-editor@~11.4.0-next.1076":
-  version "11.4.0-next.1076"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1076.tgz#ca1a43fc588c006159fbc7465859ab9504944ec5"
-  integrity sha512-vhCdwn/jzLo4i5IJdufQtql+0ziChrLl/Lp+xL1xYZNPkp6bcTLZMuW40HqnMlvict0Lv71Qe4FtFgNuuG77fA==
+"@axonivy/process-editor@11.4.0-next.1088+82ecee2", "@axonivy/process-editor@~11.4.0-next.1088":
+  version "11.4.0-next.1088"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1088.tgz#549a134ac568393810b0f5eb91b44af9ce8fc1d8"
+  integrity sha512-H2O8PTOh9FyfWQ+ZR9fde35WgEZFe8HI81RKzEteEzuUNeQN2h2vZni9qzik4O8A0i8DJ26TkU5xra3a+70+5Q==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.4.0-next.1076+2a803ae"
+    "@axonivy/process-editor-protocol" "11.4.0-next.1088+82ecee2"
     "@axonivy/ui-icons" "~11.4.0-next.160"
     "@eclipse-glsp/client" next
     showdown "^2.1.0"
@@ -221,10 +221,10 @@
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.204.tgz#3b531f7d9039b42834d68ea57247965f611bf606"
   integrity sha512-esgQWyBSQFUldKJ0X8yOhdGtMwdoQP/fJTc5zeJgUHeoX8LEUaY7FYkx5+Wvc2751GItxMVmgO3pWeN3cXODWw==
 
-"@axonivy/variable-editor@~11.4.0-next.228":
-  version "11.4.0-next.228"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.228.tgz#048c290197243e184043c8c6ca1939f15e4d45e9"
-  integrity sha512-hx0ve/f5LA0RZyIuWc7u8EpUiebwEhryudkBhthkyY1b8LRkSBfCeFmeJ4tKxWgkxNcUUvfMpJV6QR4FTuv1Zg==
+"@axonivy/variable-editor@~11.4.0-next.243":
+  version "11.4.0-next.243"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.243.tgz#bb7fdf66907294b3b2fc33ec428a91c162732a93"
+  integrity sha512-UnoGjSaO9QQ3ch1/LQ/rmS7BwmhRgVJUHTlPkjfDhInkhGDQmNvMJksodaKb2qQry7UpSSO2nNSC6doz0CAkng==
   dependencies:
     "@axonivy/jsonrpc" "~11.4.0-next.202"
     "@axonivy/ui-components" "~11.4.0-next.202"
