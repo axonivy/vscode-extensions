@@ -10,11 +10,11 @@ import { setStatusBarMessage } from '../base/status-bar-message';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
 import { CREATE_PROJECT } from './api/api-constants';
-import { activateProcessEditor } from '../editors/process-editor/activte-process-editor';
 import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
 import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
+import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -51,7 +51,7 @@ export class IvyEngineManager {
     await this.initProjects();
     await this.deployProjects();
     const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this._engineUrl));
-    activateProcessEditor(this.context, websocketUrl);
+    ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
     VariableEditorProvider.register(this.context, websocketUrl);
   }

@@ -6,7 +6,7 @@ import { messenger } from '../..';
 export default class FormEditorProvider implements vscode.CustomTextEditorProvider {
   private static readonly viewType = 'ivy.formEditor';
 
-  constructor(readonly context: vscode.ExtensionContext, readonly websocketUrl: URL) {}
+  private constructor(readonly context: vscode.ExtensionContext, readonly websocketUrl: URL) {}
 
   static register(context: vscode.ExtensionContext, websocketUrl: URL): vscode.Disposable {
     const provider = new FormEditorProvider(context, websocketUrl);

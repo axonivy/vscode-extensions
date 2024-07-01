@@ -4,10 +4,10 @@ import { Messenger, MessengerDiagnostic } from 'vscode-messenger';
 import { Command, registerCommand } from './base/commands';
 import { config } from './base/configurations';
 import { setStatusBarMessage } from './base/status-bar-message';
-import { activateIvyBrowser } from './browser/ivy-browser';
 import { addDevContainer } from './dev-container/command';
 import { IvyEngineManager } from './engine/engine-manager';
 import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
+import { IvyBrowserViewProvider } from './browser/ivy-browser-view-provider';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -30,7 +30,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('engine.setEngineDirectory', () => config.setEngineDirectory());
   registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
   IvyProjectExplorer.init(context);
-  activateIvyBrowser(context);
+  IvyBrowserViewProvider.register(context);
   setStatusBarMessage('Axon Ivy Extension activated');
 
   return messenger.diagnosticApi();

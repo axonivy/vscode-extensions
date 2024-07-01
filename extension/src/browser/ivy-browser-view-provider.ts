@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { IvyEngineManager } from '../engine/engine-manager';
 import { resolveClientEngineHost } from '../base/url-util';
-import { executeCommand } from '../base/commands';
+import { executeCommand, registerCommand } from '../base/commands';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
   private static _instance: IvyBrowserViewProvider;
@@ -11,11 +11,21 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   private constructor(private readonly extensionUri: vscode.Uri, private url: string = '') {}
 
-  static init(context: vscode.ExtensionContext) {
+  private static init(context: vscode.ExtensionContext) {
     if (!IvyBrowserViewProvider._instance) {
       IvyBrowserViewProvider._instance = new IvyBrowserViewProvider(context.extensionUri);
     }
     return IvyBrowserViewProvider._instance;
+  }
+
+  public static register(context: vscode.ExtensionContext) {
+    const provider = IvyBrowserViewProvider.init(context);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(IvyBrowserViewProvider.viewType, provider, {
+        webviewOptions: { retainContextWhenHidden: true }
+      })
+    );
+    registerCommand('engine.ivyBrowserOpen', context, async (url?: string) => provider.openInBrowser(url));
   }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -34,7 +44,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case 'openHome':
-          IvyEngineManager.instance.openDevWfUi;
+          IvyEngineManager.instance.openDevWfUi();
           break;
       }
     });
