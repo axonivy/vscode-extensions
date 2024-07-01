@@ -1,3 +1,4 @@
 {
-    "project.excludePattern": "**/excluded/**",
+  "project.excludePattern": "**/excluded/**",
+  "window.zoomLevel": -1
 }
