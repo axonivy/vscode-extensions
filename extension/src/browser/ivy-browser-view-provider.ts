@@ -1,12 +1,32 @@
 import * as vscode from 'vscode';
-import { executeCommand } from '../base/commands';
+import { IvyEngineManager } from '../engine/engine-manager';
+import { resolveClientEngineHost } from '../base/url-util';
+import { executeCommand, registerCommand } from '../base/commands';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
+  private static _instance: IvyBrowserViewProvider;
   public static readonly viewType = 'ivyBrowserView';
 
   private view?: vscode.WebviewView;
 
-  constructor(private readonly extensionUri: vscode.Uri, private url: string) {}
+  private constructor(private readonly extensionUri: vscode.Uri, private url: string = '') {}
+
+  private static init(context: vscode.ExtensionContext) {
+    if (!IvyBrowserViewProvider._instance) {
+      IvyBrowserViewProvider._instance = new IvyBrowserViewProvider(context.extensionUri);
+    }
+    return IvyBrowserViewProvider._instance;
+  }
+
+  public static register(context: vscode.ExtensionContext) {
+    const provider = IvyBrowserViewProvider.init(context);
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(IvyBrowserViewProvider.viewType, provider, {
+        webviewOptions: { retainContextWhenHidden: true }
+      })
+    );
+    registerCommand('engine.ivyBrowserOpen', context, async (url?: string) => provider.openInBrowser(url));
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this.view = webviewView;
@@ -24,13 +44,27 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case 'openHome':
-          executeCommand('engine.openDevWfUi');
+          IvyEngineManager.instance.openDevWfUi();
           break;
       }
     });
   }
 
-  public refreshWebviewHtml(url: string) {
+  public async openInBrowser(url?: string) {
+    if (!url) {
+      url =
+        (await vscode.window.showInputBox({
+          prompt: 'Enter url',
+          value: 'https://dev.axonivy.com/'
+        })) ?? '';
+    } else {
+      url = resolveClientEngineHost(new URL(url)).toString();
+    }
+    this.refreshWebviewHtml(url);
+    executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
+  }
+
+  private refreshWebviewHtml(url: string) {
     this.url = url;
     if (!this.view) {
       return;
@@ -103,8 +137,11 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     return webview.asWebviewUri(vscode.Uri.joinPath(this.extensionUri, ...pathSegments));
   }
 
-  openInExternalBrowser() {
-    vscode.env.openExternal(vscode.Uri.parse(this.url));
+  public static get instance() {
+    if (IvyBrowserViewProvider._instance) {
+      return IvyBrowserViewProvider._instance;
+    }
+    throw new Error('IvyBrowserViewProvider has not been initialized');
   }
 }
 

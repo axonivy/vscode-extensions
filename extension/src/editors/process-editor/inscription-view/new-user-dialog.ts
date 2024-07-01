@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { executeCommand } from '../../../base/commands';
 import { InscriptionActionHandler, SendInscriptionNotification } from './action-handlers';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { DialogType, dialogTypes } from '../../../project-explorer/new-user-dialog';
+import { IvyProjectExplorer } from '../../../project-explorer/ivy-project-explorer';
 
 export class NewHtmlDialogActionHandler implements InscriptionActionHandler {
   actionId = 'newHtmlDialog' as const;
@@ -15,8 +15,7 @@ export class NewHtmlDialogActionHandler implements InscriptionActionHandler {
     if (!dialogType) {
       return;
     }
-    const command = this.dialogTypeToCommand(dialogType);
-    await executeCommand(command, tabInput, [], actionArgs.context.pid);
+    await IvyProjectExplorer.instance.addUserDialog(tabInput.uri, dialogType, actionArgs.context.pid);
     sendInscriptionNotification('dataChanged');
     sendInscriptionNotification('validation');
   }
@@ -26,15 +25,5 @@ export class NewHtmlDialogActionHandler implements InscriptionActionHandler {
       title: 'Select Dialog Type',
       ignoreFocusOut: true
     }) as Promise<DialogType | undefined>;
-  }
-
-  private dialogTypeToCommand(dialogType: DialogType) {
-    if (dialogType === 'Form') {
-      return 'ivyProjects.addNewFormDialog';
-    }
-    if (dialogType === 'JSF') {
-      return 'ivyProjects.addNewHtmlDialog';
-    }
-    return 'ivyProjects.addNewOfflineDialog';
   }
 }

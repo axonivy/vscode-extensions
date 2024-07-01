@@ -8,10 +8,15 @@ const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
 const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSocketMessage' };
 
-export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, document: vscode.TextDocument) => {
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: vscode.WebviewPanel,
+  document: vscode.TextDocument
+) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new VariableEditorWebSocketForwarder(messenger, messageParticipant, document),
+    new VariableEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
       () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
@@ -21,9 +26,9 @@ export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.We
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
 
-export class VariableEditorWebSocketForwarder extends WebSocketForwarder {
-  constructor(messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
-    super('ivy-config-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
+class VariableEditorWebSocketForwarder extends WebSocketForwarder {
+  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
+    super(websocketUrl, 'ivy-config-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
   }
 
   protected override handleClientMessage(message: unknown) {

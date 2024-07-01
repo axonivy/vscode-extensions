@@ -3,8 +3,8 @@ import { Messenger } from 'vscode-messenger';
 import { WebSocketForwarder } from '../websocket-forwarder';
 import { MessageParticipant, NotificationType, RequestType } from 'vscode-messenger-common';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
-import { executeCommand } from '../../base/commands';
 import { SendInscriptionNotification, handleActionLocal } from './inscription-view/action-handlers';
+import { IvyEngineManager } from '../../engine/engine-manager';
 
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
@@ -14,17 +14,22 @@ const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' 
 const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
-export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, messageParticipant?: MessageParticipant) => {
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: vscode.WebviewPanel,
+  messageParticipant?: MessageParticipant
+) => {
   if (messageParticipant === undefined) {
     return;
   }
   const toDispose = new DisposableCollection(
-    new InscriptionWebSocketForwarder(messenger, messageParticipant),
-    new WebSocketForwarder('ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
+    new InscriptionWebSocketForwarder(websocketUrl, messenger, messageParticipant),
+    new WebSocketForwarder(websocketUrl, 'ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
     messenger.onNotification(WebviewConnectionReadyNotification, () => handleWebviewReadyNotification(messenger, messageParticipant), {
       sender: messageParticipant
     }),
-    messenger.onRequest(StartProcessRequest, startUri => executeCommand('engine.startProcess', startUri), { sender: messageParticipant }),
+    messenger.onRequest(StartProcessRequest, startUri => IvyEngineManager.instance.startProcess(startUri), { sender: messageParticipant }),
     vscode.window.onDidChangeActiveColorTheme(theme =>
       messenger.sendNotification(ColorThemeChangedNotification, messageParticipant, vsCodeThemeToMonacoTheme(theme))
     )
@@ -41,11 +46,11 @@ const vsCodeThemeToMonacoTheme = (theme: vscode.ColorTheme) => {
   return theme.kind === vscode.ColorThemeKind.Dark || theme.kind === vscode.ColorThemeKind.HighContrast ? 'dark' : 'light';
 };
 
-export class InscriptionWebSocketForwarder extends WebSocketForwarder {
+class InscriptionWebSocketForwarder extends WebSocketForwarder {
   private readonly sendInscriptionNotification: SendInscriptionNotification;
 
-  constructor(messenger: Messenger, messageParticipant: MessageParticipant) {
-    super('ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
+  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant) {
+    super(websocketUrl, 'ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
     this.sendInscriptionNotification = (type: string) =>
       this.messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }));
   }

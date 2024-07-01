@@ -4,16 +4,18 @@ import { Command, executeCommand, registerCommand } from '../base/commands';
 import { ProcessKind, addNewProcess } from './new-process';
 import path from 'path';
 import { addNewProject } from './new-project';
-import { TreeSelection, executeTreeSelectionCommand, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
+import { TreeSelection, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
 import { DialogType, addNewUserDialog } from './new-user-dialog';
+import { IvyEngineManager } from '../engine/engine-manager';
 
 export const VIEW_ID = 'ivyProjects';
 
 export class IvyProjectExplorer {
-  private treeDataProvider: IvyProjectTreeDataProvider;
-  private treeView: vscode.TreeView<Entry>;
+  private static _instance: IvyProjectExplorer;
+  private readonly treeDataProvider: IvyProjectTreeDataProvider;
+  private readonly treeView: vscode.TreeView<Entry>;
 
-  constructor(context: vscode.ExtensionContext) {
+  private constructor(context: vscode.ExtensionContext) {
     this.treeDataProvider = new IvyProjectTreeDataProvider();
     this.treeView = vscode.window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider, showCollapseAll: true });
     context.subscriptions.push(this.treeView);
@@ -28,54 +30,59 @@ export class IvyProjectExplorer {
     );
   }
 
+  static init(context: vscode.ExtensionContext) {
+    if (!IvyProjectExplorer._instance) {
+      IvyProjectExplorer._instance = new IvyProjectExplorer(context);
+    }
+    return IvyProjectExplorer._instance;
+  }
+
   private registerCommands(context: vscode.ExtensionContext) {
+    const engineManager = IvyEngineManager.instance;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
     registerCmd(`${VIEW_ID}.refreshEntry`, () => this.refresh());
-    registerCmd(`${VIEW_ID}.buildProject`, (selection: TreeSelection) => this.execute('engine.buildProject', selection));
-    registerCmd(`${VIEW_ID}.deployProject`, (selection: TreeSelection) => this.execute('engine.deployProject', selection));
-    registerCmd(`${VIEW_ID}.buildAndDeployProject`, (selection: TreeSelection) => this.execute('engine.buildAndDeployProject', selection));
-    registerCmd(`${VIEW_ID}.addProcess`, (selection: TreeSelection, pid: string) => this.addProcess(selection, undefined, pid));
-    registerCmd(`${VIEW_ID}.addBusinessProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Business Process'));
-    registerCmd(`${VIEW_ID}.addCallableSubProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Callable Sub Process'));
-    registerCmd(`${VIEW_ID}.addWebServiceProcess`, (selection: TreeSelection) => this.addProcess(selection, 'Web Service Process'));
-    registerCmd(`${VIEW_ID}.addNewProject`, (selection: TreeSelection) => addNewProject(selection));
-    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
-      this.addUserDialog(selection, 'JSF', pid)
+    registerCmd(`${VIEW_ID}.buildProject`, (s: TreeSelection) => this.runEngineAction(engineManager.buildProject, s));
+    registerCmd(`${VIEW_ID}.deployProject`, (s: TreeSelection) => this.runEngineAction(engineManager.deployProject, s));
+    registerCmd(`${VIEW_ID}.buildAndDeployProject`, (s: TreeSelection) => this.runEngineAction(engineManager.buildAndDeployProject, s));
+    registerCmd(`${VIEW_ID}.addBusinessProcess`, (s: TreeSelection) => this.addProcess(s, 'Business Process'));
+    registerCmd(`${VIEW_ID}.addCallableSubProcess`, (s: TreeSelection) => this.addProcess(s, 'Callable Sub Process'));
+    registerCmd(`${VIEW_ID}.addWebServiceProcess`, (s: TreeSelection) => this.addProcess(s, 'Web Service Process'));
+    registerCmd(`${VIEW_ID}.addNewProject`, (s: TreeSelection) => addNewProject(s));
+    registerCmd(`${VIEW_ID}.addNewHtmlDialog`, (s: TreeSelection, selections?: [TreeSelection], pid?: string) =>
+      this.addUserDialog(s, 'JSF', pid)
     );
-    registerCmd(`${VIEW_ID}.addNewFormDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
-      this.addUserDialog(selection, 'Form', pid)
+    registerCmd(`${VIEW_ID}.addNewFormDialog`, (s: TreeSelection, selections?: [TreeSelection], pid?: string) =>
+      this.addUserDialog(s, 'Form', pid)
     );
-    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (selection: TreeSelection, selections?: [TreeSelection], pid?: string) =>
-      this.addUserDialog(selection, 'JSFOffline', pid)
+    registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (s: TreeSelection, selections?: [TreeSelection], pid?: string) =>
+      this.addUserDialog(s, 'JSFOffline', pid)
     );
-    registerCmd(`${VIEW_ID}.getIvyProjects`, () => this.treeDataProvider.getIvyProjects());
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
   private defineFileWatchers() {
     vscode.workspace.createFileSystemWatcher(IVY_RPOJECT_FILE_PATTERN, false, true, true).onDidCreate(async () => await this.refresh());
     vscode.workspace.createFileSystemWatcher('**/*', true, true, false).onDidDelete(e =>
-      this.treeDataProvider
-        .getIvyProjects()
+      this.getIvyProjects()
         .then(projects => this.deleteProjectOnEngine(e, projects))
         .then(() => this.refresh())
     );
     vscode.workspace
       .createFileSystemWatcher('**/{cms,config,webContent}/**/*', true, false, true)
-      .onDidChange(e => this.execute('engine.deployProject', e));
+      .onDidChange(e => this.runEngineAction(IvyEngineManager.instance.deployProject, e));
   }
 
   private deleteProjectOnEngine(uri: vscode.Uri, ivyProjects: string[]) {
     const filePath = uri.fsPath;
     for (const project of ivyProjects) {
       if (project === filePath || project.startsWith(uri.fsPath + path.sep)) {
-        executeCommand('engine.deleteProject', project);
+        IvyEngineManager.instance.deleteProject(project);
       }
     }
   }
 
-  public async hasIvyProjects(): Promise<boolean> {
+  private async hasIvyProjects(): Promise<boolean> {
     return this.treeDataProvider.hasIvyProjects();
   }
 
@@ -86,12 +93,12 @@ export class IvyProjectExplorer {
     await this.activateEngineExtension(hasIvyProjects);
   }
 
-  private async execute(command: Command, selection: TreeSelection) {
-    executeTreeSelectionCommand(command, selection, this.treeDataProvider.getIvyProjects());
+  private async runEngineAction(action: (projectDir: string) => void, selection: TreeSelection) {
+    treeSelectionToProjectPath(selection, this.getIvyProjects()).then(selectionPath => selectionPath && action(selectionPath));
   }
 
-  private async addProcess(selection: TreeSelection, kind?: ProcessKind, pid?: string) {
-    const projectPath = await treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects());
+  public async addProcess(selection: TreeSelection, kind?: ProcessKind, pid?: string) {
+    const projectPath = await treeSelectionToProjectPath(selection, this.getIvyProjects());
     if (projectPath) {
       await addNewProcess(await treeSelectionToUri(selection), projectPath, kind, pid);
       return;
@@ -99,8 +106,8 @@ export class IvyProjectExplorer {
     vscode.window.showErrorMessage('Add Process: no valid Axon Ivy Project selected.');
   }
 
-  private async addUserDialog(selection: TreeSelection, type: DialogType, pid?: string) {
-    const projectPath = await treeSelectionToProjectPath(selection, this.treeDataProvider.getIvyProjects());
+  public async addUserDialog(selection: TreeSelection, type: DialogType, pid?: string) {
+    const projectPath = await treeSelectionToProjectPath(selection, this.getIvyProjects());
     if (projectPath) {
       await addNewUserDialog(await treeSelectionToUri(selection), projectPath, type, pid);
       return;
@@ -108,13 +115,13 @@ export class IvyProjectExplorer {
     vscode.window.showWarningMessage('Add User Dialog: no valid Axon Ivy Project selected.');
   }
 
-  private async setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
+  public async setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
     await executeCommand('setContext', 'ivy:hasIvyProjects', hasIvyProjects);
   }
 
   private async activateEngineExtension(hasIvyProjects: boolean) {
     if (hasIvyProjects) {
-      await executeCommand('engine.startIvyEngineManager');
+      await IvyEngineManager.instance.start();
     }
   }
 
@@ -166,5 +173,16 @@ export class IvyProjectExplorer {
       return this.treeView.selection[0];
     }
     return undefined;
+  }
+
+  getIvyProjects() {
+    return this.treeDataProvider.getIvyProjects();
+  }
+
+  static get instance() {
+    if (IvyProjectExplorer._instance) {
+      return IvyProjectExplorer._instance;
+    }
+    throw new Error('IvyProjectExplorer has not been initialized');
   }
 }

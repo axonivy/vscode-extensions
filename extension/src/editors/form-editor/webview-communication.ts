@@ -8,14 +8,15 @@ const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
 const FormWebSocketMessage: NotificationType<unknown> = { method: 'formWebSocketMessage' };
 
-export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, document: vscode.TextDocument) => {
-  const webSocketAddress = process.env.WEB_SOCKET_ADDRESS;
-  if (!webSocketAddress) {
-    throw Error('No Ivy Engine Url available');
-  }
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: vscode.WebviewPanel,
+  document: vscode.TextDocument
+) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new FormEditorWebSocketForwarder(messenger, messageParticipant, document),
+    new FormEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
       () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
@@ -25,11 +26,11 @@ export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.We
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
 
-export class FormEditorWebSocketForwarder extends WebSocketForwarder {
+class FormEditorWebSocketForwarder extends WebSocketForwarder {
   private readonly saveListener: vscode.Disposable;
 
-  constructor(messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
-    super('ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage);
+  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
+    super(websocketUrl, 'ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage);
     this.saveListener = vscode.workspace.onDidSaveTextDocument(e => {
       if (e.uri === document.uri) {
         super.handleClientMessage({ method: 'build', params: { app: '', pmv: '', file: this.document.uri.fsPath } });

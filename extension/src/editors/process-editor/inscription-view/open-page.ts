@@ -4,6 +4,8 @@ import * as path from 'path';
 import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
 import { InscriptionActionHandler } from './action-handlers';
 import { executeCommand } from '../../../base/commands';
+import { IvyBrowserViewProvider } from '../../../browser/ivy-browser-view-provider';
+import { IvyProjectExplorer } from '../../../project-explorer/ivy-project-explorer';
 
 export class OpenPageActionHandler implements InscriptionActionHandler {
   actionId = 'openPage' as const;
@@ -33,12 +35,12 @@ async function getValideFilePath(pathString: string) {
 }
 
 async function openUrlInIntegratedBrowser(absolutePath: string) {
-  await executeCommand('engine.ivyBrowserOpen', vscode.Uri.parse(absolutePath));
+  await IvyBrowserViewProvider.instance.openInBrowser(absolutePath);
 }
 
 function openInExplorer(absolutePath: string | null) {
   if (absolutePath) {
-    vscode.commands.executeCommand('vscode.open', vscode.Uri.file(absolutePath));
+    executeCommand('vscode.open', vscode.Uri.file(absolutePath));
   } else {
     vscode.window.showInformationMessage('The entered url is not valid.');
   }
@@ -47,7 +49,5 @@ function openInExplorer(absolutePath: string | null) {
 async function getProjectFolder() {
   const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input as { uri: vscode.Uri };
   const path = tabInput.uri.fsPath.toString();
-  const ivyProjects = (await executeCommand('ivyProjects.getIvyProjects')) as string[];
-  const projectFolder = ivyProjects.find(ivyProject => path.startsWith(ivyProject));
-  return projectFolder;
+  return IvyProjectExplorer.instance.getIvyProjects().then(projects => projects.find(ivyProject => path.startsWith(ivyProject)));
 }

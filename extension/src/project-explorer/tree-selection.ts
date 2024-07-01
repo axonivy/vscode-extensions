@@ -1,14 +1,10 @@
 import * as vscode from 'vscode';
 import { Entry } from './ivy-project-tree-data-provider';
-import { Command, executeCommand } from '../base/commands';
+import { executeCommand } from '../base/commands';
 import path from 'path';
 import fs from 'fs';
 
 export type TreeSelection = Entry | vscode.Uri | undefined;
-
-export async function executeTreeSelectionCommand(command: Command, selection: TreeSelection, ivyProjects: Promise<string[]>) {
-  treeSelectionToProjectPath(selection, ivyProjects).then(selectionPath => selectionPath && executeCommand(command, selectionPath));
-}
 
 export async function treeSelectionToProjectPath(selection: TreeSelection, ivyProjects: Promise<string[]>): Promise<string | undefined> {
   return treeSelectionToUri(selection).then(uri => findMatchingProject(ivyProjects, uri));
