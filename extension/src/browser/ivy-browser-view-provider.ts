@@ -1,31 +1,45 @@
 import * as vscode from 'vscode';
-import { IvyEngineManager } from '../engine/engine-manager';
-import { resolveClientEngineHost } from '../base/url-util';
 import { executeCommand, registerCommand } from '../base/commands';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
   private static _instance: IvyBrowserViewProvider;
   public static readonly viewType = 'ivyBrowserView';
+  private url = '';
 
   private view?: vscode.WebviewView;
 
-  private constructor(private readonly extensionUri: vscode.Uri, private url: string = '') {}
+  private constructor(readonly extensionUri: vscode.Uri, readonly engineUrl: URL, readonly devWfUiUrl: URL) {}
 
-  private static init(context: vscode.ExtensionContext) {
+  private static init(context: vscode.ExtensionContext, engineUrl: URL, devWfUiUrl: URL) {
     if (!IvyBrowserViewProvider._instance) {
-      IvyBrowserViewProvider._instance = new IvyBrowserViewProvider(context.extensionUri);
+      IvyBrowserViewProvider._instance = new IvyBrowserViewProvider(context.extensionUri, engineUrl, devWfUiUrl);
     }
     return IvyBrowserViewProvider._instance;
   }
 
-  public static register(context: vscode.ExtensionContext) {
-    const provider = IvyBrowserViewProvider.init(context);
+  public static register(context: vscode.ExtensionContext, engineUrl: URL, devContextPath: string) {
+    const resolvedEngineUrl = this.resolveCodespacesEngineHost(engineUrl);
+    const devWfUiUrl = new URL(devContextPath, resolvedEngineUrl);
+    const provider = IvyBrowserViewProvider.init(context, resolvedEngineUrl, devWfUiUrl);
     context.subscriptions.push(
       vscode.window.registerWebviewViewProvider(IvyBrowserViewProvider.viewType, provider, {
         webviewOptions: { retainContextWhenHidden: true }
       })
     );
-    registerCommand('engine.ivyBrowserOpen', context, async (url?: string) => provider.openInBrowser(url));
+    registerCommand('ivyBrowserView.open', context, (url?: string) => provider.open(url));
+    registerCommand('ivyBrowserView.openDevWfUi', context, () => provider.openDevWfUi());
+    registerCommand('ivyBrowserView.openEngineCockpit', context, () =>
+      provider.openUrl(new URL('system/engine-cockpit', resolvedEngineUrl))
+    );
+  }
+
+  private static resolveCodespacesEngineHost(engineUrl: URL): URL {
+    if (process.env.CODESPACES === 'true') {
+      const codespaceEngineHost = `${process.env.CODESPACE_NAME}-${engineUrl.port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+      engineUrl.host = codespaceEngineHost;
+      engineUrl.port = '';
+    }
+    return engineUrl;
   }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -44,24 +58,34 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
           }
           break;
         case 'openHome':
-          IvyEngineManager.instance.openDevWfUi();
+          this.openDevWfUi();
           break;
       }
     });
   }
 
-  public async openInBrowser(url?: string) {
+  private async openUrl(url: URL) {
+    this.refreshWebviewHtml(url.toString());
+  }
+
+  async open(url?: string) {
     if (!url) {
       url =
         (await vscode.window.showInputBox({
           prompt: 'Enter url',
           value: 'https://dev.axonivy.com/'
         })) ?? '';
-    } else {
-      url = resolveClientEngineHost(new URL(url)).toString();
     }
     this.refreshWebviewHtml(url);
-    executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
+  }
+
+  private async openDevWfUi() {
+    this.openUrl(this.devWfUiUrl);
+  }
+
+  async startProcess(processStart: string) {
+    const startUrl = new URL(processStart, this.engineUrl);
+    this.openUrl(startUrl);
   }
 
   private refreshWebviewHtml(url: string) {
@@ -70,6 +94,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
       return;
     }
     this.view.webview.html = this.getWebviewContent(this.view.webview);
+    executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
   }
 
   private getWebviewContent(webview: vscode.Webview) {

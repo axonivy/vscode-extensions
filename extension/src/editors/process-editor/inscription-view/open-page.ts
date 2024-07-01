@@ -35,7 +35,7 @@ async function getValideFilePath(pathString: string) {
 }
 
 async function openUrlInIntegratedBrowser(absolutePath: string) {
-  await IvyBrowserViewProvider.instance.openInBrowser(absolutePath);
+  await IvyBrowserViewProvider.instance.open(absolutePath);
 }
 
 function openInExplorer(absolutePath: string | null) {

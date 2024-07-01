@@ -89,17 +89,17 @@
         "icon": "$(add)"
       },
       {
-        "command": "engine.openDevWfUi",
+        "command": "ivyBrowserView.openDevWfUi",
         "title": "Open Developer Workflow UI",
         "category": "Axon Ivy"
       },
       {
-        "command": "engine.openEngineCockpit",
+        "command": "ivyBrowserView.openEngineCockpit",
         "title": "Open Engine Cockpit",
         "category": "Axon Ivy"
       },
       {
-        "command": "engine.ivyBrowserOpen",
+        "command": "ivyBrowserView.open",
         "title": "Open Ivy Browser",
         "category": "Axon Ivy"
       },
