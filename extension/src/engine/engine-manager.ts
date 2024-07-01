@@ -13,6 +13,8 @@ import { CREATE_PROJECT } from './api/api-constants';
 import { activateProcessEditor } from '../editors/process-editor/activte-process-editor';
 import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
 import FormEditorProvider from '../editors/form-editor/form-editor-provider';
+import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
+import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -117,7 +119,7 @@ export class IvyEngineManager {
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
-    await executeCommand('setContext', 'ivy:hasIvyProjects', true);
+    await IvyProjectExplorer.instance.setProjectExplorerActivationCondition(true);
     if (!this.started) {
       await this.start();
     }
@@ -140,7 +142,7 @@ export class IvyEngineManager {
   }
 
   async ivyProjectDirectories() {
-    return (await executeCommand('ivyProjects.getIvyProjects')) as string[];
+    return IvyProjectExplorer.instance.getIvyProjects();
   }
 
   async stop() {
@@ -160,12 +162,12 @@ export class IvyEngineManager {
   }
 
   private async openInInternalBrowser(postfix: string) {
-    await executeCommand('engine.ivyBrowserOpen', this.resolveUrl(postfix));
+    await IvyBrowserViewProvider.instance.openInBrowser(this.resolveUrl(postfix));
   }
 
   private resolveUrl(postfix: string) {
     postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    return new URL(postfix, this._engineUrl);
+    return new URL(postfix, this._engineUrl).toString();
   }
 
   public static get instance() {

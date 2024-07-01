@@ -24,15 +24,12 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('engine.deployProjects', () => ivyEngineManager.deployProjects());
   registerCmd('engine.buildProjects', () => ivyEngineManager.buildProjects());
   registerCmd('engine.buildAndDeployProjects', () => ivyEngineManager.buildAndDeployProjects());
-  registerCmd('engine.buildAndDeployProject', (ivyProjectDirectory: string) => ivyEngineManager.buildAndDeployProject(ivyProjectDirectory));
-  registerCmd('engine.buildProject', (ivyProjectDirectory: string) => ivyEngineManager.buildProject(ivyProjectDirectory));
-  registerCmd('engine.deployProject', (ivyProjectDirectory: string) => ivyEngineManager.deployProject(ivyProjectDirectory));
   registerCmd('engine.openDevWfUi', () => ivyEngineManager.openDevWfUi());
   registerCmd('engine.openEngineCockpit', () => ivyEngineManager.openEngineCockpit());
   registerCmd('engine.downloadDevEngine', downloadDevEngine);
   registerCmd('engine.setEngineDirectory', () => config.setEngineDirectory());
   registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
-  new IvyProjectExplorer(context);
+  IvyProjectExplorer.init(context);
   activateIvyBrowser(context);
   setStatusBarMessage('Axon Ivy Extension activated');
 

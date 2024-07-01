@@ -20,14 +20,10 @@ type VSCodeCommand = 'revealInExplorer' | 'setContext' | 'vscode.open' | 'copyFi
 type EngineCommand =
   | 'engine.deployProjects'
   | 'engine.buildProjects'
-  | 'engine.deployProject'
-  | 'engine.buildProject'
-  | 'engine.buildAndDeployProject'
   | 'engine.buildAndDeployProjects'
   | 'engine.openDevWfUi'
   | 'engine.openEngineCockpit'
   | 'engine.ivyBrowserOpen'
-  | 'engine.openInExternalBrowser'
   | 'engine.downloadDevEngine'
   | 'engine.setEngineDirectory';
 type ProjectViewCommand =
@@ -35,7 +31,6 @@ type ProjectViewCommand =
   | 'ivyProjects.buildProject'
   | 'ivyProjects.deployProject'
   | 'ivyProjects.buildAndDeployProject'
-  | 'ivyProjects.addProcess'
   | 'ivyProjects.addBusinessProcess'
   | 'ivyProjects.addCallableSubProcess'
   | 'ivyProjects.addWebServiceProcess'
@@ -43,6 +38,5 @@ type ProjectViewCommand =
   | 'ivyProjects.addNewHtmlDialog'
   | 'ivyProjects.addNewFormDialog'
   | 'ivyProjects.addNewOfflineDialog'
-  | 'ivyProjects.getIvyProjects'
   | 'ivyProjects.revealInExplorer';
 type ViewCommand = 'ivyBrowserView.focus' | 'ivyProcessOutline.selectElement';
