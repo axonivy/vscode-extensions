@@ -3,8 +3,8 @@ import { IvyBrowserViewProvider } from './ivy-browser-view-provider';
 import { executeCommand, registerCommand } from '../base/commands';
 import { resolveClientEngineHost } from '../base/url-util';
 
-export async function activateIvyBrowser(context: vscode.ExtensionContext, baseUri: string) {
-  const provider = new IvyBrowserViewProvider(context.extensionUri, baseUri);
+export async function activateIvyBrowser(context: vscode.ExtensionContext) {
+  const provider = new IvyBrowserViewProvider(context.extensionUri);
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(IvyBrowserViewProvider.viewType, provider, {
       webviewOptions: { retainContextWhenHidden: true }

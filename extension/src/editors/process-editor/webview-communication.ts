@@ -14,13 +14,18 @@ const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' 
 const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
-export const setupCommunication = (messenger: Messenger, webviewPanel: vscode.WebviewPanel, messageParticipant?: MessageParticipant) => {
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: vscode.WebviewPanel,
+  messageParticipant?: MessageParticipant
+) => {
   if (messageParticipant === undefined) {
     return;
   }
   const toDispose = new DisposableCollection(
-    new InscriptionWebSocketForwarder(messenger, messageParticipant),
-    new WebSocketForwarder('ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
+    new InscriptionWebSocketForwarder(websocketUrl, messenger, messageParticipant),
+    new WebSocketForwarder(websocketUrl, 'ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage),
     messenger.onNotification(WebviewConnectionReadyNotification, () => handleWebviewReadyNotification(messenger, messageParticipant), {
       sender: messageParticipant
     }),
@@ -44,8 +49,8 @@ const vsCodeThemeToMonacoTheme = (theme: vscode.ColorTheme) => {
 class InscriptionWebSocketForwarder extends WebSocketForwarder {
   private readonly sendInscriptionNotification: SendInscriptionNotification;
 
-  constructor(messenger: Messenger, messageParticipant: MessageParticipant) {
-    super('ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
+  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant) {
+    super(websocketUrl, 'ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
     this.sendInscriptionNotification = (type: string) =>
       this.messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }));
   }

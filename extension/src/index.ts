@@ -33,7 +33,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCmd('engine.setEngineDirectory', () => config.setEngineDirectory());
   registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
   new IvyProjectExplorer(context);
-  activateIvyBrowser(context, '');
+  activateIvyBrowser(context);
   setStatusBarMessage('Axon Ivy Extension activated');
 
   return messenger.diagnosticApi();

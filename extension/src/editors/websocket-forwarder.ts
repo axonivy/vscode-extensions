@@ -9,8 +9,8 @@ export class WebSocketForwarder implements vscode.Disposable {
   readonly webSocket: WebSocket;
 
   constructor(
-    websocketUrl: URL,
-    websocketEndpoint: 'ivy-inscription-lsp' | 'ivy-script-lsp' | 'ivy-form-lsp' | 'ivy-config-lsp',
+    readonly websocketUrl: URL,
+    readonly websocketEndpoint: 'ivy-inscription-lsp' | 'ivy-script-lsp' | 'ivy-form-lsp' | 'ivy-config-lsp',
     readonly messenger: Messenger,
     readonly messageParticipant: MessageParticipant,
     readonly notificationType: NotificationType<unknown>

@@ -9,7 +9,8 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
 
   constructor(
     protected readonly extensionContext: vscode.ExtensionContext,
-    protected override readonly glspVscodeConnector: GlspVscodeConnector
+    protected override readonly glspVscodeConnector: GlspVscodeConnector,
+    readonly websocketUrl: URL
   ) {
     super(glspVscodeConnector);
   }
@@ -21,7 +22,7 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
     clientId: string
   ): Promise<void> {
     const client = this.glspVscodeConnector['clientMap'].get(clientId);
-    setupCommunication(this.glspVscodeConnector.messenger, webviewPanel, client?.webviewEndpoint.messageParticipant);
+    setupCommunication(this.websocketUrl, this.glspVscodeConnector.messenger, webviewPanel, client?.webviewEndpoint.messageParticipant);
     webviewPanel.webview.options = { enableScripts: true };
     webviewPanel.webview.html = createWebViewContent(this.extensionContext, webviewPanel.webview, 'process-editor');
   }

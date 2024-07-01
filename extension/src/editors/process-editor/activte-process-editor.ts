@@ -26,7 +26,7 @@ export function activateProcessEditor(context: vscode.ExtensionContext, websocke
 
   const customEditorProvider = vscode.window.registerCustomEditorProvider(
     ProcessEditorProvider.viewType,
-    new ProcessEditorProvider(context, ivyVscodeConnector),
+    new ProcessEditorProvider(context, ivyVscodeConnector, websocketUrl),
     {
       webviewOptions: { retainContextWhenHidden: true },
       supportsMultipleEditorsPerDocument: false
