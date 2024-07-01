@@ -42,7 +42,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     return engineUrl;
   }
 
-  public resolveWebviewView(webviewView: vscode.WebviewView) {
+  resolveWebviewView(webviewView: vscode.WebviewView) {
     this.view = webviewView;
     webviewView.webview.options = { enableForms: true, enableScripts: true };
     webviewView.webview.html = this.getWebviewContent(webviewView.webview);
@@ -90,10 +90,9 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   private refreshWebviewHtml(url: string) {
     this.url = url;
-    if (!this.view) {
-      return;
+    if (this.view) {
+      this.view.webview.html = this.getWebviewContent(this.view.webview);
     }
-    this.view.webview.html = this.getWebviewContent(this.view.webview);
     executeCommand(`${IvyBrowserViewProvider.viewType}.focus`);
   }
 
