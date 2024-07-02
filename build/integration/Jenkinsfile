@@ -34,24 +34,38 @@ pipeline {
     }
 
     stage('Playwright Tests') {
-      agent {
+      parallel {
+
+        stage('Engine') {
+                        agent {
         docker {
           image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
-          args '-e JENKINS_PIPELINE="linux"'
           reuseNode true
         }
       }
-
-      steps {
-        script {
-          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          steps {
             sh 'extension/AxonIvyEngine/bin/AxonIvyEngine'
-            sh 'yarn test:playwright:download:vscode'
-            sh 'xvfb-run --auto-servernum yarn test:playwright'
           }
-          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
-          withChecks('WebTests') {
-            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+        }
+
+        stage('Testing') {
+                        agent {
+        docker {
+          image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
+          reuseNode true
+        }
+      }
+          steps {
+            script {
+              catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                sh 'yarn test:playwright:download:vscode'
+                sh 'xvfb-run --auto-servernum yarn test:playwright'
+              }
+              archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+              withChecks('WebTests') {
+                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+              }
+            }
           }
         }
       }
