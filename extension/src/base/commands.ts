@@ -21,9 +21,6 @@ type EngineCommand =
   | 'engine.deployProjects'
   | 'engine.buildProjects'
   | 'engine.buildAndDeployProjects'
-  | 'engine.openDevWfUi'
-  | 'engine.openEngineCockpit'
-  | 'engine.ivyBrowserOpen'
   | 'engine.downloadDevEngine'
   | 'engine.setEngineDirectory';
 type ProjectViewCommand =
@@ -39,4 +36,9 @@ type ProjectViewCommand =
   | 'ivyProjects.addNewFormDialog'
   | 'ivyProjects.addNewOfflineDialog'
   | 'ivyProjects.revealInExplorer';
-type ViewCommand = 'ivyBrowserView.focus' | 'ivyProcessOutline.selectElement';
+type ViewCommand =
+  | 'ivyProcessOutline.selectElement'
+  | 'ivyBrowserView.focus'
+  | 'ivyBrowserView.open'
+  | 'ivyBrowserView.openDevWfUi'
+  | 'ivyBrowserView.openEngineCockpit';

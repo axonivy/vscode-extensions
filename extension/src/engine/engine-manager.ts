@@ -21,9 +21,7 @@ export class IvyEngineManager {
 
   private readonly mavenBuilder: MavenBuilder;
   private readonly engineRunner: EngineRunner;
-  private _engineUrl: URL;
   private ivyEngineApi: IvyEngineApi;
-  private devContextPath: string;
   private started = false;
 
   private constructor(readonly context: vscode.ExtensionContext) {
@@ -44,13 +42,14 @@ export class IvyEngineManager {
       return;
     }
     this.started = true;
-    this._engineUrl = await this.resolveEngineUrl();
-    this.ivyEngineApi = new IvyEngineApi(this._engineUrl.toString());
-    this.devContextPath = await this.ivyEngineApi.devContextPath;
-    this.devContextPath += this.devContextPath.endsWith('/') ? '' : '/';
+    const engineUrl = await this.resolveEngineUrl();
+    this.ivyEngineApi = new IvyEngineApi(engineUrl.toString());
+    let devContextPath = await this.ivyEngineApi.devContextPath;
+    devContextPath += devContextPath.endsWith('/') ? '' : '/';
     await this.initProjects();
     await this.deployProjects();
-    const websocketUrl = new URL(this.devContextPath, toWebSocketUrl(this._engineUrl));
+    const websocketUrl = new URL(devContextPath, toWebSocketUrl(engineUrl));
+    IvyBrowserViewProvider.register(this.context, engineUrl, devContextPath);
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
     VariableEditorProvider.register(this.context, websocketUrl);
@@ -149,35 +148,10 @@ export class IvyEngineManager {
     await this.engineRunner.stop();
   }
 
-  async openDevWfUi() {
-    await this.openInInternalBrowser(this.devContextPath);
-  }
-
-  async openEngineCockpit() {
-    await this.openInInternalBrowser('system/engine-cockpit');
-  }
-
-  async startProcess(processStartUri: string) {
-    await this.openInInternalBrowser(processStartUri);
-  }
-
-  private async openInInternalBrowser(postfix: string) {
-    await IvyBrowserViewProvider.instance.openInBrowser(this.resolveUrl(postfix));
-  }
-
-  private resolveUrl(postfix: string) {
-    postfix = postfix.startsWith('/') ? postfix.replace('/', '') : postfix;
-    return new URL(postfix, this._engineUrl).toString();
-  }
-
   public static get instance() {
     if (IvyEngineManager._instance) {
       return IvyEngineManager._instance;
     }
     throw new Error('IvyEngineManager has not been initialized');
-  }
-
-  public get engineUrl() {
-    return this._engineUrl;
   }
 }
