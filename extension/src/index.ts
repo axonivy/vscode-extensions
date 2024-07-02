@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import * as vscode from 'vscode';
 import { Messenger, MessengerDiagnostic } from 'vscode-messenger';
-import { Command, registerCommand } from './base/commands';
+import { registerCommand } from './base/commands';
 import { config } from './base/configurations';
-import { setStatusBarMessage } from './base/status-bar-message';
 import { addDevContainer } from './dev-container/command';
 import { IvyEngineManager } from './engine/engine-manager';
 import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
+import { setStatusBarIcon } from './base/status-bar';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -18,16 +18,14 @@ export const downloadDevEngine = () =>
 export async function activate(context: vscode.ExtensionContext): Promise<MessengerDiagnostic> {
   ivyEngineManager = IvyEngineManager.init(context);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
-  registerCmd('engine.deployProjects', () => ivyEngineManager.deployProjects());
-  registerCmd('engine.buildProjects', () => ivyEngineManager.buildProjects());
-  registerCmd('engine.buildAndDeployProjects', () => ivyEngineManager.buildAndDeployProjects());
-  registerCmd('engine.downloadDevEngine', downloadDevEngine);
-  registerCmd('engine.setEngineDirectory', () => config.setEngineDirectory());
-  registerCmd('ivy.addDevContainer', () => addDevContainer(context.extensionUri));
+  registerCommand('engine.deployProjects', context, () => ivyEngineManager.deployProjects());
+  registerCommand('engine.buildProjects', context, () => ivyEngineManager.buildProjects());
+  registerCommand('engine.buildAndDeployProjects', context, () => ivyEngineManager.buildAndDeployProjects());
+  registerCommand('engine.downloadDevEngine', context, downloadDevEngine);
+  registerCommand('engine.setEngineDirectory', context, () => config.setEngineDirectory());
+  registerCommand('ivy.addDevContainer', context, () => addDevContainer(context.extensionUri));
   IvyProjectExplorer.init(context);
-  setStatusBarMessage('Axon Ivy Extension activated');
+  setStatusBarIcon();
 
   return messenger.diagnosticApi();
 }

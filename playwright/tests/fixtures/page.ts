@@ -55,7 +55,7 @@ async function launchBrowser(workspace: string): Promise<Page> {
 
 async function initialize(page: Page) {
   const fileExplorer = new FileExplorer(page);
-  await fileExplorer.hasAnyStatusMessage();
+  await fileExplorer.hasIvyStatusBarIcon();
   await fileExplorer.saveAllFiles();
   await fileExplorer.closeAllTabs();
   await fileExplorer.collapseFolders();

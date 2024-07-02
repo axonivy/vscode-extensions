@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { test } from './fixtures/page';
 import { OutputView } from './page-objects/output-view';
-import { noEngineWorkspacePath, noProjectWorkspacePath } from './workspaces/workspace';
+import { embeddedEngineWorkspace, noEngineWorkspacePath, noProjectWorkspacePath } from './workspaces/workspace';
 import { SettingsView } from './page-objects/settings-view';
 
 test.describe('Engine', () => {
@@ -11,8 +11,8 @@ test.describe('Engine', () => {
     await new OutputView(page).closeAllTabs();
   });
 
-  test('check if embedded engine has started', async ({ page: fixturePage }) => {
-    page = fixturePage;
+  test('check if embedded engine has started', async ({ pageFor }) => {
+    page = await pageFor(embeddedEngineWorkspace);
     const outputview = new OutputView(page);
     await outputview.isTabVisible();
     await outputview.isChecked();

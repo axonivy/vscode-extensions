@@ -25,6 +25,8 @@ Playwright tests can be executed against VSCode Insiders or openvscode-server
 
 ### VS Code Insiders
 
+Make sure that an Engine is running on localhost:8080. It will be used as the backend for testing.
+
 - `yarn test:playwright:download:vscode`: download latest VSCode Insiders
 - `yarn test:playwright`: run all tests against electron app
 
@@ -32,7 +34,7 @@ Playwright tests can be executed against VSCode Insiders or openvscode-server
 
 Build the openvscode-server docker image using the Dockerfile located under `/build/integration/openvscode-server/server/Dockerfile`, e.g.:
 
-- `docker build -t openvscodeserver -f build/integration/openvscode-server/server/Dockerfile .`.
+- `docker build -t openvscodeserver -f build/integration/openvscode-server/Dockerfile .`.
 
 Then run the container using
 

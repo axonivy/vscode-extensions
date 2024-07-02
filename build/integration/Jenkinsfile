@@ -37,7 +37,6 @@ pipeline {
       agent {
         docker {
           image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
-          args '-e JENKINS_PIPELINE="linux"'
           reuseNode true
         }
       }
@@ -45,6 +44,8 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'export JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
+            sh 'extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon'
             sh 'yarn test:playwright:download:vscode'
             sh 'xvfb-run --auto-servernum yarn test:playwright'
           }

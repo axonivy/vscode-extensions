@@ -1,5 +1,4 @@
 {
   "engine.runByExtension": false,
-  "project.excludePattern": "**/excluded/**",
   "window.zoomLevel": -1
 }
