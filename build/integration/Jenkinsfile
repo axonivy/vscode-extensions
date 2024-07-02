@@ -43,26 +43,17 @@ pipeline {
       }
 
       steps {
-        parallel(
-          Engine : {
-            script {
-              sh 'extension/AxonIvyEngine/bin'
-            }
-          },
-          Testing : {
-            script {
-              catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                sh 'yarn test:playwright:download:vscode'
-                sh 'xvfb-run --auto-servernum yarn test:playwright'
-              }
-              archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
-              withChecks('WebTests') {
-                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
-              }
-            }
-
+        script {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'nohup bash -c "extension/AxonIvyEngine/bin/AxonIvyEngine &"'
+            sh 'yarn test:playwright:download:vscode'
+            sh 'xvfb-run --auto-servernum yarn test:playwright'
           }
-        )
+          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+          }
+        }
       }
     }
   }
