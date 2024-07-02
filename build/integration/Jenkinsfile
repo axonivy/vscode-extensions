@@ -34,28 +34,22 @@ pipeline {
     }
 
     stage('Playwright Tests') {
-      parallel {
-
-        stage('Engine') {
-                        agent {
+      agent {
         docker {
           image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
+          args '-e JENKINS_PIPELINE="linux"'
           reuseNode true
         }
       }
-          steps {
-            sh 'extension/AxonIvyEngine/bin/AxonIvyEngine'
-          }
-        }
 
-        stage('Testing') {
-                        agent {
-        docker {
-          image 'docker-registry.ivyteam.io/axonivy/playwright-jdk17:dev'
-          reuseNode true
-        }
-      }
-          steps {
+      steps {
+        parallel(
+          Engine : {
+            script {
+              sh 'extension/AxonIvyEngine/bin'
+            }
+          },
+          Testing : {
             script {
               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                 sh 'yarn test:playwright:download:vscode'
@@ -66,8 +60,9 @@ pipeline {
                 junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
               }
             }
+
           }
-        }
+        )
       }
     }
   }
