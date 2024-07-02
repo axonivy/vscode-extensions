@@ -5,7 +5,6 @@ import { deleteRequest, getRequest, pollWithProgress, postRequest } from './requ
 import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
-import { setStatusBarMessage } from '../../base/status-bar-message';
 import {
   API_PATH,
   BUILD_PROJECTS,
@@ -19,6 +18,7 @@ import {
   Request,
   WATCH_PROJECTS
 } from './api-constants';
+import { setStatusBarMessage } from '../../base/status-bar';
 
 export class IvyEngineApi {
   private readonly _devContextPath: Promise<string>;

@@ -6,7 +6,6 @@ import { IvyEngineApi } from './api/engine-api';
 import { NewProjectParams } from '../project-explorer/new-project';
 import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
-import { setStatusBarMessage } from '../base/status-bar-message';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
 import { CREATE_PROJECT } from './api/api-constants';
@@ -15,6 +14,7 @@ import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
+import { setStatusBarMessage } from '../base/status-bar';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;

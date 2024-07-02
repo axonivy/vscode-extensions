@@ -37,8 +37,8 @@ export class PageObject {
     await expect(this.page.locator('#status\\.extensionMessage')).toBeHidden();
   }
 
-  async hasAnyStatusMessage() {
-    await expect(this.page.locator('#status\\.extensionMessage')).toBeVisible();
+  async hasIvyStatusBarIcon() {
+    await expect(this.page.locator('div.statusbar-item:has-text("Axon Ivy")')).toBeVisible();
   }
 
   async provideUserInput(input?: string) {
