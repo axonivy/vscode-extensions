@@ -34,7 +34,7 @@ Make sure that an Engine is running on localhost:8080. It will be used as the ba
 
 Build the openvscode-server docker image using the Dockerfile located under `/build/integration/openvscode-server/server/Dockerfile`, e.g.:
 
-- `docker build -t openvscodeserver -f build/integration/openvscode-server/server/Dockerfile .`.
+- `docker build -t openvscodeserver -f build/integration/openvscode-server/Dockerfile .`.
 
 Then run the container using
 
