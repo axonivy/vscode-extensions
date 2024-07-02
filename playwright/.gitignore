@@ -7,3 +7,5 @@ node_modules/
 **/target
 **/logs
 **/webcontent
+**/src_dataClasses
+**/src_wsproc

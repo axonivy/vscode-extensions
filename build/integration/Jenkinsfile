@@ -45,6 +45,7 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'extension/AxonIvyEngine/bin/AxonIvyEngine'
             sh 'yarn test:playwright:download:vscode'
             sh 'xvfb-run --auto-servernum yarn test:playwright'
           }

@@ -1,22 +1,20 @@
 import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
-import { multiProjectWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
+import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
-import path from 'path';
 
 test.describe('Create Process', () => {
   let page: Page;
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
   let processName: string;
-  const projectName = 'prebuiltProject';
-  const cleanUp = () => removeFromWorkspace(path.join(multiProjectWorkspacePath, projectName), 'processes');
+  const cleanUp = () => removeFromWorkspace(prebuiltWorkspacePath, 'processes');
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
-    page = await pageFor(multiProjectWorkspacePath, testInfo.titlePath[1]);
+    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
   });
@@ -36,7 +34,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add business process and execute it', async () => {
-    await explorer.addProcess(projectName, processName, 'Business Process');
+    await explorer.addProcess(processName, 'Business Process');
     await explorer.hasNoStatusMessage();
     await explorer.hasNode(`${processName}.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
@@ -45,7 +43,7 @@ test.describe('Create Process', () => {
   });
 
   test('Assert that process gets redeployed after editing', async () => {
-    await explorer.addProcess(projectName, processName, 'Business Process');
+    await explorer.addProcess(processName, 'Business Process');
     await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.hasNoStatusMessage();
@@ -59,7 +57,7 @@ test.describe('Create Process', () => {
   });
 
   test('Add nested business process', async () => {
-    await explorer.addProcess(projectName, `parent1/parent2/${processName}`, 'Business Process');
+    await explorer.addProcess(`parent1/parent2/${processName}`, 'Business Process');
     await explorer.hasNode('parent1');
     await explorer.hasNode('parent2');
     await explorer.hasNode(`${processName}.p.json`);
@@ -68,14 +66,14 @@ test.describe('Create Process', () => {
   });
 
   test('Add callable sub process', async () => {
-    await explorer.addProcess(projectName, processName, 'Callable Sub Process');
+    await explorer.addProcess(processName, 'Callable Sub Process');
     await explorer.hasNode(`${processName}.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:callSubStart');
     await expect(start).toBeVisible();
   });
 
   test('Add web service process', async () => {
-    await explorer.addProcess(projectName, processName, 'Web Service Process');
+    await explorer.addProcess(processName, 'Web Service Process');
     await explorer.hasNode(`${processName}.p.json`);
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
     await expect(start).toBeVisible();

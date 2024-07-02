@@ -31,10 +31,10 @@ test.describe('Project Explorer', () => {
     const page = await pageFor(multiProjectWorkspacePath);
     const explorer = new ProjectExplorerView(page);
     await explorer.openView();
-    await explorer.selectNode('prebuiltProject');
-    await explorer.revealInExplorer('dataclasses');
+    await explorer.selectNode('ivy-project-1');
+    await explorer.revealInExplorer('dummy.txt');
     const fileExplorer = new FileExplorer(page);
-    await fileExplorer.isSelected('dataclasses');
+    await fileExplorer.isSelected('dummy.txt');
     await explorer.closeView();
   });
 });

@@ -81,14 +81,14 @@ export class FileExplorer extends ExplorerView {
     await this.hasNode(rootFolder + path.sep + projectName);
   }
 
-  async addProcess(projectName: string, processName: string, kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process') {
-    await this.selectNode(projectName);
+  async addProcess(processName: string, kind: 'Business Process' | 'Callable Sub Process' | 'Web Service Process') {
+    await this.selectNode('config');
     await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(processName);
   }
 
-  async addUserDialog(projectName: string, dialogName: string, namespace: string, kind: 'Html Dialog' | 'Offline Dialog' | 'Form Dialog') {
-    await this.selectNode(projectName);
+  async addUserDialog(dialogName: string, namespace: string, kind: 'Html Dialog' | 'Offline Dialog' | 'Form Dialog') {
+    await this.selectNode('config');
     await this.executeCommand('Axon Ivy: New ' + kind);
     await this.provideUserInput(dialogName);
     await this.provideUserInput(namespace);
