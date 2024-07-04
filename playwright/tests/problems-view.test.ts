@@ -47,7 +47,6 @@ test.describe('Problems View', () => {
     const monacoEditor = inscriptionView.monacoEditor();
     await monacoEditor.click();
     await monacoEditor.pressSequentially('make test error');
-    await inscriptionView.sectionFor('Code').click();
     await processEditor.hasError(script);
     const problemsView = await ProblemsView.initProblemsView(page);
     await problemsView.hasError("Output code: Unexpected token: identifier 'error'", '18D9CDFA8F58DA2B-f7');

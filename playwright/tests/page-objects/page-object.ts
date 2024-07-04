@@ -4,8 +4,7 @@ export class PageObject {
   constructor(readonly page: Page) {}
 
   async executeCommand(command: string, ...userInputs: Array<string>) {
-    await expect(this.page.locator('div.command-center')).toBeAttached();
-    await this.page.keyboard.press('F1');
+    await this.page.locator('div.command-center').click();
     await expect(this.page.locator('.quick-input-list')).toBeVisible();
     await this.quickInputBox()
       .locator('input.input')
