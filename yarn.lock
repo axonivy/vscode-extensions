@@ -15,25 +15,25 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@axonivy/form-editor-core@~11.4.0-next.120":
-  version "11.4.0-next.120"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.120.tgz#c3c6b5463f33feef99c7483a5b87aaa8104f317d"
-  integrity sha512-lq0hAJufvMEqeeq8giJubfTwcpK1v0ECMBMr9JZplxn/z9pfv01DxnU5fx6Hdso0TPrpcUJsvWx9MEuIoqNAtQ==
+"@axonivy/form-editor-core@~11.4.0-next.122":
+  version "11.4.0-next.122"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-core/-/form-editor-core-11.4.0-next.122.tgz#6ad35f087496f98cd1b8192964f294c0a98f9257"
+  integrity sha512-1WvyxJiJBAsBs9nljJpEQSeSle0bi2Nk9lumhNjdDS3RpnWTK1T938KeMIX9qhIedhuVJ2Tfxdr2M9XOSKt9ww==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.120+d096ff6"
+    "@axonivy/form-editor-protocol" "11.4.0-next.122+393b2fd"
     "@axonivy/jsonrpc" "~11.4.0-next.160"
 
-"@axonivy/form-editor-protocol@11.4.0-next.120+d096ff6":
-  version "11.4.0-next.120"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.120.tgz#26d707f858da069a28f7f919f58a738b306d788a"
-  integrity sha512-M+M3INsHna2NiaFPteTw77goukbvc6qycDxqiqG3y/XhfDKJ5sHlTXUqeTXYLwG6loMeC6WlTXP5EPRMDyFaZA==
+"@axonivy/form-editor-protocol@11.4.0-next.122+393b2fd":
+  version "11.4.0-next.122"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor-protocol/-/form-editor-protocol-11.4.0-next.122.tgz#728e897dbb15fa1919855ef7743e023510ed56f9"
+  integrity sha512-GDeBEE0AIrA855E7QInvKegLjv4OkbFRX2IGGLjdbiIg4ujRuNFFsRNcSHF+wcQ02NPwvN5c6lr2HFJLj3ryXw==
 
-"@axonivy/form-editor@~11.4.0-next.120":
-  version "11.4.0-next.120"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.120.tgz#2a6db8b2be83ae2fb92a9fc5712cc1a9233ef4b6"
-  integrity sha512-aiwLgfUEoGJqtvN3qII+IEDKL0UiKN5qCuwKJDTXHYN9NbGUQxr2ZdjZare/pqzTkAbgDA1fuJtN/R9ctwQNeA==
+"@axonivy/form-editor@~11.4.0-next.122":
+  version "11.4.0-next.122"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/form-editor/-/form-editor-11.4.0-next.122.tgz#fe28de02acf8a945a5866b99b6007be81bf96df4"
+  integrity sha512-KFEmPGfeYDaU6PkSuYOJ54MaWJ1LiqQm/0spZdyzHDVsKTmmvSF3hKk/X12rS4W8mScddUyylMClJXzS17wNsQ==
   dependencies:
-    "@axonivy/form-editor-protocol" "11.4.0-next.120+d096ff6"
+    "@axonivy/form-editor-protocol" "11.4.0-next.122+393b2fd"
     "@axonivy/ui-components" "~11.4.0-next.160"
     "@axonivy/ui-icons" "~11.4.0-next.160"
     "@dnd-kit/core" "^6.1.0"
@@ -43,25 +43,25 @@
     react-error-boundary "^4.0.13"
     uuid "9.0.1"
 
-"@axonivy/inscription-core@11.4.0-next.1127+241ac6db", "@axonivy/inscription-core@~11.4.0-next.1125":
-  version "11.4.0-next.1127"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-core/-/inscription-core-11.4.0-next.1127.tgz#41b6bb1318bb9bd1e8bd99d17ba9d45316ae5e66"
-  integrity sha512-vHOmMhtkFF9J1LJ6V73ucMICYa11681jwLv5g710Sdls+8y1hJBuGNGGCA8T0UK6b8ewFBFAHU3e9obgBJql9A==
+"@axonivy/inscription-core@11.4.0-next.1145+77cb69b5", "@axonivy/inscription-core@~11.4.0-next.1143":
+  version "11.4.0-next.1145"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-core/-/inscription-core-11.4.0-next.1145.tgz#9313bb7d32c758c56718519eb398cee4e515d7a0"
+  integrity sha512-B9ke0J9+/Vb2y3UPi8Hj0yo0v+exce/ubluqIvOlGKdmkmz9Pa/qmKlULJvkzD08yy3mka8J95WjgtVTGXYHkQ==
   dependencies:
-    "@axonivy/inscription-protocol" "11.4.0-next.1127+241ac6db"
+    "@axonivy/inscription-protocol" "11.4.0-next.1145+77cb69b5"
     "@axonivy/jsonrpc" "~11.4.0-next.156"
     monaco-editor "^0.44.0"
     monaco-editor-workers "^0.44.0"
     monaco-languageclient "^6.6.1"
     vscode-languageserver-protocol "^3.17.5"
 
-"@axonivy/inscription-editor@~11.4.0-next.1125":
-  version "11.4.0-next.1127"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-editor/-/inscription-editor-11.4.0-next.1127.tgz#98f1c3ebb53b9f92cb1a5f2c35ec9f40c4638ad2"
-  integrity sha512-RirKSyrvDBg7jXJpYlE7gR4SSNsakWVnh0My62pO7429C8O0epc3Ry0OHVeHalQ+XuWHoTRLgO5XqH2TuLV0Dg==
+"@axonivy/inscription-editor@~11.4.0-next.1143":
+  version "11.4.0-next.1145"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-editor/-/inscription-editor-11.4.0-next.1145.tgz#a2017054fbb45b76c8e98c0eff7c0a4f6ba6f95e"
+  integrity sha512-3ooMrLt37TzKENochfN9JnVYdGcafQeoJTbb9lFa9SnVcYep/KmU2si4ytqrXR45Ekw854j9LrAJvoLa8vtSog==
   dependencies:
-    "@axonivy/inscription-core" "11.4.0-next.1127+241ac6db"
-    "@axonivy/inscription-protocol" "11.4.0-next.1127+241ac6db"
+    "@axonivy/inscription-core" "11.4.0-next.1145+77cb69b5"
+    "@axonivy/inscription-protocol" "11.4.0-next.1145+77cb69b5"
     "@axonivy/ui-components" "~11.4.0-next.156"
     "@monaco-editor/react" "^4.6.0"
     "@radix-ui/react-accordion" "^1.1.2"
@@ -82,10 +82,10 @@
     react-aria "^3.31.0"
     react-error-boundary "^4.0.12"
 
-"@axonivy/inscription-protocol@11.4.0-next.1127+241ac6db", "@axonivy/inscription-protocol@~11.4.0-next.1125":
-  version "11.4.0-next.1127"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-protocol/-/inscription-protocol-11.4.0-next.1127.tgz#53ae50004760bb4202c29edd7a5ee064e9c77247"
-  integrity sha512-SYzJ4vII2+hV6eghLSnzJJw0LGks1Sked7u5eKo8T8881arj2Wl2xh0bqmYL46nls3hVL/+Dic/2XWVFSZU3Ig==
+"@axonivy/inscription-protocol@11.4.0-next.1145+77cb69b5", "@axonivy/inscription-protocol@~11.4.0-next.1143":
+  version "11.4.0-next.1145"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/inscription-protocol/-/inscription-protocol-11.4.0-next.1145.tgz#bb405014187149836b575c04b2c7796728addcb6"
+  integrity sha512-QJEPam8pa7Dzvkfsid2sa36kAVqjXF5m66usqk2oqt0gBEraFb5IlmL1IWLmf12fenkvVRwDCiqbuivSmNzttQ==
 
 "@axonivy/jsonrpc@~11.4.0-next.156":
   version "11.4.0-next.156"
@@ -103,41 +103,44 @@
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/jsonrpc@~11.4.0-next.202":
-  version "11.4.0-next.204"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/jsonrpc/-/jsonrpc-11.4.0-next.204.tgz#aaeeaa04260e65e0e6049f16b4a9d151c9c68be7"
-  integrity sha512-l1j8vjWmotMq9b5GG1Mr4xkfA26hSlMfoDLBHIfuUT9AAWZbvTf/8tNfLYaf4DQDI3/HF5uMPhOajRtp/gO7hg==
+"@axonivy/jsonrpc@~11.4.0-next.227":
+  version "11.4.0-next.227"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/jsonrpc/-/jsonrpc-11.4.0-next.227.tgz#18c7ed8777dcbd1c86dfc4460b342e02f490a2c4"
+  integrity sha512-IrdG4Vh+Pz0IJ5kLWfiWu6Sy7/HxpCH52P1ulmj30fFUhS252VLee3P+8g38TovWJer6e5vxCnEu6VFylua7KQ==
   dependencies:
     vscode-jsonrpc "^8.2.0"
     vscode-ws-jsonrpc "^3.0.0"
 
-"@axonivy/process-editor-inscription@~11.4.0-next.1088":
-  version "11.4.0-next.1088"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1088.tgz#fc72359f65e56844abc18850d764baa16ef4aa75"
-  integrity sha512-PbYW1mQ2UeWlI0AiRp2w1uLlaBDlOfq/lgNLfgDFyt2DTzSCnzHB1E4voTK5tZ6Acj99eWhQtUMgtptnyzH0lw==
+"@axonivy/process-editor-inscription@~11.4.0-next.1099":
+  version "11.4.0-next.1099"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-inscription/-/process-editor-inscription-11.4.0-next.1099.tgz#ffce136f9fc7451561da650435bb0f9c5db31d36"
+  integrity sha512-w58Ewzi6VwvMENh/0HsPVG9z3/A5ruh7qj0xCYEYHyuXv9wuaDNxqGuoB8NXs8F9TubHtKYsgC/SbN/8sxd1Qg==
   dependencies:
-    "@axonivy/inscription-core" "~11.4.0-next.1125"
-    "@axonivy/inscription-editor" "~11.4.0-next.1125"
-    "@axonivy/inscription-protocol" "~11.4.0-next.1125"
-    "@axonivy/process-editor" "11.4.0-next.1088+82ecee2"
+    "@axonivy/inscription-core" "~11.4.0-next.1143"
+    "@axonivy/inscription-editor" "~11.4.0-next.1143"
+    "@axonivy/inscription-protocol" "~11.4.0-next.1143"
+    "@axonivy/process-editor" "11.4.0-next.1099+a702dad"
+    "@codingame/monaco-vscode-editor-service-override" "1.83.3"
+    "@codingame/monaco-vscode-languages-service-override" "1.83.3"
+    "@codingame/monaco-vscode-model-service-override" "1.83.3"
     "@eclipse-glsp/client" next
     react "^18.2.0"
     react-dom "^18.2.0"
 
-"@axonivy/process-editor-protocol@11.4.0-next.1088+82ecee2", "@axonivy/process-editor-protocol@~11.4.0-next.1088":
-  version "11.4.0-next.1088"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1088.tgz#57ba04b670838589d1b5ddf54c9260a340803daa"
-  integrity sha512-csEIwz1jDVuR7OtWKLStpH02AgiYPdcLXjlFwUHNeenTQrqMYDf1HIJXQZ84hIyOaf/t6t5RNjmNDxp0IeHPJg==
+"@axonivy/process-editor-protocol@11.4.0-next.1099+a702dad", "@axonivy/process-editor-protocol@~11.4.0-next.1099":
+  version "11.4.0-next.1099"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor-protocol/-/process-editor-protocol-11.4.0-next.1099.tgz#9259d0c536e8c8132e8e4b88e8bc104de050ddb2"
+  integrity sha512-X17vlM/pDFQdAmql0JJ56zacBbiLiYLb7VAKQ5ESV1SIzVv15LY5tL42yb8sr7FdVrkGCgYvFACJrrbmMFPANw==
   dependencies:
     "@eclipse-glsp/protocol" next
 
-"@axonivy/process-editor@11.4.0-next.1088+82ecee2", "@axonivy/process-editor@~11.4.0-next.1088":
-  version "11.4.0-next.1088"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1088.tgz#549a134ac568393810b0f5eb91b44af9ce8fc1d8"
-  integrity sha512-H2O8PTOh9FyfWQ+ZR9fde35WgEZFe8HI81RKzEteEzuUNeQN2h2vZni9qzik4O8A0i8DJ26TkU5xra3a+70+5Q==
+"@axonivy/process-editor@11.4.0-next.1099+a702dad", "@axonivy/process-editor@~11.4.0-next.1099":
+  version "11.4.0-next.1099"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/process-editor/-/process-editor-11.4.0-next.1099.tgz#f31fe8f9043690d708d0c06eb7179cea69925805"
+  integrity sha512-VyBmRyVP8rkMxIJJisJ+hEJa5VS6dMmbbJwRTkIXsAYHkd+hhOcyTzo/jhLJRT8VcnCelCAohpFMhBbRTAQiew==
   dependencies:
-    "@axonivy/process-editor-protocol" "11.4.0-next.1088+82ecee2"
-    "@axonivy/ui-icons" "~11.4.0-next.160"
+    "@axonivy/process-editor-protocol" "11.4.0-next.1099+a702dad"
+    "@axonivy/ui-icons" "~11.4.0-next.219"
     "@eclipse-glsp/client" next
     showdown "^2.1.0"
     toastify-js "1.12.0"
@@ -187,48 +190,50 @@
     react-resizable-panels "^2.0.13"
     sonner "^1.4.41"
 
-"@axonivy/ui-components@~11.4.0-next.202":
-  version "11.4.0-next.204"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-components/-/ui-components-11.4.0-next.204.tgz#cfdffb02c01b58449b2076a2a156c8e113262fec"
-  integrity sha512-RQN+E0J8hZXRAg1CwdA2iKHtwdSFWRbReHXwVRI/5oU4CfHf0OqLCMM4O+hu/PIHSBcpskXy8/qodas2DCXZmQ==
+"@axonivy/ui-components@~11.4.0-next.227":
+  version "11.4.0-next.227"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-components/-/ui-components-11.4.0-next.227.tgz#aab4780ae3d3679f532cd5bbe1962e7cfc52c257"
+  integrity sha512-3cKyhqg2sYXDHu1koiERhFc45zVde1FhRxYOHwRiXmIxd0XvKgaSvWJzYfSqxMmNddie8ULdefp+5N3ljzjXZw==
   dependencies:
-    "@radix-ui/react-accordion" "^1.1.2"
-    "@radix-ui/react-checkbox" "^1.0.4"
-    "@radix-ui/react-collapsible" "^1.0.3"
-    "@radix-ui/react-dialog" "^1.0.5"
-    "@radix-ui/react-label" "^2.0.2"
-    "@radix-ui/react-popover" "^1.0.7"
-    "@radix-ui/react-radio-group" "^1.1.3"
-    "@radix-ui/react-select" "^2.0.0"
-    "@radix-ui/react-separator" "^1.0.3"
-    "@radix-ui/react-switch" "^1.0.3"
-    "@radix-ui/react-tabs" "^1.0.4"
-    "@radix-ui/react-tooltip" "^1.0.7"
+    "@radix-ui/react-accordion" "1.1.2"
+    "@radix-ui/react-checkbox" "1.0.4"
+    "@radix-ui/react-collapsible" "1.0.3"
+    "@radix-ui/react-dialog" "1.0.5"
+    "@radix-ui/react-dropdown-menu" "2.0.6"
+    "@radix-ui/react-label" "2.0.2"
+    "@radix-ui/react-popover" "1.0.7"
+    "@radix-ui/react-radio-group" "1.1.3"
+    "@radix-ui/react-select" "2.0.0"
+    "@radix-ui/react-separator" "1.0.3"
+    "@radix-ui/react-switch" "1.0.3"
+    "@radix-ui/react-tabs" "1.0.4"
+    "@radix-ui/react-toggle-group" "1.1.0"
+    "@radix-ui/react-tooltip" "1.0.7"
     "@react-aria/dnd" "^3.5.3"
     "@tanstack/react-table" "^8.13.2"
     clsx "^2.1.0"
     downshift "^8.5.0"
     react-resizable-panels "^2.0.19"
-    sonner "^1.5.0"
+    sonner "1.5.0"
 
 "@axonivy/ui-icons@~11.4.0-next.160":
   version "11.4.0-next.180"
   resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.180.tgz#c4a8c6364dbe9d624d90f9cdfdb3056013aeb274"
   integrity sha512-YQgzEPLmJzGtsShiMbciLQogfsy8j2vub2aNlY2sHbMn7xuGDA5VF6+HS8bY8edx+szn5S8h2vJIDGxfCYk59A==
 
-"@axonivy/ui-icons@~11.4.0-next.202":
-  version "11.4.0-next.204"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.204.tgz#3b531f7d9039b42834d68ea57247965f611bf606"
-  integrity sha512-esgQWyBSQFUldKJ0X8yOhdGtMwdoQP/fJTc5zeJgUHeoX8LEUaY7FYkx5+Wvc2751GItxMVmgO3pWeN3cXODWw==
+"@axonivy/ui-icons@~11.4.0-next.219", "@axonivy/ui-icons@~11.4.0-next.227":
+  version "11.4.0-next.227"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/ui-icons/-/ui-icons-11.4.0-next.227.tgz#0eceadafccfcd2162a0dface85f44d416bfe024e"
+  integrity sha512-LIL/RrotXaSKuHuAG6RMTOgK9jshQzC0uiajcK3i/yFofl3yQF9DjhL6QyJPf8jLYPZfiCzCxSqhD+LFssYf0A==
 
-"@axonivy/variable-editor@~11.4.0-next.243":
-  version "11.4.0-next.243"
-  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.243.tgz#bb7fdf66907294b3b2fc33ec428a91c162732a93"
-  integrity sha512-UnoGjSaO9QQ3ch1/LQ/rmS7BwmhRgVJUHTlPkjfDhInkhGDQmNvMJksodaKb2qQry7UpSSO2nNSC6doz0CAkng==
+"@axonivy/variable-editor@~11.4.0-next.264":
+  version "11.4.0-next.264"
+  resolved "https://npmjs-registry.ivyteam.ch/@axonivy/variable-editor/-/variable-editor-11.4.0-next.264.tgz#d65e9c33a35975bd9e8f65497e59ef822d39c8c5"
+  integrity sha512-+QwTPhSze5oguzMEhPonWST5i+0N57rUHgoe9nuyMNM3EdJGkHYgaQ+GRyox41SpB4+OhtB3F7OKszp+DyT69g==
   dependencies:
-    "@axonivy/jsonrpc" "~11.4.0-next.202"
-    "@axonivy/ui-components" "~11.4.0-next.202"
-    "@axonivy/ui-icons" "~11.4.0-next.202"
+    "@axonivy/jsonrpc" "~11.4.0-next.227"
+    "@axonivy/ui-components" "~11.4.0-next.227"
+    "@axonivy/ui-icons" "~11.4.0-next.227"
     "@tanstack/react-query" "5.32.1"
     "@tanstack/react-query-devtools" "5.32.1"
     react "^18.2.0"
@@ -543,6 +548,14 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
+"@codingame/monaco-vscode-editor-service-override@1.83.3":
+  version "1.83.3"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-editor-service-override/-/monaco-vscode-editor-service-override-1.83.3.tgz#9bc2690ae47edc5aa2e714dab8f6d93b693bc3f7"
+  integrity sha512-9j3ixC2KO+U2U4edm27ki17UetdpiQm/nGRAtdLXzUj6fnj34vr4EOyiVaj6/YtCa+qUuEqBrveosvRbUdxJAQ==
+  dependencies:
+    monaco-editor "0.44.0"
+    vscode "npm:@codingame/monaco-vscode-api@1.83.3"
+
 "@codingame/monaco-vscode-editor-service-override@~1.83.3":
   version "1.83.5"
   resolved "https://registry.npmjs.org/@codingame/monaco-vscode-editor-service-override/-/monaco-vscode-editor-service-override-1.83.5.tgz"
@@ -551,6 +564,14 @@
     monaco-editor "0.44.0"
     vscode "npm:@codingame/monaco-vscode-api@1.83.5"
 
+"@codingame/monaco-vscode-languages-service-override@1.83.3":
+  version "1.83.3"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-languages-service-override/-/monaco-vscode-languages-service-override-1.83.3.tgz#7a782c1ebe68b9591e201fc997b5716dce236697"
+  integrity sha512-ECIZbjFnB1gv+KiEhYVH26InXYUhBy1lZ8L8LJqL2fk8M9uni3bnVoV8yfP0OXd0L+tpjsL3hsNXv304a222+g==
+  dependencies:
+    monaco-editor "0.44.0"
+    vscode "npm:@codingame/monaco-vscode-api@1.83.3"
+
 "@codingame/monaco-vscode-languages-service-override@~1.83.3":
   version "1.83.5"
   resolved "https://registry.npmjs.org/@codingame/monaco-vscode-languages-service-override/-/monaco-vscode-languages-service-override-1.83.5.tgz"
@@ -558,6 +579,14 @@
   dependencies:
     monaco-editor "0.44.0"
     vscode "npm:@codingame/monaco-vscode-api@1.83.5"
+
+"@codingame/monaco-vscode-model-service-override@1.83.3":
+  version "1.83.3"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-model-service-override/-/monaco-vscode-model-service-override-1.83.3.tgz#7e90ce7465d40b21c47f2bfbce1e734b7378a30b"
+  integrity sha512-Bc0LujY0SBMvVJqB1YOVQzJPfApWyhHU79pCQiCPG2HbhdAOw1RDakbZ1iTA2i95q8ksgQTKVzgWLfL1Kj/McA==
+  dependencies:
+    monaco-editor "0.44.0"
+    vscode "npm:@codingame/monaco-vscode-api@1.83.3"
 
 "@codingame/monaco-vscode-model-service-override@~1.83.3":
   version "1.83.5"
@@ -1452,7 +1481,12 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@radix-ui/react-accordion@^1.1.2":
+"@radix-ui/primitive@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/primitive/-/primitive-1.1.0.tgz#42ef83b3b56dccad5d703ae8c42919a68798bbe2"
+  integrity sha512-4Z8dn6Upk0qk4P74xBhZ6Hd/w0mPEzOOLxy4xiPXOXqjF7jZS0VAKk7/x/H6FyY2zCkYJqePf1G5KmkmNJ4RBA==
+
+"@radix-ui/react-accordion@1.1.2", "@radix-ui/react-accordion@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@radix-ui/react-accordion/-/react-accordion-1.1.2.tgz"
   integrity sha512-fDG7jcoNKVjSK6yfmuAs0EnPDro0WMXIhMtXdTBWqEioVW206ku+4Lw07e+13lUkFkpoEQ2PdeMIAGpdqEAmDg==
@@ -1476,7 +1510,7 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-primitive" "1.0.3"
 
-"@radix-ui/react-checkbox@^1.0.4":
+"@radix-ui/react-checkbox@1.0.4", "@radix-ui/react-checkbox@^1.0.4":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@radix-ui/react-checkbox/-/react-checkbox-1.0.4.tgz"
   integrity sha512-CBuGQa52aAYnADZVt/KBQzXrwx6TqnlwtcIPGtVt5JkkzQwMOLJjPukimhfKEr4GQNd43C+djUh5Ikopj8pSLg==
@@ -1517,12 +1551,27 @@
     "@radix-ui/react-primitive" "1.0.3"
     "@radix-ui/react-slot" "1.0.2"
 
+"@radix-ui/react-collection@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-collection/-/react-collection-1.1.0.tgz#f18af78e46454a2360d103c2251773028b7724ed"
+  integrity sha512-GZsZslMJEyo1VKm5L1ZJY8tGDxZNPAoUeQUIbKeJfoi7Q4kmig5AsgLMYYuyYbfjd8fBmFORAIwYAkXMnXZgZw==
+  dependencies:
+    "@radix-ui/react-compose-refs" "1.1.0"
+    "@radix-ui/react-context" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-slot" "1.1.0"
+
 "@radix-ui/react-compose-refs@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@radix-ui/react-compose-refs/-/react-compose-refs-1.0.1.tgz"
   integrity sha512-fDSBgd44FKHa1FRMU59qBMPFcl2PZE+2nmqunj+BWFyYYjnhIDWL2ItDs3rrbJDQOtzt5nIebLCQc4QRfz6LJw==
   dependencies:
     "@babel/runtime" "^7.13.10"
+
+"@radix-ui/react-compose-refs@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-compose-refs/-/react-compose-refs-1.1.0.tgz#656432461fc8283d7b591dcf0d79152fae9ecc74"
+  integrity sha512-b4inOtiaOnYf9KWyO3jAeeCG6FeyfY6ldiEPanbUjWd+xIk5wZeHa8yVwmrJ2vderhu/BQvzCrJI0lHd+wIiqw==
 
 "@radix-ui/react-context@1.0.1":
   version "1.0.1"
@@ -1531,7 +1580,12 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@radix-ui/react-dialog@^1.0.5":
+"@radix-ui/react-context@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-context/-/react-context-1.1.0.tgz#6df8d983546cfd1999c8512f3a8ad85a6e7fcee8"
+  integrity sha512-OKrckBy+sMEgYM/sMmqmErVn0kZqrHPJze+Ql3DzYsDDp0hl0L62nx/2122/Bvps1qz645jlcu2tD9lrRSdf8A==
+
+"@radix-ui/react-dialog@1.0.5", "@radix-ui/react-dialog@^1.0.5":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@radix-ui/react-dialog/-/react-dialog-1.0.5.tgz"
   integrity sha512-GjWJX/AUpB703eEBanuBnIWdIXg6NvJFCXcNlSZk4xdszCdhrJgBoUd1cGk67vFO+WdA2pfI/plOpqz/5GUP6Q==
@@ -1559,6 +1613,11 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
+"@radix-ui/react-direction@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-direction/-/react-direction-1.1.0.tgz#a7d39855f4d077adc2a1922f9c353c5977a09cdc"
+  integrity sha512-BUuBvgThEiAXh2DWu93XsT+a3aWrGqolGlqqw5VU1kG7p/ZH2cuDlM1sRLNnY3QcBS69UIz2mcKhMxDsdewhjg==
+
 "@radix-ui/react-dismissable-layer@1.0.5":
   version "1.0.5"
   resolved "https://registry.npmjs.org/@radix-ui/react-dismissable-layer/-/react-dismissable-layer-1.0.5.tgz"
@@ -1570,6 +1629,20 @@
     "@radix-ui/react-primitive" "1.0.3"
     "@radix-ui/react-use-callback-ref" "1.0.1"
     "@radix-ui/react-use-escape-keydown" "1.0.3"
+
+"@radix-ui/react-dropdown-menu@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.0.6.tgz#cdf13c956c5e263afe4e5f3587b3071a25755b63"
+  integrity sha512-i6TuFOoWmLWq+M/eCLGd/bQ2HfAX1RJgvrBQ6AQLmzfvsLdefxbWu8G9zczcPFfcSPehz9GcpF6K9QYreFV8hA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-compose-refs" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-id" "1.0.1"
+    "@radix-ui/react-menu" "2.0.6"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-use-controllable-state" "1.0.1"
 
 "@radix-ui/react-focus-guards@1.0.1":
   version "1.0.1"
@@ -1596,7 +1669,14 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-use-layout-effect" "1.0.1"
 
-"@radix-ui/react-label@^2.0.2":
+"@radix-ui/react-id@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-id/-/react-id-1.1.0.tgz#de47339656594ad722eb87f94a6b25f9cffae0ed"
+  integrity sha512-EJUrI8yYh7WOjNOqpoJaf1jlFIH2LvtgAl+YcFqNCa+4hj64ZXmPkAKOFs/ukjz3byN6bdb/AVUqHkI8/uWWMA==
+  dependencies:
+    "@radix-ui/react-use-layout-effect" "1.1.0"
+
+"@radix-ui/react-label@2.0.2", "@radix-ui/react-label@^2.0.2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@radix-ui/react-label/-/react-label-2.0.2.tgz"
   integrity sha512-N5ehvlM7qoTLx7nWPodsPYPgMzA5WM8zZChQg8nyFJKnDO5WHdba1vv5/H6IO5LtJMfD2Q3wh1qHFGNtK0w3bQ==
@@ -1604,7 +1684,32 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-primitive" "1.0.3"
 
-"@radix-ui/react-popover@^1.0.7":
+"@radix-ui/react-menu@2.0.6":
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-menu/-/react-menu-2.0.6.tgz#2c9e093c1a5d5daa87304b2a2f884e32288ae79e"
+  integrity sha512-BVkFLS+bUC8HcImkRKPSiVumA1VPOOEC5WBMiT+QAVsPzW1FJzI9KnqgGxVDPBcql5xXrHkD3JOVoXWEXD8SYA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-collection" "1.0.3"
+    "@radix-ui/react-compose-refs" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-direction" "1.0.1"
+    "@radix-ui/react-dismissable-layer" "1.0.5"
+    "@radix-ui/react-focus-guards" "1.0.1"
+    "@radix-ui/react-focus-scope" "1.0.4"
+    "@radix-ui/react-id" "1.0.1"
+    "@radix-ui/react-popper" "1.1.3"
+    "@radix-ui/react-portal" "1.0.4"
+    "@radix-ui/react-presence" "1.0.1"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-roving-focus" "1.0.4"
+    "@radix-ui/react-slot" "1.0.2"
+    "@radix-ui/react-use-callback-ref" "1.0.1"
+    aria-hidden "^1.1.1"
+    react-remove-scroll "2.5.5"
+
+"@radix-ui/react-popover@1.0.7", "@radix-ui/react-popover@^1.0.7":
   version "1.0.7"
   resolved "https://registry.npmjs.org/@radix-ui/react-popover/-/react-popover-1.0.7.tgz"
   integrity sha512-shtvVnlsxT6faMnK/a7n0wptwBD23xc1Z5mdrtKLwVEfsEMXodS0r5s0/g5P0hX//EKYZS2sxUjqfzlg52ZSnQ==
@@ -1668,7 +1773,14 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-slot" "1.0.2"
 
-"@radix-ui/react-radio-group@^1.1.3":
+"@radix-ui/react-primitive@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-primitive/-/react-primitive-2.0.0.tgz#fe05715faa9203a223ccc0be15dc44b9f9822884"
+  integrity sha512-ZSpFm0/uHa8zTvKBDjLFWLo8dkr4MBsiDLz0g3gMUwqgLHz9rTaRRGYDgvZPtBJgYCBKXkS9fzmoySgr8CO6Cw==
+  dependencies:
+    "@radix-ui/react-slot" "1.1.0"
+
+"@radix-ui/react-radio-group@1.1.3", "@radix-ui/react-radio-group@^1.1.3":
   version "1.1.3"
   resolved "https://registry.npmjs.org/@radix-ui/react-radio-group/-/react-radio-group-1.1.3.tgz"
   integrity sha512-x+yELayyefNeKeTx4fjK6j99Fs6c4qKm3aY38G3swQVTN6xMpsrbigC0uHs2L//g8q4qR7qOcww8430jJmi2ag==
@@ -1701,7 +1813,22 @@
     "@radix-ui/react-use-callback-ref" "1.0.1"
     "@radix-ui/react-use-controllable-state" "1.0.1"
 
-"@radix-ui/react-select@^2.0.0":
+"@radix-ui/react-roving-focus@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-roving-focus/-/react-roving-focus-1.1.0.tgz#b30c59daf7e714c748805bfe11c76f96caaac35e"
+  integrity sha512-EA6AMGeq9AEeQDeSH0aZgG198qkfHSbvWTf1HvoDmOB5bBG/qTxjYMWUKMnYiV6J/iP/J8MEFSuB2zRU2n7ODA==
+  dependencies:
+    "@radix-ui/primitive" "1.1.0"
+    "@radix-ui/react-collection" "1.1.0"
+    "@radix-ui/react-compose-refs" "1.1.0"
+    "@radix-ui/react-context" "1.1.0"
+    "@radix-ui/react-direction" "1.1.0"
+    "@radix-ui/react-id" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-use-callback-ref" "1.1.0"
+    "@radix-ui/react-use-controllable-state" "1.1.0"
+
+"@radix-ui/react-select@2.0.0", "@radix-ui/react-select@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@radix-ui/react-select/-/react-select-2.0.0.tgz"
   integrity sha512-RH5b7af4oHtkcHS7pG6Sgv5rk5Wxa7XI8W5gvB1N/yiuDGZxko1ynvOiVhFM7Cis2A8zxF9bTOUVbRDzPepe6w==
@@ -1729,7 +1856,7 @@
     aria-hidden "^1.1.1"
     react-remove-scroll "2.5.5"
 
-"@radix-ui/react-separator@^1.0.3":
+"@radix-ui/react-separator@1.0.3", "@radix-ui/react-separator@^1.0.3":
   version "1.0.3"
   resolved "https://registry.npmjs.org/@radix-ui/react-separator/-/react-separator-1.0.3.tgz"
   integrity sha512-itYmTy/kokS21aiV5+Z56MZB54KrhPgn6eHDKkFeOLR34HMN2s8PaN47qZZAGnvupcjxHaFZnW4pQEh0BvvVuw==
@@ -1745,7 +1872,14 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-compose-refs" "1.0.1"
 
-"@radix-ui/react-switch@^1.0.3":
+"@radix-ui/react-slot@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-1.1.0.tgz#7c5e48c36ef5496d97b08f1357bb26ed7c714b84"
+  integrity sha512-FUCf5XMfmW4dtYl69pdS4DbxKy8nj4M7SafBgPllysxmdachynNflAdp/gCsnYWNDnge6tI9onzMp5ARYc1KNw==
+  dependencies:
+    "@radix-ui/react-compose-refs" "1.1.0"
+
+"@radix-ui/react-switch@1.0.3", "@radix-ui/react-switch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.npmjs.org/@radix-ui/react-switch/-/react-switch-1.0.3.tgz"
   integrity sha512-mxm87F88HyHztsI7N+ZUmEoARGkC22YVW5CaC+Byc+HRpuvCrOBPTAnXgf+tZ/7i0Sg/eOePGdMhUKhPaQEqow==
@@ -1759,7 +1893,7 @@
     "@radix-ui/react-use-previous" "1.0.1"
     "@radix-ui/react-use-size" "1.0.1"
 
-"@radix-ui/react-tabs@^1.0.4":
+"@radix-ui/react-tabs@1.0.4", "@radix-ui/react-tabs@^1.0.4":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@radix-ui/react-tabs/-/react-tabs-1.0.4.tgz"
   integrity sha512-egZfYY/+wRNCflXNHx+dePvnz9FbmssDTJBtgRfDY7e8SE5oIo3Py2eCB1ckAbh1Q7cQ/6yJZThJ++sgbxibog==
@@ -1774,7 +1908,29 @@
     "@radix-ui/react-roving-focus" "1.0.4"
     "@radix-ui/react-use-controllable-state" "1.0.1"
 
-"@radix-ui/react-tooltip@^1.0.7":
+"@radix-ui/react-toggle-group@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle-group/-/react-toggle-group-1.1.0.tgz#28714c4d1ff4961a8fd259b1feef58b4cac92f80"
+  integrity sha512-PpTJV68dZU2oqqgq75Uzto5o/XfOVgkrJ9rulVmfTKxWp3HfUjHE6CP/WLRR4AzPX9HWxw7vFow2me85Yu+Naw==
+  dependencies:
+    "@radix-ui/primitive" "1.1.0"
+    "@radix-ui/react-context" "1.1.0"
+    "@radix-ui/react-direction" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-roving-focus" "1.1.0"
+    "@radix-ui/react-toggle" "1.1.0"
+    "@radix-ui/react-use-controllable-state" "1.1.0"
+
+"@radix-ui/react-toggle@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle/-/react-toggle-1.1.0.tgz#1f7697b82917019330a16c6f96f649f46b4606cf"
+  integrity sha512-gwoxaKZ0oJ4vIgzsfESBuSgJNdc0rv12VhHgcqN0TEJmmZixXG/2XpsLK8kzNWYcnaoRIEEQc0bEi3dIvdUpjw==
+  dependencies:
+    "@radix-ui/primitive" "1.1.0"
+    "@radix-ui/react-primitive" "2.0.0"
+    "@radix-ui/react-use-controllable-state" "1.1.0"
+
+"@radix-ui/react-tooltip@1.0.7", "@radix-ui/react-tooltip@^1.0.7":
   version "1.0.7"
   resolved "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-1.0.7.tgz"
   integrity sha512-lPh5iKNFVQ/jav/j6ZrWq3blfDJ0OH9R6FlNUHPMqdLuQ9vwDgFsRxvl8b7Asuy5c8xmoojHUxKHQSOAvMHxyw==
@@ -1800,6 +1956,11 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
+"@radix-ui/react-use-callback-ref@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.1.0.tgz#bce938ca413675bc937944b0d01ef6f4a6dc5bf1"
+  integrity sha512-CasTfvsy+frcFkbXtSJ2Zu9JHpN8TYKxkgJGWbjiZhFivxaeW7rMeZt7QELGVLaYVfFMsKHjb7Ak0nMEe+2Vfw==
+
 "@radix-ui/react-use-controllable-state@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.0.1.tgz"
@@ -1807,6 +1968,13 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-use-callback-ref" "1.0.1"
+
+"@radix-ui/react-use-controllable-state@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.1.0.tgz#1321446857bb786917df54c0d4d084877aab04b0"
+  integrity sha512-MtfMVJiSr2NjzS0Aa90NPTnvTSg6C/JLCV7ma0W6+OMV78vd8OyRpID+Ng9LxzsPbLeuBnWBA1Nq30AtBIDChw==
+  dependencies:
+    "@radix-ui/react-use-callback-ref" "1.1.0"
 
 "@radix-ui/react-use-escape-keydown@1.0.3":
   version "1.0.3"
@@ -1822,6 +1990,11 @@
   integrity sha512-v/5RegiJWYdoCvMnITBkNNx6bCj20fiaJnWtRkU18yITptraXjffz5Qbn05uOiQnOvi+dbkznkoaMltz1GnszQ==
   dependencies:
     "@babel/runtime" "^7.13.10"
+
+"@radix-ui/react-use-layout-effect@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.1.0.tgz#3c2c8ce04827b26a39e442ff4888d9212268bd27"
+  integrity sha512-+FPE0rOdziWSrH9athwI1R0HDVbWlEhd+FR+aSDk4uWGmSJ9Z54sdZVDQPZAinJhJXwfT+qnj969mCsT2gfm5w==
 
 "@radix-ui/react-use-previous@1.0.1":
   version "1.0.1"
@@ -8806,7 +8979,7 @@ socks@^2.6.2, socks@^2.7.1:
     ip "^2.0.0"
     smart-buffer "^4.2.0"
 
-sonner@^1.4.41, sonner@^1.5.0:
+sonner@1.5.0, sonner@^1.4.41:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/sonner/-/sonner-1.5.0.tgz#af359f817063318415326b33aab54c5d17c747b7"
   integrity sha512-FBjhG/gnnbN6FY0jaNnqZOMmB73R+5IiyYAw8yBj7L54ER7HB3fOSE5OFiQiE2iXWxeXKvg6fIP4LtVppHEdJA==
@@ -9653,6 +9826,13 @@ vscode-ws-jsonrpc@^3.0.0:
   integrity sha512-22IbVb2K691np9pOubyahNBj1BicsbtlbiaHOJu5/rvyWDqmqPMAqpAfojwGjdBztp8EtO8TAO7lmyY6hnmYAA==
   dependencies:
     vscode-jsonrpc "~8.1.0"
+
+"vscode@npm:@codingame/monaco-vscode-api@1.83.3":
+  version "1.83.3"
+  resolved "https://registry.yarnpkg.com/@codingame/monaco-vscode-api/-/monaco-vscode-api-1.83.3.tgz#9d7440500a5a35b687c3583783efe9cd9e181dc6"
+  integrity sha512-UhhThNT7mgUrnpLgoW0QiidFjD5vI0ia5uPvw88Z6uj4FngzXG33rqOhA/36xYwkFZKkNqOvSPnCG3zyTd0l2Q==
+  dependencies:
+    monaco-editor "0.44.0"
 
 "vscode@npm:@codingame/monaco-vscode-api@1.83.5", "vscode@npm:@codingame/monaco-vscode-api@>=1.83.3 <1.84.0":
   version "1.83.5"
