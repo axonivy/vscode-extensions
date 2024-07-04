@@ -13,7 +13,6 @@ export class ProblemsView extends View {
 
   static async initProblemsView(page: Page) {
     const problemsView = new ProblemsView(page);
-    await problemsView.executeCommand('Problems: Focus on Problems View');
     await problemsView.tabLocator.click();
     await problemsView.isChecked();
     return problemsView;

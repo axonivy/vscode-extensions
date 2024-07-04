@@ -17,6 +17,7 @@ test.describe('Problems View', () => {
   test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
+    await processEditor.executeCommand('View: Focus into Panel');
   });
 
   test.afterEach(async () => {
@@ -47,7 +48,6 @@ test.describe('Problems View', () => {
     const monacoEditor = inscriptionView.monacoEditor();
     await monacoEditor.click();
     await monacoEditor.pressSequentially('make test error');
-    await inscriptionView.header().click();
     await processEditor.hasError(script);
     const problemsView = await ProblemsView.initProblemsView(page);
     await problemsView.hasError("Output code: Unexpected token: identifier 'error'", '18D9CDFA8F58DA2B-f7');
