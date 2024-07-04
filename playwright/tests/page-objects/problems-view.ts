@@ -13,9 +13,6 @@ export class ProblemsView extends View {
 
   static async initProblemsView(page: Page) {
     const problemsView = new ProblemsView(page);
-    if (!(await problemsView.tabLocator.isVisible())) {
-      await problemsView.executeCommand('View: Toggle Problems');
-    }
     await problemsView.tabLocator.click();
     await problemsView.isChecked();
     return problemsView;
