@@ -28,7 +28,7 @@ export async function start({ file }: InitializeConnection): Promise<void> {
     <React.StrictMode>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
-          <App app={''} pmv={''} file={file} />
+          <App context={{ app: '', pmv: '', file }} />
         </QueryProvider>
       </ClientContextProvider>
     </React.StrictMode>

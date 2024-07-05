@@ -26,7 +26,7 @@ export async function start({ file }: InitializeConnection): Promise<void> {
     <React.StrictMode>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
-          <VariableEditor app={''} pmv={''} file={file} />
+          <VariableEditor context={{ app: '', pmv: '', file }} />
         </QueryProvider>
       </ClientContextProvider>
     </React.StrictMode>

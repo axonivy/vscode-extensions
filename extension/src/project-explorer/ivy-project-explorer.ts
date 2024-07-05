@@ -42,9 +42,11 @@ export class IvyProjectExplorer {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const registerCmd = (command: Command, callback: (...args: any[]) => any) => registerCommand(command, context, callback);
     registerCmd(`${VIEW_ID}.refreshEntry`, () => this.refresh());
-    registerCmd(`${VIEW_ID}.buildProject`, (s: TreeSelection) => this.runEngineAction(engineManager.buildProject, s));
-    registerCmd(`${VIEW_ID}.deployProject`, (s: TreeSelection) => this.runEngineAction(engineManager.deployProject, s));
-    registerCmd(`${VIEW_ID}.buildAndDeployProject`, (s: TreeSelection) => this.runEngineAction(engineManager.buildAndDeployProject, s));
+    registerCmd(`${VIEW_ID}.buildProject`, (s: TreeSelection) => this.runEngineAction((d: string) => engineManager.buildProject(d), s));
+    registerCmd(`${VIEW_ID}.deployProject`, (s: TreeSelection) => this.runEngineAction((d: string) => engineManager.deployProject(d), s));
+    registerCmd(`${VIEW_ID}.buildAndDeployProject`, (s: TreeSelection) =>
+      this.runEngineAction((d: string) => engineManager.buildAndDeployProject(d), s)
+    );
     registerCmd(`${VIEW_ID}.addBusinessProcess`, (s: TreeSelection) => this.addProcess(s, 'Business Process'));
     registerCmd(`${VIEW_ID}.addCallableSubProcess`, (s: TreeSelection) => this.addProcess(s, 'Callable Sub Process'));
     registerCmd(`${VIEW_ID}.addWebServiceProcess`, (s: TreeSelection) => this.addProcess(s, 'Web Service Process'));
@@ -70,7 +72,7 @@ export class IvyProjectExplorer {
     );
     vscode.workspace
       .createFileSystemWatcher('**/{cms,config,webContent}/**/*', true, false, true)
-      .onDidChange(e => this.runEngineAction(IvyEngineManager.instance.deployProject, e));
+      .onDidChange(e => this.runEngineAction((d: string) => IvyEngineManager.instance.deployProject(d), e));
   }
 
   private deleteProjectOnEngine(uri: vscode.Uri, ivyProjects: string[]) {
@@ -93,8 +95,8 @@ export class IvyProjectExplorer {
     await this.activateEngineExtension(hasIvyProjects);
   }
 
-  private async runEngineAction(action: (projectDir: string) => void, selection: TreeSelection) {
-    treeSelectionToProjectPath(selection, this.getIvyProjects()).then(selectionPath => selectionPath && action(selectionPath));
+  private async runEngineAction(action: (projectDir: string) => Promise<void>, selection: TreeSelection) {
+    treeSelectionToProjectPath(selection, this.getIvyProjects()).then(selectionPath => (selectionPath ? action(selectionPath) : {}));
   }
 
   public async addProcess(selection: TreeSelection, kind?: ProcessKind, pid?: string) {
