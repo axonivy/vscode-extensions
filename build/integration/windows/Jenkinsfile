@@ -4,6 +4,7 @@ pipeline {
   }
 
   tools {
+    jdk 'temurin-jdk-21.0.3.9'
     maven '3.9'
   }
 
