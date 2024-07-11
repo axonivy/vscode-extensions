@@ -9,7 +9,7 @@ This extension can be used locally or in a [Dev Container](https://code.visualst
 
 ### Local ussage
 
-Make sure that **Java SE 17** and **Maven 3** are installed on your machine.
+Make sure that **Java SE 21** and **Maven 3** are installed on your machine.
 
 After installing the extension, you have to define the **Engine Directory** setting. Proceed as follows:
 
