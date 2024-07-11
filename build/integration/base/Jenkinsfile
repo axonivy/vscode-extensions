@@ -20,7 +20,7 @@ pipeline {
         script {
           docker.withRegistry('https://docker-registry.ivyteam.io', 'docker-registry.ivyteam.io') {
             sh """
-            export IMAGE_TAG=docker-registry.ivyteam.io/axonivy/playwright-jdk17:${params.dockerImageTag}
+            export IMAGE_TAG=docker-registry.ivyteam.io/axonivy/playwright-jdk21:${params.dockerImageTag}
             export PUSH="${pushOption()}"
             build/integration/base/build.sh
             """
