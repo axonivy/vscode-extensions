@@ -8,7 +8,6 @@ import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
-import { CREATE_PROJECT } from './api/api-constants';
 import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
 import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
@@ -111,9 +110,12 @@ export class IvyEngineManager {
   }
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
-    const hdPath = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
+    const hdBean = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
     const viewExtension = newUserDialogParams.type === 'Form' ? '.f.json' : '.xhtml';
-    const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + viewExtension);
+    if (!hdBean.uri) {
+      return;
+    }
+    const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdBean.uri), newUserDialogParams.name + viewExtension);
     executeCommand('vscode.open', viewUri);
   }
 
@@ -128,12 +130,12 @@ export class IvyEngineManager {
       .then(() => this.ivyEngineApi.initProjects([path]))
       .then(() => this.ivyEngineApi.watchProjects([path]))
       .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
-      .then(() => setStatusBarMessage('Finished: ' + CREATE_PROJECT.description));
+      .then(() => setStatusBarMessage('Finished: Create new Project'));
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
-    const newProcessUri = await this.ivyEngineApi.createProcess(newProcessParams);
-    executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
+    const processBean = await this.ivyEngineApi.createProcess(newProcessParams);
+    if (processBean.uri) executeCommand('vscode.open', vscode.Uri.parse(processBean.uri));
   }
 
   public async deleteProject(ivyProjectDirectory: string) {

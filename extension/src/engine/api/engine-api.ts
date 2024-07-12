@@ -1,40 +1,39 @@
 import * as vscode from 'vscode';
 import * as crypto from 'crypto';
 import path from 'path';
-import { deleteRequest, getRequest, pollWithProgress, postRequest } from './request';
+import { pollWithProgress } from './poll';
 import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
-import {
-  API_PATH,
-  BUILD_PROJECTS,
-  CREATE_PROCESS,
-  CREATE_PROJECT,
-  CREATE_USER_DIALOG,
-  DELETE_PROJECT,
-  DEPLOY_PROJECTS,
-  DEV_CONTEXT,
-  INIT_PROJECT,
-  Request,
-  WATCH_PROJECTS
-} from './api-constants';
 import { setStatusBarMessage } from '../../base/status-bar';
+import { build, createHd, createProcess, createProject, deleteProject, deployProjects, initProject, watch } from './generated/openapi-dev';
+import { getOrCreateDevContext } from './generated/openapi-system';
+
+const progressOptions = (title: string) => {
+  return {
+    location: vscode.ProgressLocation.Window,
+    title,
+    cancellable: false
+  };
+};
+const headers = { 'X-Requested-By': 'web-ide' };
+const options = { headers, auth: { username: 'Developer', password: 'Developer' }, paramsSerializer: { indexes: null } };
 
 export class IvyEngineApi {
   private readonly _devContextPath: Promise<string>;
-  private readonly devRequestUrl: Promise<string>;
+  private readonly baseURL: Promise<string>;
 
   constructor(engineUrl: string) {
     this._devContextPath = this.devContextPathRequest(engineUrl);
-    this.devRequestUrl = this.devContextPath.then(devContextPath => new URL(path.join(devContextPath, API_PATH), engineUrl).toString());
+    this.baseURL = this.devContextPath.then(devContextPath => new URL(path.join(devContextPath, 'api'), engineUrl).toString());
   }
 
-  private async devContextPathRequest(engineUrl: string): Promise<string> {
-    const baseSystemUrl = engineUrl + 'system/';
-    await pollWithProgress(baseSystemUrl, 'Waiting for Axon Ivy Engine to be ready.');
-    const systemRequestUrl = baseSystemUrl + path.join(API_PATH, DEV_CONTEXT.path);
+  private async devContextPathRequest(engineUrl: string) {
+    const baseURL = new URL(path.join('system', 'api'), engineUrl).toString();
+    await pollWithProgress(engineUrl, 'Waiting for Axon Ivy Engine to be ready.');
     const sessionId = this.sessionId();
-    return postRequest(systemRequestUrl, { sessionId }, { username: 'admin', password: 'admin' });
+    const { data } = await getOrCreateDevContext({ sessionId }, { baseURL, auth: { username: 'admin', password: 'admin' }, headers });
+    return data;
   }
 
   private sessionId(): string {
@@ -55,84 +54,66 @@ export class IvyEngineApi {
   public async initProject(projectDir: string) {
     const projectName = path.basename(projectDir);
     const params = { projectName, projectDir };
-    await this.get(INIT_PROJECT, params);
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Initialize Ivy Project'), async () => {
+      await initProject(params, { baseURL, ...options });
+    });
   }
 
   public async deployProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
-    await this.get(DEPLOY_PROJECTS, params);
-    setStatusBarMessage('Finished: ' + DEPLOY_PROJECTS.description);
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Deploy Ivy Projects'), async () => {
+      await deployProjects(params, { baseURL, ...options });
+    });
+    setStatusBarMessage('Finished: Deploy Ivy Projects');
   }
 
   public async buildProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
-    this.get(BUILD_PROJECTS, params);
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Build Projects'), async () => {
+      await build(params, { baseURL, ...options });
+    });
   }
 
   public async watchProjects(ivyProjectDirectories: string[]) {
-    await this.get(WATCH_PROJECTS, { projectDir: ivyProjectDirectories });
+    const params = { projectDir: ivyProjectDirectories };
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Watch Projects'), async () => {
+      await watch(params, { baseURL, ...options });
+    });
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
-    return this.post(CREATE_PROCESS, newProcessParams);
+  public async createProcess(newProcessParams: NewProcessParams) {
+    const baseURL = await this.baseURL;
+    return vscode.window.withProgress(progressOptions('Create new Process'), async () => {
+      return createProcess(newProcessParams, { baseURL, ...options }).then(res => res.data);
+    });
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
-    return this.post(CREATE_PROJECT, newProjectParams);
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Create new Project'), async () => {
+      await createProject(newProjectParams, { baseURL, ...options });
+    });
   }
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
-    return this.post(CREATE_USER_DIALOG, newUserDialogParams);
+    const baseURL = await this.baseURL;
+    return vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
+      return createHd(newUserDialogParams, { baseURL, ...options }).then(res => res.data);
+    });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async deleteProject(projectDir: string): Promise<any> {
-    return this.delete(DELETE_PROJECT, { projectDir });
-  }
-
-  private async toRequestUrl(request: Request): Promise<string> {
-    return this.devRequestUrl.then(url => url + '/' + request.path);
-  }
-
-  private toProgressOptions(request: Request) {
-    return {
-      location: vscode.ProgressLocation.Window,
-      title: request.description,
-      cancellable: false
-    };
+  public async deleteProject(projectDir: string) {
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Delete Project'), async () => {
+      await deleteProject({ projectDir }, { baseURL, ...options });
+    });
   }
 
   public get devContextPath(): Promise<string> {
     return this._devContextPath;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async get(request: Request, params: { projectDir: string | string[]; projectName?: string }): Promise<any> {
-    const url = await this.toRequestUrl(request);
-    return new Promise(resolve =>
-      vscode.window.withProgress(this.toProgressOptions(request), async () => {
-        resolve(await getRequest(url, params));
-      })
-    );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async post(request: Request, data: NewProjectParams | NewProcessParams | NewUserDialogParams): Promise<any> {
-    const url = await this.toRequestUrl(request);
-    return new Promise(resolve =>
-      vscode.window.withProgress(this.toProgressOptions(request), async () => {
-        resolve(await postRequest(url, data));
-      })
-    );
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private async delete(request: Request, params: { projectDir: string }): Promise<any> {
-    const url = await this.toRequestUrl(request);
-    return new Promise(resolve =>
-      vscode.window.withProgress(this.toProgressOptions(request), async () => {
-        resolve(await deleteRequest(url, params));
-      })
-    );
   }
 }
