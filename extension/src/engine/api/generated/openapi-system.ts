@@ -3,11 +3,8 @@
  * Do not edit manually.
  * Axon Ivy
  */
-import axios from 'axios'
-import type {
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios'
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 export type DeployBody = {
   /** deployment options as YAML file. If defined, the specific params below will be ignored. */
   deploymentOptions?: string;
@@ -20,153 +17,140 @@ export type DeployBody = {
 };
 
 export type SetVariableParams = {
-/**
- * new value for variable
- */
-value?: string;
+  /**
+   * new value for variable
+   */
+  value?: string;
 };
 
 export type SetConfigParams = {
-/**
- * new value for config
- */
-value?: string;
+  /**
+   * new value for config
+   */
+  value?: string;
 };
 
 export interface DevSecurityContextInit {
   sessionId?: string;
 }
 
-
-
-
-
-  /**
+/**
  * Returns the value of the config with the given name.
  */
 export const getConfig = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    configKey: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/apps/${applicationName}/configs/${configKey}`,options
-    );
-  }
+  applicationName: string,
+  configKey: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/apps/${applicationName}/configs/${configKey}`, options);
+};
 
 /**
  * Sets a new value for the config with the given name.
  */
 export const setConfig = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    configKey: string,
-    setConfigBody: string,
-    params?: SetConfigParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/apps/${applicationName}/configs/${configKey}`,
-      setConfigBody,{
+  applicationName: string,
+  configKey: string,
+  setConfigBody: string,
+  params?: SetConfigParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/apps/${applicationName}/configs/${configKey}`, setConfigBody, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params }
+  });
+};
 
 /**
  * Resets the config with the given name to the default value.
  */
 export const resetConfig = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    configKey: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/apps/${applicationName}/configs/${configKey}`,options
-    );
-  }
+  applicationName: string,
+  configKey: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/apps/${applicationName}/configs/${configKey}`, options);
+};
 
 /**
  * Returns the value of the variable with the given name.
  */
 export const getVariable = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    variableName: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.get(
-      `/apps/${applicationName}/variables/${variableName}`,options
-    );
-  }
+  applicationName: string,
+  variableName: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/apps/${applicationName}/variables/${variableName}`, options);
+};
 
 /**
  * Sets a new value for the variable with the given name.
  */
 export const setVariable = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    variableName: string,
-    setVariableBody: string,
-    params?: SetVariableParams, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/apps/${applicationName}/variables/${variableName}`,
-      setVariableBody,{
+  applicationName: string,
+  variableName: string,
+  setVariableBody: string,
+  params?: SetVariableParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/apps/${applicationName}/variables/${variableName}`, setVariableBody, {
     ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: { ...params, ...options?.params }
+  });
+};
 
 /**
  * Resets the variable with the given name to the default value.
  */
 export const resetVariable = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    variableName: string, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.delete(
-      `/apps/${applicationName}/variables/${variableName}`,options
-    );
-  }
+  applicationName: string,
+  variableName: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/apps/${applicationName}/variables/${variableName}`, options);
+};
 
 /**
  * Deploys a project .iar file or multiple projects in a .zip file to an application.
  */
 export const deploy = <TData = AxiosResponse<void>>(
-    applicationName: string,
-    deployBody: DeployBody, options?: AxiosRequestConfig
- ): Promise<TData> => {const formData = new FormData();
-formData.append('fileToDeploy', deployBody.fileToDeploy)
-if(deployBody.deploymentOptions !== undefined) {
- formData.append('deploymentOptions', deployBody.deploymentOptions)
- }
-if(deployBody.deployTestUsers !== undefined) {
- formData.append('deployTestUsers', deployBody.deployTestUsers)
- }
-if(deployBody.targetVersion !== undefined) {
- formData.append('targetVersion', deployBody.targetVersion)
- }
-if(deployBody.targetState !== undefined) {
- formData.append('targetState', deployBody.targetState)
- }
-if(deployBody.targetFileFormat !== undefined) {
- formData.append('targetFileFormat', deployBody.targetFileFormat)
- }
-
-    return axios.post(
-      `/apps/${applicationName}`,
-      formData,options
-    );
+  applicationName: string,
+  deployBody: DeployBody,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  const formData = new FormData();
+  formData.append('fileToDeploy', deployBody.fileToDeploy);
+  if (deployBody.deploymentOptions !== undefined) {
+    formData.append('deploymentOptions', deployBody.deploymentOptions);
   }
+  if (deployBody.deployTestUsers !== undefined) {
+    formData.append('deployTestUsers', deployBody.deployTestUsers);
+  }
+  if (deployBody.targetVersion !== undefined) {
+    formData.append('targetVersion', deployBody.targetVersion);
+  }
+  if (deployBody.targetState !== undefined) {
+    formData.append('targetState', deployBody.targetState);
+  }
+  if (deployBody.targetFileFormat !== undefined) {
+    formData.append('targetFileFormat', deployBody.targetFileFormat);
+  }
+
+  return axios.post(`/apps/${applicationName}`, formData, options);
+};
 
 export const getOrCreateDevContext = <TData = AxiosResponse<string>>(
-    devSecurityContextInit: DevSecurityContextInit, options?: AxiosRequestConfig
- ): Promise<TData> => {
-    return axios.post(
-      `/web-ide/dev-security-context`,
-      devSecurityContextInit,options
-    );
-  }
+  devSecurityContextInit: DevSecurityContextInit,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/dev-security-context`, devSecurityContextInit, options);
+};
 
-export type GetConfigResult = AxiosResponse<void>
-export type SetConfigResult = AxiosResponse<void>
-export type ResetConfigResult = AxiosResponse<void>
-export type GetVariableResult = AxiosResponse<void>
-export type SetVariableResult = AxiosResponse<void>
-export type ResetVariableResult = AxiosResponse<void>
-export type DeployResult = AxiosResponse<void>
-export type GetOrCreateDevContextResult = AxiosResponse<string>
+export type GetConfigResult = AxiosResponse<void>;
+export type SetConfigResult = AxiosResponse<void>;
+export type ResetConfigResult = AxiosResponse<void>;
+export type GetVariableResult = AxiosResponse<void>;
+export type SetVariableResult = AxiosResponse<void>;
+export type ResetVariableResult = AxiosResponse<void>;
+export type DeployResult = AxiosResponse<void>;
+export type GetOrCreateDevContextResult = AxiosResponse<string>;

@@ -112,10 +112,11 @@ export class IvyEngineManager {
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
     const hdBean = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
     const viewExtension = newUserDialogParams.type === 'Form' ? '.f.json' : '.xhtml';
-    if (hdBean.uri) {
-      const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdBean.uri), newUserDialogParams.name + viewExtension);
-      executeCommand('vscode.open', viewUri);
+    if (!hdBean.uri) {
+      return;
     }
+    const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdBean.uri), newUserDialogParams.name + viewExtension);
+    executeCommand('vscode.open', viewUri);
   }
 
   public async createProject(newProjectParams: NewProjectParams) {

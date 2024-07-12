@@ -4,7 +4,7 @@ import { finished } from 'stream/promises';
 
 const downloadOpenapi = async () => {
   const url = process.argv[2] ? new URL(process.argv[2]) : new URL('https://dev.demo.ivyteam.io');
-  await download('openapi.yaml', new URL('api/openapi.yaml', url));
+  await download('openapi-dev.yaml', new URL('api/openapi.yaml', url));
   await download('openapi-system.yaml', new URL('system/api/openapi.yaml', url));
 };
 

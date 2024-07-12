@@ -6,18 +6,7 @@ import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../../base/status-bar';
-import {
-  HdBean,
-  ProcessBean,
-  build,
-  createHd,
-  createProcess,
-  createProject,
-  deleteProject,
-  deployProjects,
-  initProject,
-  watch
-} from './generated/openapi';
+import { build, createHd, createProcess, createProject, deleteProject, deployProjects, initProject, watch } from './generated/openapi-dev';
 import { getOrCreateDevContext } from './generated/openapi-system';
 
 const progressOptions = (title: string) => {
@@ -39,7 +28,7 @@ export class IvyEngineApi {
     this.baseURL = this.devContextPath.then(devContextPath => new URL(path.join(devContextPath, 'api'), engineUrl).toString());
   }
 
-  private async devContextPathRequest(engineUrl: string): Promise<string> {
+  private async devContextPathRequest(engineUrl: string) {
     const baseURL = new URL(path.join('system', 'api'), engineUrl).toString();
     await pollWithProgress(engineUrl, 'Waiting for Axon Ivy Engine to be ready.');
     const sessionId = this.sessionId();
@@ -65,15 +54,17 @@ export class IvyEngineApi {
   public async initProject(projectDir: string) {
     const projectName = path.basename(projectDir);
     const params = { projectName, projectDir };
+    const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Initialize Ivy Project'), async () => {
-      await initProject(params, { baseURL: await this.baseURL, ...options });
+      await initProject(params, { baseURL, ...options });
     });
   }
 
   public async deployProjects(ivyProjectDirectories: string[]) {
     const params = { projectDir: ivyProjectDirectories };
+    const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Deploy Ivy Projects'), async () => {
-      await deployProjects(params, { baseURL: await this.baseURL, ...options });
+      await deployProjects(params, { baseURL, ...options });
     });
     setStatusBarMessage('Finished: Deploy Ivy Projects');
   }
@@ -94,31 +85,25 @@ export class IvyEngineApi {
     });
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<ProcessBean> {
+  public async createProcess(newProcessParams: NewProcessParams) {
     const baseURL = await this.baseURL;
-    return new Promise(resolve =>
-      vscode.window.withProgress(progressOptions('Create new Process'), async () => {
-        resolve((await createProcess(newProcessParams, { baseURL, ...options })).data);
-      })
-    );
+    return vscode.window.withProgress(progressOptions('Create new Process'), async () => {
+      return createProcess(newProcessParams, { baseURL, ...options }).then(res => res.data);
+    });
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
     const baseURL = await this.baseURL;
-    return new Promise(resolve =>
-      vscode.window.withProgress(progressOptions('Create new Project'), async () => {
-        resolve(await createProject(newProjectParams, { baseURL, ...options }));
-      })
-    );
+    await vscode.window.withProgress(progressOptions('Create new Project'), async () => {
+      await createProject(newProjectParams, { baseURL, ...options });
+    });
   }
 
-  public async createUserDialog(newUserDialogParams: NewUserDialogParams): Promise<HdBean> {
+  public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
     const baseURL = await this.baseURL;
-    return new Promise(resolve =>
-      vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
-        resolve((await createHd(newUserDialogParams, { baseURL, ...options })).data);
-      })
-    );
+    return vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
+      return createHd(newUserDialogParams, { baseURL, ...options }).then(res => res.data);
+    });
   }
 
   public async deleteProject(projectDir: string) {
