@@ -8,7 +8,6 @@ import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
-import { CREATE_PROJECT } from './api/api-constants';
 import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
 import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
@@ -128,7 +127,7 @@ export class IvyEngineManager {
       .then(() => this.ivyEngineApi.initProjects([path]))
       .then(() => this.ivyEngineApi.watchProjects([path]))
       .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
-      .then(() => setStatusBarMessage('Finished: ' + CREATE_PROJECT.description));
+      .then(() => setStatusBarMessage('Finished: Create new Project'));
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
