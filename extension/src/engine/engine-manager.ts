@@ -110,10 +110,12 @@ export class IvyEngineManager {
   }
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
-    const hdPath = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
+    const hdBean = await this.ivyEngineApi.createUserDialog(newUserDialogParams);
     const viewExtension = newUserDialogParams.type === 'Form' ? '.f.json' : '.xhtml';
-    const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdPath), newUserDialogParams.name + viewExtension);
-    executeCommand('vscode.open', viewUri);
+    if (hdBean.uri) {
+      const viewUri = vscode.Uri.joinPath(vscode.Uri.parse(hdBean.uri), newUserDialogParams.name + viewExtension);
+      executeCommand('vscode.open', viewUri);
+    }
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
@@ -131,8 +133,8 @@ export class IvyEngineManager {
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {
-    const newProcessUri = await this.ivyEngineApi.createProcess(newProcessParams);
-    executeCommand('vscode.open', vscode.Uri.parse(newProcessUri));
+    const processBean = await this.ivyEngineApi.createProcess(newProcessParams);
+    if (processBean.uri) executeCommand('vscode.open', vscode.Uri.parse(processBean.uri));
   }
 
   public async deleteProject(ivyProjectDirectory: string) {

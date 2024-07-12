@@ -250,7 +250,7 @@ If you want to use quotes within such values you need to escape them with " e.g.
 filter?: string;
 };
 
-export type Watch1Params = {
+export type WatchParams = {
 projectDir?: string[];
 };
 
@@ -410,6 +410,7 @@ export interface ProcessBean {
   processIdentifier?: ProcessIdentifier;
   requestPath?: string;
   type?: string;
+  uri?: string;
 }
 
 export interface ProjectIdentifier {
@@ -442,12 +443,13 @@ export interface FormIdentifier {
   project?: ProjectIdentifier;
 }
 
-export interface FormBean {
+export interface HdBean {
   identifier?: FormIdentifier;
   name?: string;
   namespace?: string;
   path?: string;
   type?: string;
+  uri?: string;
 }
 
 export interface EngineInfo {
@@ -598,7 +600,7 @@ export const getInfo = <TData = AxiosResponse<EngineInfo>>(
     );
   }
 
-export const forms = <TData = AxiosResponse<FormBean[]>>(
+export const forms = <TData = AxiosResponse<HdBean[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -606,7 +608,7 @@ export const forms = <TData = AxiosResponse<FormBean[]>>(
     );
   }
 
-export const _delete = <TData = AxiosResponse<unknown>>(
+export const deleteForm = <TData = AxiosResponse<unknown>>(
     formIdentifier: FormIdentifier, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.delete(
@@ -615,7 +617,7 @@ export const _delete = <TData = AxiosResponse<unknown>>(
     );
   }
 
-export const createHd = <TData = AxiosResponse<unknown>>(
+export const createHd = <TData = AxiosResponse<HdBean>>(
     hdInit: HdInit, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -632,7 +634,7 @@ export const getProcesses = <TData = AxiosResponse<ProcessBean[]>>(
     );
   }
 
-export const create = <TData = AxiosResponse<unknown>>(
+export const createProcess = <TData = AxiosResponse<ProcessBean>>(
     processInit: ProcessInit, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -641,7 +643,7 @@ export const create = <TData = AxiosResponse<unknown>>(
     );
   }
 
-export const delete1 = <TData = AxiosResponse<unknown>>(
+export const deleteProcess = <TData = AxiosResponse<unknown>>(
     processIdentifier: ProcessIdentifier, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.delete(
@@ -658,7 +660,7 @@ export const projects = <TData = AxiosResponse<ProjectIdentifier[]>>(
     );
   }
 
-export const watch = <TData = AxiosResponse<unknown>>(
+export const watchProjects = <TData = AxiosResponse<unknown>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
@@ -715,8 +717,8 @@ export const initProject = <TData = AxiosResponse<unknown>>(
     );
   }
 
-export const watch1 = <TData = AxiosResponse<unknown>>(
-    params?: Watch1Params, options?: AxiosRequestConfig
+export const watch = <TData = AxiosResponse<unknown>>(
+    params?: WatchParams, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.get(
       `/web-ide/project/watch`,{
@@ -787,7 +789,7 @@ export const getContent = <TData = AxiosResponse<unknown>>(
     );
   }
 
-export const delete2 = <TData = AxiosResponse<MessageBean>>(
+export const _delete = <TData = AxiosResponse<MessageBean>>(
     caseId: number,
     documentId: number, options?: AxiosRequestConfig
  ): Promise<TData> => {
@@ -898,27 +900,27 @@ export type HideResult = AxiosResponse<unknown>
 export type Operation1Result = AxiosResponse<unknown>
 export type MeResult = AxiosResponse<UserBean>
 export type GetInfoResult = AxiosResponse<EngineInfo>
-export type FormsResult = AxiosResponse<FormBean[]>
-export type _DeleteResult = AxiosResponse<unknown>
-export type CreateHdResult = AxiosResponse<unknown>
+export type FormsResult = AxiosResponse<HdBean[]>
+export type DeleteFormResult = AxiosResponse<unknown>
+export type CreateHdResult = AxiosResponse<HdBean>
 export type GetProcessesResult = AxiosResponse<ProcessBean[]>
-export type CreateResult = AxiosResponse<unknown>
-export type Delete1Result = AxiosResponse<unknown>
+export type CreateProcessResult = AxiosResponse<ProcessBean>
+export type DeleteProcessResult = AxiosResponse<unknown>
 export type ProjectsResult = AxiosResponse<ProjectIdentifier[]>
-export type WatchResult = AxiosResponse<unknown>
+export type WatchProjectsResult = AxiosResponse<unknown>
 export type BuildResult = AxiosResponse<unknown>
 export type CreateProjectResult = AxiosResponse<unknown>
 export type DeleteProjectResult = AxiosResponse<unknown>
 export type DeployProjectsResult = AxiosResponse<unknown>
 export type InitProjectResult = AxiosResponse<unknown>
-export type Watch1Result = AxiosResponse<unknown>
+export type WatchResult = AxiosResponse<unknown>
 export type WorkspacesResult = AxiosResponse<WorkspaceBean[]>
 export type CreateWorkspaceResult = AxiosResponse<WorkspaceBean>
 export type DeleteWorkspaceResult = AxiosResponse<unknown>
 export type StatsResult = AxiosResponse<AggBean>
 export type AddResult = AxiosResponse<MessageBean>
 export type GetContentResult = AxiosResponse<unknown>
-export type Delete2Result = AxiosResponse<MessageBean>
+export type _DeleteResult = AxiosResponse<MessageBean>
 export type Get1Result = AxiosResponse<ProcessStartBean[]>
 export type Paged1Result = AxiosResponse<WebStartableBean[]>
 export type Head1Result = AxiosResponse<void>

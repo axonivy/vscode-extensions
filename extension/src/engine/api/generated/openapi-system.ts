@@ -153,7 +153,7 @@ if(deployBody.targetFileFormat !== undefined) {
     );
   }
 
-export const getOrCreate = <TData = AxiosResponse<string>>(
+export const getOrCreateDevContext = <TData = AxiosResponse<string>>(
     devSecurityContextInit: DevSecurityContextInit, options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.post(
@@ -169,4 +169,4 @@ export type GetVariableResult = AxiosResponse<void>
 export type SetVariableResult = AxiosResponse<void>
 export type ResetVariableResult = AxiosResponse<void>
 export type DeployResult = AxiosResponse<void>
-export type GetOrCreateResult = AxiosResponse<string>
+export type GetOrCreateDevContextResult = AxiosResponse<string>

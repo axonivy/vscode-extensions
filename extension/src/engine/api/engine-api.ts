@@ -6,8 +6,19 @@ import { NewProcessParams } from '../../project-explorer/new-process';
 import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../../base/status-bar';
-import { build, create, createHd, createProject, deleteProject, deployProjects, initProject, watch1 } from './generated/openapi';
-import { getOrCreate } from './generated/openapi-system';
+import {
+  HdBean,
+  ProcessBean,
+  build,
+  createHd,
+  createProcess,
+  createProject,
+  deleteProject,
+  deployProjects,
+  initProject,
+  watch
+} from './generated/openapi';
+import { getOrCreateDevContext } from './generated/openapi-system';
 
 const progressOptions = (title: string) => {
   return {
@@ -32,7 +43,7 @@ export class IvyEngineApi {
     const baseURL = new URL(path.join('system', 'api'), engineUrl).toString();
     await pollWithProgress(engineUrl, 'Waiting for Axon Ivy Engine to be ready.');
     const sessionId = this.sessionId();
-    const { data } = await getOrCreate({ sessionId }, { baseURL, auth: { username: 'admin', password: 'admin' }, headers });
+    const { data } = await getOrCreateDevContext({ sessionId }, { baseURL, auth: { username: 'admin', password: 'admin' }, headers });
     return data;
   }
 
@@ -79,15 +90,15 @@ export class IvyEngineApi {
     const params = { projectDir: ivyProjectDirectories };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Watch Projects'), async () => {
-      await watch1(params, { baseURL, ...options });
+      await watch(params, { baseURL, ...options });
     });
   }
 
-  public async createProcess(newProcessParams: NewProcessParams): Promise<string> {
+  public async createProcess(newProcessParams: NewProcessParams): Promise<ProcessBean> {
     const baseURL = await this.baseURL;
     return new Promise(resolve =>
       vscode.window.withProgress(progressOptions('Create new Process'), async () => {
-        resolve((await create(newProcessParams, { baseURL, ...options })).data as string);
+        resolve((await createProcess(newProcessParams, { baseURL, ...options })).data);
       })
     );
   }
@@ -101,11 +112,11 @@ export class IvyEngineApi {
     );
   }
 
-  public async createUserDialog(newUserDialogParams: NewUserDialogParams): Promise<string> {
+  public async createUserDialog(newUserDialogParams: NewUserDialogParams): Promise<HdBean> {
     const baseURL = await this.baseURL;
     return new Promise(resolve =>
       vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
-        resolve((await createHd(newUserDialogParams, { baseURL, ...options })).data as string);
+        resolve((await createHd(newUserDialogParams, { baseURL, ...options })).data);
       })
     );
   }
