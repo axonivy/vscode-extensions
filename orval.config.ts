@@ -1,18 +1,23 @@
 import { defineConfig } from 'orval';
 
+const hooks = { afterAllFilesWrite: 'prettier --write' };
+const filters = { tags: ['web-ide'] };
+
 export default defineConfig({
   openapiDev: {
-    input: './openapi-dev.yaml',
+    input: {
+      target: './openapi-dev.yaml',
+      filters
+    },
     output: './extension/src/engine/api/generated/openapi-dev.ts',
-    hooks: {
-      afterAllFilesWrite: 'prettier --write'
-    }
+    hooks
   },
   openapiSystem: {
-    input: './openapi-system.yaml',
+    input: {
+      target: './openapi-system.yaml',
+      filters
+    },
     output: './extension/src/engine/api/generated/openapi-system.ts',
-    hooks: {
-      afterAllFilesWrite: 'prettier --write'
-    }
+    hooks
   }
 });
