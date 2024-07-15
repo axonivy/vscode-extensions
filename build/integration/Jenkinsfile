@@ -56,6 +56,29 @@ pipeline {
         }
       }
     }
+
+    stage('Protocol') {
+      agent {
+        dockerfile {
+          filename 'build/Dockerfile'
+          reuseNode true
+        }
+      }
+
+      steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          script {
+            sh 'yarn download:openapi https://dev.demo.ivyteam.io'
+            sh 'yarn codegen:openapi'
+            sh 'yarn build'
+            sh 'yarn lint:ci'
+          }
+        }
+        withChecks('Integration Protocol ESLint') {
+          recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+        }
+      }
+    }
   }
 
   post {
