@@ -58,13 +58,15 @@ pipeline {
     }
 
     stage('Protocol') {
+      when {
+        expression { isReleasingBranch() }
+      }
       agent {
         dockerfile {
           filename 'build/Dockerfile'
           reuseNode true
         }
       }
-
       steps {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
           script {
