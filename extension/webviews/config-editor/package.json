@@ -18,6 +18,7 @@
     "build:production": "vite build --emptyOutDir",
     "lint": "eslint --ext .ts,.tsx ./src",
     "clean": "rimraf dist lib",
+    "type": "yarn tsc",
     "watch": "vite build --mode development --watch --emptyOutDir"
   }
 }

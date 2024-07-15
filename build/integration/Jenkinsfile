@@ -70,7 +70,7 @@ pipeline {
           script {
             sh 'yarn download:openapi https://dev.demo.ivyteam.io'
             sh 'yarn codegen:openapi'
-            sh 'yarn build'
+            sh 'yarn type'
             sh 'yarn lint:ci'
           }
         }
