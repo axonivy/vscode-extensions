@@ -3,7 +3,6 @@ import { executeCommand } from '../base/commands';
 import { MavenBuilder } from './build/maven';
 import { NewProcessParams } from '../project-explorer/new-process';
 import { IvyEngineApi } from './api/engine-api';
-import { NewProjectParams } from '../project-explorer/new-project';
 import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { toWebSocketUrl } from '../base/url-util';
@@ -14,6 +13,7 @@ import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
 import { setStatusBarMessage } from '../base/status-bar';
+import { NewProjectParams } from './api/generated/openapi-dev';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -119,7 +119,7 @@ export class IvyEngineManager {
     executeCommand('vscode.open', viewUri);
   }
 
-  public async createProject(newProjectParams: NewProjectParams) {
+  public async createProject(newProjectParams: NewProjectParams & { path: string }) {
     await IvyProjectExplorer.instance.setProjectExplorerActivationCondition(true);
     if (!this.started) {
       await this.start();

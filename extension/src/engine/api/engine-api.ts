@@ -3,10 +3,19 @@ import * as crypto from 'crypto';
 import path from 'path';
 import { pollWithProgress } from './poll';
 import { NewProcessParams } from '../../project-explorer/new-process';
-import { NewProjectParams } from '../../project-explorer/new-project';
 import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../../base/status-bar';
-import { build, createHd, createProcess, createProject, deleteProject, deployProjects, initProject, watch } from './generated/openapi-dev';
+import {
+  NewProjectParams,
+  build,
+  createHd,
+  createProcess,
+  createProject,
+  deleteProject,
+  deployProjects,
+  initProject,
+  watch
+} from './generated/openapi-dev';
 import { getOrCreateDevContext } from './generated/openapi-system';
 
 const progressOptions = (title: string) => {

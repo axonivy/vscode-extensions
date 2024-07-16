@@ -99,7 +99,7 @@ export class IvyProjectExplorer {
     treeSelectionToProjectPath(selection, this.getIvyProjects()).then(selectionPath => (selectionPath ? action(selectionPath) : {}));
   }
 
-  public async addProcess(selection: TreeSelection, kind?: ProcessKind, pid?: string) {
+  public async addProcess(selection: TreeSelection, kind: ProcessKind, pid?: string) {
     const projectPath = await treeSelectionToProjectPath(selection, this.getIvyProjects());
     if (projectPath) {
       await addNewProcess(await treeSelectionToUri(selection), projectPath, kind, pid);

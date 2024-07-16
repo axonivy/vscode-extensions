@@ -8,7 +8,7 @@ export class NewProcessActionHandler implements InscriptionActionHandler {
   async handle(actionArgs: InscriptionActionArgs, sendInscriptionNotification: SendInscriptionNotification): Promise<void> {
     const tabInput = vscode.window.tabGroups.activeTabGroup.activeTab?.input;
     if (tabInput instanceof vscode.TabInputCustom) {
-      await IvyProjectExplorer.instance.addProcess(tabInput.uri, undefined, actionArgs.context.pid);
+      await IvyProjectExplorer.instance.addProcess(tabInput.uri, '', actionArgs.context.pid);
       sendInscriptionNotification('dataChanged');
       sendInscriptionNotification('validation');
     }
