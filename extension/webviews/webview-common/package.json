@@ -23,6 +23,6 @@
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build",
     "clean": "rimraf lib",
-    "type": "tsc"
+    "type": "tsc --noEmit"
   }
 }

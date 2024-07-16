@@ -34,7 +34,7 @@
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build",
     "clean": "rimraf dist lib",
-    "type": "tsc",
+    "type": "tsc --noEmit",
     "watch": "vite build --mode development --watch --emptyOutDir"
   }
 }

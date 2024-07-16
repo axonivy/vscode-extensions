@@ -24,7 +24,7 @@
     "package:with:engine": "bash -c 'vsce package -o ${npm_package_name}-with-engine.vsix --no-update-package-json --no-git-tag-version --yarn ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")'",
     "publish:next": "bash -c 'vsce publish --yarn --no-update-package-json --no-git-tag-version ${npm_package_version:0:4}.$(date \"+%Y%m%d%H\")'",
     "prepare": "yarn clean && yarn build",
-    "type": "tsc",
+    "type": "tsc --noEmit",
     "watch": "webpack --watch --mode development"
   },
   "main": "./dist/extension.js",
