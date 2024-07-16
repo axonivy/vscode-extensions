@@ -3,14 +3,6 @@ import path from 'path';
 import { TreeSelection, treeSelectionToUri } from './tree-selection';
 import { IvyEngineManager } from '../engine/engine-manager';
 
-export interface NewProjectParams {
-  name: string;
-  groupId: string;
-  projectId: string;
-  defaultNamespace: string;
-  path: string;
-}
-
 export async function addNewProject(selection: TreeSelection) {
   const selectedUri = await treeSelectionToUri(selection);
   const input = await collectNewProjectParams(selectedUri);
@@ -19,7 +11,7 @@ export async function addNewProject(selection: TreeSelection) {
   }
 }
 
-async function collectNewProjectParams(selectedUri: vscode.Uri): Promise<NewProjectParams | undefined> {
+async function collectNewProjectParams(selectedUri: vscode.Uri) {
   const prompt = `Project Location: ${selectedUri.path}`;
   const name = await vscode.window.showInputBox({
     title: 'Project Name',

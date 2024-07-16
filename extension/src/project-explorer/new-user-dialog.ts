@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
 import { IvyEngineManager } from '../engine/engine-manager';
+import { HdInit } from '../engine/api/generated/openapi-dev';
 
 export const dialogTypes = ['JSF', 'Form', 'JSFOffline'] as const;
 export type DialogType = (typeof dialogTypes)[number];
@@ -18,15 +19,7 @@ type Layout = (typeof layouts)[number];
 const templates = ['frame-10', 'frame-10-right', 'frame-10-full-width', 'basic-10'] as const;
 type Template = (typeof templates)[number];
 
-export interface NewUserDialogParams {
-  namespace: string;
-  name: string;
-  type: DialogType;
-  template?: Template;
-  layout?: Layout;
-  projectDir: string;
-  pid?: string;
-}
+export type NewUserDialogParams = HdInit;
 
 export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType, pid?: string) {
   const input = await collectNewUserDialogParams(selectedUri, type, projectDir);
