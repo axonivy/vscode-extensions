@@ -22,6 +22,7 @@
     "build:production": "yarn build",
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build",
-    "clean": "rimraf lib"
+    "clean": "rimraf lib",
+    "type": "tsc --noEmit"
   }
 }
