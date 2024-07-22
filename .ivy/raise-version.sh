@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-yarn install --ignore-scripts
-yarn lerna version ${1/-SNAPSHOT/} --no-git-tag-version --no-push --ignore-scripts --exact --yes
-yarn install --ignore-scripts
+npm install
+npx lerna version ${1/-SNAPSHOT/} --no-git-tag-version --no-push --ignore-scripts --exact --yes
+npm install
 
 echo "update ivy version in maven.ts"
 oldVersion="IVY_ENGINE_VERSION = '[0-9]+.[0-9]+.[0-9]+'"

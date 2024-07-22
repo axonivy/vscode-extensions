@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
@@ -8,14 +10,10 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
-    library: {
-      type: 'commonjs'
-    },
+    libraryTarget: 'commonjs2',
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },
   devtool: 'source-map',
-  mode: 'development',
-
   externals: {
     vscode: 'commonjs vscode',
     'utf-8-validate': 'utf-8-validate'

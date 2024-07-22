@@ -2,15 +2,14 @@
   "name": "root",
   "private": true,
   "engines": {
-    "yarn": ">=1.7.0 <2.x.x",
     "node": ">=20.10.0"
+  },
+  "volta": {
+    "node": "20.12.2"
   },
   "scripts": {
     "build": "lerna run build",
     "build:production": "lerna run build:production",
-    "build:clean": "yarn clean && yarn build",
-    "extension:build": "yarn --cwd extension build",
-    "extension:clean": "yarn --cwd extension clean",
     "download:engine": "ts-node scripts/download-engine.ts",
     "download:openapi": "ts-node scripts/download-openapi.ts",
     "codegen:openapi": "orval",
@@ -20,10 +19,10 @@
     "package": "lerna run package",
     "package:with:engine": "lerna run package:with:engine",
     "publish:next": "lerna run publish:next",
-    "test:playwright": "yarn -s --cwd playwright ui-tests",
-    "test:playwright:stable": "RUN_STABLE_VERSION=true yarn test:playwright",
-    "test:playwright:browser": "RUN_IN_BRWOSER=true yarn test:playwright",
-    "test:playwright:download:vscode": "yarn -s --cwd playwright download:vscode",
+    "test:playwright": "npm run --workspace=@axonivy/vscode-extensions-playwright ui-tests",
+    "test:playwright:stable": "RUN_STABLE_VERSION=true npm run test:playwright",
+    "test:playwright:browser": "RUN_IN_BRWOSER=true npm run test:playwright",
+    "test:playwright:download:vscode": "npm run --workspace=@axonivy/vscode-extensions-playwright download:vscode",
     "type": "lerna run type",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "watch": "lerna run watch --parallel"
@@ -56,9 +55,5 @@
     "extension",
     "extension/webviews/*",
     "playwright/"
-  ],
-  "volta": {
-    "node": "20.12.2",
-    "yarn": "1.22.21"
-  }
+  ]
 }

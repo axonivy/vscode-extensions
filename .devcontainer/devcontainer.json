@@ -1,6 +1,6 @@
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
-  "postCreateCommand": "mkdir -p container-workspace && yarn",
+  "postCreateCommand": "mkdir -p container-workspace && npm install",
   "containerEnv": {
     "CONTAINER_WORKSPACE": "${workspaceFolder}/container-workspace"
   },

@@ -19,9 +19,8 @@
   "types": "lib/index",
   "scripts": {
     "build": "tsc",
-    "build:production": "yarn build",
+    "build:production": "npm run build",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "prepare": "yarn clean && yarn build",
     "clean": "rimraf lib",
     "type": "tsc --noEmit"
   }

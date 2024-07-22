@@ -3,8 +3,9 @@
   "tasks": [
     {
       "label": "Watch",
-      "type": "shell",
-      "command": "yarn watch",
+      "dependsOn": ["Build webview common"],
+      "type": "npm",
+      "script": "watch",
       "isBackground": true,
       "problemMatcher": {
         "base": "$tsc-watch",
@@ -17,6 +18,16 @@
       "presentation": {
         "reveal": "always",
         "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Build webview common",
+      "type": "shell",
+      "command": "npm run build --workspace=vscode-webview-common",
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "close": true
       }
     },
     {
