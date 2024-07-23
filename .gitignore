@@ -21,8 +21,6 @@ pack
 
 npm-debug.log*
 lerna-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 junit.xml
 eslint.xml

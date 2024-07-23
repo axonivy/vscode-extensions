@@ -25,10 +25,10 @@ pipeline {
 
       steps {
         script {
-          sh 'yarn update:axonivy:next'
-          sh 'yarn install'
-          sh 'yarn build:production'
-          sh 'yarn download:engine ' + params.engineDownloadUrl
+          sh 'npm run update:axonivy:next'
+          sh 'npm install'
+          sh 'npm run build:production'
+          sh 'npm run download:engine ' + params.engineDownloadUrl
         }
       }
     }
@@ -46,8 +46,8 @@ pipeline {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'export JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
             sh 'extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon'
-            sh 'yarn test:playwright:download:vscode'
-            sh 'xvfb-run --auto-servernum yarn test:playwright'
+            sh 'npm run test:playwright:download:vscode'
+            sh 'xvfb-run --auto-servernum npm run test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
@@ -70,10 +70,10 @@ pipeline {
       steps {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
           script {
-            sh 'yarn download:openapi https://dev.demo.ivyteam.io'
-            sh 'yarn codegen:openapi'
-            sh 'yarn type'
-            sh 'yarn lint:ci'
+            sh 'npm run download:openapi https://dev.demo.ivyteam.io'
+            sh 'npm run codegen:openapi'
+            sh 'npm run type'
+            sh 'npm run lint:ci'
           }
         }
         withChecks('Integration Protocol ESLint') {

@@ -6,14 +6,14 @@ The available VS Code extension can be found under `/extension`.
 
 ## Build & Package
 
-- `yarn`: install all packages
-- `yarn build`: build the extension and webviews
-- `yarn download:engine`: download and unpack the latest master engine
-- `yarn package`: package the extension as .vsix file
+- `npm install`: install all packages
+- `npm run build`: build the extension and webviews
+- `npm run download:engine`: download and unpack the latest master engine
+- `npm run package`: package the extension as .vsix file
 
 ## Debugging the extension
 
-Make sure that all packages are installed, i.e. run `yarn`. Building and packaging are not needed. Simply start the `Run Extension` launch config, which will also activate the watch mode.
+Make sure that all packages are installed, i.e. run `npm install`. Building and packaging are not needed. Simply start the `Run Extension` launch config, which will also activate the watch mode.
 
 ## Connect to another Ivy Engine
 
@@ -27,8 +27,8 @@ Playwright tests can be executed against VSCode Insiders or openvscode-server
 
 Make sure that an Engine is running on localhost:8080. It will be used as the backend for testing.
 
-- `yarn test:playwright:download:vscode`: download latest VSCode Insiders
-- `yarn test:playwright`: run all tests against electron app
+- `npm run test:playwright:download:vscode`: download latest VSCode Insiders
+- `npm run test:playwright`: run all tests against electron app
 
 ### openvscode-server
 
@@ -42,4 +42,4 @@ Then run the container using
 
 Finally
 
-- `yarn test:playwright:browser`: run all tests against openvscode-server in browser
+- `npm run test:playwright:browser`: run all tests against openvscode-server in browser

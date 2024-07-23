@@ -25,10 +25,10 @@ pipeline {
     stage('Build') {
       steps {
         nodejs(nodeJSInstallationName: '20.10.0') {
-          bat 'yarn update:axonivy:next'
-          bat 'yarn install'
-          bat 'yarn build:production'
-          bat 'yarn download:engine ' + params.engineDownloadUrl
+          bat 'npm run update:axonivy:next'
+          bat 'npm install'
+          bat 'npm run build:production'
+          bat 'npm run download:engine ' + params.engineDownloadUrl
         }
       }
     }
@@ -39,8 +39,8 @@ pipeline {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             bat 'set JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
             bat 'start extension/AxonIvyEngine/bin/AxonIvyEngine.exe'
-            bat 'yarn test:playwright:download:vscode'
-            bat 'yarn test:playwright'
+            bat 'npm run test:playwright:download:vscode'
+            bat 'npm run test:playwright'
             bat 'start extension/AxonIvyEngine/bin/AxonIvyEngine.exe stop'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true

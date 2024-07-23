@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 
 /**@type {import('webpack').Configuration}*/
@@ -14,8 +16,6 @@ const config = {
     devtoolModuleFilenameTemplate: '../[resource-path]'
   },
   devtool: 'source-map',
-  mode: 'development',
-
   externals: {
     vscode: 'commonjs vscode',
     'utf-8-validate': 'utf-8-validate'
