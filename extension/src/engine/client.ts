@@ -20,7 +20,7 @@ export const WebIdeClientProvider = (webSocketUrl: URL) => {
   };
 };
 
-const handleOpenEditor = (process: ProcessBean): boolean => {
+const handleOpenEditor = async (process: ProcessBean) => {
   if (!process.uri) {
     return false;
   }
@@ -45,7 +45,6 @@ const handleOpenEditor = (process: ProcessBean): boolean => {
     default:
       return false;
   }
-  //TODO: wait on editor to be ready
 };
 
 const isOpenProcesses = (process: ProcessBean) => {
@@ -69,11 +68,11 @@ const isCurrentProcess = (process: ProcessBean) => {
   return false;
 };
 
-const openEditor = (process: ProcessBean): boolean => {
+const openEditor = async (process: ProcessBean) => {
   if (!process.uri) {
     return false;
   }
-  executeCommand('vscode.open', vscode.Uri.parse(process.uri));
+  await executeCommand('vscode.open', vscode.Uri.parse(process.uri));
   return true;
 };
 

@@ -7,7 +7,7 @@ import { ProcessBean } from './generated/openapi-dev';
 export interface WebIdeOnNotificationTypes {}
 
 export interface WebIdeOnRequestTypes {
-  openEditor: [ProcessBean, boolean];
+  openEditor: [ProcessBean, Promise<boolean>];
 }
 
 export type AnimationSettings = {
@@ -22,11 +22,11 @@ export interface WebIdeNotificationTypes {
 }
 
 export class WebIdeClientJsonRpc extends BaseRpcClient implements WebIdeClient {
-  onOpenEditor = new Callback<ProcessBean, boolean>();
+  onOpenEditor = new Callback<ProcessBean, Promise<boolean>>();
   protected override setupConnection(): void {
     super.setupConnection();
     this.toDispose.push(this.onOpenEditor);
-    this.onRequest('openEditor', data => this.onOpenEditor.call(data) ?? false);
+    this.onRequest('openEditor', data => this.onOpenEditor.call(data) ?? new Promise(() => false));
   }
 
   animationSettings(settings: AnimationSettings) {

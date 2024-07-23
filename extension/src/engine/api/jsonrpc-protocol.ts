@@ -18,7 +18,7 @@ export class Callback<T, R = void> implements Disposable {
 }
 
 export interface WebIdeClient {
-  onOpenEditor: Callback<ProcessBean, boolean>;
+  onOpenEditor: Callback<ProcessBean, Promise<boolean>>;
   animationSettings(settings: AnimationSettings): void;
 
   stop(): void;
