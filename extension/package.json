@@ -264,6 +264,30 @@
             "default": true,
             "markdownDescription": "Configure whether Maven Builder is used for building Axon Ivy Projects.",
             "order": 2200
+          },
+          "process.animation.animate": {
+            "type": "boolean",
+            "default": false,
+            "markdownDescription": "Specify whether processes should be animated during preview."
+          },
+          "process.animation.speed": {
+            "type": "integer",
+            "default": 50,
+            "minimum": 0,
+            "maximum": 100,
+            "markdownDescription": "Specify process animation speed."
+          },
+          "process.animation.mode": {
+            "type": "string",
+            "default": "all",
+            "enum": [
+              "all",
+              "currentProcess",
+              "openProcesses",
+              "noDialogProcesses",
+              "noEmbeddedProcesses"
+            ],
+            "markdownDescription": "Specify process animation mode."
           }
         }
       }

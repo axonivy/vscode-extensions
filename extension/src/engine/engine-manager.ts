@@ -14,6 +14,7 @@ import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
 import { setStatusBarMessage } from '../base/status-bar';
 import { NewProjectParams } from './api/generated/openapi-dev';
+import { WebIdeClientProvider } from './client';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -52,6 +53,7 @@ export class IvyEngineManager {
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
     VariableEditorProvider.register(this.context, websocketUrl);
+    WebIdeClientProvider(websocketUrl);
   }
 
   private async resolveEngineUrl() {
