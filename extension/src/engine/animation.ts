@@ -3,6 +3,8 @@ import { config } from '../base/configurations';
 import { ProcessBean } from './api/generated/openapi-dev';
 import * as vscode from 'vscode';
 
+export type AnimationFollowMode = 'all' | 'currentProcess' | 'openProcesses' | 'noDialogProcesses' | 'noEmbeddedProcesses';
+
 export const animationSettings = () => {
   return { animate: config.processAnimationAnimate() ?? false, speed: config.processAnimationSpeed() ?? 50 };
 };

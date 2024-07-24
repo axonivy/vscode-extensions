@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-
-type AnimationFollowMode = 'all' | 'currentProcess' | 'openProcesses' | 'noDialogProcesses' | 'noEmbeddedProcesses';
+import { AnimationFollowMode } from '../engine/animation';
 
 const configs = () => vscode.workspace.getConfiguration();
 
