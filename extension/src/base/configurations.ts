@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { AnimationFollowMode } from '../engine/animation';
 
 const configs = () => vscode.workspace.getConfiguration();
 
@@ -9,6 +10,9 @@ export namespace config {
   export const projectExcludePattern = () => configs().get<string>('project.excludePattern');
   export const projectMaximumNumber = () => configs().get<number>('project.maximumNumber');
   export const projectUseMavenBuilder = () => configs().get<boolean>('project.useMavenBuilder');
+  export const processAnimationAnimate = () => configs().get<boolean>('process.animation.animate');
+  export const processAnimationSpeed = () => configs().get<number>('process.animation.speed');
+  export const processAnimationMode = () => configs().get<AnimationFollowMode>('process.animation.mode');
 
   export async function setEngineDirectory() {
     const selection = await vscode.window.showOpenDialog({
