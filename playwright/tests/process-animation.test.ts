@@ -7,6 +7,7 @@ test.describe('Process Animation', () => {
     const page = await pageFor(prebuiltWorkspacePath);
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.hasDeployProjectStatusMessage();
+    await processEditor.hasNoStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
 
