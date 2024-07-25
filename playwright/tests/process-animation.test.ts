@@ -17,14 +17,11 @@ test.describe('Process Animation', () => {
     await processEditor.isViewVisible();
   });
 
-  test.only('Animate Call Sub', async () => {
+  test('Animate Call Sub', async () => {
     const start = processEditor.locatorForPID('190E9B4311474684-f0');
     const scriptInCallSub = processEditor.locatorForPID('190E938617AE0413-f3');
-
-    await processEditor.page.waitForTimeout(4000);
+    await processEditor.page.waitForTimeout(1000);
     await expect(start).toBeVisible();
     await processEditor.startProcessAndAssertExecuted(start, scriptInCallSub);
-
-    await processEditor.page.waitForTimeout(4000);
   });
 });
