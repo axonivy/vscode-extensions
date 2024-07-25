@@ -22,7 +22,7 @@
       "id" : "f1",
       "type" : "CallSubEnd",
       "visual" : {
-        "at" : { "x" : 352, "y" : 64 },
+        "at" : { "x" : 448, "y" : 64 },
         "labelOffset" : { "x" : 13, "y" : 33 }
       }
     }, {
@@ -32,7 +32,17 @@
         "at" : { "x" : 224, "y" : 64 }
       },
       "connect" : [
-        { "id" : "f4", "to" : "f1", "color" : "default" }
+        { "id" : "f4", "to" : "f5", "color" : "default" }
+      ]
+    }, {
+      "id" : "f5",
+      "type" : "TaskSwitchEvent",
+      "visual" : {
+        "at" : { "x" : 352, "y" : 64 },
+        "labelOffset" : { "x" : 14, "y" : 34 }
+      },
+      "connect" : [
+        { "id" : "f6", "to" : "f1", "color" : "default" }
       ]
     } ]
 }

@@ -1,4 +1,5 @@
 {
   "engine.runByExtension": false,
+  "process.animation.animate":true,
   "window.zoomLevel": -1
 }
