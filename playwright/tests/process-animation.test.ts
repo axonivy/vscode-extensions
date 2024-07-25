@@ -1,7 +1,7 @@
 import { ProcessEditor } from './page-objects/process-editor';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
 import { pageFor } from './fixtures/page';
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Process Animation', () => {
   let processEditor: ProcessEditor;
@@ -20,6 +20,7 @@ test.describe('Process Animation', () => {
   test('Animate Call Sub', async () => {
     const start = processEditor.locatorForPID('190E9B4311474684-f0');
     const scriptInCallSub = processEditor.locatorForPID('190E938617AE0413-f3');
+    await expect(start).toBeVisible();
     await processEditor.startProcessAndAssertExecuted(start, scriptInCallSub);
   });
 });
