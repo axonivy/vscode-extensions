@@ -3,6 +3,7 @@ import fs from 'fs';
 import { randomInt } from 'crypto';
 
 export const prebuiltWorkspacePath = path.resolve(__dirname, './prebuiltProject');
+export const prebuiltEmptyWorkspacePath = path.resolve(__dirname, './prebuiltEmptyProject');
 export const noEngineWorkspacePath = path.resolve(__dirname, './no-engine');
 export const noProjectWorkspacePath = path.resolve(__dirname, './no-project');
 export const multiProjectWorkspacePath = path.resolve(__dirname, './multi-project');

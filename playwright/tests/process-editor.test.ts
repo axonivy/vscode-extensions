@@ -59,4 +59,12 @@ test.describe('Process Editor', () => {
     await expect(start).toHaveText('a new test label');
     await processEditor.isDirty();
   });
+
+  test('Jump into Call Sub', async () => {
+    const callSub = processEditor.locatorForPID('15254DCE818AD7A2-f19');
+    await callSub.click();
+    await processEditor.typeText('j');
+    const nestedScript = processEditor.locatorForPID('190E938617AE0413-f3');
+    await expect(nestedScript).toBeVisible();
+  });
 });

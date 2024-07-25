@@ -6,7 +6,7 @@ import '../css/diagram.css';
 import { MonacoEditorUtil } from '@axonivy/inscription-editor';
 import { createIvyDiagramContainer, ivyBreakpointModule } from '@axonivy/process-editor';
 import { ivyInscriptionModule } from '@axonivy/process-editor-inscription';
-import { ContainerConfiguration } from '@eclipse-glsp/client';
+import { ContainerConfiguration, navigationModule } from '@eclipse-glsp/client';
 import { GLSPStarter } from '@eclipse-glsp/vscode-integration-webview';
 import { Container } from 'inversify';
 import { NotificationType } from 'vscode-messenger-common';
@@ -32,7 +32,8 @@ class IvyGLSPStarter extends GLSPStarter {
       ivyBreakpointModule,
       ivyStartActionModule,
       ivyInscriptionModule,
-      ivyStartupDiagramModule
+      ivyStartupDiagramModule,
+      navigationModule
     );
   }
 

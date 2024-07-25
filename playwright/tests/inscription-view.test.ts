@@ -8,6 +8,7 @@ import { wait } from './utils/timeout';
 const userDialogPID1 = '15254DCE818AD7A2-f3';
 const userDialogPID2 = '15254DCE818AD7A2-f14';
 const userTaskPID = '15254DCE818AD7A2-f17';
+const namespace = 'testNamespace';
 
 test.describe('Inscription View', () => {
   let page: Page;
@@ -15,7 +16,7 @@ test.describe('Inscription View', () => {
   let processEditor: ProcessEditor;
   const cleanUp = () => {
     removeFromWorkspace(prebuiltWorkspacePath, 'src_hd', 'prebuiltProject');
-    removeFromWorkspace(prebuiltWorkspacePath, 'processes');
+    removeFromWorkspace(prebuiltWorkspacePath, 'processes', namespace);
   };
 
   test.beforeAll(async ({}, testInfo) => {
@@ -132,11 +133,11 @@ test.describe('Inscription View', () => {
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
     const processName = randomArtefactName();
-    await inscriptionView.provideUserInput(processName);
+    await inscriptionView.provideUserInput(`${namespace}/${processName}`);
     await processEditor.isDirty();
     await processEditor.isInactive();
     await processEditor.tabLocator.click();
-    await expect(processStartField).toHaveValue(`${processName}:call()`);
+    await expect(processStartField).toHaveValue(`${namespace}/${processName}:call()`);
   });
 
   test('Create Html Dialog', async () => {

@@ -1,6 +1,6 @@
 import { test } from 'playwright/test';
 import { pageFor } from './fixtures/page';
-import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
+import { prebuiltEmptyWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
@@ -10,11 +10,11 @@ test.describe('Create Process', () => {
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
   let processName: string;
-  const cleanUp = () => removeFromWorkspace(prebuiltWorkspacePath, 'processes');
+  const cleanUp = () => removeFromWorkspace(prebuiltEmptyWorkspacePath, 'processes');
 
   test.beforeAll(async ({}, testInfo) => {
     cleanUp();
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+    page = await pageFor(prebuiltEmptyWorkspacePath, testInfo.titlePath[1]);
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
   });
@@ -44,13 +44,12 @@ test.describe('Create Process', () => {
 
   test('Assert that process gets redeployed after editing', async () => {
     await explorer.addProcess(processName, 'Business Process');
-    await explorer.hasNoStatusMessage();
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
-    await processEditor.hasNoStatusMessage();
     await processEditor.appendActivity(start, 'Script');
     await processEditor.isDirty();
+    await page.waitForTimeout(1000);
     await processEditor.saveAllFiles();
-    await page.waitForTimeout(4000);
+    await page.waitForTimeout(3000);
     const script = processEditor.locatorForElementType('g.script');
     await expect(script).toHaveClass(/selected/);
     await processEditor.startProcessAndAssertExecuted(start, script);

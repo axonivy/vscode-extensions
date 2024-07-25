@@ -1,0 +1,4 @@
+ch.ivyteam.ivy.designer.preferences.DataClassPreferencePage\:DEFAULT_DATA_CLASS=prebuiltEmptyProject.Data
+ch.ivyteam.ivy.designer.preferences.DataClassPreferencePage\:DEFAULT_NAMESPACE=prebuiltEmptyProject
+ch.ivyteam.ivy.project.preferences\:PRIMEFACES_VERSION=13
+ch.ivyteam.ivy.project.preferences\:PROJECT_VERSION=114004
