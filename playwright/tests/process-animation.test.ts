@@ -7,9 +7,9 @@ test.describe('Process Animation', () => {
     const page = await pageFor(prebuiltWorkspacePath);
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.hasDeployProjectStatusMessage();
-    await processEditor.hasNoStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
+    await processEditor.hasNoStatusMessage();
 
     const start = processEditor.locatorForPID('190E9B4311474684-f0');
     const scriptInCallSub = processEditor.locatorForPID('190E938617AE0413-f3');
