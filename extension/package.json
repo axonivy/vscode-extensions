@@ -223,6 +223,16 @@
         "command": "ivy.addDevContainer",
         "title": "Add Dev Container",
         "category": "Axon Ivy"
+      },
+      {
+        "command": "engine.activateAnimation",
+        "title": "Activate Process Animation",
+        "category": "Axon Ivy"
+      },
+      {
+        "command": "engine.deactivateAnimation",
+        "title": "Deactivate Process Animation",
+        "category": "Axon Ivy"
       }
     ],
     "configuration": [

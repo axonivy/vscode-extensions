@@ -1,8 +1,8 @@
 {
   "$schema" : "https://json-schema.axonivy.com/process/11.3.0/process.json",
-  "id" : "190E9B4311474684",
+  "id" : "190EEC366DECC66A",
   "config" : {
-    "data" : "prebuiltProject.Data"
+    "data" : "animationProject.Data"
   },
   "elements" : [ {
       "id" : "f0",
@@ -28,7 +28,7 @@
       "id" : "f3",
       "type" : "SubProcessCall",
       "config" : {
-        "processCall" : "CallMe:call()"
+        "processCall" : "Callable:call()"
       },
       "visual" : {
         "at" : { "x" : 224, "y" : 64 }

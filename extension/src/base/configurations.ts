@@ -14,7 +14,7 @@ export namespace config {
   export const processAnimationSpeed = () => configs().get<number>('process.animation.speed');
   export const processAnimationMode = () => configs().get<AnimationFollowMode>('process.animation.mode');
 
-  export async function setEngineDirectory() {
+  export const setEngineDirectory = async () => {
     const selection = await vscode.window.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,
@@ -25,5 +25,9 @@ export namespace config {
       return;
     }
     await configs().update('engine.directory', selection[0].fsPath, true);
-  }
+  };
+
+  export const setProcessAnimationAnimate = async (animate: boolean) => {
+    await configs().update('process.animation.animate', animate);
+  };
 }

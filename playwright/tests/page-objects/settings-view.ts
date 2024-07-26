@@ -20,10 +20,6 @@ export class SettingsView extends View {
     await this.executeCommand('Preferences: Open Default Settings (JSON)');
   }
 
-  override async isActive() {
-    await expect(this.tabLocator).toHaveClass(/active/);
-  }
-
   async containsSetting(expectedSetting: string) {
     await expect(this.viewLocator).toBeVisible();
     await this.viewLocator.click();
