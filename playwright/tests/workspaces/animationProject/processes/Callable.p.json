@@ -1,9 +1,9 @@
 {
   "$schema" : "https://json-schema.axonivy.com/process/11.3.0/process.json",
-  "id" : "190E938617AE0413",
+  "id" : "190EEC3ABECE2C88",
   "kind" : "CALLABLE_SUB",
   "config" : {
-    "data" : "prebuiltProject.Data"
+    "data" : "animationProject.Data"
   },
   "elements" : [ {
       "id" : "f0",

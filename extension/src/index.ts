@@ -23,6 +23,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCommand('engine.buildAndDeployProjects', context, () => ivyEngineManager.buildAndDeployProjects());
   registerCommand('engine.downloadDevEngine', context, downloadDevEngine);
   registerCommand('engine.setEngineDirectory', context, () => config.setEngineDirectory());
+  registerCommand('engine.activateAnimation', context, async () => await config.setProcessAnimationAnimate(true));
+  registerCommand('engine.deactivateAnimation', context, async () => await config.setProcessAnimationAnimate(false));
   registerCommand('ivy.addDevContainer', context, () => addDevContainer(context.extensionUri));
   IvyProjectExplorer.init(context);
   setStatusBarIcon();

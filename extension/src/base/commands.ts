@@ -22,7 +22,9 @@ type EngineCommand =
   | 'engine.buildProjects'
   | 'engine.buildAndDeployProjects'
   | 'engine.downloadDevEngine'
-  | 'engine.setEngineDirectory';
+  | 'engine.setEngineDirectory'
+  | 'engine.deactivateAnimation'
+  | 'engine.activateAnimation';
 type ProjectViewCommand =
   | 'ivyProjects.refreshEntry'
   | 'ivyProjects.buildProject'
