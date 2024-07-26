@@ -21,10 +21,6 @@ test.describe('Process Animation', () => {
     await expect(start).not.toHaveClass(/executed/);
   });
 
-  test.afterEach(async () => {
-    await processEditor.closeAllTabs();
-  });
-
   test('with activated animation', async () => {
     await processEditor.executeCommand('Axon Ivy: Activate Process Animation');
     const scriptInCallSub = processEditor.locatorForPID('190EEC3ABECE2C88-f3');
