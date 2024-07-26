@@ -23,12 +23,14 @@ test.describe('Process Animation', () => {
 
   test('with activated animation', async () => {
     await processEditor.executeCommand('Axon Ivy: Activate Process Animation');
+    await processEditor.page.waitForTimeout(1_000); // ensure config is respected
     const scriptInCallSub = processEditor.locatorForPID('190EEC3ABECE2C88-f3');
     await processEditor.startProcessAndAssertExecuted(start, scriptInCallSub);
   });
 
   test('with deactivated animation', async () => {
     await processEditor.executeCommand('Axon Ivy: Deactivate Process Animation');
+    await processEditor.page.waitForTimeout(1_000); // ensure config is respected
     const callSub = processEditor.locatorForPID('190EEC366DECC66A-f3');
     await processEditor.startProcessAndAssertExecuted(start, callSub);
     await processEditor.page.waitForTimeout(500); // to ensure no jump
