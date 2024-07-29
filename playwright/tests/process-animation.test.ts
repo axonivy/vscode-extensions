@@ -11,14 +11,15 @@ test.describe('Process Animation', () => {
     const page = await pageFor(animationWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page, 'Animation.p.json');
     start = processEditor.locatorForPID('190EEC366DECC66A-f0');
+    await processEditor.hasDeployProjectStatusMessage();
   });
 
   test.beforeEach(async () => {
+    await processEditor.executeCommand('Axon Ivy: Deploy All Projects');
     await processEditor.hasDeployProjectStatusMessage();
     await processEditor.hasNoStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-    await processEditor.executeCommand('Axon Ivy: Deploy All Projects');
     await expect(start).not.toHaveClass(/executed/);
   });
 
