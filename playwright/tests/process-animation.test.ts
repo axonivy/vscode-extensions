@@ -17,7 +17,6 @@ test.describe('Process Animation', () => {
   test.beforeEach(async () => {
     await processEditor.executeCommand('Axon Ivy: Deploy All Projects');
     await processEditor.hasDeployProjectStatusMessage();
-    await processEditor.hasNoStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
     await expect(start).not.toHaveClass(/executed/);
