@@ -46,8 +46,7 @@ export class IvyEngineManager {
     this.ivyEngineApi = new IvyEngineApi(engineUrl.toString());
     let devContextPath = await this.ivyEngineApi.devContextPath;
     devContextPath += devContextPath.endsWith('/') ? '' : '/';
-    await this.initProjects();
-    await this.deployProjects();
+    await this.initExistingProjects();
     const websocketUrl = new URL(devContextPath, toWebSocketUrl(engineUrl));
     IvyBrowserViewProvider.register(this.context, engineUrl, devContextPath);
     ProcessEditorProvider.register(this.context, websocketUrl);
@@ -65,9 +64,12 @@ export class IvyEngineManager {
     return new URL(engineUrl);
   }
 
-  private async initProjects() {
+  private async initExistingProjects() {
     const ivyProjectDirectories = await this.ivyProjectDirectories();
-    await this.ivyEngineApi.initProjects(ivyProjectDirectories);
+    for (const projectDir of ivyProjectDirectories) {
+      await this.ivyEngineApi.initExistingProject(projectDir);
+    }
+    await this.ivyEngineApi.deployProjects(ivyProjectDirectories);
   }
 
   public async deployProjects() {
@@ -129,8 +131,6 @@ export class IvyEngineManager {
     const path = newProjectParams.path;
     this.ivyEngineApi
       .createProject(newProjectParams)
-      .then(() => this.ivyEngineApi.initProjects([path]))
-      .then(() => this.ivyEngineApi.watchProjects([path]))
       .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
       .then(() => setStatusBarMessage('Finished: Create new Project'));
   }

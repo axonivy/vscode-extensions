@@ -43,4 +43,5 @@ type ViewCommand =
   | 'ivyBrowserView.focus'
   | 'ivyBrowserView.open'
   | 'ivyBrowserView.openDevWfUi'
-  | 'ivyBrowserView.openEngineCockpit';
+  | 'ivyBrowserView.openEngineCockpit'
+  | 'ivyBrowserView.openNEO';
