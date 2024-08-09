@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as crypto from 'crypto';
 import path from 'path';
 import { pollWithProgress } from './poll';
 import { NewProcessParams } from '../../project-explorer/new-process';
@@ -11,12 +10,11 @@ import {
   createHd,
   createProcess,
   createProject,
+  createWorkspace,
   deleteProject,
   deployProjects,
-  initProject,
-  watch
+  initExistingProject
 } from './generated/openapi-dev';
-import { getOrCreateDevContext } from './generated/openapi-system';
 
 const progressOptions = (title: string) => {
   return {
@@ -33,39 +31,29 @@ export class IvyEngineApi {
   private readonly baseURL: Promise<string>;
 
   constructor(engineUrl: string) {
-    this._devContextPath = this.devContextPathRequest(engineUrl);
+    this._devContextPath = this.createWorkspace(engineUrl).then(ws => ws.baseUrl);
     this.baseURL = this.devContextPath.then(devContextPath => new URL(path.join(devContextPath, 'api'), engineUrl).toString());
   }
 
-  private async devContextPathRequest(engineUrl: string) {
-    const baseURL = new URL(path.join('system', 'api'), engineUrl).toString();
+  private async createWorkspace(engineUrl: string) {
     await pollWithProgress(engineUrl, 'Waiting for Axon Ivy Engine to be ready.');
-    const sessionId = this.sessionId();
-    const { data } = await getOrCreateDevContext({ sessionId }, { baseURL, auth: { username: 'admin', password: 'admin' }, headers });
-    return data;
+    const baseURL = new URL(path.join('api'), engineUrl).toString();
+    const workspaces = vscode.workspace.workspaceFolders;
+    if (!workspaces || workspaces.length === 0) throw new Error('No workspace available');
+    if (workspaces.length !== 1) throw new Error('Too many workspaces available, only one workspace supported');
+    const workspace = workspaces[0];
+    const workspaceInit = { name: workspace.name, path: workspace.uri.fsPath };
+    return await vscode.window.withProgress(progressOptions('Create workspace'), async () => {
+      return (await createWorkspace(workspaceInit, { baseURL, ...options })).data;
+    });
   }
 
-  private sessionId(): string {
-    if (vscode.workspace.workspaceFolders) {
-      const workspace = vscode.workspace.workspaceFolders[0].uri;
-      return crypto.createHash('sha256').update(workspace.toString()).digest('hex');
-    }
-    return 'workspace-not-available';
-  }
-
-  public async initProjects(ivyProjectDirectories: string[]) {
-    for (const ivyProjectDirectory of ivyProjectDirectories) {
-      await this.initProject(ivyProjectDirectory);
-    }
-    await this.watchProjects(ivyProjectDirectories);
-  }
-
-  public async initProject(projectDir: string) {
-    const projectName = path.basename(projectDir);
-    const params = { projectName, projectDir };
+  public async initExistingProject(projectDir: string) {
+    const name = path.basename(projectDir);
+    const params = { name, path: projectDir };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Initialize Ivy Project'), async () => {
-      await initProject(params, { baseURL, ...options });
+      await initExistingProject(params, { baseURL, ...options });
     });
   }
 
@@ -83,14 +71,6 @@ export class IvyEngineApi {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Build Projects'), async () => {
       await build(params, { baseURL, ...options });
-    });
-  }
-
-  public async watchProjects(ivyProjectDirectories: string[]) {
-    const params = { projectDir: ivyProjectDirectories };
-    const baseURL = await this.baseURL;
-    await vscode.window.withProgress(progressOptions('Watch Projects'), async () => {
-      await watch(params, { baseURL, ...options });
     });
   }
 

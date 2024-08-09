@@ -45,6 +45,12 @@ test.describe('Browser View', () => {
     await assertToolbarInput(/system\/engine-cockpit/);
   });
 
+  test('Open NEO', async () => {
+    await browserView.openNEO();
+    await assertToolbarInput(/neo/);
+    await expect(browserView.content().locator('div.neo-layout')).toBeVisible();
+  });
+
   async function assertToolbarInput(value: RegExp) {
     await expect(browserView.input()).toHaveValue(value);
   }

@@ -5,13 +5,9 @@
  */
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-export type WatchParams = {
-  projectDir?: string[];
-};
-
-export type InitProjectParams = {
-  projectName?: string;
-  projectDir?: string;
+export type ImportWorkspaceBody = {
+  file?: Blob;
+  fileName?: string;
 };
 
 export type DeployProjectsParams = {
@@ -50,13 +46,6 @@ export interface LocationBean {
   timestamp?: string;
   /** The type of the location, e.g., UserPosition, HeadQuarter, BranchOffice */
   type?: string;
-}
-
-export interface CaseBean {
-  description?: string;
-  documents?: DocumentBean[];
-  id?: number;
-  name?: string;
 }
 
 export interface TaskBean {
@@ -102,6 +91,13 @@ export interface DocumentBean {
   url?: string;
 }
 
+export interface CaseBean {
+  description?: string;
+  documents?: DocumentBean[];
+  id?: number;
+  name?: string;
+}
+
 export interface MessageBean {
   document?: DocumentBean;
   message?: string;
@@ -114,6 +110,7 @@ export interface AggBean {
 
 export interface WorkspaceInit {
   name: string;
+  path?: string;
 }
 
 export interface WorkspaceBean {
@@ -121,6 +118,11 @@ export interface WorkspaceBean {
   id: string;
   name: string;
   running: boolean;
+}
+
+export interface InitProjectParams {
+  name?: string;
+  path?: string;
 }
 
 export interface NewProjectParams {
@@ -311,18 +313,11 @@ export const deployProjects = <TData = AxiosResponse<unknown>>(
   });
 };
 
-export const initProject = <TData = AxiosResponse<unknown>>(params?: InitProjectParams, options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/project/init`, {
-    ...options,
-    params: { ...params, ...options?.params }
-  });
-};
-
-export const watch = <TData = AxiosResponse<unknown>>(params?: WatchParams, options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/project/watch`, {
-    ...options,
-    params: { ...params, ...options?.params }
-  });
+export const initExistingProject = <TData = AxiosResponse<unknown>>(
+  initProjectParams: InitProjectParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/project/init`, initProjectParams, options);
 };
 
 export const workspaces = <TData = AxiosResponse<WorkspaceBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
@@ -336,11 +331,28 @@ export const createWorkspace = <TData = AxiosResponse<WorkspaceBean>>(
   return axios.post(`/web-ide/workspace`, workspaceInit, options);
 };
 
-export const deleteWorkspace = <TData = AxiosResponse<unknown>>(
-  deleteWorkspaceBody: string,
+export const exportWorkspace = <TData = AxiosResponse<unknown>>(id: string, options?: AxiosRequestConfig): Promise<TData> => {
+  return axios.get(`/web-ide/workspace/${id}`, options);
+};
+
+export const importWorkspace = <TData = AxiosResponse<unknown>>(
+  id: string,
+  importWorkspaceBody: ImportWorkspaceBody,
   options?: AxiosRequestConfig
 ): Promise<TData> => {
-  return axios.delete(`/web-ide/workspace`, { data: deleteWorkspaceBody, ...options });
+  const formData = new FormData();
+  if (importWorkspaceBody.file !== undefined) {
+    formData.append('file', importWorkspaceBody.file);
+  }
+  if (importWorkspaceBody.fileName !== undefined) {
+    formData.append('fileName', importWorkspaceBody.fileName);
+  }
+
+  return axios.post(`/web-ide/workspace/${id}`, formData, options);
+};
+
+export const deleteWorkspace = <TData = AxiosResponse<unknown>>(id: string, options?: AxiosRequestConfig): Promise<TData> => {
+  return axios.delete(`/web-ide/workspace/${id}`, options);
 };
 
 export type FormsResult = AxiosResponse<HdBean[]>;
@@ -355,8 +367,9 @@ export type BuildResult = AxiosResponse<unknown>;
 export type CreateProjectResult = AxiosResponse<unknown>;
 export type DeleteProjectResult = AxiosResponse<unknown>;
 export type DeployProjectsResult = AxiosResponse<unknown>;
-export type InitProjectResult = AxiosResponse<unknown>;
-export type WatchResult = AxiosResponse<unknown>;
+export type InitExistingProjectResult = AxiosResponse<unknown>;
 export type WorkspacesResult = AxiosResponse<WorkspaceBean[]>;
 export type CreateWorkspaceResult = AxiosResponse<WorkspaceBean>;
+export type ExportWorkspaceResult = AxiosResponse<unknown>;
+export type ImportWorkspaceResult = AxiosResponse<unknown>;
 export type DeleteWorkspaceResult = AxiosResponse<unknown>;
