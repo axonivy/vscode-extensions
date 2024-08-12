@@ -1,6 +1,7 @@
 FROM docker-registry.ivyteam.io/axonivy/openvscode-server-jdk21:dev
 
 ENV IVY_EXTENSION="designer-11.vsix"
+ENV JAVA_OPTS_IVY_SYSTEM="-Divy.engine.testheadless=true -Ddev.mode=true"
 ARG IVY_HOME=/usr/lib/axonivy-engine
 
 COPY extension/${IVY_EXTENSION} /tmp/exts/
