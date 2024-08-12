@@ -43,7 +43,7 @@ test.describe('Create User Dialog', () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test', 'Html Dialog');
     await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.xhtml`);
-    await explorer.hasNode(`${userDialogName}Data.ivyClass`);
+    await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
     await explorer.isTabWithNameVisible(userDialogName + '.xhtml');
     await processEditor.activeEditorHasText('>Html Dialog</a>');
@@ -56,7 +56,7 @@ test.describe('Create User Dialog', () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test.offline', 'Offline Dialog');
     await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.xhtml`);
-    await explorer.hasNode(`${userDialogName}Data.ivyClass`);
+    await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
     await explorer.isTabWithNameVisible(userDialogName + '.xhtml');
     await processEditor.activeEditorHasText('>Offline Html Dialog</a>');
@@ -69,7 +69,7 @@ test.describe('Create User Dialog', () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test.form', 'Form Dialog');
     await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.f.json`);
-    await explorer.hasNode(`${userDialogName}Data.ivyClass`);
+    await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
     await explorer.isTabWithNameVisible(userDialogName + '.f.json');
     await explorer.hasNoStatusMessage();
