@@ -37,7 +37,7 @@ pipeline {
       steps {
         nodejs(nodeJSInstallationName: '20.10.0') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            bat 'set JAVA_OPTS_IVY_SYSTEM="-Divy.engine.testheadless=true -Ddev.mode=true"'
+            bat 'echo -Ddev.mode=true>>"extension/AxonIvyEngine/configuration/jvm.options"'
             bat 'start extension/AxonIvyEngine/bin/AxonIvyEngine.exe'
             bat 'npm run test:playwright:download:vscode'
             bat 'npm run test:playwright'
