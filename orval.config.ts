@@ -11,13 +11,5 @@ export default defineConfig({
     },
     output: './extension/src/engine/api/generated/openapi-dev.ts',
     hooks
-  },
-  openapiSystem: {
-    input: {
-      target: './openapi-system.yaml',
-      filters
-    },
-    output: './extension/src/engine/api/generated/openapi-system.ts',
-    hooks
   }
 });

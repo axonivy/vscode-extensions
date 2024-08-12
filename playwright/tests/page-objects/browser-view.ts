@@ -22,6 +22,10 @@ export class BrowserView extends View {
     await this.executeCommand('Open Engine Cockpit');
   }
 
+  async openNEO() {
+    await this.executeCommand('Open NEO');
+  }
+
   back() {
     return this.header().locator('.back-button');
   }

@@ -8,7 +8,11 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   private view?: vscode.WebviewView;
 
-  private constructor(readonly extensionUri: vscode.Uri, readonly engineUrl: URL, readonly devWfUiUrl: URL) {}
+  private constructor(
+    readonly extensionUri: vscode.Uri,
+    readonly engineUrl: URL,
+    readonly devWfUiUrl: URL
+  ) {}
 
   private static init(context: vscode.ExtensionContext, engineUrl: URL, devWfUiUrl: URL) {
     if (!IvyBrowserViewProvider._instance) {
@@ -31,6 +35,7 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
     registerCommand('ivyBrowserView.openEngineCockpit', context, () =>
       provider.openUrl(new URL('system/engine-cockpit', resolvedEngineUrl))
     );
+    registerCommand('ivyBrowserView.openNEO', context, () => provider.openUrl(new URL('neo', resolvedEngineUrl)));
   }
 
   private static resolveCodespacesEngineHost(engineUrl: URL): URL {
