@@ -45,7 +45,7 @@ pipeline {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'export JAVA_OPTS_IVY_SYSTEM="-Divy.engine.testheadless=true  -Ddev.mode=true"'
-            sh 'nohup bash -c "extension/AxonIvyEngine/bin/AxonIvyEngine"'
+            sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine'
             sh 'npm run test:playwright:download:vscode'
             sh 'xvfb-run --auto-servernum npm run test:playwright'
           }

@@ -15,4 +15,4 @@ USER root
 RUN chown -R openvscode-server /home/workspace
 RUN mkdir ${IVY_HOME}/logs
 
-ENTRYPOINT [ "/bin/sh", "-c", "nohup bash -c /usr/lib/axonivy-engine/bin/AxonIvyEngine & exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server --host 0.0.0.0 --without-connection-token \"${@}\"", "--" ]
+ENTRYPOINT [ "/bin/sh", "-c", "nohup /usr/lib/axonivy-engine/bin/AxonIvyEngine & exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server --host 0.0.0.0 --without-connection-token \"${@}\"", "--" ]
