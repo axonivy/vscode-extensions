@@ -1,7 +1,6 @@
 FROM docker-registry.ivyteam.io/axonivy/openvscode-server-jdk21:dev
 
 ENV IVY_EXTENSION="designer-11.vsix"
-ENV JAVA_OPTS_IVY_SYSTEM="-Divy.engine.testheadless=true -Ddev.mode=true"
 ARG IVY_HOME=/usr/lib/axonivy-engine
 
 COPY extension/${IVY_EXTENSION} /tmp/exts/
@@ -14,5 +13,7 @@ RUN ${OPENVSCODE} --install-builtin-extension /tmp/exts/${IVY_EXTENSION}
 USER root
 RUN chown -R openvscode-server /home/workspace
 RUN mkdir ${IVY_HOME}/logs
+
+ENV JAVA_OPTS_IVY_SYSTEM="-Divy.engine.testheadless=true -Ddev.mode=true"
 
 ENTRYPOINT [ "/bin/sh", "-c", "/usr/lib/axonivy-engine/bin/AxonIvyEngine startdaemon & exec ${OPENVSCODE_SERVER_ROOT}/bin/openvscode-server --host 0.0.0.0 --without-connection-token \"${@}\"", "--" ]
