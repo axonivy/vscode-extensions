@@ -30,6 +30,7 @@ pipeline {
           sh 'npm run build:production'
           sh 'npm run download:engine ' + params.engineDownloadUrl
           sh 'npm run package'
+          sh 'echo "-Ddev.mode=true" >> extension/AxonIvyEngine/configuration/jvm.options '
         }
       }
     }
