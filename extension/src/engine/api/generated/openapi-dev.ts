@@ -5,11 +5,6 @@
  */
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-export type ImportWorkspaceBody = {
-  file?: Blob;
-  fileName?: string;
-};
-
 export type DeployProjectsParams = {
   projectDir?: string[];
 };
@@ -46,6 +41,13 @@ export interface LocationBean {
   timestamp?: string;
   /** The type of the location, e.g., UserPosition, HeadQuarter, BranchOffice */
   type?: string;
+}
+
+export interface CaseBean {
+  description?: string;
+  documents?: DocumentBean[];
+  id?: number;
+  name?: string;
 }
 
 export interface TaskBean {
@@ -91,13 +93,6 @@ export interface DocumentBean {
   url?: string;
 }
 
-export interface CaseBean {
-  description?: string;
-  documents?: DocumentBean[];
-  id?: number;
-  name?: string;
-}
-
 export interface MessageBean {
   document?: DocumentBean;
   message?: string;
@@ -106,18 +101,6 @@ export interface MessageBean {
 
 export interface AggBean {
   [key: string]: unknown;
-}
-
-export interface WorkspaceInit {
-  name: string;
-  path?: string;
-}
-
-export interface WorkspaceBean {
-  baseUrl: string;
-  id: string;
-  name: string;
-  running: boolean;
 }
 
 export interface InitProjectParams {
@@ -320,41 +303,6 @@ export const initExistingProject = <TData = AxiosResponse<unknown>>(
   return axios.post(`/web-ide/project/init`, initProjectParams, options);
 };
 
-export const workspaces = <TData = AxiosResponse<WorkspaceBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/workspaces`, options);
-};
-
-export const createWorkspace = <TData = AxiosResponse<WorkspaceBean>>(
-  workspaceInit: WorkspaceInit,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/web-ide/workspace`, workspaceInit, options);
-};
-
-export const exportWorkspace = <TData = AxiosResponse<unknown>>(id: string, options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/workspace/${id}`, options);
-};
-
-export const importWorkspace = <TData = AxiosResponse<unknown>>(
-  id: string,
-  importWorkspaceBody: ImportWorkspaceBody,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  const formData = new FormData();
-  if (importWorkspaceBody.file !== undefined) {
-    formData.append('file', importWorkspaceBody.file);
-  }
-  if (importWorkspaceBody.fileName !== undefined) {
-    formData.append('fileName', importWorkspaceBody.fileName);
-  }
-
-  return axios.post(`/web-ide/workspace/${id}`, formData, options);
-};
-
-export const deleteWorkspace = <TData = AxiosResponse<unknown>>(id: string, options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.delete(`/web-ide/workspace/${id}`, options);
-};
-
 export type FormsResult = AxiosResponse<HdBean[]>;
 export type DeleteFormResult = AxiosResponse<unknown>;
 export type CreateHdResult = AxiosResponse<HdBean>;
@@ -368,8 +316,3 @@ export type CreateProjectResult = AxiosResponse<unknown>;
 export type DeleteProjectResult = AxiosResponse<unknown>;
 export type DeployProjectsResult = AxiosResponse<unknown>;
 export type InitExistingProjectResult = AxiosResponse<unknown>;
-export type WorkspacesResult = AxiosResponse<WorkspaceBean[]>;
-export type CreateWorkspaceResult = AxiosResponse<WorkspaceBean>;
-export type ExportWorkspaceResult = AxiosResponse<unknown>;
-export type ImportWorkspaceResult = AxiosResponse<unknown>;
-export type DeleteWorkspaceResult = AxiosResponse<unknown>;

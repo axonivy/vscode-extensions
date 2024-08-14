@@ -10,11 +10,11 @@ import {
   createHd,
   createProcess,
   createProject,
-  createWorkspace,
   deleteProject,
   deployProjects,
   initExistingProject
 } from './generated/openapi-dev';
+import { createWorkspace } from './generated/openapi-default';
 
 const progressOptions = (title: string) => {
   return {
