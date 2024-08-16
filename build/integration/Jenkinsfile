@@ -44,7 +44,6 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'echo "-Ddev.mode=true" >> extension/AxonIvyEngine/configuration/jvm.options '
             sh 'extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon'
             sh 'npm run test:playwright:download:vscode'
             sh 'xvfb-run --auto-servernum npm run test:playwright'
