@@ -24,8 +24,8 @@ body:where(.vscode-dark, .vscode-high-contrast:not(.vscode-high-contrast-light))
   --P75: #7e7e7e;
   --P300: #fafafa;
   --P500: #004e69;
-  --error-color: #ee4a52;
-  --warning-color: #ffac5e;
+  --error-color: #e5151c;
+  --warning-color: #ff7300;
   --success-color: #47c46b;
 
   --basic-border: 1px solid var(--N200);

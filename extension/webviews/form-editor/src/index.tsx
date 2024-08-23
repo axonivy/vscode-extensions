@@ -1,4 +1,5 @@
 import 'vscode-webview-common/css/colors.css';
+import './index.css';
 import { App, ClientContextProvider, QueryProvider, initQueryClient } from '@axonivy/form-editor';
 import { FormClientJsonRpc } from '@axonivy/form-editor-core';
 import * as React from 'react';
