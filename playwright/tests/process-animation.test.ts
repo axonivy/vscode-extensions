@@ -1,5 +1,5 @@
-import { expect, Locator, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect, Locator } from '@playwright/test';
+import { test } from './fixtures/page';
 import { ProcessEditor } from './page-objects/process-editor';
 import { animationWorkspacePath } from './workspaces/workspace';
 
@@ -7,18 +7,12 @@ test.describe('Process Animation', () => {
   let processEditor: ProcessEditor;
   let start: Locator;
 
-  test.beforeAll(async ({}, testInfo) => {
-    const page = await pageFor(animationWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    const page = await pageFor(animationWorkspacePath);
     processEditor = new ProcessEditor(page, 'Animation.p.json');
     start = processEditor.locatorForPID('190EEC366DECC66A-f0');
-    await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
-    await processEditor.hasNoStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-    await processEditor.executeCommand('Axon Ivy: Deploy All Projects');
     await processEditor.hasDeployProjectStatusMessage();
   });
 

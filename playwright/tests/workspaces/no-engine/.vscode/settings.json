@@ -1,5 +1,7 @@
 {
-    "engine.url": "http://localhost:8080/",
-    "engine.runByExtension": false,
-    "window.zoomLevel": -1
+  "engine.url": "http://localhost:8080/",
+  "engine.runByExtension": false,
+  "window.zoomLevel": -1,
+  "extensions.ignoreRecommendations": true,
+  "git.openRepositoryInParentFolders": "never"
 }
