@@ -7,10 +7,10 @@ COPY extension/${IVY_EXTENSION} /tmp/exts/
 COPY playwright/tests/workspaces/ /home/workspace
 COPY extension/AxonIvyEngine/ ${IVY_HOME}
 
+USER root
 SHELL ["/bin/bash", "-c"]
 RUN ${OPENVSCODE} --install-builtin-extension /tmp/exts/${IVY_EXTENSION}
 
-USER root
 RUN chown -R openvscode-server /home/workspace
 RUN mkdir ${IVY_HOME}/logs
 
