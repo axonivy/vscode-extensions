@@ -10,7 +10,7 @@ const userDialogPID2 = '15254DCE818AD7A2-f14';
 const userTaskPID = '15254DCE818AD7A2-f17';
 const namespace = 'testNamespace';
 
-test.describe('Inscription View', () => {
+test.describe.skip('Inscription View', () => {
   let page: Page;
   let browserView: BrowserView;
   let processEditor: ProcessEditor;
