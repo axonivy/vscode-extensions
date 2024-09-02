@@ -7,10 +7,6 @@ import { SettingsView } from './page-objects/settings-view';
 test.describe('Engine', () => {
   let page: Page;
 
-  test.afterEach(async () => {
-    await new OutputView(page).closeAllTabs();
-  });
-
   test('check if embedded engine has started', async ({ pageFor }) => {
     page = await pageFor(embeddedEngineWorkspace);
     const outputview = new OutputView(page);
