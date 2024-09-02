@@ -30,6 +30,5 @@ test.describe('Create Project', () => {
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
-    await processEditor.closeAllTabs();
   });
 });
