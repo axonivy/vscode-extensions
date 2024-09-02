@@ -38,7 +38,7 @@ pipeline {
       steps {
         script {
           docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
-            docker.image('docker-registry.ivyteam.io/axonivy/playwright-jdk21:dev').inside("--network host -e RUN_IN_BRWOSER=true") {
+            docker.image('docker-registry.ivyteam.io/axonivy/playwright-base:dev').inside("--network host -e RUN_IN_BRWOSER=true") {
               catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                 sh 'npm run test:playwright:browser'
               }

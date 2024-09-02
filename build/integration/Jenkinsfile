@@ -36,7 +36,7 @@ pipeline {
     stage('Playwright Tests') {
       agent {
         docker {
-          image 'docker-registry.ivyteam.io/axonivy/playwright-jdk21:dev'
+          image 'docker-registry.ivyteam.io/axonivy/playwright-base:dev'
           reuseNode true
         }
       }

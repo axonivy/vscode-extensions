@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -z "${IMAGE_TAG}" ]]; then
-  IMAGE_TAG="axonivy/playwright-jdk21:local"
+  IMAGE_TAG="axonivy/playwright-base:local"
 fi
 
 if [[ -z "${PUSH}" ]]; then
