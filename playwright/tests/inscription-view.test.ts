@@ -29,6 +29,7 @@ test.describe('Inscription View', () => {
   test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
+    await processEditor.hidePanel();
   });
 
   test.afterEach(async () => {
@@ -104,7 +105,6 @@ test.describe('Inscription View', () => {
   });
 
   test('Monaco Editor completion', async () => {
-    await processEditor.executeCommand('View: Toggle Panel Visibility');
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
