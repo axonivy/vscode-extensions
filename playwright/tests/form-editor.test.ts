@@ -16,10 +16,6 @@ test.describe('Form Editor', () => {
     await editor.isViewVisible();
   });
 
-  test.afterEach(async () => {
-    await editor.revertAndCloseEditor();
-  });
-
   test('Open Form editor', async () => {
     const text = editor.locatorFor('.block-text');
     await expect(text).toBeVisible();

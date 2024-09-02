@@ -29,10 +29,6 @@ test.describe('Create User Dialog', () => {
     userDialogName = randomArtefactName();
   });
 
-  test.afterEach(async () => {
-    await explorer.closeAllTabs();
-  });
-
   test.afterAll(async () => {
     cleanUp();
   });

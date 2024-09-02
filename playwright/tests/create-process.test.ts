@@ -23,10 +23,6 @@ test.describe('Create Process', () => {
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
   });
 
-  test.afterEach(async () => {
-    await processEditor.closeAllTabs();
-  });
-
   test.afterAll(async () => {
     cleanUp();
   });
