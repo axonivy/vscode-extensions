@@ -1,14 +1,14 @@
-import { test, expect, Page } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect, Page } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { animationWorkspacePath } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
+import { test } from './fixtures/page';
 
 test.describe('Process Animation', () => {
   let page: Page;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(animationWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(animationWorkspacePath);
     await new FileExplorer(page).hasDeployProjectStatusMessage();
   });
 

@@ -1,14 +1,11 @@
-import { Page, expect, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
-import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { expect } from '@playwright/test';
 import { BrowserView } from './page-objects/browser-view';
+import { test } from './fixtures/page';
 
 test.describe('Browser View', () => {
-  let page: Page;
   let browserView: BrowserView;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ page }) => {
     browserView = new BrowserView(page);
     await browserView.hasDeployProjectStatusMessage();
   });

@@ -1,14 +1,14 @@
-import { Page, expect, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { Page, expect } from '@playwright/test';
 import { VariablesEditor } from './page-objects/variables-editor';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { test } from './fixtures/page';
 
 test.describe('Variables Editor', () => {
   let page: Page;
   let editor: VariablesEditor;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
     editor = new VariablesEditor(page);
     await editor.hasDeployProjectStatusMessage();
     await editor.openEditorFile();

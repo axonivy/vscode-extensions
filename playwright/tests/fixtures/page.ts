@@ -19,8 +19,7 @@ export const test = base.extend<{ page: Page; pageFor(workspace: string): Promis
   }
 });
 
-export async function pageFor(workspace: string, testTitle: string): Promise<Page> {
-  await close();
+async function pageFor(workspace: string, testTitle: string): Promise<Page> {
   if (runInBrowser) {
     return launchBrowser(workspace);
   }
