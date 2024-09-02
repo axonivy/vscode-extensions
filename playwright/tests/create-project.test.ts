@@ -17,7 +17,6 @@ test.describe('Create Project', () => {
   });
 
   test('Add Project and execute init Process', async ({ pageFor }) => {
-    test.setTimeout(80_000);
     const page = await pageFor(empty);
     const explorer = new FileExplorer(page);
     await explorer.addNestedProject(rootFolder, projectName);
