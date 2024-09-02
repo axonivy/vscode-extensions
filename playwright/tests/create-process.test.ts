@@ -23,6 +23,7 @@ test.describe('Create Process', () => {
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
     await processEditor.hasNoStatusMessage();
+    await explorer.hidePanel();
   });
 
   test.afterEach(async () => {

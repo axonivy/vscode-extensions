@@ -83,4 +83,12 @@ export class PageObject {
   async activeEditorHasText(text: string) {
     await expect(this.page.locator('div.editor-container')).toContainText(text);
   }
+
+  async hidePanel() {
+    const panel = this.page.locator('div.panel.basepanel');
+    if (await panel.isVisible()) {
+      await this.executeCommand('View: Toggle Panel Visibility');
+    }
+    await expect(panel).toBeHidden();
+  }
 }

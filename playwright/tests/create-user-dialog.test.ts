@@ -29,6 +29,7 @@ test.describe('Create User Dialog', () => {
   test.beforeEach(async () => {
     userDialogName = randomArtefactName();
     await explorer.hasNoStatusMessage();
+    await explorer.hidePanel();
   });
 
   test.afterEach(async () => {
