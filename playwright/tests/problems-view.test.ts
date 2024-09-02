@@ -1,27 +1,20 @@
-import { Page, test } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
 import { ProblemsView } from './page-objects/problems-view';
+import { test } from './fixtures/page';
 
 test.describe('Problems View', () => {
   let page: Page;
   let processEditor: ProcessEditor;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
     processEditor = new ProcessEditor(page, 'Validation.p.json');
     await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
     await processEditor.executeCommand('View: Focus into Panel');
-  });
-
-  test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
   });
 
   test('Check existing warning', async () => {
@@ -51,5 +44,6 @@ test.describe('Problems View', () => {
     await processEditor.hasError(script);
     const problemsView = await ProblemsView.initProblemsView(page);
     await problemsView.hasError("Output code: Unexpected token: identifier '", '18D9CDFA8F58DA2B-f7');
+    await processEditor.revertAndCloseEditor();
   });
 });

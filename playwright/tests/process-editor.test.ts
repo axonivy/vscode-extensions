@@ -19,10 +19,6 @@ test.describe('Process Editor', () => {
     await processEditor.isViewVisible();
   });
 
-  test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
-  });
-
   test('Check if User Dialog is visible', async () => {
     const userDialog = processEditor.locatorForPID(userDialogPID);
     await expect(userDialog).toBeVisible();
@@ -40,6 +36,7 @@ test.describe('Process Editor', () => {
     expect(boundingBoxAfter!.x).not.toBe(boundingBoxBefore!.x);
     expect(boundingBoxAfter!.y).not.toBe(boundingBoxBefore!.y);
     await processEditor.isDirty();
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Change display name of Request Start', async () => {
@@ -55,6 +52,7 @@ test.describe('Process Editor', () => {
     await expect(start).not.toHaveText(initialName);
     await expect(start).toHaveText('a new test label');
     await processEditor.isDirty();
+    await processEditor.revertAndCloseEditor();
   });
 
   test('Jump into Call Sub', async () => {
