@@ -331,11 +331,6 @@
           "id": "ivyProjects",
           "name": "Axon Ivy Projects",
           "when": "ivy:hasIvyProjects"
-        },
-        {
-          "id": "ivyProcessOutline",
-          "name": "Process Outline",
-          "when": "ivy:hasIvyProjects"
         }
       ]
     },

@@ -10,8 +10,6 @@ import { setupCommunication } from './webview-communication';
 import { createWebViewContent } from '../webview-helper';
 import { ProcessVscodeConnector } from './process-vscode-connector';
 import { messenger } from '../..';
-import { ProcessOutlineProvider } from './process-outline-provider';
-import { registerCommand } from '../../base/commands';
 
 export default class ProcessEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
@@ -65,19 +63,6 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
 
     context.subscriptions.push(workflowServer, ivyVscodeConnector, customEditorProvider);
     workflowServer.start();
-
-    const ivyProcessOutline = new ProcessOutlineProvider(context, ivyVscodeConnector);
-    const treeView = vscode.window.createTreeView('ivyProcessOutline', { treeDataProvider: ivyProcessOutline, showCollapseAll: true });
-    context.subscriptions.push(treeView);
-    ivyVscodeConnector.onSelectedElement(selectedElement => {
-      if (selectedElement) {
-        const element = ivyProcessOutline.findElementBy(selectedElement.pid);
-        if (element && treeView.visible) {
-          treeView.reveal(element, { select: true });
-        }
-      }
-    });
-    registerCommand('ivyProcessOutline.selectElement', context, pid => ivyProcessOutline.select(pid));
 
     configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
   }

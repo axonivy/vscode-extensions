@@ -39,7 +39,6 @@ type ProjectViewCommand =
   | 'ivyProjects.addNewOfflineDialog'
   | 'ivyProjects.revealInExplorer';
 type ViewCommand =
-  | 'ivyProcessOutline.selectElement'
   | 'ivyBrowserView.focus'
   | 'ivyBrowserView.open'
   | 'ivyBrowserView.openDevWfUi'
