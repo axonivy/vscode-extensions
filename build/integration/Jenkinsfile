@@ -46,7 +46,7 @@ pipeline {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon'
             sh 'npm run test:playwright:download:vscode'
-            sh 'xvfb-run --auto-servernum npm run test:playwright'
+            sh 'npm run test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
