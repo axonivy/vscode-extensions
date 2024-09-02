@@ -1,9 +1,9 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 import { wait } from './utils/timeout';
+import { test } from './fixtures/page';
 
 const userDialogPID1 = '15254DCE818AD7A2-f3';
 const userDialogPID2 = '15254DCE818AD7A2-f14';
@@ -19,17 +19,16 @@ test.describe('Inscription View', () => {
     removeFromWorkspace(prebuiltWorkspacePath, 'processes', namespace);
   };
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async () => {
     cleanUp();
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
-    processEditor = new ProcessEditor(page);
-    await processEditor.hasDeployProjectStatusMessage();
   });
 
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
+    processEditor = new ProcessEditor(page);
+    await processEditor.hasDeployProjectStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-    await processEditor.hidePanel();
   });
 
   test.afterEach(async () => {
@@ -105,6 +104,7 @@ test.describe('Inscription View', () => {
   });
 
   test('Monaco Editor completion', async () => {
+    await processEditor.hidePanel();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     const outputAccordion = inscriptionView.accordionFor('Output');
     await expect(outputAccordion).toBeVisible();
@@ -141,7 +141,6 @@ test.describe('Inscription View', () => {
   });
 
   test('Create Html Dialog', async () => {
-    await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     await inscriptionView.accordionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');
@@ -161,7 +160,6 @@ test.describe('Inscription View', () => {
   });
 
   test('Create Form Dialog', async () => {
-    await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID2);
     await inscriptionView.accordionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');
@@ -179,7 +177,6 @@ test.describe('Inscription View', () => {
   });
 
   test('Create Offline Dialog', async () => {
-    await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userTaskPID);
     await inscriptionView.accordionFor('Dialog').click();
     const dialogField = inscriptionView.parent.getByRole('combobox');

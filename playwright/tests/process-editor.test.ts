@@ -1,9 +1,9 @@
-import { expect, test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect } from 'playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { getCtrlOrMeta } from './utils/keyboard';
+import { test } from './fixtures/page';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
@@ -11,13 +11,10 @@ test.describe('Process Editor', () => {
   let processEditor: ProcessEditor;
   let page: Page;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
     processEditor = new ProcessEditor(page);
     await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });

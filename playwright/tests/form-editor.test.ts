@@ -1,20 +1,17 @@
-import { expect, test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect } from 'playwright/test';
 import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { FormEditor } from './page-objects/form-editor';
+import { test } from './fixtures/page';
 
 test.describe('Form Editor', () => {
   let editor: FormEditor;
   let page: Page;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
     editor = new FormEditor(page);
     await editor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await editor.openEditorFile();
     await editor.isViewVisible();
   });
