@@ -1,11 +1,10 @@
-import { test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 import { FormEditor } from './page-objects/form-editor';
+import { test } from './fixtures/page';
 
 test.describe('Create User Dialog', () => {
   let page: Page;
@@ -18,18 +17,16 @@ test.describe('Create User Dialog', () => {
     removeFromWorkspace(projectPath, 'src_dataClasses', 'ch');
   };
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async () => {
     cleanUp();
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  });
+
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltWorkspacePath);
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
     processEditor = new ProcessEditor(page);
-  });
-
-  test.beforeEach(async () => {
     userDialogName = randomArtefactName();
-    await explorer.hasNoStatusMessage();
-    await explorer.hidePanel();
   });
 
   test.afterEach(async () => {

@@ -1,9 +1,8 @@
-import { test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
 import { prebuiltEmptyWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { Page, expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
+import { test } from './fixtures/page';
 
 test.describe('Create Process', () => {
   let page: Page;
@@ -12,18 +11,16 @@ test.describe('Create Process', () => {
   let processName: string;
   const cleanUp = () => removeFromWorkspace(prebuiltEmptyWorkspacePath, 'processes');
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async () => {
     cleanUp();
-    page = await pageFor(prebuiltEmptyWorkspacePath, testInfo.titlePath[1]);
-    explorer = new FileExplorer(page);
-    await explorer.hasDeployProjectStatusMessage();
   });
 
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ pageFor }) => {
+    page = await pageFor(prebuiltEmptyWorkspacePath);
+    explorer = new FileExplorer(page);
+    await explorer.hasDeployProjectStatusMessage();
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
-    await processEditor.hasNoStatusMessage();
-    await explorer.hidePanel();
   });
 
   test.afterEach(async () => {
