@@ -3,7 +3,10 @@ import { View, ViewData } from './view';
 import path from 'path';
 
 export abstract class ExplorerView extends View {
-  constructor(private viewName: string, page: Page) {
+  constructor(
+    private viewName: string,
+    page: Page
+  ) {
     const data: ViewData = {
       tabSelector: `div.pane-header:has-text("${viewName}")`,
       viewSelector: ''
@@ -111,11 +114,5 @@ export class ProjectExplorerView extends ExplorerView {
   async revealInExplorer(name: string) {
     await this.selectNode(name);
     await this.executeCommand('Axon Ivy: Reveal in Explorer');
-  }
-}
-
-export class OutlineExplorerView extends ExplorerView {
-  constructor(page: Page) {
-    super('Process Outline', page);
   }
 }
