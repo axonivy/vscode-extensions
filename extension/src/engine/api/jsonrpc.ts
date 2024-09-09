@@ -1,6 +1,4 @@
-import { BaseRpcClient } from '@axonivy/jsonrpc/lib/base-rpc-client';
-import { Connection } from '@axonivy/jsonrpc/lib/connection-util';
-import { createMessageConnection, Disposable } from '@axonivy/jsonrpc/lib/re-exports';
+import { BaseRpcClient, Connection, createMessageConnection, Disposable } from '@axonivy/jsonrpc';
 import { Callback, WebIdeClient } from './jsonrpc-protocol';
 import { ProcessBean } from './generated/openapi-dev';
 
