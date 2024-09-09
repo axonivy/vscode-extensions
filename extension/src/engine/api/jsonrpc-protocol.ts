@@ -1,4 +1,4 @@
-import type { Disposable } from '@axonivy/jsonrpc/lib/re-exports';
+import type { Disposable } from '@axonivy/jsonrpc';
 import { ProcessBean } from './generated/openapi-dev';
 
 export class Callback<T, R = void> implements Disposable {
