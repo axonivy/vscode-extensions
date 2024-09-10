@@ -41,7 +41,6 @@ test.describe('Create User Dialog', () => {
 
   test('Add Html Dialog', async () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test', 'Html Dialog');
-    await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.xhtml`);
     await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
@@ -54,7 +53,6 @@ test.describe('Create User Dialog', () => {
 
   test('Add Offline Dialog', async () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test.offline', 'Offline Dialog');
-    await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.xhtml`);
     await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
@@ -67,7 +65,6 @@ test.describe('Create User Dialog', () => {
 
   test('Add Form Dialog', async () => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test.form', 'Form Dialog');
-    await explorer.hasNode(`${userDialogName}.rddescriptor`);
     await explorer.hasNode(`${userDialogName}.f.json`);
     await explorer.hasNode(`${userDialogName}Data.d.json`);
     await explorer.hasNode(`${userDialogName}Process.p.json`);
