@@ -14,8 +14,10 @@ const args = [
 ];
 
 export async function launchElectronApp(workspacePath: string, testTitle: string): Promise<ElectronApplication> {
+  const executablePath = await downloadAndUnzipVSCode(downloadVersion);
   return await _electron.launch({
-    executablePath: await downloadAndUnzipVSCode(downloadVersion),
+    executablePath,
+    env: {},
     args: [...args, workspacePath],
     recordVideo: recordVideo(testTitle)
   });

@@ -26,7 +26,8 @@ junit.xml
 eslint.xml
 report.xml
 
-test-results
+test-results/
+.vscode-test/
 
 tsconfig.tsbuildinfo
 
