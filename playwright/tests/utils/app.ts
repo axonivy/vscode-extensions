@@ -17,9 +17,9 @@ export async function launchElectronApp(workspacePath: string, testTitle: string
   const executablePath = await downloadAndUnzipVSCode(downloadVersion);
   return await _electron.launch({
     executablePath,
-    env: {},
     args: [...args, workspacePath],
-    recordVideo: recordVideo(testTitle)
+    recordVideo: recordVideo(testTitle),
+    env: process.env.CI ? undefined : {}
   });
 }
 
