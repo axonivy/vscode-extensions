@@ -89,7 +89,11 @@ export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.Cus
     const { args } = message.action.target;
     const absolutePath = args?.['absolutePath'] as string;
     if (absolutePath) {
-      this.openWithProcessEditor(absolutePath);
+      if (absolutePath.endsWith('.p.json')) {
+        this.openWithProcessEditor(absolutePath);
+      } else {
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(absolutePath));
+      }
       return { processedMessage: undefined, messageChanged: true };
     }
     return super.handleNavigateToExternalTargetAction(message, _client, _origin);

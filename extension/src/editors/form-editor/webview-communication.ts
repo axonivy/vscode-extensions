@@ -3,6 +3,7 @@ import { Messenger } from 'vscode-messenger';
 import { WebSocketForwarder } from '../websocket-forwarder';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import { MessageParticipant, NotificationType } from 'vscode-messenger-common';
+import { FormActionArgs } from '@axonivy/form-editor-protocol';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
@@ -29,7 +30,12 @@ export const setupCommunication = (
 class FormEditorWebSocketForwarder extends WebSocketForwarder {
   private readonly saveListener: vscode.Disposable;
 
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, readonly document: vscode.TextDocument) {
+  constructor(
+    websocketUrl: URL,
+    messenger: Messenger,
+    messageParticipant: MessageParticipant,
+    readonly document: vscode.TextDocument
+  ) {
     super(websocketUrl, 'ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage);
     this.saveListener = vscode.workspace.onDidSaveTextDocument(e => {
       if (e.uri === document.uri) {
@@ -41,6 +47,17 @@ class FormEditorWebSocketForwarder extends WebSocketForwarder {
   protected override handleClientMessage(message: unknown) {
     if (this.isSaveData(message)) {
       message.method = 'content';
+    }
+    if (this.isAction(message)) {
+      const file = this.document.uri.path;
+      const path = file.substring(0, file.lastIndexOf('.f.json'));
+      if (message.params.actionId === 'openProcess') {
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`${path}Process.p.json`));
+      }
+      if (message.params.actionId === 'openDataClass') {
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`${path}Data.d.json`));
+      }
+      return;
     }
     super.handleClientMessage(message);
   }
@@ -56,6 +73,10 @@ class FormEditorWebSocketForwarder extends WebSocketForwarder {
 
   isSaveData = (obj: unknown): obj is { method: string } => {
     return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'saveData';
+  };
+
+  isAction = (obj: unknown): obj is { method: string; params: FormActionArgs } => {
+    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'action';
   };
 
   isContent = (obj: unknown): obj is { result: { content: string } } => {
