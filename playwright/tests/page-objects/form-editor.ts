@@ -21,4 +21,8 @@ export class FormEditor extends Editor {
   locatorFor(type: string) {
     return this.viewFrameLoactor().locator(type);
   }
+
+  get toolbar() {
+    return this.viewFrameLoactor().locator('.toolbar');
+  }
 }

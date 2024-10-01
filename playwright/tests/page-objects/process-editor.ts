@@ -23,6 +23,10 @@ export class ProcessEditor extends Editor {
     return this.viewFrameLoactor().locator('#sprotty .sprotty-graph');
   }
 
+  get toolbar() {
+    return this.viewFrameLoactor().locator('.ivy-tool-bar');
+  }
+
   locatorForPID(pid: string) {
     return this.graphLocator().locator(`[id$="_${pid}"]`);
   }
