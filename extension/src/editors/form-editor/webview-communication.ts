@@ -28,8 +28,6 @@ export const setupCommunication = (
 };
 
 class FormEditorWebSocketForwarder extends WebSocketForwarder {
-  private readonly saveListener: vscode.Disposable;
-
   constructor(
     websocketUrl: URL,
     messenger: Messenger,
@@ -37,11 +35,6 @@ class FormEditorWebSocketForwarder extends WebSocketForwarder {
     readonly document: vscode.TextDocument
   ) {
     super(websocketUrl, 'ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage);
-    this.saveListener = vscode.workspace.onDidSaveTextDocument(e => {
-      if (e.uri === document.uri) {
-        super.handleClientMessage({ method: 'build', params: { app: '', pmv: '', file: this.document.uri.fsPath } });
-      }
-    });
   }
 
   protected override handleClientMessage(message: unknown) {
@@ -100,9 +93,4 @@ class FormEditorWebSocketForwarder extends WebSocketForwarder {
     );
     vscode.workspace.applyEdit(workspaceEdit);
   };
-
-  override dispose(): void {
-    super.dispose();
-    this.saveListener.dispose();
-  }
 }
