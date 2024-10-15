@@ -5,9 +5,9 @@
  */
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-export type ImportWorkspaceBody = {
+export type ImportProjectsBody = {
+  dependentProject?: Blob;
   file?: Blob;
-  fileName?: string;
 };
 
 /**
@@ -34,6 +34,13 @@ export interface LocationBean {
   timestamp?: string;
   /** The type of the location, e.g., UserPosition, HeadQuarter, BranchOffice */
   type?: string;
+}
+
+export interface CaseBean {
+  description?: string;
+  documents?: DocumentBean[];
+  id?: number;
+  name?: string;
 }
 
 export interface TaskBean {
@@ -79,13 +86,6 @@ export interface DocumentBean {
   url?: string;
 }
 
-export interface CaseBean {
-  description?: string;
-  documents?: DocumentBean[];
-  id?: number;
-  name?: string;
-}
-
 export interface MessageBean {
   document?: DocumentBean;
   message?: string;
@@ -94,6 +94,17 @@ export interface MessageBean {
 
 export interface AggBean {
   [key: string]: unknown;
+}
+
+export interface ProjectIdentifier {
+  app: string;
+  isIar?: boolean;
+  pmv: string;
+}
+
+export interface ProductInstallParams {
+  dependentProject?: ProjectIdentifier;
+  productJson: string;
 }
 
 export interface WorkspaceInit {
@@ -162,17 +173,17 @@ export const exportWorkspace = <TData = AxiosResponse<unknown>>(id: string, opti
   return axios.get(`/web-ide/workspace/${id}`, options);
 };
 
-export const importWorkspace = <TData = AxiosResponse<unknown>>(
+export const importProjects = <TData = AxiosResponse<unknown>>(
   id: string,
-  importWorkspaceBody: ImportWorkspaceBody,
+  importProjectsBody: ImportProjectsBody,
   options?: AxiosRequestConfig
 ): Promise<TData> => {
   const formData = new FormData();
-  if (importWorkspaceBody.file !== undefined) {
-    formData.append('file', importWorkspaceBody.file);
+  if (importProjectsBody.file !== undefined) {
+    formData.append('file', importProjectsBody.file);
   }
-  if (importWorkspaceBody.fileName !== undefined) {
-    formData.append('fileName', importWorkspaceBody.fileName);
+  if (importProjectsBody.dependentProject !== undefined) {
+    formData.append('dependentProject', importProjectsBody.dependentProject);
   }
 
   return axios.post(`/web-ide/workspace/${id}`, formData, options);
@@ -182,8 +193,17 @@ export const deleteWorkspace = <TData = AxiosResponse<unknown>>(id: string, opti
   return axios.delete(`/web-ide/workspace/${id}`, options);
 };
 
+export const installMarketProduct = <TData = AxiosResponse<unknown>>(
+  id: string,
+  productInstallParams: ProductInstallParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/workspace/install/${id}`, productInstallParams, options);
+};
+
 export type WorkspacesResult = AxiosResponse<WorkspaceBean[]>;
 export type CreateWorkspaceResult = AxiosResponse<WorkspaceBean>;
 export type ExportWorkspaceResult = AxiosResponse<unknown>;
-export type ImportWorkspaceResult = AxiosResponse<unknown>;
+export type ImportProjectsResult = AxiosResponse<unknown>;
 export type DeleteWorkspaceResult = AxiosResponse<unknown>;
+export type InstallMarketProductResult = AxiosResponse<unknown>;

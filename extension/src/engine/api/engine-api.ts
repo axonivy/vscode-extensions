@@ -6,13 +6,13 @@ import { NewUserDialogParams } from '../../project-explorer/new-user-dialog';
 import { setStatusBarMessage } from '../../base/status-bar';
 import {
   NewProjectParams,
-  build,
+  buildProjects,
   createHd,
   createProcess,
-  createProject,
+  createPmvAndProjectFiles,
   deleteProject,
   deployProjects,
-  initExistingProject
+  findOrCreatePmv
 } from './generated/openapi-dev';
 import { createWorkspace } from './generated/openapi-default';
 
@@ -53,24 +53,22 @@ export class IvyEngineApi {
     const params = { name, path: projectDir };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Initialize Ivy Project'), async () => {
-      await initExistingProject(params, { baseURL, ...options });
+      await findOrCreatePmv(params, { baseURL, ...options });
     });
   }
 
   public async deployProjects(ivyProjectDirectories: string[]) {
-    const params = { projectDir: ivyProjectDirectories };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Deploy Ivy Projects'), async () => {
-      await deployProjects(params, { baseURL, ...options });
+      await deployProjects(ivyProjectDirectories, { baseURL, ...options });
     });
     setStatusBarMessage('Finished: Deploy Ivy Projects');
   }
 
   public async buildProjects(ivyProjectDirectories: string[]) {
-    const params = { projectDir: ivyProjectDirectories };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Build Projects'), async () => {
-      await build(params, { baseURL, ...options });
+      await buildProjects(ivyProjectDirectories, { baseURL, ...options });
     });
   }
 
@@ -84,7 +82,7 @@ export class IvyEngineApi {
   public async createProject(newProjectParams: NewProjectParams) {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Create new Project'), async () => {
-      await createProject(newProjectParams, { baseURL, ...options });
+      await createPmvAndProjectFiles(newProjectParams, { baseURL, ...options });
     });
   }
 

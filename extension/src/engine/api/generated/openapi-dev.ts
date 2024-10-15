@@ -5,16 +5,8 @@
  */
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-export type DeployProjectsParams = {
-  projectDir?: string[];
-};
-
 export type DeleteProjectParams = {
   projectDir?: string;
-};
-
-export type BuildParams = {
-  projectDir?: string[];
 };
 
 /**
@@ -41,13 +33,6 @@ export interface LocationBean {
   timestamp?: string;
   /** The type of the location, e.g., UserPosition, HeadQuarter, BranchOffice */
   type?: string;
-}
-
-export interface CaseBean {
-  description?: string;
-  documents?: DocumentBean[];
-  id?: number;
-  name?: string;
 }
 
 export interface TaskBean {
@@ -93,6 +78,13 @@ export interface DocumentBean {
   url?: string;
 }
 
+export interface CaseBean {
+  description?: string;
+  documents?: DocumentBean[];
+  id?: number;
+  name?: string;
+}
+
 export interface MessageBean {
   document?: DocumentBean;
   message?: string;
@@ -103,7 +95,7 @@ export interface AggBean {
   [key: string]: unknown;
 }
 
-export interface InitProjectParams {
+export interface ProjectParams {
   name?: string;
   path?: string;
 }
@@ -114,6 +106,15 @@ export interface NewProjectParams {
   name?: string;
   path?: string;
   projectId?: string;
+}
+
+export interface ProcessInit {
+  kind: string;
+  name: string;
+  namespace: string;
+  path?: string;
+  pid?: string;
+  project?: ProjectIdentifier;
 }
 
 export interface ProcessIdentifier {
@@ -145,16 +146,8 @@ export interface ProcessBean {
 
 export interface ProjectIdentifier {
   app: string;
+  isIar?: boolean;
   pmv: string;
-}
-
-export interface ProcessInit {
-  kind: string;
-  name: string;
-  namespace: string;
-  path?: string;
-  pid?: string;
-  project?: ProjectIdentifier;
 }
 
 export interface HdInit {
@@ -180,6 +173,24 @@ export interface HdBean {
   path: string;
   type?: string;
   uri?: string;
+}
+
+export interface DataClassInit {
+  name: string;
+  project?: ProjectIdentifier;
+  projectDir?: string;
+}
+
+export interface DataClassIdentifier {
+  name: string;
+  project: ProjectIdentifier;
+}
+
+export interface DataClassBean {
+  dataClassIdentifier: DataClassIdentifier;
+  name: string;
+  path: string;
+  simpleName: string;
 }
 
 export interface EngineInfo {
@@ -221,6 +232,24 @@ export interface WebNotificationOperation {
   operation?: WebNotificationOperationOperation;
 }
 
+export const dataClasses = <TData = AxiosResponse<DataClassBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
+  return axios.get(`/web-ide/dataclasses`, options);
+};
+
+export const createDataClass = <TData = AxiosResponse<DataClassBean>>(
+  dataClassInit: DataClassInit,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/dataclass`, dataClassInit, options);
+};
+
+export const deleteDataClass = <TData = AxiosResponse<DataClassIdentifier>>(
+  dataClassIdentifier: DataClassIdentifier,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/web-ide/dataclass`, { data: dataClassIdentifier, ...options });
+};
+
 export const forms = <TData = AxiosResponse<HdBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
   return axios.get(`/web-ide/forms`, options);
 };
@@ -254,26 +283,36 @@ export const deleteProcess = <TData = AxiosResponse<unknown>>(
   return axios.delete(`/web-ide/process`, { data: processIdentifier, ...options });
 };
 
+export const buildProjects = <TData = AxiosResponse<unknown>>(
+  buildProjectsBody: string[],
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/projects/build`, buildProjectsBody, options);
+};
+
+export const deployProjects = <TData = AxiosResponse<unknown>>(
+  deployProjectsBody: string[],
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/projects/deploy`, deployProjectsBody, options);
+};
+
 export const projects = <TData = AxiosResponse<ProjectIdentifier[]>>(options?: AxiosRequestConfig): Promise<TData> => {
   return axios.get(`/web-ide/projects`, options);
 };
 
-export const watchProjects = <TData = AxiosResponse<unknown>>(options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/projects/watch`, options);
-};
-
-export const build = <TData = AxiosResponse<unknown>>(params?: BuildParams, options?: AxiosRequestConfig): Promise<TData> => {
-  return axios.get(`/web-ide/project/build`, {
-    ...options,
-    params: { ...params, ...options?.params }
-  });
-};
-
-export const createProject = <TData = AxiosResponse<unknown>>(
+export const createPmvAndProjectFiles = <TData = AxiosResponse<unknown>>(
   newProjectParams: NewProjectParams,
   options?: AxiosRequestConfig
 ): Promise<TData> => {
-  return axios.post(`/web-ide/project`, newProjectParams, options);
+  return axios.post(`/web-ide/project/new`, newProjectParams, options);
+};
+
+export const findOrCreatePmv = <TData = AxiosResponse<unknown>>(
+  projectParams: ProjectParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/project`, projectParams, options);
 };
 
 export const deleteProject = <TData = AxiosResponse<unknown>>(
@@ -286,33 +325,18 @@ export const deleteProject = <TData = AxiosResponse<unknown>>(
   });
 };
 
-export const deployProjects = <TData = AxiosResponse<unknown>>(
-  params?: DeployProjectsParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.get(`/web-ide/project/deploy`, {
-    ...options,
-    params: { ...params, ...options?.params }
-  });
-};
-
-export const initExistingProject = <TData = AxiosResponse<unknown>>(
-  initProjectParams: InitProjectParams,
-  options?: AxiosRequestConfig
-): Promise<TData> => {
-  return axios.post(`/web-ide/project/init`, initProjectParams, options);
-};
-
+export type DataClassesResult = AxiosResponse<DataClassBean[]>;
+export type CreateDataClassResult = AxiosResponse<DataClassBean>;
+export type DeleteDataClassResult = AxiosResponse<DataClassIdentifier>;
 export type FormsResult = AxiosResponse<HdBean[]>;
 export type DeleteFormResult = AxiosResponse<unknown>;
 export type CreateHdResult = AxiosResponse<HdBean>;
 export type GetProcessesResult = AxiosResponse<ProcessBean[]>;
 export type CreateProcessResult = AxiosResponse<ProcessBean>;
 export type DeleteProcessResult = AxiosResponse<unknown>;
-export type ProjectsResult = AxiosResponse<ProjectIdentifier[]>;
-export type WatchProjectsResult = AxiosResponse<unknown>;
-export type BuildResult = AxiosResponse<unknown>;
-export type CreateProjectResult = AxiosResponse<unknown>;
-export type DeleteProjectResult = AxiosResponse<unknown>;
+export type BuildProjectsResult = AxiosResponse<unknown>;
 export type DeployProjectsResult = AxiosResponse<unknown>;
-export type InitExistingProjectResult = AxiosResponse<unknown>;
+export type ProjectsResult = AxiosResponse<ProjectIdentifier[]>;
+export type CreatePmvAndProjectFilesResult = AxiosResponse<unknown>;
+export type FindOrCreatePmvResult = AxiosResponse<unknown>;
+export type DeleteProjectResult = AxiosResponse<unknown>;
