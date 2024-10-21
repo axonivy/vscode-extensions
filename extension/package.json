@@ -28,7 +28,7 @@
   },
   "main": "./dist/extension.js",
   "dependencies": {
-    "@eclipse-glsp/vscode-integration": "~2.2.0",
+    "@eclipse-glsp/vscode-integration": "2.3.0-next.90",
     "axios": "^1.7.4",
     "fast-xml-parser": "^4.3.2",
     "htmlparser2": "^9.1.0",
