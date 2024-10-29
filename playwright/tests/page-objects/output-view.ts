@@ -12,7 +12,7 @@ export class OutputView extends View {
   }
 
   async checkIfEngineStarted() {
-    const expectedText = "Type 'shutdown' and confirm";
+    const expectedText = 'Axon Ivy Engine is running and ready to serve.';
     await expect(async () => {
       await expect(this.viewLocator).toContainText(expectedText);
     }).toPass();

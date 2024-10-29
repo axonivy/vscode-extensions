@@ -7,6 +7,8 @@ import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 export type DeleteProjectParams = {
   projectDir?: string;
+  app?: string;
+  pmv?: string;
 };
 
 /**
@@ -150,7 +152,16 @@ export interface ProjectIdentifier {
   pmv: string;
 }
 
+export interface ProjectBean {
+  artifactId: string;
+  groupId: string;
+  id: ProjectIdentifier;
+  isDeletable: boolean;
+  version: string;
+}
+
 export interface HdInit {
+  dataClass?: DataClassIdentifier;
   layout?: string;
   name: string;
   namespace: string;
@@ -297,7 +308,7 @@ export const deployProjects = <TData = AxiosResponse<unknown>>(
   return axios.post(`/web-ide/projects/deploy`, deployProjectsBody, options);
 };
 
-export const projects = <TData = AxiosResponse<ProjectIdentifier[]>>(options?: AxiosRequestConfig): Promise<TData> => {
+export const projects = <TData = AxiosResponse<ProjectBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
   return axios.get(`/web-ide/projects`, options);
 };
 
@@ -325,6 +336,33 @@ export const deleteProject = <TData = AxiosResponse<unknown>>(
   });
 };
 
+export const dependencies = <TData = AxiosResponse<ProjectIdentifier[]>>(
+  app: string,
+  pmv: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/web-ide/project/${app}/${pmv}/dependencies`, options);
+};
+
+export const addDependency = <TData = AxiosResponse<unknown>>(
+  app: string,
+  pmv: string,
+  projectIdentifier: ProjectIdentifier,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/project/${app}/${pmv}/dependency`, projectIdentifier, options);
+};
+
+export const removeDependency = <TData = AxiosResponse<unknown>>(
+  app: string,
+  pmv: string,
+  dependencyApp: string,
+  dependencyPmv: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/web-ide/project/${app}/${pmv}/dependency/${dependencyApp}/${dependencyPmv}`, options);
+};
+
 export type DataClassesResult = AxiosResponse<DataClassBean[]>;
 export type CreateDataClassResult = AxiosResponse<DataClassBean>;
 export type DeleteDataClassResult = AxiosResponse<DataClassIdentifier>;
@@ -336,7 +374,10 @@ export type CreateProcessResult = AxiosResponse<ProcessBean>;
 export type DeleteProcessResult = AxiosResponse<unknown>;
 export type BuildProjectsResult = AxiosResponse<unknown>;
 export type DeployProjectsResult = AxiosResponse<unknown>;
-export type ProjectsResult = AxiosResponse<ProjectIdentifier[]>;
+export type ProjectsResult = AxiosResponse<ProjectBean[]>;
 export type CreatePmvAndProjectFilesResult = AxiosResponse<unknown>;
 export type FindOrCreatePmvResult = AxiosResponse<unknown>;
 export type DeleteProjectResult = AxiosResponse<unknown>;
+export type DependenciesResult = AxiosResponse<ProjectIdentifier[]>;
+export type AddDependencyResult = AxiosResponse<unknown>;
+export type RemoveDependencyResult = AxiosResponse<unknown>;

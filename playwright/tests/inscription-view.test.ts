@@ -137,7 +137,7 @@ test.describe('Inscription View', () => {
     await processEditor.isDirty();
     await processEditor.isInactive();
     await processEditor.tabLocator.click();
-    await expect(processStartField).toHaveValue(`${namespace}/${processName}:call()`);
+    await expect(processStartField).toHaveValue(`${namespace}/${processName}:call(prebuiltProject.Data)`);
   });
 
   test('Create Html Dialog', async () => {
@@ -157,7 +157,7 @@ test.describe('Inscription View', () => {
     await processEditor.isInactive();
     await processEditor.isTabWithNameVisible(`${userDialogName}.xhtml`);
     await processEditor.tabLocator.click();
-    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
+    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start(prebuiltProject.Data)`);
   });
 
   test('Create Form Dialog', async () => {
@@ -175,7 +175,7 @@ test.describe('Inscription View', () => {
     await processEditor.isInactive();
     await processEditor.isTabWithNameVisible(`${userDialogName}.f.json`);
     await processEditor.tabLocator.click();
-    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
+    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start(prebuiltProject.Data)`);
   });
 
   test('Create Offline Dialog', async () => {
@@ -193,6 +193,6 @@ test.describe('Inscription View', () => {
     await processEditor.isInactive();
     await processEditor.isTabWithNameVisible(`${userDialogName}.xhtml`);
     await processEditor.tabLocator.click();
-    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start()`);
+    await expect(dialogField).toHaveValue(`prebuiltProject.${userDialogName}:start(prebuiltProject.Data)`);
   });
 });
