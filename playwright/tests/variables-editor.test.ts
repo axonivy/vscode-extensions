@@ -2,6 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { pageFor } from './fixtures/page';
 import { VariablesEditor } from './page-objects/variables-editor';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { BrowserView } from './page-objects/browser-view';
 
 test.describe('Variables Editor', () => {
   let page: Page;
@@ -45,5 +46,13 @@ test.describe('Variables Editor', () => {
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
     // expect(await editor.hasKey('originalKey'));
     // expect(await editor.hasValue('originalValue'));
+  });
+
+  test('Open Help', async () => {
+    const browserView = new BrowserView(page);
+    await editor.viewFrameLoactor().getByRole('button', { name: /Help/ }).click();
+    expect((await browserView.input().inputValue()).toString()).toMatch(
+      /^https:\/\/developer\.axonivy\.com.*configuration\/variables\.html$/
+    );
   });
 });

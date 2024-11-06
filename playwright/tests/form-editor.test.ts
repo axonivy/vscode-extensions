@@ -3,6 +3,7 @@ import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspace';
 import { Page } from '@playwright/test';
 import { FormEditor } from './page-objects/form-editor';
+import { BrowserView } from './page-objects/browser-view';
 
 test.describe('Form Editor', () => {
   let editor: FormEditor;
@@ -45,5 +46,15 @@ test.describe('Form Editor', () => {
     await xhtmlEditor.isTabVisible();
     await xhtmlEditor.activeEditorHasText(`value="${newLabel}" />`);
     await xhtmlEditor.revertAndCloseEditor();
+  });
+
+  test('Open Help', async () => {
+    const browserView = new BrowserView(page);
+    await editor.locatorFor('.block-input').dblclick();
+    const inscriptionView = editor.locatorFor('#properties');
+    await inscriptionView.getByRole('button', { name: /Help/ }).click();
+    expect((await browserView.input().inputValue()).toString()).toMatch(
+      /^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/
+    );
   });
 });

@@ -4,6 +4,7 @@ import { WebSocketForwarder } from '../websocket-forwarder';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import { MessageParticipant, NotificationType } from 'vscode-messenger-common';
 import { FormActionArgs } from '@axonivy/form-editor-protocol';
+import { IvyBrowserViewProvider } from '../../browser/ivy-browser-view-provider';
 
 const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
 const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
@@ -49,6 +50,9 @@ class FormEditorWebSocketForwarder extends WebSocketForwarder {
       }
       if (message.params.actionId === 'openDataClass') {
         vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`${path}Data.d.json`));
+      }
+      if (message.params.actionId === 'openUrl') {
+        IvyBrowserViewProvider.instance.open(message.params.payload);
       }
       return;
     }

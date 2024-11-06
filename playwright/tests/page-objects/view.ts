@@ -8,7 +8,10 @@ export interface ViewData {
 }
 
 export class View extends PageObject {
-  constructor(protected readonly data: ViewData, page: Page) {
+  constructor(
+    protected readonly data: ViewData,
+    page: Page
+  ) {
     super(page);
   }
 
@@ -20,7 +23,7 @@ export class View extends PageObject {
     return this.page.locator(this.data.viewSelector);
   }
 
-  protected viewFrameLoactor(): FrameLocator {
+  viewFrameLoactor(): FrameLocator {
     return this.viewLocator
       .frameLocator('iFrame')
       .frameLocator(`iFrame#active-frame${this.data.viewName ? `[title="${this.data.viewName}"]` : ''}`);
