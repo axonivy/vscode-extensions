@@ -5,7 +5,7 @@ import path from 'path';
 function downloadEngine() {
   const engineDonwloadUrl = process.argv[2]
     ? process.argv[2]
-    : 'https://jenkins.ivyteam.io/job/core_product-engine/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip';
+    : 'https://jenkins.ivyteam.io/job/core_product-engine/job/release%252F12.0/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip';
 
   const engineDir = 'extension/AxonIvyEngine';
   if (fs.existsSync(engineDir)) {
