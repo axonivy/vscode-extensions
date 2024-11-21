@@ -1,5 +1,5 @@
 {
-  "name": "designer-11",
+  "name": "designer-13",
   "private": true,
   "preview": true,
   "version": "13.1.0",
@@ -11,7 +11,7 @@
     "url": "https://github.com/axonivy/vscode-extensions"
   },
   "icon": "assets/ivy-logo.png",
-  "displayName": "Axon Ivy Designer 11",
+  "displayName": "Axon Ivy Designer 13",
   "engines": {
     "vscode": "^1.85.0"
   },
