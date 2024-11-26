@@ -1,7 +1,6 @@
 {
   "private": true,
   "name": "@axonivy/vscode-extensions-playwright",
-  "version": "11.3.0",
   "scripts": {
     "download:vscode": "ts-node tests/utils/download-vscode.ts",
     "lint": "eslint --ext .ts,.tsx ./tests",
