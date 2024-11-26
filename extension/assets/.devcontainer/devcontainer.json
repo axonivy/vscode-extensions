@@ -1,9 +1,7 @@
 {
   "name": "Axon Ivy Dev Container",
   "image": "mcr.microsoft.com/devcontainers/base:bookworm",
-  "forwardPorts": [
-    8080
-  ],
+  "forwardPorts": [8080],
   "containerEnv": {
     "JAVA_OPTS_IVY_SYSTEM": "-Ddev.mode=true -Divy.engine.testheadless=true"
   },
@@ -18,9 +16,7 @@
   },
   "customizations": {
     "vscode": {
-      "extensions": [
-        "axon-ivy.designer-11"
-      ],
+      "extensions": ["axon-ivy.designer-13"],
       "settings": {
         "engine.runByExtension": false,
         "engine.url": "http://localhost:8080/",

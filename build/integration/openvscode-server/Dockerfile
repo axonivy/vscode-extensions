@@ -1,6 +1,6 @@
 FROM docker-registry.ivyteam.io/axonivy/openvscode-server-base:dev
 
-ENV IVY_EXTENSION="designer-11.vsix"
+ENV IVY_EXTENSION="designer-13.vsix"
 ARG IVY_HOME=/usr/lib/axonivy-engine
 
 COPY extension/${IVY_EXTENSION} /tmp/exts/
