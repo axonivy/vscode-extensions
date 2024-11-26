@@ -69,7 +69,7 @@ pipeline {
       steps {
         catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
           script {
-            sh 'npm run download:openapi https://dev.demo.ivyteam.io'
+            sh 'npm run download:openapi https://neo.ivyteam.io'
             sh 'npm run codegen:openapi'
             sh 'npm run type'
             sh 'npm run lint:ci'
