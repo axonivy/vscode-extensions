@@ -12,7 +12,9 @@ export const WebSocketClientProvider = (webSocketUrl: URL) => {
       client.animationSettings(animationSettings());
       client.onOpenEditor.set(process => handleOpenEditor(process));
       vscode.workspace.onDidChangeConfiguration(e => {
-        e.affectsConfiguration('process.animation') ? client.animationSettings(animationSettings()) : {};
+        if (e.affectsConfiguration('process.animation')) {
+          client.animationSettings(animationSettings());
+        }
       });
     });
   };
