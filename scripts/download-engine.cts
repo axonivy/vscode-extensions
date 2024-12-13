@@ -1,6 +1,7 @@
-import https from 'https';
-import fs from 'fs';
-import path from 'path';
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
+const AdmZip = require('adm-zip');
 
 function downloadEngine() {
   const engineDonwloadUrl = process.argv[2]
@@ -27,7 +28,6 @@ function downloadEngine() {
 }
 
 function unzipEngine(zipName: string, targetDir: string) {
-  const AdmZip = require('adm-zip');
   var zip = new AdmZip(zipName);
   zip.extractAllTo(targetDir, true, true);
   fs.rmSync(zipName);

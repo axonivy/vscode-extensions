@@ -1,5 +1,6 @@
 import fs from 'fs';
-const { Readable } = require('stream');
+import { Readable } from 'stream';
+import { ReadableStream } from 'stream/web';
 import { finished } from 'stream/promises';
 
 const downloadOpenapi = async () => {
@@ -11,7 +12,7 @@ const downloadOpenapi = async () => {
 const download = async (fileName: string, url: URL) => {
   const stream = fs.createWriteStream(fileName);
   const { body } = await fetch(url);
-  await finished(Readable.fromWeb(body).pipe(stream));
+  await finished(Readable.fromWeb(body as ReadableStream).pipe(stream));
 };
 
 downloadOpenapi();
