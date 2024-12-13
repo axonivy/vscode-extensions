@@ -6,7 +6,7 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": ["@typescript-eslint", "import", "eslint-plugin-react-compiler"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -38,6 +38,7 @@
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-namespace": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "react-compiler/react-compiler": "error"
   }
 }
