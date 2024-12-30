@@ -1,4 +1,4 @@
-import { InscriptionActionArgs, InscriptionNotificationTypes } from '@axonivy/inscription-protocol';
+import { InscriptionActionArgs, InscriptionNotificationTypes } from '@axonivy/process-editor-inscription-protocol';
 import { OpenPageActionHandler } from './open-page';
 import { NewProcessActionHandler } from './new-process';
 import { NewHtmlDialogActionHandler } from './new-user-dialog';

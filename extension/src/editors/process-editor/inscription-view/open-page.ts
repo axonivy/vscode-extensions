@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { InscriptionActionArgs } from '@axonivy/inscription-protocol';
+import { InscriptionActionArgs } from '@axonivy/process-editor-inscription-protocol';
 import { InscriptionActionHandler } from './action-handlers';
 import { executeCommand } from '../../../base/commands';
 import { IvyBrowserViewProvider } from '../../../browser/ivy-browser-view-provider';

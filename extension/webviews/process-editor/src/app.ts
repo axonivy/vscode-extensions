@@ -3,7 +3,7 @@ import '../css/colors.css';
 import 'vscode-webview-common/css/colors.css';
 import '../css/diagram.css';
 
-import { MonacoEditorUtil } from '@axonivy/inscription-editor';
+import { MonacoEditorUtil } from '@axonivy/process-editor-inscription-view';
 import { createIvyDiagramContainer, ivyBreakpointModule, ivyOpenDataClassModule, ivyOpenFormModule } from '@axonivy/process-editor';
 import { ivyInscriptionModule } from '@axonivy/process-editor-inscription';
 import { ContainerConfiguration, navigationModule } from '@eclipse-glsp/client';
