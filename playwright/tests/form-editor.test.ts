@@ -36,7 +36,9 @@ test.describe('Form Editor', () => {
     await input.dblclick();
     const labelProperty = editor.locatorFor('#properties').getByLabel('Label');
     const newLabel = randomArtefactName();
-    await labelProperty.fill(newLabel);
+    await labelProperty.click();
+    await expect(labelProperty).toBeFocused();
+    await page.keyboard.type(newLabel);
     await expect(input).toHaveText(newLabel);
     await editor.isDirty();
     await editor.saveAllFiles();
