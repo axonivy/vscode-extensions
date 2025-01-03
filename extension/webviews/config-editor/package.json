@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@axonivy/variable-editor": "~13.1.0-next.458",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
     "vscode-webview-common": "13.1.0"
   },
   "devDependencies": {
