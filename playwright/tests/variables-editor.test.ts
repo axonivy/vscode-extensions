@@ -1,5 +1,5 @@
 import { Page, expect, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { pageFor, runInBrowser } from './fixtures/page';
 import { VariablesEditor } from './page-objects/variables-editor';
 import { prebuiltWorkspacePath } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
@@ -38,7 +38,11 @@ test.describe('Variables Editor', () => {
     await editor.executeCommand('Select All');
     await editor.typeText(originalContent);
     await editor.activeEditorHasText(originalContent);
-    await editor.saveAllFiles();
+    if (runInBrowser) {
+      await page.waitForTimeout(1_000);
+    } else {
+      await editor.saveAllFiles();
+    }
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
     await editor.hasKey('originalKey');
     await editor.hasValue('originalValue');
