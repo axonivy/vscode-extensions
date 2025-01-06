@@ -5,7 +5,7 @@ import { FileExplorer } from '../page-objects/explorer-view';
 
 let electronApp: ElectronApplication;
 let browser: Browser;
-const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
+export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
 export const test = base.extend<{ page: Page; pageFor(workspace: string): Promise<Page> }>({
   page: async ({}, use, testInfo) => {
