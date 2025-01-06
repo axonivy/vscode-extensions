@@ -19,14 +19,14 @@ test.describe('Inscription View', () => {
     removeFromWorkspace(prebuiltWorkspacePath, 'processes', namespace);
   };
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async () => {
     cleanUp();
+  });
+
+  test.beforeEach(async ({}, testInfo) => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     processEditor = new ProcessEditor(page);
     await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
   });
