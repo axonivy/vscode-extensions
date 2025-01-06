@@ -17,13 +17,9 @@ test.describe('Variables Editor', () => {
     await editor.isViewVisible();
   });
 
-  test.afterEach(async () => {
-    await editor.revertAndCloseEditor();
-  });
-
   test('Read and write', async () => {
-    expect(await editor.hasKey('originalKey'));
-    expect(await editor.hasValue('originalValue'));
+    await editor.hasKey('originalKey');
+    await editor.hasValue('originalValue');
 
     await editor.selectFirstRow();
     await editor.editInput('originalKey', 'newKey');
@@ -44,15 +40,14 @@ test.describe('Variables Editor', () => {
     await editor.activeEditorHasText(originalContent);
     await editor.saveAllFiles();
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
-    // expect(await editor.hasKey('originalKey'));
-    // expect(await editor.hasValue('originalValue'));
+    await editor.hasKey('originalKey');
+    await editor.hasValue('originalValue');
   });
 
   test('Open Help', async () => {
     const browserView = new BrowserView(page);
     await editor.viewFrameLoactor().getByRole('button', { name: /Help/ }).click();
-    expect((await browserView.input().inputValue()).toString()).toMatch(
-      /^https:\/\/developer\.axonivy\.com.*configuration\/variables\.html$/
-    );
+    const helpLink = await browserView.input().inputValue();
+    expect(helpLink).toMatch(/^https:\/\/developer\.axonivy\.com.*configuration\/variables\.html$/);
   });
 });
