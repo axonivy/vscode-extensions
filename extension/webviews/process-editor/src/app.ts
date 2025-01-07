@@ -72,7 +72,6 @@ async function initMonaco(): Promise<unknown> {
   // 'editorWorkerLocation' variable:
   import('monaco-editor/esm/vs/editor/editor.worker?worker');
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (!editorWorkerLocation) {
     console.warn('Could not find editor worker location for web worker creation. Initialize without dedicated web worker support.');
     return MonacoEditorUtil.configureInstance({ theme: 'light', worker: { skip: true } });

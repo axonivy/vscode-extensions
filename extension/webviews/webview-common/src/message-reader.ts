@@ -18,6 +18,7 @@ export class WebviewMessageReader extends AbstractMessageReader implements Messa
       this.state = 'listening';
       this.callback = callback;
       while (this.events.length !== 0) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const event = this.events.pop()!;
         if (event.message) {
           this.readMessage(event.message);
@@ -44,7 +45,7 @@ export class WebviewMessageReader extends AbstractMessageReader implements Messa
     } else if (this.state === 'listening') {
       try {
         const data = JSON.parse(message);
-        this.callback!(data);
+        this.callback?.(data);
       } catch (err) {
         const error: Error = {
           name: '' + 400,

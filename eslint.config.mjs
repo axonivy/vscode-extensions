@@ -20,6 +20,10 @@ export default tseslint.config(
   },
   {
     name: 'vscode/rules',
-    rules: {}
+    rules: {
+      'playwright/no-wait-for-timeout': 'off',
+      'playwright/no-force-option': 'off',
+      'playwright/no-conditional-in-test': 'off'
+    }
   }
 );
