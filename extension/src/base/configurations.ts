@@ -3,6 +3,7 @@ import { AnimationFollowMode } from '../engine/animation';
 
 const configs = () => vscode.workspace.getConfiguration();
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace config {
   export const engineRunByExtension = () => configs().get<boolean>('engine.runByExtension');
   export const engineDirectory = () => configs().get<string>('engine.directory');
