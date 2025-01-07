@@ -8,13 +8,13 @@ let browser: Browser;
 export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
 export const test = base.extend<{ page: Page; pageFor(workspace: string): Promise<Page> }>({
-  page: async ({}, use, testInfo) => {
+  page: async ({}, take, testInfo) => {
     const page = await pageFor(prebuiltWorkspacePath, testInfo.title);
-    await use(page);
+    await take(page);
     await close();
   },
-  pageFor: async ({}, use, testInfo) => {
-    await use(workspace => pageFor(workspace, testInfo.title));
+  pageFor: async ({}, take, testInfo) => {
+    await take(workspace => pageFor(workspace, testInfo.title));
     await close();
   }
 });
