@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-undef
 const vscode = acquireVsCodeApi();
+import DOMPurify from 'dompurify';
 
 function onceDocumentLoaded(func) {
   if (document.readyState === 'loading' || document.readyState === 'uninitialized') {
@@ -72,8 +73,9 @@ onceDocumentLoaded(() => {
   });
 
   function navigateTo(rawUrl) {
+    const sanitizedUrl = DOMPurify.sanitize(rawUrl);
     try {
-      const url = new URL(rawUrl);
+      const url = new URL(sanitizedUrl);
 
       // Try to bust the cache for the iframe
       // There does not appear to be any way to reliably do this except modifying the url
@@ -81,10 +83,10 @@ onceDocumentLoaded(() => {
 
       iframe.src = url.toString();
     } catch {
-      iframe.src = rawUrl;
+      iframe.src = sanitizedUrl;
     }
 
-    vscode.setState({ url: rawUrl });
+    vscode.setState({ url: sanitizedUrl });
   }
 });
 
