@@ -15,6 +15,7 @@ import {
   findOrCreatePmv
 } from './generated/openapi-dev';
 import { createWorkspace } from './generated/openapi-default';
+import { handleAxiosError } from './axios-error-handler';
 
 const progressOptions = (title: string) => {
   return {
@@ -31,7 +32,9 @@ export class IvyEngineApi {
   private readonly baseURL: Promise<string>;
 
   constructor(engineUrl: string) {
-    this._devContextPath = this.createWorkspace(engineUrl).then(ws => ws.baseUrl);
+    this._devContextPath = this.createWorkspace(engineUrl)
+      .then(ws => ws.baseUrl)
+      .catch(handleAxiosError);
     this.baseURL = this.devContextPath.then(devContextPath => new URL(path.join(devContextPath, 'api'), engineUrl).toString());
   }
 
@@ -53,14 +56,14 @@ export class IvyEngineApi {
     const params = { name, path: projectDir };
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Initialize Ivy Project'), async () => {
-      await findOrCreatePmv(params, { baseURL, ...options });
+      await findOrCreatePmv(params, { baseURL, ...options }).catch(handleAxiosError);
     });
   }
 
   public async deployProjects(ivyProjectDirectories: string[]) {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Deploy Ivy Projects'), async () => {
-      await deployProjects(ivyProjectDirectories, { baseURL, ...options });
+      await deployProjects(ivyProjectDirectories, { baseURL, ...options }).catch(handleAxiosError);
     });
     setStatusBarMessage('Finished: Deploy Ivy Projects');
   }
@@ -68,35 +71,39 @@ export class IvyEngineApi {
   public async buildProjects(ivyProjectDirectories: string[]) {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Build Projects'), async () => {
-      await buildProjects(ivyProjectDirectories, { baseURL, ...options });
+      await buildProjects(ivyProjectDirectories, { baseURL, ...options }).catch(handleAxiosError);
     });
   }
 
   public async createProcess(newProcessParams: NewProcessParams) {
     const baseURL = await this.baseURL;
     return vscode.window.withProgress(progressOptions('Create new Process'), async () => {
-      return createProcess(newProcessParams, { baseURL, ...options }).then(res => res.data);
+      return createProcess(newProcessParams, { baseURL, ...options })
+        .then(res => res.data)
+        .catch(handleAxiosError);
     });
   }
 
   public async createProject(newProjectParams: NewProjectParams) {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Create new Project'), async () => {
-      await createPmvAndProjectFiles(newProjectParams, { baseURL, ...options });
+      await createPmvAndProjectFiles(newProjectParams, { baseURL, ...options }).catch(handleAxiosError);
     });
   }
 
   public async createUserDialog(newUserDialogParams: NewUserDialogParams) {
     const baseURL = await this.baseURL;
     return vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
-      return createHd(newUserDialogParams, { baseURL, ...options }).then(res => res.data);
+      return createHd(newUserDialogParams, { baseURL, ...options })
+        .then(res => res.data)
+        .catch(handleAxiosError);
     });
   }
 
   public async deleteProject(projectDir: string) {
     const baseURL = await this.baseURL;
     await vscode.window.withProgress(progressOptions('Delete Project'), async () => {
-      await deleteProject({ projectDir }, { baseURL, ...options });
+      await deleteProject({ projectDir }, { baseURL, ...options }).catch(handleAxiosError);
     });
   }
 

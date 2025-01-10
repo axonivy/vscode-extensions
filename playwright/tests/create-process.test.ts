@@ -77,4 +77,11 @@ test.describe('Create Process', () => {
     const start = processEditor.locatorForElementType('g.start\\:webserviceStart');
     await expect(start).toBeVisible();
   });
+
+  test('Process name validation', async () => {
+    await explorer.addProcess('default', 'Business Process');
+    await expect(page.locator('div.notification-toast-container')).toHaveText(
+      'Error validating Artifact Name: The entered name "default" is forbidden for this input'
+    );
+  });
 });
