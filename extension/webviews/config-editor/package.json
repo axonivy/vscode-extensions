@@ -3,7 +3,7 @@
   "version": "13.1.0",
   "private": true,
   "dependencies": {
-    "@axonivy/variable-editor": "~13.1.0-next.458",
+    "@axonivy/variable-editor": "~13.1.0-next.460",
     "vscode-webview-common": "13.1.0"
   },
   "devDependencies": {
@@ -14,7 +14,6 @@
   "scripts": {
     "build": "vite build --mode development --emptyOutDir",
     "build:production": "vite build --emptyOutDir",
-    "lint": "eslint --ext .ts,.tsx ./src",
     "clean": "rimraf dist lib",
     "type": "tsc --noEmit",
     "watch": "vite build --mode development --watch --emptyOutDir"

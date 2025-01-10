@@ -20,7 +20,6 @@
   "scripts": {
     "build": "tsc",
     "build:production": "npm run build",
-    "lint": "eslint --ext .ts,.tsx ./src",
     "clean": "rimraf lib",
     "type": "tsc --noEmit"
   }

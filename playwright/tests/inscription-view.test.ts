@@ -86,12 +86,9 @@ test.describe('Inscription View', () => {
     await inscriptionView.cellInsideTable(0, 2).click();
     await wait(page);
     await inscriptionView.clickButton('Open URL');
-    const activeTabElement = await page.$('.tab.active');
-    expect(activeTabElement).not.toBeNull();
-    expect(await activeTabElement?.getAttribute('data-resource-name')).toEqual('pom.xml');
-
-    const closeButtonOfActiveTab = await activeTabElement?.$('.action-label.codicon.codicon-close');
-    await closeButtonOfActiveTab?.click();
+    const activeTabElement = page.locator('.tab.active');
+    await expect(activeTabElement).toHaveAttribute('data-resource-name', 'pom.xml');
+    await activeTabElement.locator('.action-label.codicon.codicon-close').click();
   });
 
   test('OpenPage-Action in Browers - Open Help', async () => {

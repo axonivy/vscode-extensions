@@ -25,7 +25,11 @@ export async function start({ file }: InitializeConnection): Promise<void> {
   });
   const queryClient = initQueryClient();
 
-  createRoot(document.getElementById('root')!).render(
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    throw new Error('Root element not found');
+  }
+  createRoot(rootElement).render(
     <React.StrictMode>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
