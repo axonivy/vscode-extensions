@@ -6,7 +6,11 @@ import * as vscode from 'vscode';
 export type AnimationFollowMode = 'all' | 'currentProcess' | 'openProcesses' | 'noDialogProcesses' | 'noEmbeddedProcesses';
 
 export const animationSettings = () => {
-  return { animate: config.processAnimationAnimate() ?? false, speed: config.processAnimationSpeed() ?? 50 };
+  return {
+    animate: config.processAnimationAnimate() ?? false,
+    speed: config.processAnimationSpeed() ?? 50,
+    mode: config.processAnimationMode() ?? 'all'
+  };
 };
 
 export const handleOpenEditor = async (process: ProcessBean) => {
@@ -29,7 +33,6 @@ export const handleOpenEditor = async (process: ProcessBean) => {
       }
       return openEditor(process);
     case 'noEmbeddedProcesses':
-      //TODO: check if embedded
       return openEditor(process);
     default:
       return false;

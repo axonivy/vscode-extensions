@@ -1,5 +1,6 @@
 import type { Disposable } from '@axonivy/jsonrpc';
 import { ProcessBean } from './generated/openapi-dev';
+import { AnimationSettings } from './jsonrpc';
 
 export class Callback<T, R = void> implements Disposable {
   private callback?: (e: T) => R;
@@ -23,8 +24,3 @@ export interface WebIdeClient {
 
   stop(): void;
 }
-
-export type AnimationSettings = {
-  animate: boolean;
-  speed: number;
-};

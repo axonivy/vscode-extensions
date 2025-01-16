@@ -5,8 +5,20 @@
  */
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+export type StopBpmEngineParams = {
+  app?: string;
+  pmv?: string;
+  projectDir?: string;
+};
+
 export type DeleteProjectParams = {
   projectDir?: string;
+  app?: string;
+  pmv?: string;
+};
+
+export type ReadConfigParams = {
+  path?: string;
   app?: string;
   pmv?: string;
 };
@@ -110,6 +122,15 @@ export interface NewProjectParams {
   projectId?: string;
 }
 
+export interface ProjectBean {
+  artifactId: string;
+  defaultNamespace: string;
+  groupId: string;
+  id: ProjectIdentifier;
+  isDeletable: boolean;
+  version: string;
+}
+
 export interface ProcessInit {
   kind: string;
   name: string;
@@ -146,21 +167,6 @@ export interface ProcessBean {
   uri?: string;
 }
 
-export interface ProjectIdentifier {
-  app: string;
-  isIar?: boolean;
-  pmv: string;
-}
-
-export interface ProjectBean {
-  artifactId: string;
-  defaultNamespace: string;
-  groupId: string;
-  id: ProjectIdentifier;
-  isDeletable: boolean;
-  version: string;
-}
-
 export interface HdInit {
   dataClass?: DataClassIdentifier;
   layout?: string;
@@ -173,11 +179,6 @@ export interface HdInit {
   type?: string;
 }
 
-export interface FormIdentifier {
-  id: string;
-  project: ProjectIdentifier;
-}
-
 export interface HdBean {
   identifier: FormIdentifier;
   name: string;
@@ -185,6 +186,26 @@ export interface HdBean {
   path: string;
   type?: string;
   uri?: string;
+}
+
+export interface DataClassBean {
+  dataClassIdentifier: DataClassIdentifier;
+  isBusinessCaseData: boolean;
+  isEntityClass: boolean;
+  name: string;
+  path: string;
+  simpleName: string;
+}
+
+export interface ProjectIdentifier {
+  app: string;
+  isIar?: boolean;
+  pmv: string;
+}
+
+export interface FormIdentifier {
+  id: string;
+  project: ProjectIdentifier;
 }
 
 export interface DataClassInit {
@@ -198,13 +219,14 @@ export interface DataClassIdentifier {
   project: ProjectIdentifier;
 }
 
-export interface DataClassBean {
-  dataClassIdentifier: DataClassIdentifier;
-  isBusinessCaseData: boolean;
-  isEntityClass: boolean;
-  name: string;
+export interface ConfigurationIdentifier {
   path: string;
-  simpleName: string;
+  project: ProjectIdentifier;
+}
+
+export interface ConfigurationBean {
+  content: string;
+  id: ConfigurationIdentifier;
 }
 
 export interface EngineInfo {
@@ -245,6 +267,27 @@ export const WebNotificationOperationOperation = {
 export interface WebNotificationOperation {
   operation?: WebNotificationOperationOperation;
 }
+
+export const configurations = <TData = AxiosResponse<ConfigurationIdentifier[]>>(options?: AxiosRequestConfig): Promise<TData> => {
+  return axios.get(`/web-ide/configurations`, options);
+};
+
+export const readConfig = <TData = AxiosResponse<ConfigurationBean>>(
+  params?: ReadConfigParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/web-ide/configuration`, {
+    ...options,
+    params: { ...params, ...options?.params }
+  });
+};
+
+export const writeConfig = <TData = AxiosResponse<ConfigurationBean>>(
+  configurationBean: ConfigurationBean,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/configuration`, configurationBean, options);
+};
 
 export const dataClasses = <TData = AxiosResponse<DataClassBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
   return axios.get(`/web-ide/dataclasses`, options);
@@ -339,6 +382,16 @@ export const deleteProject = <TData = AxiosResponse<unknown>>(
   });
 };
 
+export const stopBpmEngine = <TData = AxiosResponse<unknown>>(
+  params?: StopBpmEngineParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/web-ide/project/stop-bpm-engine`, undefined, {
+    ...options,
+    params: { ...params, ...options?.params }
+  });
+};
+
 export const dependencies = <TData = AxiosResponse<ProjectIdentifier[]>>(
   app: string,
   pmv: string,
@@ -366,6 +419,9 @@ export const removeDependency = <TData = AxiosResponse<unknown>>(
   return axios.delete(`/web-ide/project/${app}/${pmv}/dependency/${dependencyApp}/${dependencyPmv}`, options);
 };
 
+export type ConfigurationsResult = AxiosResponse<ConfigurationIdentifier[]>;
+export type ReadConfigResult = AxiosResponse<ConfigurationBean>;
+export type WriteConfigResult = AxiosResponse<ConfigurationBean>;
 export type DataClassesResult = AxiosResponse<DataClassBean[]>;
 export type CreateDataClassResult = AxiosResponse<DataClassBean>;
 export type DeleteDataClassResult = AxiosResponse<DataClassIdentifier>;
@@ -381,6 +437,7 @@ export type ProjectsResult = AxiosResponse<ProjectBean[]>;
 export type CreatePmvAndProjectFilesResult = AxiosResponse<unknown>;
 export type FindOrCreatePmvResult = AxiosResponse<unknown>;
 export type DeleteProjectResult = AxiosResponse<unknown>;
+export type StopBpmEngineResult = AxiosResponse<unknown>;
 export type DependenciesResult = AxiosResponse<ProjectIdentifier[]>;
 export type AddDependencyResult = AxiosResponse<unknown>;
 export type RemoveDependencyResult = AxiosResponse<unknown>;

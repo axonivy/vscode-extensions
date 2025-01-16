@@ -107,6 +107,38 @@ export interface ProductInstallParams {
   productJson: string;
 }
 
+export interface ProcessIdentifier {
+  pid: string;
+  project: ProjectIdentifier;
+}
+
+export type ProcessBeanKind = (typeof ProcessBeanKind)[keyof typeof ProcessBeanKind];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ProcessBeanKind = {
+  NORMAL: 'NORMAL',
+  WEB_SERVICE: 'WEB_SERVICE',
+  CALLABLE_SUB: 'CALLABLE_SUB',
+  HTML_DIALOG: 'HTML_DIALOG'
+} as const;
+
+export interface ProcessBean {
+  kind: ProcessBeanKind;
+  name: string;
+  namespace: string;
+  path?: string;
+  processGroup?: string;
+  processIdentifier: ProcessIdentifier;
+  requestPath?: string;
+  type?: string;
+  uri?: string;
+}
+
+export interface MarketInstallResult {
+  demoProcesses: ProcessBean[];
+  installedProjects: ProjectIdentifier[];
+}
+
 export interface WorkspaceInit {
   name: string;
   path?: string;
@@ -193,7 +225,7 @@ export const deleteWorkspace = <TData = AxiosResponse<unknown>>(id: string, opti
   return axios.delete(`/web-ide/workspace/${id}`, options);
 };
 
-export const installMarketProduct = <TData = AxiosResponse<unknown>>(
+export const installMarketProduct = <TData = AxiosResponse<MarketInstallResult>>(
   id: string,
   productInstallParams: ProductInstallParams,
   options?: AxiosRequestConfig
@@ -206,4 +238,4 @@ export type CreateWorkspaceResult = AxiosResponse<WorkspaceBean>;
 export type ExportWorkspaceResult = AxiosResponse<unknown>;
 export type ImportProjectsResult = AxiosResponse<unknown>;
 export type DeleteWorkspaceResult = AxiosResponse<unknown>;
-export type InstallMarketProductResult = AxiosResponse<unknown>;
+export type InstallMarketProductResult = AxiosResponse<MarketInstallResult>;

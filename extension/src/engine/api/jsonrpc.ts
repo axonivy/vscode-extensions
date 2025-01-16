@@ -9,6 +9,7 @@ export interface WebIdeOnRequestTypes {
 export type AnimationSettings = {
   animate: boolean;
   speed: number;
+  mode: string;
 };
 
 export interface WebIdeNotificationTypes {
