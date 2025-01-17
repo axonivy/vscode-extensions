@@ -7,7 +7,7 @@ export type AnimationFollowMode = 'all' | 'currentProcess' | 'openProcesses' | '
 
 export const animationSettings = () => {
   return {
-    animate: config.processAnimationAnimate() ?? false,
+    animate: config.processAnimationAnimate() ?? true,
     speed: config.processAnimationSpeed() ?? 50,
     mode: config.processAnimationMode() ?? 'all'
   };
