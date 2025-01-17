@@ -8,12 +8,11 @@ export class PageObject {
     const quickInputList = this.page.locator('.quick-input-list');
     await expect(async () => {
       await this.page.keyboard.press('F1');
-      await expect(quickInputList).toBeVisible();
       await this.quickInputBox()
         .locator('input.input')
-        .fill('>' + command, { timeout: 300 });
+        .fill('>' + command, { timeout: 100 });
+      await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true, timeout: 100 });
     }).toPass();
-    await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true });
     for (const userInput of userInputs) {
       this.provideUserInput(userInput);
     }
