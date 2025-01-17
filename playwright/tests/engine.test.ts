@@ -24,7 +24,7 @@ test.describe('Engine', () => {
     await settingsView.containsSetting('"engine.directory": ""');
     await settingsView.containsSetting('"engine.url": "http://localhost:8080/"');
     await settingsView.containsSetting('"project.excludePattern": "**/target/**"');
-    await settingsView.containsSetting('"process.animation.animate": false');
+    await settingsView.containsSetting('"process.animation.animate": true');
     await settingsView.containsSetting('"process.animation.mode": "all"');
     await settingsView.containsSetting('"process.animation.speed": 50');
   });

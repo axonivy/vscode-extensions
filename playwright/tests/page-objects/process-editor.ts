@@ -55,7 +55,15 @@ export class ProcessEditor extends Editor {
     await expect(startEvent).toHaveClass(/selected/);
     const playButton = this.viewFrameLoactor().locator('i.ivy.ivy-play');
     await playButton.click();
-    await expect(executedElement).toHaveClass(/executed/);
+    await this.assertExecuted(executedElement);
+  }
+
+  async assertExecuted(element: Locator) {
+    await expect(element).toHaveClass(/executed/);
+  }
+
+  async assertNotExecuted(element: Locator) {
+    await expect(element).not.toHaveClass(/executed/);
   }
 
   async appendActivity(target: Locator, activityName: string) {

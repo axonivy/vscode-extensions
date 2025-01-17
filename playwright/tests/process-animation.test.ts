@@ -12,7 +12,7 @@ test.describe('Process Animation', () => {
     await new FileExplorer(page).hasDeployProjectStatusMessage();
   });
 
-  test('with activated animation', async () => {
+  test('with activated animation and reset afterwards', async () => {
     test.skip(process.platform === 'win32');
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.openEditorFile();
@@ -24,6 +24,8 @@ test.describe('Process Animation', () => {
     const taskInCallSub = processEditor.locatorForPID('190EEC3ABECE2C88-f5');
     await processEditor.startProcessAndAssertExecuted(start, taskInCallSub);
     await processEditor.page.waitForTimeout(500); //ensure animation finished
+    await processEditor.executeCommand('Axon Ivy: Stop BPM Engine of Project');
+    await processEditor.assertNotExecuted(taskInCallSub);
   });
 
   test('with deactivated animation', async () => {

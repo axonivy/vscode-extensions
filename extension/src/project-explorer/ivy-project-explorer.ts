@@ -47,6 +47,7 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.buildAndDeployProject`, (s: TreeSelection) =>
       this.runEngineAction((d: string) => engineManager.buildAndDeployProject(d), s)
     );
+    registerCmd(`${VIEW_ID}.stopBpmEngine`, (s: TreeSelection) => this.runEngineAction((d: string) => engineManager.stopBpmEngine(d), s));
     registerCmd(`${VIEW_ID}.addBusinessProcess`, (s: TreeSelection) => this.addProcess(s, 'Business Process'));
     registerCmd(`${VIEW_ID}.addCallableSubProcess`, (s: TreeSelection) => this.addProcess(s, 'Callable Sub Process'));
     registerCmd(`${VIEW_ID}.addWebServiceProcess`, (s: TreeSelection) => this.addProcess(s, 'Web Service Process'));

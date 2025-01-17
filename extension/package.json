@@ -179,6 +179,11 @@
         "category": "Axon Ivy"
       },
       {
+        "command": "ivyProjects.stopBpmEngine",
+        "title": "Stop BPM Engine of Project",
+        "category": "Axon Ivy"
+      },
+      {
         "command": "engine.buildAndDeployProjects",
         "title": "Build and Deploy all Projects",
         "category": "Axon Ivy",
@@ -283,7 +288,7 @@
           },
           "process.animation.animate": {
             "type": "boolean",
-            "default": false,
+            "default": true,
             "markdownDescription": "Specify whether processes should be animated during preview."
           },
           "process.animation.speed": {
@@ -512,6 +517,11 @@
         {
           "command": "ivyProjects.deployProject",
           "group": "run@2",
+          "when": "ivy:hasIvyProjects"
+        },
+        {
+          "command": "ivyProjects.stopBpmEngine",
+          "group": "run@4",
           "when": "ivy:hasIvyProjects"
         }
       ]

@@ -37,7 +37,8 @@ type ProjectViewCommand =
   | 'ivyProjects.addNewHtmlDialog'
   | 'ivyProjects.addNewFormDialog'
   | 'ivyProjects.addNewOfflineDialog'
-  | 'ivyProjects.revealInExplorer';
+  | 'ivyProjects.revealInExplorer'
+  | 'ivyProjects.stopBpmEngine';
 type ViewCommand =
   | 'ivyBrowserView.focus'
   | 'ivyBrowserView.open'
