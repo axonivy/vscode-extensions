@@ -109,6 +109,10 @@ export class IvyEngineManager {
     await this.ivyEngineApi.deployProjects([ivyProjectDirectory]);
   }
 
+  public async stopBpmEngine(ivyProjectDirectory: string) {
+    await this.ivyEngineApi.stopBpmEngine(ivyProjectDirectory);
+  }
+
   public async createProcess(newProcessParams: NewProcessParams) {
     await this.createAndOpenProcess(newProcessParams);
   }

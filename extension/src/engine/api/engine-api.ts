@@ -12,7 +12,8 @@ import {
   createPmvAndProjectFiles,
   deleteProject,
   deployProjects,
-  findOrCreatePmv
+  findOrCreatePmv,
+  stopBpmEngine
 } from './generated/openapi-dev';
 import { createWorkspace } from './generated/openapi-default';
 import { handleAxiosError } from './axios-error-handler';
@@ -66,6 +67,16 @@ export class IvyEngineApi {
       await deployProjects(ivyProjectDirectories, { baseURL, ...options }).catch(handleAxiosError);
     });
     setStatusBarMessage('Finished: Deploy Ivy Projects');
+  }
+
+  public async stopBpmEngine(projectDir: string) {
+    const baseURL = await this.baseURL;
+    await vscode.window.withProgress(progressOptions('Stop BPM Engine'), async () => {
+      await stopBpmEngine({ projectDir }, { baseURL, ...options, headers: { ...headers, 'Content-Type': 'application/json' } }).catch(
+        handleAxiosError
+      );
+    });
+    setStatusBarMessage('Finished: Stop BPM Engine');
   }
 
   public async buildProjects(ivyProjectDirectories: string[]) {
