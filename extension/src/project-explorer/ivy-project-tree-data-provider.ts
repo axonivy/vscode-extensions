@@ -14,13 +14,12 @@ export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
 
 export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry> {
   private ivyProjects: Promise<string[]>;
-  private _onDidChangeTreeData: vscode.EventEmitter<Entry | undefined | null | void> = new vscode.EventEmitter<
-    Entry | undefined | null | void
-  >();
-  readonly onDidChangeTreeData: vscode.Event<Entry | undefined | null | void> = this._onDidChangeTreeData.event;
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  private _onDidChangeTreeData = new vscode.EventEmitter<Entry | undefined | null | void>();
+  readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
-  private _onDidCreateTreeItem: vscode.EventEmitter<Entry> = new vscode.EventEmitter<Entry>();
-  readonly onDidCreateTreeItem: vscode.Event<Entry> = this._onDidCreateTreeItem.event;
+  private _onDidCreateTreeItem = new vscode.EventEmitter<Entry>();
+  readonly onDidCreateTreeItem = this._onDidCreateTreeItem.event;
 
   private entryCache = new Map<string, Entry>();
   private openTabPaths: string[];
