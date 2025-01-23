@@ -28,7 +28,7 @@
     "watch": "lerna run watch --parallel"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.7",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "adm-zip": "^0.5.16",
