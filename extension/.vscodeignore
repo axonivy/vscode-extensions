@@ -10,5 +10,3 @@ assets/readme
 **/node_modules
 
 lib/
-webviews/
-!webviews/*/dist/

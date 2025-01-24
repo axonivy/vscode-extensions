@@ -49,7 +49,7 @@
   },
   "workspaces": [
     "extension",
-    "extension/webviews/*",
+    "webviews/*",
     "playwright/"
   ]
 }

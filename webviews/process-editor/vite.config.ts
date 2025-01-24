@@ -6,7 +6,7 @@ export default defineConfig(() => {
     plugins: [tsconfigPaths()],
     build: {
       manifest: 'build.manifest.json',
-      outDir: 'dist',
+      outDir: '../../extension/dist/webviews/process-editor',
       chunkSizeWarningLimit: 5000,
       rollupOptions: {
         output: {

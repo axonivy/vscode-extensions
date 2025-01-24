@@ -10,19 +10,19 @@
     },
     {
       "name": "webview/common",
-      "path": "extension/webviews/webview-common"
+      "path": "webviews/webview-common"
     },
     {
       "name": "webview/config-editor",
-      "path": "extension/webviews/config-editor"
+      "path": "webviews/config-editor"
     },
     {
       "name": "webview/process-editor",
-      "path": "extension/webviews/process-editor"
+      "path": "webviews/process-editor"
     },
     {
       "name": "webview/form-editor",
-      "path": "extension/webviews/form-editor"
+      "path": "webviews/form-editor"
     },
     {
       "name": "playwright",
