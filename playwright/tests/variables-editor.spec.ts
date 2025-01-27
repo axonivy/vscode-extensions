@@ -26,7 +26,7 @@ test.describe('Variables Editor', () => {
     await editor.editInput('originalValue', 'newValue');
     await page.waitForTimeout(300);
     await editor.saveAllFiles();
-    await editor.executeCommand('View: Reopen Editor With Text');
+    await editor.executeCommand('View: Reopen Editor With Text Editor');
     const newContent = `Variables:
   newKey: newValue
 `;
