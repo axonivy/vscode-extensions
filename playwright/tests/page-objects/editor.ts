@@ -3,14 +3,20 @@ import { View, ViewData } from './view';
 import { getCtrlOrMeta } from '../utils/keyboard';
 
 export class Editor extends View {
-  constructor(private readonly editorFile: string, viewData: ViewData, page: Page) {
+  constructor(
+    private readonly editorFile: string,
+    viewData: ViewData,
+    page: Page
+  ) {
     super(viewData, page);
   }
 
   async openEditorFile() {
-    await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
-    await this.quickInputBox().locator('input.input').fill(this.editorFile);
-    await this.page.locator(`div.quick-input-list-entry.has-actions:has-text("${this.editorFile}")`).first().click();
+    await expect(async () => {
+      await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
+      await this.quickInputBox().locator('input.input').fill(this.editorFile, { timeout: 100 });
+      await this.page.locator('span.monaco-icon-name-container').getByText(this.editorFile).first().click({ force: true, timeout: 100 });
+    }).toPass();
   }
 
   async revertAndCloseEditor() {
