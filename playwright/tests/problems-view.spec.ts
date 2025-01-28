@@ -43,8 +43,8 @@ test.describe('Problems View', () => {
     const script = processEditor.locatorForPID(pid);
     await processEditor.hasNoValidationMarker(script);
     const inscriptionView = await processEditor.openInscriptionView(pid);
-    await inscriptionView.accordionFor('Output').click();
-    await inscriptionView.sectionFor('Code').click();
+    await inscriptionView.openAccordion('Output');
+    await inscriptionView.openCollapsible('Code');
     const monacoEditor = inscriptionView.monacoEditor();
     await monacoEditor.click();
     await inscriptionView.typeText('make test error');
