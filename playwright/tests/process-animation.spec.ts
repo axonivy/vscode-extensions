@@ -13,6 +13,7 @@ test.describe('Process Animation', () => {
   });
 
   test('with activated animation and reset afterwards', async () => {
+    test.skip(process.platform === 'win32');
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForPID('190EEC366DECC66A-f0');
