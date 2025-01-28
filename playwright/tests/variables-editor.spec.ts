@@ -13,8 +13,8 @@ test.describe('Variables Editor', () => {
       await editor.activeEditorHasText(currentContent);
     }
     const originalContent = `Variables:
-    originalKey: originalValue
-  `;
+  originalKey: originalValue
+`;
     await editor.executeCommand('Select All');
     await page.waitForTimeout(300);
     await editor.typeText(originalContent);
