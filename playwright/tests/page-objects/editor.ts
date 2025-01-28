@@ -12,11 +12,9 @@ export class Editor extends View {
   }
 
   async openEditorFile() {
-    await expect(async () => {
-      await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
-      await this.quickInputBox().locator('input.input').fill(this.editorFile, { timeout: 300 });
-      await this.page.locator('span.monaco-icon-name-container').getByText(this.editorFile).first().click({ force: true, timeout: 300 });
-    }).toPass();
+    await this.page.keyboard.press(getCtrlOrMeta() + '+KeyP');
+    await this.quickInputBox().locator('input.input').fill(this.editorFile);
+    await this.page.locator('span.monaco-icon-name-container').getByText(this.editorFile).first().click();
   }
 
   async revertAndCloseEditor() {
