@@ -10,8 +10,8 @@ export class PageObject {
       await this.page.keyboard.press('F1');
       await this.quickInputBox()
         .locator('input.input')
-        .fill('>' + command, { timeout: 100 });
-      await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true, timeout: 100 });
+        .fill('>' + command, { timeout: 300 });
+      await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true, timeout: 300 });
     }).toPass();
     for (const userInput of userInputs) {
       this.provideUserInput(userInput);
