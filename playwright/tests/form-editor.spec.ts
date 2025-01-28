@@ -4,6 +4,7 @@ import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspac
 import { Page } from '@playwright/test';
 import { FormEditor } from './page-objects/form-editor';
 import { BrowserView } from './page-objects/browser-view';
+import { wait } from './utils/timeout';
 
 test.describe('Form Editor', () => {
   let editor: FormEditor;
@@ -44,6 +45,7 @@ test.describe('Form Editor', () => {
     await editor.saveAllFiles();
     await editor.isNotDirty();
     const xhtmlEditor = new FormEditor(page, 'testForm.xhtml');
+    await wait(page);
     await xhtmlEditor.openEditorFile();
     await xhtmlEditor.isTabVisible();
     await xhtmlEditor.activeEditorHasText(`value="${newLabel}" />`);
@@ -55,8 +57,6 @@ test.describe('Form Editor', () => {
     await editor.locatorFor('.block-input').dblclick();
     const inscriptionView = editor.locatorFor('#properties');
     await inscriptionView.getByRole('button', { name: /Help/ }).click();
-    expect((await browserView.input().inputValue()).toString()).toMatch(
-      /^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/
-    );
+    expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/);
   });
 });
