@@ -6,11 +6,11 @@ export default defineConfig(() => {
     plugins: [tsconfigPaths()],
     build: {
       manifest: 'build.manifest.json',
-      outDir: 'dist',
+      outDir: '../../extension/dist/webviews/form-editor',
       chunkSizeWarningLimit: 5000
     },
     server: {
-      port: 3001,
+      port: 3000,
       open: false
     },
     base: './'

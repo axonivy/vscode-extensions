@@ -12,7 +12,7 @@ export const createWebViewContent = (
   customAsset?: (nonce: string, rootEntry: ViteManifestEntry, rootPath: vscode.Uri) => Element
 ) => {
   const nonce = createNonce();
-  const rootPath = vscode.Uri.joinPath(context.extensionUri, 'webviews', webviewPath, 'dist');
+  const rootPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'webviews', webviewPath);
   // const pathOf = (path: string) => vscode.Uri.joinPath(rootPath, path);
 
   const manifest = parseBuildManifest(vscode.Uri.joinPath(rootPath, 'build.manifest.json').fsPath);
