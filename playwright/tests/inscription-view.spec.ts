@@ -54,9 +54,7 @@ test.describe('Inscription View', () => {
 
   test('Change User Dialog display name', async () => {
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
-    const nameAccordion = inscriptionView.accordionFor('General');
-    await expect(nameAccordion).toBeVisible();
-    await nameAccordion.click();
+    await inscriptionView.openAccordion('General');
 
     const inputField = inscriptionView.inputFieldFor('Display name');
     await expect(inputField).toHaveText('Enter Request');
@@ -73,11 +71,9 @@ test.describe('Inscription View', () => {
 
   test('OpenPage-Action - valid file - Means/Document Table', async () => {
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
-    const generalAccordion = inscriptionView.accordionFor('General');
-    await expect(generalAccordion).toBeVisible();
-    await generalAccordion.click();
+    await inscriptionView.openAccordion('General');
 
-    await inscriptionView.clickButton('Means / Documents');
+    await inscriptionView.openCollapsible('Means / Documents');
     await inscriptionView.clickButton('Add row');
 
     const firstRowURLCell = inscriptionView.cellInsideTable(0, 3);
@@ -95,18 +91,14 @@ test.describe('Inscription View', () => {
     browserView = new BrowserView(page);
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     await inscriptionView.clickButton('Open Help for User Dialog');
-    expect((await browserView.input().inputValue()).toString()).toMatch(
-      /^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/
-    );
+    expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/);
   });
 
   test('Monaco Editor completion', async () => {
     await processEditor.executeCommand('View: Toggle Panel Visibility');
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
-    const outputAccordion = inscriptionView.accordionFor('Output');
-    await expect(outputAccordion).toBeVisible();
-    await outputAccordion.click();
-    await inscriptionView.sectionFor('Code').click();
+    await inscriptionView.openAccordion('Output');
+    await inscriptionView.openCollapsible('Code');
     const monacoEditor = inscriptionView.monacoEditor();
     await expect(monacoEditor).toBeVisible();
 
@@ -125,7 +117,8 @@ test.describe('Inscription View', () => {
 
   test('Create new Sub Process', async () => {
     const inscriptionView = await processEditor.openInscriptionView('15254DCE818AD7A2-f5');
-    await inscriptionView.accordionFor('Process').click();
+    await inscriptionView.openAccordion('Process');
+    await inscriptionView.openCollapsible('Process start');
     const processStartField = inscriptionView.parent.getByRole('combobox');
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
@@ -140,7 +133,8 @@ test.describe('Inscription View', () => {
   test('Create Html Dialog', async () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
-    await inscriptionView.accordionFor('Dialog').click();
+    await inscriptionView.openAccordion('Dialog');
+    await inscriptionView.openCollapsible('Dialog');
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
@@ -160,7 +154,8 @@ test.describe('Inscription View', () => {
   test('Create Form Dialog', async () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID2);
-    await inscriptionView.accordionFor('Dialog').click();
+    await inscriptionView.openAccordion('Dialog');
+    await inscriptionView.openCollapsible('Dialog');
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
@@ -178,7 +173,8 @@ test.describe('Inscription View', () => {
   test('Create Offline Dialog', async () => {
     await processEditor.hasNoStatusMessage();
     const inscriptionView = await processEditor.openInscriptionView(userTaskPID);
-    await inscriptionView.accordionFor('Dialog').click();
+    await inscriptionView.openAccordion('Dialog');
+    await inscriptionView.openCollapsible('Dialog');
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
