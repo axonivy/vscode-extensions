@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-undef
 const vscode = acquireVsCodeApi();
+const DOMPurify = require('dompurify');
 
 function onceDocumentLoaded(func) {
   if (document.readyState === 'loading' || document.readyState === 'uninitialized') {
@@ -81,7 +82,7 @@ onceDocumentLoaded(() => {
 
       iframe.src = url.toString();
     } catch {
-      iframe.src = rawUrl;
+      iframe.src = DOMPurify.sanitize(rawUrl);
     }
 
     vscode.setState({ url: rawUrl });
