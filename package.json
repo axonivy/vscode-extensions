@@ -30,8 +30,15 @@
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "watch": "lerna run watch --parallel"
   },
+  "dependencies": {
+    "@axonivy/form-editor": "~13.1.0-next.519",
+    "@axonivy/form-editor-core": "~13.1.0-next.519",
+    "@axonivy/process-editor": "~13.1.0-next.1331",
+    "@axonivy/process-editor-inscription": "~13.1.0-next.1331",
+    "@axonivy/variable-editor": "~13.1.0-next.529"
+  },
   "devDependencies": {
-    "@axonivy/eslint-config": "^13.1.0-next.453",
+    "@axonivy/eslint-config": "^13.1.0-next.456",
     "@types/node": "^22.10.7",
     "adm-zip": "^0.5.16",
     "lerna": "^8.1.9",
