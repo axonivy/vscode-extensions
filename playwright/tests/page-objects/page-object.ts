@@ -11,7 +11,7 @@ export class PageObject {
       await this.quickInputBox()
         .locator('input.input')
         .fill('>' + command, { timeout: 100 });
-      await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true, timeout: 100 });
+      await this.page.keyboard.press('Enter');
     }).toPass();
     for (const userInput of userInputs) {
       this.provideUserInput(userInput);
