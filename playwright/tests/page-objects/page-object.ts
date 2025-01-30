@@ -4,11 +4,13 @@ export class PageObject {
   constructor(readonly page: Page) {}
 
   async executeCommand(command: string, ...userInputs: Array<string>) {
-    await expect(this.page.locator('div.command-center')).toBeAttached();
+    const commandCenter = this.page.locator('li.command-center-center');
+    await expect(commandCenter).toBeVisible();
     const quickInputList = this.page.locator('.quick-input-list');
     await expect(quickInputList).toBeHidden();
     await expect(async () => {
-      await this.page.keyboard.press('F1');
+      await commandCenter.click({ timeout: 100 });
+      await expect(quickInputList).toBeVisible({ timeout: 100 });
       await this.quickInputBox()
         .locator('input.input')
         .fill('>' + command, { timeout: 100 });
