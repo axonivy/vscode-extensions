@@ -6,6 +6,7 @@ export class PageObject {
   async executeCommand(command: string, ...userInputs: Array<string>) {
     await expect(this.page.locator('div.command-center')).toBeAttached();
     const quickInputList = this.page.locator('.quick-input-list');
+    await expect(quickInputList).toBeHidden();
     await expect(async () => {
       await this.page.keyboard.press('F1');
       await this.quickInputBox()
