@@ -8,6 +8,7 @@ export class PageObject {
     const quickInputList = this.page.locator('.quick-input-list');
     await expect(async () => {
       await this.page.keyboard.press('F1');
+      await this.page.waitForTimeout(100);
       await this.quickInputBox()
         .locator('input.input')
         .fill('>' + command, { timeout: 100 });
