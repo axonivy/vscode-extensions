@@ -31,6 +31,7 @@ test.describe('Variables Editor', () => {
     await editor.saveAllFiles();
     await editor.executeCommand('View: Reopen Editor With Text Editor');
     await editor.activeEditorHasText(`originalKey: ${newValue}`);
+    await editor.revertAndCloseEditor();
   });
 
   test('Open Help', async () => {
