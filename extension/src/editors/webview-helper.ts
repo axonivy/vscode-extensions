@@ -15,7 +15,7 @@ export const createWebViewContent = (
   const rootPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'webviews', webviewPath);
   // const pathOf = (path: string) => vscode.Uri.joinPath(rootPath, path);
 
-  const manifest = parseBuildManifest(vscode.Uri.joinPath(rootPath, 'build.manifest.json').fsPath);
+  const manifest = parseBuildManifest(rootPath);
 
   // create process editor HTML document from "template"
   const htmlUri = findRootHtml(rootPath, manifest);
