@@ -1,0 +1,22 @@
+{
+  "name": "vscode-browser-webview",
+  "private": true,
+  "version": "13.1.0",
+  "description": "VSCode extension webview script for the embedded browser",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "dependencies": {
+    "dompurify": "^3.2.4",
+    "vscode-webview-common": "13.1.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.14",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite build --mode development --emptyOutDir",
+    "build:production": "vite build --emptyOutDir",
+    "type": "tsc --noEmit",
+    "watch": "vite build --mode development --watch --emptyOutDir"
+  }
+}

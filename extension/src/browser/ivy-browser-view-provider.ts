@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { executeCommand, registerCommand } from '../base/commands';
+import { findRootEntry, parseBuildManifest } from '../editors/build-manifest';
 
 export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
   private static _instance: IvyBrowserViewProvider;
@@ -103,7 +104,9 @@ export class IvyBrowserViewProvider implements vscode.WebviewViewProvider {
 
   private getWebviewContent(webview: vscode.Webview) {
     const browserCss = this.extensionResourceUrl(webview, 'src', 'browser', 'media', 'browser.css');
-    const mainJs = this.extensionResourceUrl(webview, 'src', 'browser', 'media', 'index.js');
+    const root = this.extensionResourceUrl(webview, 'dist', 'webviews', 'browser');
+    const manifest = parseBuildManifest(root);
+    const mainJs = vscode.Uri.joinPath(root, findRootEntry(manifest).chunk.file ?? '');
     const nonce = getNonce();
     return `<!DOCTYPE html>
     <html>
