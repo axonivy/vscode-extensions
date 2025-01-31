@@ -6,12 +6,13 @@ export class PageObject {
   async executeCommand(command: string, ...userInputs: Array<string>) {
     await expect(this.page.locator('div.command-center')).toBeAttached();
     const quickInputList = this.page.locator('.quick-input-list');
-    await this.page.keyboard.press('F1');
-    await this.page.waitForTimeout(100);
-    await this.quickInputBox()
-      .locator('input.input')
-      .fill('>' + command);
-    await this.page.keyboard.press('Enter');
+    await expect(async () => {
+      await this.page.keyboard.press('F1');
+      await this.quickInputBox()
+        .locator('input.input')
+        .fill('>' + command, { timeout: 100 });
+      await this.page.locator(`.quick-input-list-entry:has-text("${command}")`).nth(0).click({ force: true, timeout: 100 });
+    }).toPass();
     for (const userInput of userInputs) {
       this.provideUserInput(userInput);
     }
