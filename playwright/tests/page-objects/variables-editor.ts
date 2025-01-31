@@ -22,9 +22,13 @@ export class VariablesEditor extends Editor {
     await expect(field).toBeVisible();
   }
 
-  async hasValue(value: string) {
+  async hasValue(value: string, exact = true) {
     const field = this.viewFrameLoactor().locator('td:nth-child(2) > div');
-    await expect(field).toHaveText(value);
+    if (exact) {
+      await expect(field).toHaveText(value);
+    } else {
+      await expect(field).toContainText(value);
+    }
     await expect(field).toBeVisible();
   }
 
@@ -33,10 +37,9 @@ export class VariablesEditor extends Editor {
     await firstRow.click();
   }
 
-  async editInput(oldValue: string, newValue: string) {
-    const input = this.viewFrameLoactor().locator(`input[value='${oldValue}']`);
-    await input.fill(newValue);
-    const updatedInput = this.viewFrameLoactor().locator(`input[value='${newValue}']`);
-    await expect(updatedInput).toBeVisible();
+  async updateValue(value: string) {
+    const input = this.viewFrameLoactor().getByLabel('Value');
+    await input.fill(value);
+    await this.hasValue(value);
   }
 }

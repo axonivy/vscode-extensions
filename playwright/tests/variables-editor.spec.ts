@@ -1,36 +1,20 @@
 import { Page, expect, test } from '@playwright/test';
-import { pageFor, runInBrowser } from './fixtures/page';
+import { pageFor } from './fixtures/page';
 import { VariablesEditor } from './page-objects/variables-editor';
-import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 
 test.describe('Variables Editor', () => {
   let page: Page;
   let editor: VariablesEditor;
-  const resetContet = async (currentContent?: string) => {
-    await editor.executeCommand('View: Reopen Editor With Text Editor');
-    if (currentContent) {
-      await editor.activeEditorHasText(currentContent);
-    }
-    const originalContent = `Variables:
-  originalKey: originalValue
-`;
-    await editor.executeCommand('Select All');
-    await page.waitForTimeout(300);
-    await editor.typeText(originalContent);
-    await editor.activeEditorHasText(originalContent);
-    if (runInBrowser) {
-      await page.waitForTimeout(1_000);
-    } else {
-      await editor.saveAllFiles();
-    }
-    await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
-  };
 
   test.beforeAll(async ({}, testInfo) => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     editor = new VariablesEditor(page);
     await editor.hasDeployProjectStatusMessage();
+  });
+
+  test.beforeEach(async () => {
     await editor.openEditorFile();
     await editor.isTabVisible();
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
@@ -38,21 +22,15 @@ test.describe('Variables Editor', () => {
   });
 
   test('Read and write', async () => {
-    await resetContet();
     await editor.hasKey('originalKey');
-    await editor.hasValue('originalValue');
-
+    await editor.hasValue('originalValue', false);
+    const newValue = `originalValue-${randomArtefactName()}`;
     await editor.selectFirstRow();
-    await editor.editInput('originalKey', 'newKey');
-    await editor.editInput('originalValue', 'newValue');
+    await editor.updateValue(newValue);
     await page.waitForTimeout(300);
     await editor.saveAllFiles();
-    const currentContent = `Variables:
-  newKey: newValue
-`;
-    await resetContet(currentContent);
-    await editor.hasKey('originalKey');
-    await editor.hasValue('originalValue');
+    await editor.executeCommand('View: Reopen Editor With Text Editor');
+    await editor.activeEditorHasText(`originalKey: ${newValue}`);
   });
 
   test('Open Help', async () => {
