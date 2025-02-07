@@ -20,13 +20,7 @@ pipeline {
                 sh 'npm install'
                 sh 'npm run sbom'
                 def version = sh (script: "node -p \"require('./extension/package.json').version\"", returnStdout: true)
-                sh 'curl -v --fail -X POST https://api.dependency-track.ivyteam.io/api/v1/bom \
-                    -H "Content-Type: multipart/form-data" \
-                    -H "X-API-Key: ' + API_KEY + '" \
-                    -F "autoCreate=true" \
-                    -F "projectName=vscode-extensions" \
-                    -F "projectVersion=' + version + '" \
-                    -F "bom=@bom.json"'
+                uploadBOM(projectName: 'vscode-extensions', projectVersion: version, bomFile: 'bom.json')               
               }
             }
           }
