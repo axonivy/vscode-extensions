@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client';
 import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
 import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
 import { VsCodeApi, Messenger } from 'vscode-messenger-webview';
-import '@axonivy/form-editor/lib/style.css';
+import '@axonivy/form-editor/lib/editor.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
