@@ -24,8 +24,9 @@ export interface ViteManifestEntry {
 export const ROOT_ENTRY = 'index.html';
 export const EDITOR_WORKER_ENTRY = 'editor.worker.js?worker';
 
-export function parseBuildManifest(path: string): ViteManifest {
-  return JSON.parse(fs.readFileSync(path, 'utf8'));
+export function parseBuildManifest(root: vscode.Uri): ViteManifest {
+  const manifest = vscode.Uri.joinPath(root, 'build.manifest.json').fsPath;
+  return JSON.parse(fs.readFileSync(manifest, 'utf8'));
 }
 
 export function findRootEntry(manifest: ViteManifest): ViteManifestEntry {
