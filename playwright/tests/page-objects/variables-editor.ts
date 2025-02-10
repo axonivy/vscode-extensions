@@ -23,7 +23,7 @@ export class VariablesEditor extends Editor {
   }
 
   async hasValue(value: string, exact = true) {
-    const field = this.viewFrameLoactor().locator('td:nth-child(2) > div');
+    const field = this.viewFrameLoactor().locator('td:nth-child(2) > span');
     if (exact) {
       await expect(field).toHaveText(value);
     } else {
