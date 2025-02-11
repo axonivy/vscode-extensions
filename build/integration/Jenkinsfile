@@ -32,6 +32,23 @@ pipeline {
         }
       }
     }
+
+    stage('Playwright Tests') {
+      steps {
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            // sh 'start extension/AxonIvyEngine/bin/AxonIvyEngine.exe'
+            sh 'npm run test:playwright:download:vscode'
+            sh 'npm run test:playwright'
+            // sh 'start extension/AxonIvyEngine/bin/AxonIvyEngine.exe stop'
+          }
+          archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
+          }
+        }
+      }
+    }
   }
 
   post {

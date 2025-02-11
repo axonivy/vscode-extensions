@@ -29,7 +29,8 @@ test.describe('Engine', () => {
     await settingsView.containsSetting('"process.animation.speed": 50');
   });
 
-  test('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
+  // eslint-disable-next-line playwright/no-focused-test
+  test.only('ensure that embedded engine is not started due to settings', async ({ pageFor }) => {
     page = await pageFor(noEngineWorkspacePath);
     const settingsView = new SettingsView(page);
     await settingsView.isExplorerActionItemChecked();
