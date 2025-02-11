@@ -1,5 +1,12 @@
 pipeline {
-  agent any
+  agent {
+    label 'bigSur'
+  }
+
+  tools {
+    jdk 'temurin-jdk-21.0.6.7'
+    maven '3.9'
+  }
 
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
@@ -16,15 +23,8 @@ pipeline {
 
   stages {
     stage('Build') {
-      agent {
-        dockerfile {
-          filename 'build/Dockerfile'
-          reuseNode true
-        }
-      }
-
       steps {
-        script {
+        nodejs(nodeJSInstallationName: '22.11.0') {
           sh 'npm run update:axonivy:next'
           sh 'npm install'
           sh 'npm run build:production'
@@ -34,19 +34,13 @@ pipeline {
     }
 
     stage('Playwright Tests') {
-      agent {
-        docker {
-          image 'docker-registry.ivyteam.io/axonivy/playwright-base:dev'
-          reuseNode true
-        }
-      }
-
       steps {
-        script {
-          catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-            sh 'extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon'
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            sh 'export JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
+            sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
             sh 'npm run test:playwright:download:vscode'
-            sh 'xvfb-run --auto-servernum npm run test:playwright'
+            sh 'npm run test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
@@ -60,29 +54,28 @@ pipeline {
       when {
         expression { isReleasingBranch() }
       }
-      agent {
-        dockerfile {
-          filename 'build/Dockerfile'
-          reuseNode true
-        }
-      }
       steps {
-        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-          script {
-            sh 'npm run download:openapi https://neo.ivyteam.io'
-            sh 'npm run codegen:openapi'
-            sh 'npm run type'
-            sh 'npm run lint:ci'
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            script {
+              sh 'npm run download:openapi https://neo.ivyteam.io'
+              sh 'npm run codegen:openapi'
+              sh 'npm run type'
+              sh 'npm run lint:ci'
+            }
           }
-        }
-        withChecks('Integration Protocol ESLint') {
-          recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          withChecks('Integration Protocol ESLint') {
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          }
         }
       }
     }
   }
 
   post {
+    always {
+      sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine stop'
+    }
     success {
       cleanWs()
     }
