@@ -41,7 +41,6 @@ pipeline {
             sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
             sh 'npm run test:playwright:download:vscode'
             sh 'npm run test:playwright'
-            sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine stop'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
@@ -50,9 +49,31 @@ pipeline {
         }
       }
     }
+
+    stage('Protocol') {
+      when {
+        expression { isReleasingBranch() }
+      }
+      steps {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+          script {
+            sh 'npm run download:openapi https://neo.ivyteam.io'
+            sh 'npm run codegen:openapi'
+            sh 'npm run type'
+            sh 'npm run lint:ci'
+          }
+        }
+        withChecks('Integration Protocol ESLint') {
+          recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+        }
+      }
+    }
   }
 
   post {
+    always {
+      sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine stop'
+    }
     success {
       cleanWs()
     }
