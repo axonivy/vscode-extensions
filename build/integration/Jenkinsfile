@@ -55,16 +55,18 @@ pipeline {
         expression { isReleasingBranch() }
       }
       steps {
-        catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-          script {
-            sh 'npm run download:openapi https://neo.ivyteam.io'
-            sh 'npm run codegen:openapi'
-            sh 'npm run type'
-            sh 'npm run lint:ci'
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            script {
+              sh 'npm run download:openapi https://neo.ivyteam.io'
+              sh 'npm run codegen:openapi'
+              sh 'npm run type'
+              sh 'npm run lint:ci'
+            }
           }
-        }
-        withChecks('Integration Protocol ESLint') {
-          recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          withChecks('Integration Protocol ESLint') {
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          }
         }
       }
     }
