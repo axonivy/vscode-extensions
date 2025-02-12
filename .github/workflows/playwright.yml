@@ -4,7 +4,9 @@ on:
 jobs:
   test:
     timeout-minutes: 30
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    env:
+      CI: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,7 +29,7 @@ jobs:
         run: |
           nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
           npm run test:playwright:download:vscode
-          npm run test:playwright
+          xvfb-run -a npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
