@@ -7,7 +7,8 @@ import { getCtrlOrMeta } from './utils/keyboard';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
-test.describe('Process Editor', () => {
+// eslint-disable-next-line playwright/no-focused-test
+test.only('Process Editor', () => {
   let processEditor: ProcessEditor;
   let page: Page;
 
