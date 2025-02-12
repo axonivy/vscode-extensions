@@ -4,7 +4,7 @@ on:
 jobs:
   test:
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CI: true
     steps:
@@ -20,6 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           node --version
+          echo $CI
           npm run update:axonivy:next
           npm install
           npm run build:production
@@ -29,7 +30,7 @@ jobs:
         run: |
           nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
           npm run test:playwright:download:vscode
-          xvfb-run -a npm run test:playwright
+          npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
