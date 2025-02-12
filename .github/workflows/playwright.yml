@@ -4,7 +4,7 @@ on:
 jobs:
   test:
     timeout-minutes: 30
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       CI: true
     steps:
@@ -19,18 +19,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          node --version
-          echo $CI
           npm run update:axonivy:next
           npm install
           npm run build:production
           npm run download:engine https://download.axonivy.com/dev/AxonIvyEngine13.1.0.2502121306_All_x64.zip
-          node --version
       - name: Run Playwright tests
         run: |
-          start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
           npm run test:playwright:download:vscode
-          npm run test:playwright
+          xvfb-run --auto-servernum npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
