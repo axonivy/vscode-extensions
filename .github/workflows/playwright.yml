@@ -28,7 +28,7 @@ jobs:
           node --version
       - name: Run Playwright tests
         run: |
-          nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
+          start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
           npm run test:playwright:download:vscode
           npm run test:playwright
       - uses: actions/upload-artifact@v4
