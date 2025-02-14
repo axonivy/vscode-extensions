@@ -17,6 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           which java
+          rm -r /bin/java
           # npm run update:axonivy:next
           env
           npm install
