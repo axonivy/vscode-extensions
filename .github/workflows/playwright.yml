@@ -12,7 +12,7 @@ jobs:
           node-version: 22
       - uses: actions/setup-java@v4
         with:
-          java-version: 21
+          java-version: '21.0.4'
           distribution: 'temurin'
       - name: Install dependencies
         run: |
