@@ -23,9 +23,9 @@ export async function launchElectronApp(workspacePath: string, testTitle: string
 }
 
 function recordVideo(testTitle: string) {
-  // if (process.platform == 'win32') {
-  //   return;
-  // }
+  if (process.platform == 'win32') {
+    return;
+  }
   return {
     dir: path.join(__dirname, '..', '..', 'playwright-videos', testTitle.replaceAll(' ', '_'))
   };
