@@ -9,7 +9,7 @@ import { IvyBrowserViewProvider } from '../../browser/ivy-browser-view-provider'
 const ColorThemeChangedNotification: NotificationType<'dark' | 'light'> = { method: 'colorThemeChanged' };
 const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
-const StartProcessRequest: RequestType<string, void> = { method: 'startProcess' };
+const StartProcessRequest: RequestType<string, Promise<void>> = { method: 'startProcess' };
 
 const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
 const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
@@ -29,7 +29,7 @@ export const setupCommunication = (
     messenger.onNotification(WebviewConnectionReadyNotification, () => handleWebviewReadyNotification(messenger, messageParticipant), {
       sender: messageParticipant
     }),
-    messenger.onRequest(StartProcessRequest, startUri => IvyBrowserViewProvider.instance.startProcess(startUri), {
+    messenger.onRequest<string, Promise<void>>(StartProcessRequest, startUri => IvyBrowserViewProvider.instance.startProcess(startUri), {
       sender: messageParticipant
     }),
     vscode.window.onDidChangeActiveColorTheme(theme =>

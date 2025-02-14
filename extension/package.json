@@ -28,25 +28,22 @@
   "main": "./dist/extension.js",
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "2.3.0",
-    "axios": "^1.7.4",
-    "fast-xml-parser": "^4.3.2",
-    "htmlparser2": "^9.1.0",
-    "vscode-messenger": "^0.4.5",
-    "vscode-messenger-common": "^0.4.5",
-    "vscode-ws-jsonrpc": "^3.0.0",
-    "ws": "^8.16.0"
+    "axios": "1.7.9",
+    "fast-xml-parser": "4.5.1",
+    "htmlparser2": "10.0.0",
+    "vscode-messenger": "0.4.5",
+    "vscode-ws-jsonrpc": "3.4.0",
+    "ws": "8.18.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
-    "@types/vscode-webview": "^1.57.4",
-    "@types/ws": "^8.5.10",
-    "@vscode/vsce": "^2.22.0",
-    "bufferutil": "^4.0.8",
-    "chai": "^4.3.10",
+    "@types/vscode": "1.97.0",
+    "@types/vscode-webview": "1.57.5",
+    "@types/ws": "8.5.14",
+    "@vscode/vsce": "3.2.2",
     "vscode-config-editor-webview": "13.1.0",
     "vscode-process-editor-webview": "13.1.0",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack": "5.98.0",
+    "webpack-cli": "6.0.1"
   },
   "activationEvents": [
     "onStartupFinished"
