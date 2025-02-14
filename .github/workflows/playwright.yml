@@ -3,6 +3,8 @@ on:
   push:
 jobs:
   test:
+    env:
+      IVY_JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.3-9.0.LTS/x64
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -16,6 +18,7 @@ jobs:
           distribution: 'temurin'
       - name: Install dependencies
         run: |
+          echo $IVY_JAVA_HOME
           which java
           rm -r /bin/java
           # npm run update:axonivy:next
