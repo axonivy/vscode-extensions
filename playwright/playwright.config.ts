@@ -2,7 +2,6 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   use: {
-    headless: process.env.CI ? true : false,
     permissions: ['clipboard-read'],
     trace: 'retain-on-failure'
   },

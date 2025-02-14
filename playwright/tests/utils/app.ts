@@ -18,8 +18,7 @@ export async function launchElectronApp(workspacePath: string, testTitle: string
   return await _electron.launch({
     executablePath,
     args: [...args, workspacePath],
-    recordVideo: recordVideo(testTitle),
-    env: process.env.CI ? undefined : {}
+    recordVideo: recordVideo(testTitle)
   });
 }
 
