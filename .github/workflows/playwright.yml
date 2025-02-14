@@ -21,7 +21,7 @@ jobs:
           npm run update:axonivy:next
           npm install
           npm run build:production
-          npm run download:engine https://download.axonivy.com/dev/AxonIvyEngine13.1.0.2502121306_All_x64.zip
+          npm run download:engine https://download.axonivy.com/dev/AxonIvyEngine13.1.0.2502141306_All_x64.zip
       - name: Run Playwright tests
         run: |
           extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
