@@ -25,11 +25,16 @@ jobs:
           start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
           npm run test:playwright:download:vscode
           npm run test:playwright
+        env:
+          CI: true
+          RUN_STABLE_VERSION: true
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-videos
-          path: playwright/playwright-videos/
+          path: |
+            playwright/playwright-videos/
+            extension/AxonIvyEngine/logs
           retention-days: 3
 # name: Playwright Tests
 # on:

@@ -39,8 +39,7 @@ test.describe('Inscription View', () => {
     cleanUp();
   });
 
-  // eslint-disable-next-line playwright/no-focused-test
-  test.only('Check Process Editor Connector', async () => {
+  test('Check Process Editor Connector', async () => {
     let element = processEditor.locatorForPID(userDialogPID1);
     await expect(element).toBeVisible();
     await element.dblclick();
