@@ -38,6 +38,7 @@ pipeline {
         nodejs(nodeJSInstallationName: '22.11.0') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'export JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
+            sh 'export CI=true'
             sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
             sh 'npm run test:playwright:download:vscode'
             sh 'npm run test:playwright'
