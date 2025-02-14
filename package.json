@@ -58,6 +58,9 @@
     "vite": "6.1.0",
     "vite-tsconfig-paths": "5.1.4"
   },
+  "overrides": {
+    "vscode-jsonrpc": "8.2.0"
+  },
   "workspaces": [
     "extension",
     "webviews/*",
