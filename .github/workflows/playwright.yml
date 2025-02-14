@@ -16,6 +16,7 @@ jobs:
           distribution: 'temurin'
       - name: Install dependencies
         run: |
+          which java
           # npm run update:axonivy:next
           env
           npm install
