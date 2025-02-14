@@ -22,7 +22,7 @@ jobs:
           npm run download:engine https://download.axonivy.com/dev/AxonIvyEngine13.1.0.2502141306_All_x64.zip
       - name: Run Playwright tests
         run: |
-          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+          nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
           npm run test:playwright:download:vscode
           xvfb-run --auto-servernum npm run test:playwright
       - uses: actions/upload-artifact@v4
