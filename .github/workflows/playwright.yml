@@ -16,7 +16,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Install dependencies
         run: |
           npm run update:axonivy:next
