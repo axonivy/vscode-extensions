@@ -7,7 +7,7 @@ export class FormEditor extends Editor {
   constructor(page: Page, editorFile: string = 'testForm.f.json') {
     const outputViewData: ViewData = {
       tabSelector: `div.tab:has-text("${editorFile}")`,
-      viewSelector: 'body > div > div[data-parent-flow-to-element-id] >> visible = true'
+      viewSelector: 'body > div > div[data-parent-flow-to-element-id] >> visible=true'
     };
     super(editorFile, outputViewData, page);
   }
