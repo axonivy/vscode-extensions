@@ -19,8 +19,6 @@ jobs:
       - name: Install dependencies
         run: |
           echo $IVY_JAVA_HOME
-          which java
-          rm -r /bin/java
           # npm run update:axonivy:next
           env
           npm install
