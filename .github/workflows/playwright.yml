@@ -12,20 +12,20 @@ jobs:
           node-version: 22
       - uses: actions/setup-java@v4
         with:
+          java-version: 21
           distribution: 'temurin'
-          java-version: '21'
       - name: Install dependencies
         run: |
-          npm run update:axonivy:next
+          # npm run update:axonivy:next
           npm install
-          npm run build:production
+          # npm run build:production
           npm run download:engine https://download.axonivy.com/dev/AxonIvyEngine13.1.0.2502141306_All_x64.zip
       - name: Run Playwright tests
         run: |
           java --version
-          nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
-          npm run test:playwright:download:vscode
-          xvfb-run --auto-servernum npm run test:playwright
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+          # npm run test:playwright:download:vscode
+          # xvfb-run --auto-servernum npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
