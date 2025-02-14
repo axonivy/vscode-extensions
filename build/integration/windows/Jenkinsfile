@@ -21,6 +21,12 @@ pipeline {
     cron '@midnight'
   }
 
+  environment {
+    JAVA_OPTS_IVY_SYSTEM = '-Divy.engine.testheadless=true'
+    CI = 'true'
+    RUN_STABLE_VERSION = 'true'
+  }
+
   stages {
     stage('Build') {
       steps {

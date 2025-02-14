@@ -21,6 +21,12 @@ pipeline {
     string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product-engine/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip', description: 'engine that will be packaged')
   }
 
+  environment {
+    JAVA_OPTS_IVY_SYSTEM = '-Divy.engine.testheadless=true'
+    CI = 'true'
+    RUN_STABLE_VERSION = 'false'
+  }
+
   stages {
     stage('Build') {
       steps {
@@ -37,8 +43,6 @@ pipeline {
       steps {
         nodejs(nodeJSInstallationName: '22.11.0') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            sh 'export JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true'
-            sh 'export CI=true'
             sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
             sh 'npm run test:playwright:download:vscode'
             sh 'npm run test:playwright'
