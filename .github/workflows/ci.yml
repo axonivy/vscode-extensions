@@ -31,11 +31,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-videos
+          name: archive
           path: |
             playwright/playwright-videos/
             extension/AxonIvyEngine/logs
-          retention-days: 3
+          retention-days: 10
 # name: Playwright Tests
 # on:
 #   push:
