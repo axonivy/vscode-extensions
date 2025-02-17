@@ -5,7 +5,7 @@ import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
 import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
 import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
 import 'vscode-webview-common/css/colors.css';
-import '@axonivy/variable-editor/lib/style.css';
+import '@axonivy/variable-editor/lib/editor.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
