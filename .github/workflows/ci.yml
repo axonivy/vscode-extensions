@@ -20,7 +20,7 @@ jobs:
           npm install
           npm run build:production
           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
-          rmdir extension/AxonIvyEngine/system/demo-applications
+          rm -r extension/AxonIvyEngine/system/demo-applications
       - name: Run Playwright tests
         run: |
           start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
