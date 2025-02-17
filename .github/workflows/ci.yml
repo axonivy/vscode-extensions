@@ -26,10 +26,12 @@ jobs:
           npm run build:production
           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
           rm -r extension/AxonIvyEngine/system/demo-applications
-      - run: start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
+      - name: Start engine on Windows
         if: runner.os == 'Windows'
-      - run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+        run: start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
+      - name: Start engine on macOS
         if: runner.os == 'macOS'
+        run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
       - name: Run Playwright tests
         run: |
           npm run test:playwright:download:vscode
