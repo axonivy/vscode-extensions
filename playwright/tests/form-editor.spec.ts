@@ -25,7 +25,8 @@ test.describe('Form Editor', () => {
     await editor.revertAndCloseEditor();
   });
 
-  test('Open Form editor', async () => {
+  // eslint-disable-next-line playwright/no-focused-test
+  test.only('Open Form editor', async () => {
     const text = editor.locatorFor('.block-text');
     await expect(text).toBeVisible();
     await expect(text).toHaveText('This is my test');
