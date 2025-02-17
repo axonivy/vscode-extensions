@@ -16,11 +16,11 @@ jobs:
         run: |
           npm run update:axonivy:next
           npm install
-          npm run build:production
+          # npm run build:production
       - name: Run Playwright tests
         run: |
           npm run test:playwright:download:vscode
-          xvfb-run npx playwright test
+          xvfb-run npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
