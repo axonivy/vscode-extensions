@@ -24,7 +24,11 @@ jobs:
           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
           rm -r extension/AxonIvyEngine/system/demo-applications
       - name: Start engine
-        run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+        run: |
+          env
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+        env:
+          IVY_JAVA_HOME: $JAVA_HOME
       - name: Run Playwright tests
         run: |
           npm run test:playwright:download:vscode
