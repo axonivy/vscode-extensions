@@ -26,5 +26,5 @@ jobs:
         with:
           name: archive
           path: |
-            playwright/test-results/
+            playwright/
           retention-days: 10
