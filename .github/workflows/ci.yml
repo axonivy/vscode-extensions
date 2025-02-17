@@ -19,7 +19,7 @@ jobs:
           # npm run build:production
       - name: Run Playwright tests
         run: |
-          npm run test:playwright:download:vscode
+          # npm run test:playwright:download:vscode
           xvfb-run npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
