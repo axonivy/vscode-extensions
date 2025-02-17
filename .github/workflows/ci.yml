@@ -5,12 +5,8 @@ on:
     - cron: '21 21 * * *'
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest]
     timeout-minutes: 30
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,16 +23,12 @@ jobs:
           npm run build:production
           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
           rm -r extension/AxonIvyEngine/system/demo-applications
-      - name: Start engine on Windows
-        if: runner.os == 'Windows'
-        run: start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
-      - name: Start engine on macOS
-        if: runner.os == 'macOS'
+      - name: Start engine
         run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
       - name: Run Playwright tests
         run: |
           npm run test:playwright:download:vscode
-          npm run test:playwright
+          xvfb-run -a npm run test:playwright
         env:
           CI: true
           RUN_STABLE_VERSION: true
@@ -48,3 +40,53 @@ jobs:
             playwright/playwright-videos/
             extension/AxonIvyEngine/logs
           retention-days: 10
+# name: Playwright Tests
+# on:
+#   push:
+#   schedule:
+#     - cron: '21 21 * * *'
+# jobs:
+#   test:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         os: [macos-latest, windows-latest]
+#     timeout-minutes: 30
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: 22
+#       - uses: actions/setup-java@v4
+#         with:
+#           java-version: 21
+#           distribution: 'temurin'
+#       - name: Install dependencies
+#         run: |
+#           npm run update:axonivy:next
+#           npm install
+#           npm run build:production
+#           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
+#           rm -r extension/AxonIvyEngine/system/demo-applications
+#       - name: Start engine on Windows
+#         if: runner.os == 'Windows'
+#         run: start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
+#       - name: Start engine on macOS
+#         if: runner.os == 'macOS'
+#         run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+#       - name: Run Playwright tests
+#         run: |
+#           npm run test:playwright:download:vscode
+#           npm run test:playwright
+#         env:
+#           CI: true
+#           RUN_STABLE_VERSION: true
+#       - uses: actions/upload-artifact@v4
+#         if: ${{ !cancelled() }}
+#         with:
+#           name: archive
+#           path: |
+#             playwright/playwright-videos/
+#             extension/AxonIvyEngine/logs
+#           retention-days: 10
