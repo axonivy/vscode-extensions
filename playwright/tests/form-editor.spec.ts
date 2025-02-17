@@ -13,6 +13,7 @@ test.describe('Form Editor', () => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     editor = new FormEditor(page);
     await editor.hasDeployProjectStatusMessage();
+    await editor.hasNoStatusMessage();
   });
 
   test.beforeEach(async () => {
@@ -55,8 +56,6 @@ test.describe('Form Editor', () => {
     await editor.locatorFor('.block-input').dblclick();
     const inscriptionView = editor.locatorFor('#properties');
     await inscriptionView.getByRole('button', { name: /Help/ }).click();
-    expect((await browserView.input().inputValue()).toString()).toMatch(
-      /^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/
-    );
+    expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/);
   });
 });

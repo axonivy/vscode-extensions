@@ -12,6 +12,7 @@ test.describe('Variables Editor', () => {
     page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
     editor = new VariablesEditor(page);
     await editor.hasDeployProjectStatusMessage();
+    await editor.hasNoStatusMessage();
   });
 
   test.beforeEach(async () => {
