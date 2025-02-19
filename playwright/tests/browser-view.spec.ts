@@ -1,6 +1,48 @@
-import { test } from './fixtures/baseTest';
+import { expect, test } from './fixtures/baseTest';
+import { BrowserView } from './page-objects/browser-view';
 
-test('Open Engine Cockpit', async ({ page }) => {
-  await page.getByRole('treeitem', { name: 'pom.xml', exact: true }).locator('a').click();
-  console.log('Hello');
+test.describe('Browser View', () => {
+  let browserView: BrowserView;
+
+  test.beforeEach(async ({ page }) => {
+    browserView = new BrowserView(page);
+    await browserView.hasDeployProjectStatusMessage();
+  });
+
+  test('Toolbar and navigation', async () => {
+    const home = /home.xhtml/;
+    const starts = /starts.xhtml/;
+    await browserView.openDevWfUi();
+    await assertToolbarInput(/dev-workflow-ui/);
+
+    await browserView.home().click();
+    await assertToolbarInput(home);
+
+    const startLink = browserView.content().locator('#menuform\\:sr_starts');
+    await expect(startLink).toBeVisible();
+    await browserView.content().locator('#menuform\\:sr_starts').click();
+    await assertToolbarInput(starts);
+
+    await browserView.reload().click({ clickCount: 2 });
+    await assertToolbarInput(starts);
+
+    await browserView.back().click();
+    await assertToolbarInput(starts);
+
+    await browserView.back().click();
+    await assertToolbarInput(home);
+
+    await browserView.forward().click();
+    await assertToolbarInput(starts);
+
+    await browserView.openCockpit();
+    await assertToolbarInput(/system\/engine-cockpit/);
+
+    await browserView.openNEO();
+    await assertToolbarInput(/neo/);
+  });
+
+  async function assertToolbarInput(value: RegExp) {
+    await expect(browserView.input()).toHaveValue(value);
+  }
 });
