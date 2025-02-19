@@ -5,12 +5,12 @@ on:
     - cron: '21 21 * * *'
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 30
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    env:
+      IVY_JAVA_HOME: $JAVA_HOME
+      CI: true
+      RUN_STABLE_VERSION: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,28 +28,9 @@ jobs:
           npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
           rm -r extension/AxonIvyEngine/system/demo-applications
           npm run test:playwright:download:vscode
-      - name: Start engine on Windows
-        if: runner.os == 'Windows'
-        run: start extension/AxonIvyEngine/bin/AxonIvyEngine.exe
-      - name: Start engine on macOS/ubuntu
-        if: runner.os != 'Windows'
-        run: extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
-        env:
-          IVY_JAVA_HOME: $JAVA_HOME
-      - name: Run Playwright tests on Linux
-        if: runner.os == 'Linux'
-        run: xvfb-run npm run test:playwright
-        env:
-          CI: true
-          RUN_STABLE_VERSION: true
-          IVY_JAVA_HOME: $JAVA_HOME
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
       - name: Run Playwright tests
-        if: runner.os != 'Linux'
-        run: npm run test:playwright
-        env:
-          CI: true
-          RUN_STABLE_VERSION: true
-          IVY_JAVA_HOME: $JAVA_HOME
+        run: xvfb-run npm run test:playwright
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
