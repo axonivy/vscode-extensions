@@ -24,7 +24,7 @@ test.describe('Problems View', () => {
     await problemsView.hasError('Output code: A statement is expected, not an expression (maybe missing semicolon)', '18D9CDFA8F58DA2B-f5');
   });
 
-  test('Check live validation', async () => {
+  test('Check live validation', async ({ page }) => {
     const pid = '18D9CDFA8F58DA2B-f7';
     const script = processEditor.locatorForPID(pid);
     await processEditor.hasNoValidationMarker(script);
