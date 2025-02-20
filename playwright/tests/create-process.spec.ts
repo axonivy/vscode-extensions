@@ -10,6 +10,8 @@ test.describe('Create Process', () => {
   let processName: string;
   const cleanUp = () => removeFromWorkspace(prebuiltEmptyWorkspacePath, 'processes');
 
+  test.use({ workspace: prebuiltEmptyWorkspacePath });
+
   test.beforeEach(async ({ page }) => {
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
