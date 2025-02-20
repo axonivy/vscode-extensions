@@ -10,11 +10,10 @@ export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
 export const test = base.extend<{ workspace: string; page: Page }>({
   workspace: prebuiltWorkspacePath,
-  page: async ({ workspace }, use) => {
+  page: async ({ workspace }, take) => {
     const { page, browser, electronApp } = await appWithPage(workspace);
     await initialize(page);
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    await use(page);
+    await take(page);
     if (browser) {
       await browser.close();
       return;

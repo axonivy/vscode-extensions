@@ -1,8 +1,6 @@
 pipeline {
-  agent {
-    label 'bigSur'
-  }
-
+  agent agent
+  
   tools {
     jdk 'temurin-jdk-21.0.6.7'
     maven '3.9'
