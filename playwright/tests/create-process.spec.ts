@@ -17,6 +17,7 @@ test.describe('Create Process', () => {
     await explorer.hasDeployProjectStatusMessage();
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
+    await processEditor.hasNoStatusMessage();
   });
 
   test.afterAll(async () => {
