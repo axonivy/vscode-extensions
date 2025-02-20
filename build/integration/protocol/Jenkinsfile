@@ -1,0 +1,43 @@
+pipeline {
+  agent any
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
+    disableConcurrentBuilds()
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  stages {
+    stage('Protocol') {
+      when {
+        expression { isReleasingBranch() }
+      }
+      steps {
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            script {
+              sh 'npm run update:axonivy:next'
+              sh 'npm install'
+              sh 'npm run download:openapi https://neo.ivyteam.io'
+              sh 'npm run codegen:openapi'
+              sh 'npm run type'
+              sh 'npm run lint:ci'
+            }
+          }
+          withChecks('Integration Protocol ESLint') {
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      cleanWs()
+    }
+  }
+}
