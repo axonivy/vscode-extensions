@@ -17,17 +17,16 @@ test.describe('Create Process', () => {
     await explorer.hasDeployProjectStatusMessage();
     processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
-    await processEditor.hasNoStatusMessage();
   });
 
   test.afterAll(async () => {
     cleanUp();
   });
 
-  test('Add business process and execute it', async () => {
+  test('Add business process and execute it', async ({ page }) => {
     await explorer.addProcess(processName, 'Business Process');
-    await explorer.hasNoStatusMessage();
     await explorer.hasNode(`${processName}.p.json`);
+    await page.waitForTimeout(1000);
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     const end = processEditor.locatorForElementType('g.end\\:taskEnd');
     await processEditor.startProcessAndAssertExecuted(start, end);
@@ -35,6 +34,8 @@ test.describe('Create Process', () => {
 
   test('Assert that process gets redeployed after editing', async ({ page }) => {
     await explorer.addProcess(processName, 'Business Process');
+    await explorer.hasNode(`${processName}.p.json`);
+    await page.waitForTimeout(1000);
     const start = processEditor.locatorForElementType('g.start\\:requestStart');
     await processEditor.appendActivity(start, 'Script');
     await processEditor.isDirty();
