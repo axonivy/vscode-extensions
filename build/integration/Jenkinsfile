@@ -1,6 +1,6 @@
 pipeline {
   agent agent
-  
+
   tools {
     jdk 'temurin-jdk-21.0.6.7'
     maven '3.9'
@@ -43,7 +43,7 @@ pipeline {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
             sh 'npm run test:playwright:download:vscode'
-            sh 'npm run test:playwright'
+            sh 'xvfb-run npm run test:playwright'
           }
           archiveArtifacts artifacts: '**/playwright/playwright-videos/**', allowEmptyArchive: true
           withChecks('WebTests') {
