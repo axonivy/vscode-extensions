@@ -1,18 +1,17 @@
-import { test, expect, Page } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { animationWorkspacePath } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
+import { test } from './fixtures/baseTest';
 
 test.describe('Process Animation', () => {
-  let page: Page;
+  test.use({ workspace: animationWorkspacePath });
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(animationWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ page }) => {
     await new FileExplorer(page).hasDeployProjectStatusMessage();
   });
 
-  test('with activated animation and reset afterwards', async () => {
+  test('with activated animation and reset afterwards', async ({ page }) => {
     test.skip(process.platform === 'win32');
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.openEditorFile();
@@ -28,7 +27,7 @@ test.describe('Process Animation', () => {
     await processEditor.assertNotExecuted(taskInCallSub);
   });
 
-  test('with deactivated animation', async () => {
+  test('with deactivated animation', async ({ page }) => {
     const processEditor = new ProcessEditor(page, 'NoAnimation.p.json');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForPID('191A2645F90CDC61-f0');

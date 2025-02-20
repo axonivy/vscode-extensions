@@ -1,29 +1,18 @@
-import { expect, test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect } from 'playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { prebuiltWorkspacePath } from './workspaces/workspace';
-import { Page } from '@playwright/test';
 import { getCtrlOrMeta } from './utils/keyboard';
+import { test } from './fixtures/baseTest';
 
 const userDialogPID = '15254DCE818AD7A2-f3';
 
 test.describe('Process Editor', () => {
   let processEditor: ProcessEditor;
-  let page: Page;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ page }) => {
     processEditor = new ProcessEditor(page);
     await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-  });
-
-  test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
   });
 
   test('Check if User Dialog is visible', async () => {

@@ -1,11 +1,10 @@
-import { test } from './fixtures/page';
+import { test } from './fixtures/baseTest';
 import { ProcessEditor } from './page-objects/process-editor';
 import { empty, removeFromWorkspace } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
 import { ProblemsView } from './page-objects/problems-view';
 
 test.describe('Create Project', () => {
-  const projectName = 'testProject';
   const rootFolder = 'parent';
 
   test.beforeAll(async () => {
@@ -16,10 +15,11 @@ test.describe('Create Project', () => {
     removeFromWorkspace(empty, rootFolder);
   });
 
-  test('Add Project and execute init Process', async ({ pageFor }) => {
-    const page = await pageFor(empty);
+  test.use({ workspace: empty });
+
+  test('Add Project and execute init Process', async ({ page }) => {
     const explorer = new FileExplorer(page);
-    await explorer.addNestedProject(rootFolder, projectName);
+    await explorer.addNestedProject(rootFolder, 'testProject');
     await explorer.hasStatusMessage('Finished: Create new Project', 60_000);
     await explorer.hasNoStatusMessage();
 

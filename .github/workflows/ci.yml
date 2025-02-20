@@ -1,0 +1,40 @@
+name: Playwright Tests
+on:
+  push:
+  schedule:
+    - cron: '21 21 * * *'
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      IVY_JAVA_HOME: $JAVA_HOME
+      CI: true
+      RUN_STABLE_VERSION: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Install dependencies
+        run: |
+          npm run update:axonivy:next
+          npm install
+          npm run build:production
+          npm run download:engine https://dev.axonivy.com/permalink/dev/axonivy-engine.zip
+          rm -r extension/AxonIvyEngine/system/demo-applications
+          npm run test:playwright:download:vscode
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+      - name: Run Playwright tests
+        run: xvfb-run npm run test:playwright
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: |
+            playwright/test-results
+          retention-days: 10

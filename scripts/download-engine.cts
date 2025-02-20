@@ -13,10 +13,16 @@ function downloadEngine() {
     fs.rmSync(engineDir, { recursive: true, force: true });
   }
   fs.mkdirSync(engineDir);
+  downloadEngineReq(engineDir, engineDonwloadUrl);
+}
 
-  const filename = path.join(engineDir, path.basename(engineDonwloadUrl));
-
-  https.get(engineDonwloadUrl, res => {
+function downloadEngineReq(engineDir: string, downloadUrl: string) {
+  const filename = path.join(engineDir, path.basename(downloadUrl));
+  https.get(downloadUrl, res => {
+    if (res.statusCode === 302 && res.headers.location) {
+      downloadEngineReq(engineDir, res.headers.location);
+      return;
+    }
     const fileStream = fs.createWriteStream(filename);
     res.pipe(fileStream);
     fileStream.on('finish', () => {

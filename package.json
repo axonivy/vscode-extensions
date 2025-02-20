@@ -30,15 +30,15 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/form-editor": "13.1.0-next.560",
-    "@axonivy/form-editor-core": "13.1.0-next.560",
-    "@axonivy/process-editor": "13.1.0-next.1358",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1358",
-    "@axonivy/variable-editor": "13.1.0-next.552",
-    "vscode-messenger-common": "0.5.1"
+    "@axonivy/form-editor": "13.1.0-next.578",
+    "@axonivy/form-editor-core": "13.1.0-next.578",
+    "@axonivy/process-editor": "13.1.0-next.1400",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1400",
+    "@axonivy/variable-editor": "13.1.0-next.586",
+    "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.552",
+    "@axonivy/eslint-config": "13.1.0-next.578",
     "@types/node": "22.13.4",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",

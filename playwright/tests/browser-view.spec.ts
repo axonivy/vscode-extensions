@@ -1,19 +1,13 @@
-import { Page, expect, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
-import { prebuiltWorkspacePath } from './workspaces/workspace';
+import { expect, test } from './fixtures/baseTest';
 import { BrowserView } from './page-objects/browser-view';
 
 test.describe('Browser View', () => {
-  let page: Page;
   let browserView: BrowserView;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test('Toolbar and navigation', async ({ page }) => {
     browserView = new BrowserView(page);
     await browserView.hasDeployProjectStatusMessage();
-  });
 
-  test('Toolbar', async () => {
     const home = /home.xhtml/;
     const starts = /starts.xhtml/;
     await browserView.openDevWfUi();
@@ -38,14 +32,10 @@ test.describe('Browser View', () => {
 
     await browserView.forward().click();
     await assertToolbarInput(starts);
-  });
 
-  test('Open Engine Cockpit', async () => {
     await browserView.openCockpit();
     await assertToolbarInput(/system\/engine-cockpit/);
-  });
 
-  test('Open NEO', async () => {
     await browserView.openNEO();
     await assertToolbarInput(/neo/);
   });
