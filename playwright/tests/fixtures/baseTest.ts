@@ -11,8 +11,11 @@ export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 export const test = base.extend<{ workspace: string; page: Page }>({
   workspace: prebuiltWorkspacePath,
   page: async ({ workspace }, take) => {
-    if (runInBrowser) await runBrowserTest(workspace, take);
-    else await runElectronAppTest(workspace, take);
+    if (runInBrowser) {
+      await runBrowserTest(workspace, take);
+    } else {
+      await runElectronAppTest(workspace, take);
+    }
   }
 });
 
