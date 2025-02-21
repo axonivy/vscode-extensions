@@ -1,27 +1,22 @@
-import { Page, expect, test } from '@playwright/test';
-import { pageFor } from './fixtures/page';
+import { expect } from '@playwright/test';
 import { VariablesEditor } from './page-objects/variables-editor';
-import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspace';
+import { randomArtefactName } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
+import { test } from './fixtures/baseTest';
 
 test.describe('Variables Editor', () => {
-  let page: Page;
   let editor: VariablesEditor;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ page }) => {
     editor = new VariablesEditor(page);
     await editor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await editor.openEditorFile();
     await editor.isTabVisible();
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Variables Editor');
     await editor.isViewVisible();
   });
 
-  test('Read and write', async () => {
+  test('Read, write and open help', async ({ page }) => {
     await editor.hasKey('originalKey');
     await editor.hasValue('originalValue', false);
     const newValue = `originalValue-${randomArtefactName()}`;
@@ -34,7 +29,7 @@ test.describe('Variables Editor', () => {
     await editor.revertAndCloseEditor();
   });
 
-  test('Open Help', async () => {
+  test('Open Help', async ({ page }) => {
     const browserView = new BrowserView(page);
     await editor.viewFrameLoactor().getByRole('button', { name: /Help/ }).click();
     const helpLink = await browserView.input().inputValue();

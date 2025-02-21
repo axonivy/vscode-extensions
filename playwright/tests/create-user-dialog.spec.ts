@@ -1,14 +1,12 @@
-import { test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
+import { test } from './fixtures/baseTest';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
-import { Page, expect } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
 import path from 'path';
 import { FormEditor } from './page-objects/form-editor';
 
 test.describe('Create User Dialog', () => {
-  let page: Page;
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
   let userDialogName: string;
@@ -18,21 +16,16 @@ test.describe('Create User Dialog', () => {
     removeFromWorkspace(projectPath, 'src_dataClasses', 'ch');
   };
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async ({}) => {
     cleanUp();
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  });
+
+  test.beforeEach(async ({ page }) => {
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
     processEditor = new ProcessEditor(page);
-  });
-
-  test.beforeEach(async () => {
     userDialogName = randomArtefactName();
     await explorer.hasNoStatusMessage();
-  });
-
-  test.afterEach(async () => {
-    await explorer.closeAllTabs();
   });
 
   test.afterAll(async () => {
@@ -63,7 +56,7 @@ test.describe('Create User Dialog', () => {
     await expect(start).toBeVisible();
   });
 
-  test('Add Form Dialog', async () => {
+  test('Add Form Dialog', async ({ page }) => {
     await explorer.addUserDialog(userDialogName, 'ch.ivyteam.test.form', 'Form Dialog');
     await explorer.hasNode(`${userDialogName}.f.json`);
     await explorer.hasNode(`${userDialogName}Data.d.json`);

@@ -1,27 +1,17 @@
-import { expect, test } from 'playwright/test';
-import { pageFor } from './fixtures/page';
-import { prebuiltWorkspacePath, randomArtefactName } from './workspaces/workspace';
-import { Page } from '@playwright/test';
+import { expect } from 'playwright/test';
+import { randomArtefactName } from './workspaces/workspace';
 import { FormEditor } from './page-objects/form-editor';
 import { BrowserView } from './page-objects/browser-view';
+import { test } from './fixtures/baseTest';
 
 test.describe('Form Editor', () => {
   let editor: FormEditor;
-  let page: Page;
 
-  test.beforeAll(async ({}, testInfo) => {
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  test.beforeEach(async ({ page }) => {
     editor = new FormEditor(page);
     await editor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await editor.openEditorFile();
     await editor.isViewVisible();
-  });
-
-  test.afterEach(async () => {
-    await editor.revertAndCloseEditor();
   });
 
   test('Open Form editor', async () => {
@@ -31,7 +21,7 @@ test.describe('Form Editor', () => {
     await editor.isNotDirty();
   });
 
-  test('Edit input label', async () => {
+  test('Edit input label', async ({ page }) => {
     const input = editor.locatorFor('.block-input');
     await input.dblclick();
     const labelProperty = editor.locatorFor('#properties').getByLabel('Label');
@@ -50,13 +40,11 @@ test.describe('Form Editor', () => {
     await xhtmlEditor.revertAndCloseEditor();
   });
 
-  test('Open Help', async () => {
+  test('Open Help', async ({ page }) => {
     const browserView = new BrowserView(page);
     await editor.locatorFor('.block-input').dblclick();
     const inscriptionView = editor.locatorFor('#properties');
     await inscriptionView.getByRole('button', { name: /Help/ }).click();
-    expect((await browserView.input().inputValue()).toString()).toMatch(
-      /^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/
-    );
+    expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/);
   });
 });

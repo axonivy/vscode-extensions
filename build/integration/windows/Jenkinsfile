@@ -55,6 +55,27 @@ pipeline {
         }
       }
     }
+
+    stage('Protocol') {
+      when {
+        expression { isReleasingBranch() }
+      }
+      steps {
+        nodejs(nodeJSInstallationName: '22.11.0') {
+          catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            script {
+              bat 'npm run download:openapi https://neo.ivyteam.io'
+              bat 'npm run codegen:openapi'
+              bat 'npm run type'
+              bat 'npm run lint:ci'
+            }
+          }
+          withChecks('Integration Protocol ESLint') {
+            recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(id: 'latest', pattern: 'extension/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
+          }
+        }
+      }
+    }
   }
 
   post {

@@ -1,9 +1,9 @@
-import { Page, expect, test } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { pageFor } from './fixtures/page';
 import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 import { wait } from './utils/timeout';
+import { test } from './fixtures/baseTest';
 
 const userDialogPID1 = '15254DCE818AD7A2-f3';
 const userDialogPID2 = '15254DCE818AD7A2-f14';
@@ -11,28 +11,21 @@ const userTaskPID = '15254DCE818AD7A2-f17';
 const namespace = 'testNamespace';
 
 test.describe('Inscription View', () => {
-  let page: Page;
-  let browserView: BrowserView;
   let processEditor: ProcessEditor;
   const cleanUp = () => {
     removeFromWorkspace(prebuiltWorkspacePath, 'src_hd', 'prebuiltProject');
     removeFromWorkspace(prebuiltWorkspacePath, 'processes', namespace);
   };
 
-  test.beforeAll(async ({}, testInfo) => {
+  test.beforeAll(async () => {
     cleanUp();
-    page = await pageFor(prebuiltWorkspacePath, testInfo.titlePath[1]);
+  });
+
+  test.beforeEach(async ({ page }) => {
     processEditor = new ProcessEditor(page);
     await processEditor.hasDeployProjectStatusMessage();
-  });
-
-  test.beforeEach(async () => {
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-  });
-
-  test.afterEach(async () => {
-    await processEditor.revertAndCloseEditor();
   });
 
   test.afterAll(() => {
@@ -69,7 +62,7 @@ test.describe('Inscription View', () => {
     await expect(element).toHaveText(newDisplayName);
   });
 
-  test('OpenPage-Action - valid file - Means/Document Table', async () => {
+  test('OpenPage-Action - valid file - Means/Document Table', async ({ page }) => {
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     await inscriptionView.openAccordion('General');
 
@@ -87,8 +80,8 @@ test.describe('Inscription View', () => {
     await activeTabElement.locator('.action-label.codicon.codicon-close').click();
   });
 
-  test('OpenPage-Action in Browers - Open Help', async () => {
-    browserView = new BrowserView(page);
+  test('OpenPage-Action in Browers - Open Help', async ({ page }) => {
+    const browserView = new BrowserView(page);
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
     await inscriptionView.clickButton('Open Help for User Dialog');
     expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/);
