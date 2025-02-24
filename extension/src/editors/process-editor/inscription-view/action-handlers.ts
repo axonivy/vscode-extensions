@@ -2,6 +2,7 @@ import { InscriptionActionArgs, InscriptionNotificationTypes } from '@axonivy/pr
 import { OpenPageActionHandler } from './open-page';
 import { NewProcessActionHandler } from './new-process';
 import { NewHtmlDialogActionHandler } from './new-user-dialog';
+import { isAction } from '../../notification-helper';
 
 const ActionHandlers = [new NewProcessActionHandler(), new NewHtmlDialogActionHandler(), new OpenPageActionHandler()];
 
@@ -13,7 +14,7 @@ export interface InscriptionActionHandler {
 }
 
 export const handleActionLocal = (msg: unknown, sendInscriptionNotification: SendInscriptionNotification) => {
-  if (isAction(msg)) {
+  if (isAction<InscriptionActionArgs>(msg)) {
     const handler = ActionHandlers.find(handler => handler.actionId === msg.params.actionId);
     if (handler) {
       handler.handle(msg.params, sendInscriptionNotification);
@@ -21,15 +22,4 @@ export const handleActionLocal = (msg: unknown, sendInscriptionNotification: Sen
     }
   }
   return false;
-};
-
-const isAction = (obj: unknown): obj is { method: string; params: InscriptionActionArgs } => {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'method' in obj &&
-    obj.method === 'action' &&
-    'params' in obj &&
-    typeof obj.params === 'object'
-  );
 };

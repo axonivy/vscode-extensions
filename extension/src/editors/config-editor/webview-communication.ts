@@ -5,9 +5,9 @@ import { MessageParticipant, NotificationType } from 'vscode-messenger-common';
 import { WebSocketForwarder } from '../websocket-forwarder';
 import type { VariablesActionArgs } from '@axonivy/variable-editor-protocol';
 import { IvyBrowserViewProvider } from '../../browser/ivy-browser-view-provider';
+import { hasEditorFileContent, InitializeConnectionRequest, isAction, WebviewReadyNotification } from '../notification-helper';
+import { updateTextDocumentContent } from '../content-writer';
 
-const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
 const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'configWebSocketMessage' };
 
 export const setupCommunication = (
@@ -39,33 +39,18 @@ class VariableEditorWebSocketForwarder extends WebSocketForwarder {
   }
 
   protected override handleClientMessage(message: unknown) {
-    if (this.isSaveData(message)) {
-      this.writeTextDocument(message.params.data);
-    }
-    if (this.isAction(message)) {
-      if (message.params.actionId === 'openUrl') {
-        IvyBrowserViewProvider.instance.open(message.params.payload);
-      }
-      return;
+    if (isAction<VariablesActionArgs>(message) && message.params.actionId === 'openUrl') {
+      IvyBrowserViewProvider.instance.open(message.params.payload);
     }
     super.handleClientMessage(message);
   }
 
-  isSaveData = (obj: unknown): obj is { jsonrpc: string; id: number; method: string; params: { data: string } } => {
-    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'saveData';
-  };
-
-  isAction = (obj: unknown): obj is { method: string; params: VariablesActionArgs } => {
-    return typeof obj === 'object' && obj !== null && 'method' in obj && obj.method === 'action';
-  };
-
-  writeTextDocument = (content: string) => {
-    const workspaceEdit = new vscode.WorkspaceEdit();
-    workspaceEdit.replace(
-      this.document.uri,
-      new vscode.Range(new vscode.Position(0, 0), new vscode.Position(this.document.lineCount + 1, 0)),
-      content
-    );
-    vscode.workspace.applyEdit(workspaceEdit);
-  };
+  protected override handleServerMessage(message: string) {
+    const obj = JSON.parse(message);
+    if (hasEditorFileContent(obj)) {
+      updateTextDocumentContent(this.document, obj.result).then(() => super.handleServerMessage(message));
+    } else {
+      super.handleServerMessage(message);
+    }
+  }
 }

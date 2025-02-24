@@ -76,6 +76,15 @@
             "filenamePattern": "*.f.json"
           }
         ]
+      },
+      {
+        "viewType": "ivy.dataClassEditor",
+        "displayName": "Axon Ivy Data Class Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.d.json"
+          }
+        ]
       }
     ],
     "commands": [

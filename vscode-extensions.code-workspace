@@ -25,6 +25,10 @@
       "path": "webviews/form-editor"
     },
     {
+      "name": "webview/dataclass-editor",
+      "path": "webviews/dataclass-editor"
+    },
+    {
       "name": "playwright",
       "path": "playwright"
     }

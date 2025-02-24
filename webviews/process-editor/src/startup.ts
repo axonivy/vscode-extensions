@@ -7,12 +7,10 @@ import { RequestTypeHintsAction } from '@eclipse-glsp/vscode-integration';
 import { HOST_EXTENSION, NotificationType, RequestType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 import './index.css';
-import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
+import { toConnection } from 'vscode-webview-common';
 
 const WebviewConnectionReadyNotification: NotificationType<void> = { method: 'connectionReady' };
 const InitializeConnectionRequest: RequestType<void, void> = { method: 'initializeConnection' };
-const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscriptionWebSocketMessage' };
-const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
 @injectable()
 export class StandaloneDiagramStartup implements IDiagramStartup {
@@ -33,17 +31,10 @@ export class StandaloneDiagramStartup implements IDiagramStartup {
 
   private initConnection() {
     this.actionDispatcher.onceModelInitialized().finally(() => {
-      const ivyScript = this.toMessageConnection(IvyScriptWebSocketMessage);
-      const inscription = this.toMessageConnection(InscriptionWebSocketMessage);
+      const ivyScript = toConnection(this.messenger, 'ivyScriptWebSocketMessage');
+      const inscription = toConnection(this.messenger, 'inscriptionWebSocketMessage');
       this.actionDispatcher.dispatch(EnableInscriptionAction.create({ connection: { ivyScript, inscription } }));
     });
-  }
-
-  private toMessageConnection(notificationType: NotificationType<string>) {
-    return {
-      reader: new WebviewMessageReader(this.messenger, notificationType),
-      writer: new WebviewMessageWriter(this.messenger, notificationType)
-    };
   }
 }
 

@@ -3,13 +3,13 @@ import { Messenger } from 'vscode-messenger';
 import { WebSocketForwarder } from '../websocket-forwarder';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import { MessageParticipant, NotificationType } from 'vscode-messenger-common';
-import { FormActionArgs } from '@axonivy/form-editor-protocol';
+import { DataActionArgs } from '@axonivy/dataclass-editor-protocol';
 import { IvyBrowserViewProvider } from '../../browser/ivy-browser-view-provider';
-import { hasEditorFileContent, InitializeConnectionRequest, WebviewReadyNotification } from '../notification-helper';
+import { InitializeConnectionRequest, WebviewReadyNotification } from '../notification-helper';
+import { hasEditorFileContent, isAction } from '../notification-helper';
 import { updateTextDocumentContent } from '../content-writer';
-import { isAction } from '../notification-helper';
 
-const FormWebSocketMessage: NotificationType<unknown> = { method: 'formWebSocketMessage' };
+const DataClassWebSocketMessage: NotificationType<unknown> = { method: 'dataclassWebSocketMessage' };
 
 export const setupCommunication = (
   websocketUrl: URL,
@@ -19,7 +19,7 @@ export const setupCommunication = (
 ) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new FormEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new DataClassEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
       () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
@@ -29,27 +29,19 @@ export const setupCommunication = (
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
 
-class FormEditorWebSocketForwarder extends WebSocketForwarder {
+class DataClassEditorWebSocketForwarder extends WebSocketForwarder {
   constructor(
     websocketUrl: URL,
     messenger: Messenger,
     messageParticipant: MessageParticipant,
     readonly document: vscode.TextDocument
   ) {
-    super(websocketUrl, 'ivy-form-lsp', messenger, messageParticipant, FormWebSocketMessage);
+    super(websocketUrl, 'ivy-data-class-lsp', messenger, messageParticipant, DataClassWebSocketMessage);
   }
 
   protected override handleClientMessage(message: unknown) {
-    if (isAction<FormActionArgs>(message)) {
-      const file = this.document.uri.path;
-      const path = file.substring(0, file.lastIndexOf('.f.json'));
-      if (message.params.actionId === 'openProcess') {
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`${path}Process.p.json`));
-      } else if (message.params.actionId === 'openDataClass') {
-        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(`${path}Data.d.json`));
-      } else if (message.params.actionId === 'openUrl') {
-        IvyBrowserViewProvider.instance.open(message.params.payload);
-      }
+    if (isAction<DataActionArgs>(message) && message.params.actionId === 'openUrl') {
+      IvyBrowserViewProvider.instance.open(message.params.payload);
     }
     super.handleClientMessage(message);
   }
