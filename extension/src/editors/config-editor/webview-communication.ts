@@ -35,7 +35,7 @@ class VariableEditorWebSocketForwarder extends WebSocketForwarder {
     messageParticipant: MessageParticipant,
     readonly document: vscode.TextDocument
   ) {
-    super(websocketUrl, 'ivy-config-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
+    super(websocketUrl, 'ivy-variables-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
   }
 
   protected override handleClientMessage(message: unknown) {
