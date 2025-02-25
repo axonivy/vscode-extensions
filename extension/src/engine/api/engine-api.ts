@@ -13,7 +13,9 @@ import {
   deleteProject,
   deployProjects,
   findOrCreatePmv,
-  stopBpmEngine
+  stopBpmEngine,
+  createDataClass,
+  DataClassInit
 } from './generated/openapi-dev';
 import { createWorkspace } from './generated/openapi-default';
 import { handleAxiosError } from './axios-error-handler';
@@ -106,6 +108,15 @@ export class IvyEngineApi {
     const baseURL = await this.baseURL;
     return vscode.window.withProgress(progressOptions('Create new User Dialog'), async () => {
       return createHd(newUserDialogParams, { baseURL, ...options })
+        .then(res => res.data)
+        .catch(handleAxiosError);
+    });
+  }
+
+  public async createDataClass(params: DataClassInit) {
+    const baseURL = await this.baseURL;
+    return vscode.window.withProgress(progressOptions('Create new Data Class'), async () => {
+      return createDataClass(params, { baseURL, ...options })
         .then(res => res.data)
         .catch(handleAxiosError);
     });
