@@ -143,8 +143,10 @@ export class IvyEngineManager {
 
   public async createDataClass(params: DataClassInit) {
     const dataClassBean = await this.ivyEngineApi.createDataClass(params);
-    const dataClassUri = vscode.Uri.joinPath(vscode.Uri.parse(params.projectDir ?? ''), dataClassBean.path);
-    executeCommand('vscode.open', dataClassUri);
+    if (params.projectDir) {
+      const dataClassUri = vscode.Uri.joinPath(vscode.Uri.file(params.projectDir), dataClassBean.path);
+      executeCommand('vscode.open', dataClassUri);
+    }
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {

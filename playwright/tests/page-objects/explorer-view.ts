@@ -101,6 +101,13 @@ export class FileExplorer extends ExplorerView {
     }
   }
 
+  async addDataClass(dataClass: string, namespace: string) {
+    await this.selectNode('config');
+    await this.executeCommand('Axon Ivy: New Data Class');
+    await this.provideUserInput(dataClass);
+    await this.provideUserInput(namespace);
+  }
+
   async collapseFolders() {
     await this.executeCommand('Collapse Folders in Explorer');
   }
