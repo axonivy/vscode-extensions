@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import { VariablesEditor } from './page-objects/variables-editor';
-import { randomArtefactName } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 import { test } from './fixtures/baseTest';
 
@@ -14,7 +13,7 @@ test('Read, write and open help', async ({ page }) => {
 
   await editor.hasKey('originalKey');
   await editor.hasValue('originalValue', false);
-  const newValue = `originalValue-${randomArtefactName()}`;
+  const newValue = 'newTestValue';
   await editor.selectFirstRow();
   await editor.updateValue(newValue);
   await page.waitForTimeout(300);

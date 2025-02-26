@@ -2,7 +2,6 @@ import { expect } from 'playwright/test';
 import { BrowserView } from './page-objects/browser-view';
 import { test } from './fixtures/baseTest';
 import { DataClassEditor } from './page-objects/data-class-editor';
-import { randomArtefactName } from './workspaces/workspace';
 import { Editor } from './page-objects/editor';
 
 test.describe('Data Class Editor', () => {
@@ -21,7 +20,7 @@ test.describe('Data Class Editor', () => {
       .viewFrameLoactor()
       .getByRole('button', { name: /Add Attribute/ })
       .click();
-    const attributeName = randomArtefactName();
+    const attributeName = 'testAttributeName';
     const dialog = editor.viewFrameLoactor().getByRole('dialog');
     await dialog.getByRole('textbox', { name: 'Name' }).fill(attributeName);
     await dialog.getByRole('button', { name: 'Create Attribute' }).click();
