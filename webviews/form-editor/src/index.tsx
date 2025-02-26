@@ -4,25 +4,16 @@ import { App, ClientContextProvider, QueryProvider, initQueryClient } from '@axo
 import { FormClientJsonRpc } from '@axonivy/form-editor-core';
 import * as React from 'react';
 import { createRoot } from 'react-dom/client';
-import { WebviewMessageReader, WebviewMessageWriter } from 'vscode-webview-common';
-import { HOST_EXTENSION, NotificationType } from 'vscode-messenger-common';
+import { InitializeConnection, initMessenger, toConnection } from 'vscode-webview-common';
 import { VsCodeApi, Messenger } from 'vscode-messenger-webview';
 import '@axonivy/form-editor/lib/editor.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-type InitializeConnection = { file: string };
-
-const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-const InitializeConnectionNotification: NotificationType<InitializeConnection> = { method: 'initializeConnection' };
-const FormWebSocketMessage: NotificationType<unknown> = { method: 'formWebSocketMessage' };
-
 export async function start({ file }: InitializeConnection): Promise<void> {
-  const client = await FormClientJsonRpc.startClient({
-    reader: new WebviewMessageReader(messenger, FormWebSocketMessage),
-    writer: new WebviewMessageWriter(messenger, FormWebSocketMessage)
-  });
+  const connection = toConnection(messenger, 'formWebSocketMessage');
+  const client = await FormClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
 
   const rootElement = document.getElementById('root');
@@ -40,6 +31,4 @@ export async function start({ file }: InitializeConnection): Promise<void> {
   );
 }
 
-messenger.onNotification(InitializeConnectionNotification, start);
-messenger.start();
-messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
+initMessenger(messenger, start);

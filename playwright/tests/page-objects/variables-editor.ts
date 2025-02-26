@@ -1,14 +1,9 @@
 import { Page, expect } from '@playwright/test';
 import { Editor } from './editor';
-import { ViewData } from './view';
 
 export class VariablesEditor extends Editor {
   constructor(page: Page, editorFile = 'variables.yaml') {
-    const outputViewData: ViewData = {
-      tabSelector: `div.tab:has-text("${editorFile}")`,
-      viewSelector: 'body > div > div[data-parent-flow-to-element-id] >> visible=true'
-    };
-    super(editorFile, outputViewData, page);
+    super(editorFile, page);
   }
 
   override async isViewVisible() {

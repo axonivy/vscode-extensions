@@ -4,7 +4,6 @@ import { PageObject } from './page-object';
 export interface ViewData {
   tabSelector: string;
   viewSelector: string;
-  viewName?: string;
 }
 
 export class View extends PageObject {
@@ -24,9 +23,7 @@ export class View extends PageObject {
   }
 
   viewFrameLoactor(): FrameLocator {
-    return this.viewLocator
-      .frameLocator('iFrame')
-      .frameLocator(`iFrame#active-frame${this.data.viewName ? `[title="${this.data.viewName}"]` : ''}`);
+    return this.viewLocator.frameLocator('iFrame').frameLocator('iFrame#active-frame');
   }
 
   async isTabVisible() {

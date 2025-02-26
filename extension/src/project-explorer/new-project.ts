@@ -2,20 +2,21 @@ import * as vscode from 'vscode';
 import path from 'path';
 import { TreeSelection, treeSelectionToUri } from './tree-selection';
 import { IvyEngineManager } from '../engine/engine-manager';
+import { validateArtifactName, validateDotSeparatedName } from './util';
 
-export async function addNewProject(selection: TreeSelection) {
+export const addNewProject = async (selection: TreeSelection) => {
   const selectedUri = await treeSelectionToUri(selection);
   const input = await collectNewProjectParams(selectedUri);
   if (input) {
     IvyEngineManager.instance.createProject(input);
   }
-}
+};
 
-async function collectNewProjectParams(selectedUri: vscode.Uri) {
+const collectNewProjectParams = async (selectedUri: vscode.Uri) => {
   const prompt = `Project Location: ${selectedUri.path}`;
   const name = await vscode.window.showInputBox({
     title: 'Project Name',
-    validateInput: validateProjectName,
+    validateInput: validateArtifactName,
     prompt,
     ignoreFocusOut: true
   });
@@ -23,11 +24,21 @@ async function collectNewProjectParams(selectedUri: vscode.Uri) {
     return;
   }
   const projectPath = path.join(selectedUri.fsPath, name);
-  const groupId = await vscode.window.showInputBox({ title: 'Group Id', value: name, validateInput: validateId, ignoreFocusOut: true });
+  const groupId = await vscode.window.showInputBox({
+    title: 'Group Id',
+    value: name,
+    validateInput: value => validateDotSeparatedName(value, 'Invalid id.'),
+    ignoreFocusOut: true
+  });
   if (!groupId) {
     return;
   }
-  const projectId = await vscode.window.showInputBox({ title: 'Project Id', value: name, validateInput: validateId, ignoreFocusOut: true });
+  const projectId = await vscode.window.showInputBox({
+    title: 'Project Id',
+    value: name,
+    validateInput: value => validateDotSeparatedName(value, 'Invalid id.'),
+    ignoreFocusOut: true
+  });
   if (!projectId) {
     return;
   }
@@ -41,28 +52,12 @@ async function collectNewProjectParams(selectedUri: vscode.Uri) {
     return;
   }
   return { path: projectPath, name, groupId, projectId, defaultNamespace };
-}
+};
 
-function validateProjectName(value: string): string | undefined {
-  const pattern = /^[\w-]+$/;
-  if (pattern.test(value)) {
-    return;
-  }
-  return 'Invalid project name.';
-}
-
-function validateId(value: string): string | undefined {
-  const pattern = /^\w+(\.\w+)*(-\w+)*$/;
-  if (pattern.test(value)) {
-    return;
-  }
-  return 'Invalid id.';
-}
-
-function validateNamespace(value: string): string | undefined {
+const validateNamespace = (value: string) => {
   const pattern = /^\w+(\.\w+)*$/;
   if (pattern.test(value)) {
     return;
   }
   return 'Invalid namespace.';
-}
+};

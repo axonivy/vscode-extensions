@@ -76,6 +76,15 @@
             "filenamePattern": "*.f.json"
           }
         ]
+      },
+      {
+        "viewType": "ivy.dataClassEditor",
+        "displayName": "Axon Ivy Data Class Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.d.json"
+          }
+        ]
       }
     ],
     "commands": [
@@ -219,6 +228,11 @@
       {
         "command": "ivyProjects.addNewOfflineDialog",
         "title": "New Offline Dialog",
+        "category": "Axon Ivy"
+      },
+      {
+        "command": "ivyProjects.addNewDataClass",
+        "title": "New Data Class",
         "category": "Axon Ivy"
       },
       {
@@ -461,6 +475,10 @@
         {
           "command": "ivyProjects.addNewOfflineDialog",
           "group": "2_new@3"
+        },
+        {
+          "command": "ivyProjects.addNewDataClass",
+          "group": "3_new@1"
         }
       ],
       "explorer.new": [
@@ -495,8 +513,13 @@
           "when": "ivy:hasIvyProjects"
         },
         {
+          "command": "ivyProjects.addNewDataClass",
+          "group": "3_new@1",
+          "when": "ivy:hasIvyProjects"
+        },
+        {
           "command": "ivyProjects.addNewProject",
-          "group": "3_new@1"
+          "group": "4_new@1"
         }
       ],
       "explorer.run": [

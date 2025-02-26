@@ -14,14 +14,12 @@ test.describe('Form Editor', () => {
     await editor.isViewVisible();
   });
 
-  test('Open Form editor', async () => {
+  test('Edit input label', async ({ page }) => {
     const text = editor.locatorFor('.block-text');
     await expect(text).toBeVisible();
     await expect(text).toHaveText('This is my test');
     await editor.isNotDirty();
-  });
 
-  test('Edit input label', async ({ page }) => {
     const input = editor.locatorFor('.block-input');
     await input.dblclick();
     const labelProperty = editor.locatorFor('#properties').getByLabel('Label');

@@ -7,9 +7,12 @@ import { messenger } from '../..';
 export class VariableEditorProvider implements vscode.CustomTextEditorProvider {
   static readonly viewType = 'ivy.variableEditor';
 
-  private constructor(readonly context: vscode.ExtensionContext, readonly websocketUrl: URL) {}
+  private constructor(
+    readonly context: vscode.ExtensionContext,
+    readonly websocketUrl: URL
+  ) {}
 
-  static register(context: vscode.ExtensionContext, websocketUrl: URL): vscode.Disposable {
+  static register(context: vscode.ExtensionContext, websocketUrl: URL) {
     registerNewVariablesFileCmd(context);
     const provider = new VariableEditorProvider(context, websocketUrl);
     const providerRegistration = vscode.window.registerCustomEditorProvider(VariableEditorProvider.viewType, provider);

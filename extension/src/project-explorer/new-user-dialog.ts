@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { defaultNamespaceOf, resolveNamespaceFromPath } from './util';
+import { resolveNamespaceFromPath, validateArtifactName, validateDotSeparatedName } from './util';
 import { IvyEngineManager } from '../engine/engine-manager';
 import { HdInit } from '../engine/api/generated/openapi-dev';
 
@@ -21,18 +21,14 @@ type Template = (typeof templates)[number];
 
 export type NewUserDialogParams = HdInit;
 
-export async function addNewUserDialog(selectedUri: vscode.Uri, projectDir: string, type: DialogType, pid?: string) {
+export const addNewUserDialog = async (selectedUri: vscode.Uri, projectDir: string, type: DialogType, pid?: string) => {
   const input = await collectNewUserDialogParams(selectedUri, type, projectDir);
   if (input) {
     await IvyEngineManager.instance.createUserDialog({ pid, ...input });
   }
-}
+};
 
-async function collectNewUserDialogParams(
-  selectedUri: vscode.Uri,
-  type: DialogType,
-  projectDir: string
-): Promise<NewUserDialogParams | undefined> {
+const collectNewUserDialogParams = async (selectedUri: vscode.Uri, type: DialogType, projectDir: string) => {
   const name = await collectName();
   if (!name) {
     return;
@@ -59,30 +55,29 @@ async function collectNewUserDialogParams(
     return;
   }
   return { name, namespace, type, template: template, layout, projectDir };
-}
+};
 
-async function collectName(): Promise<string | undefined> {
+const collectName = async () => {
   return vscode.window.showInputBox({
     title: 'User Dialog Name',
     placeHolder: 'Enter a name',
     ignoreFocusOut: true,
-    validateInput: validateUserDialogName
+    validateInput: validateArtifactName
   });
-}
+};
 
-async function collectNamespace(selectedUri: vscode.Uri, projectDir: string): Promise<string | undefined> {
-  const namespaceFromPath = await resolveNamespaceFromPath(selectedUri, projectDir, 'src_hd');
-  const namespace = namespaceFromPath ? namespaceFromPath : await defaultNamespaceOf(projectDir);
+const collectNamespace = async (selectedUri: vscode.Uri, projectDir: string) => {
+  const namespace = await resolveNamespaceFromPath(selectedUri, projectDir, 'src_hd');
   return vscode.window.showInputBox({
     title: 'User Dialog Namespace',
     value: namespace,
     valueSelection: [namespace.length, -1],
     ignoreFocusOut: true,
-    validateInput: validateNamespace
+    validateInput: validateDotSeparatedName
   });
-}
+};
 
-async function collectLayout(): Promise<Layout> {
+const collectLayout = async () => {
   return (await vscode.window.showQuickPick(
     layouts.filter(t => t !== 'Page'),
     {
@@ -90,27 +85,11 @@ async function collectLayout(): Promise<Layout> {
       ignoreFocusOut: true
     }
   )) as Layout;
-}
+};
 
-async function collectTemplate(): Promise<Template> {
+const collectTemplate = async () => {
   return (await vscode.window.showQuickPick(templates, {
     title: 'Select Template',
     ignoreFocusOut: true
   })) as Template;
-}
-
-function validateUserDialogName(value: string): string | undefined {
-  const pattern = /^[\w-]+$/;
-  if (pattern.test(value)) {
-    return;
-  }
-  return 'Invalid project name.';
-}
-
-function validateNamespace(value: string): string | undefined {
-  const pattern = /^\w+(\.\w+)*(-\w+)*$/;
-  if (pattern.test(value)) {
-    return;
-  }
-  return 'Invalid namespace.';
-}
+};

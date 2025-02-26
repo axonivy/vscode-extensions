@@ -13,8 +13,9 @@ import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
 import { setStatusBarMessage } from '../base/status-bar';
-import { NewProjectParams } from './api/generated/openapi-dev';
+import { DataClassInit, NewProjectParams } from './api/generated/openapi-dev';
 import { WebSocketClientProvider } from './ws-client';
+import DataClassEditorProvider from '../editors/dataclass-editor/dataclass-editor-provider';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -52,6 +53,7 @@ export class IvyEngineManager {
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
     VariableEditorProvider.register(this.context, websocketUrl);
+    DataClassEditorProvider.register(this.context, websocketUrl);
     WebSocketClientProvider(websocketUrl);
   }
 
@@ -137,6 +139,14 @@ export class IvyEngineManager {
       .createProject(newProjectParams)
       .then(() => this.createAndOpenProcess({ name: 'BusinessProcess', kind: 'Business Process', path, namespace: '' }))
       .then(() => setStatusBarMessage('Finished: Create new Project'));
+  }
+
+  public async createDataClass(params: DataClassInit) {
+    const dataClassBean = await this.ivyEngineApi.createDataClass(params);
+    if (params.projectDir) {
+      const dataClassUri = vscode.Uri.joinPath(vscode.Uri.file(params.projectDir), dataClassBean.path);
+      executeCommand('vscode.open', dataClassUri);
+    }
   }
 
   private async createAndOpenProcess(newProcessParams: NewProcessParams) {

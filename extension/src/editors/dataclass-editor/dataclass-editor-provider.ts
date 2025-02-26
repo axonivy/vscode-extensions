@@ -3,8 +3,8 @@ import { setupCommunication } from './webview-communication';
 import { createWebViewContent } from '../webview-helper';
 import { messenger } from '../..';
 
-export default class FormEditorProvider implements vscode.CustomTextEditorProvider {
-  private static readonly viewType = 'ivy.formEditor';
+export default class DataClassEditorProvider implements vscode.CustomTextEditorProvider {
+  private static readonly viewType = 'ivy.dataClassEditor';
 
   private constructor(
     readonly context: vscode.ExtensionContext,
@@ -12,8 +12,8 @@ export default class FormEditorProvider implements vscode.CustomTextEditorProvid
   ) {}
 
   static register(context: vscode.ExtensionContext, websocketUrl: URL) {
-    const provider = new FormEditorProvider(context, websocketUrl);
-    return vscode.window.registerCustomEditorProvider(FormEditorProvider.viewType, provider, {
+    const provider = new DataClassEditorProvider(context, websocketUrl);
+    return vscode.window.registerCustomEditorProvider(DataClassEditorProvider.viewType, provider, {
       webviewOptions: { retainContextWhenHidden: true }
     });
   }
@@ -21,6 +21,6 @@ export default class FormEditorProvider implements vscode.CustomTextEditorProvid
   resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel) {
     setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
     webviewPanel.webview.options = { enableScripts: true };
-    webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'form-editor');
+    webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'dataclass-editor');
   }
 }

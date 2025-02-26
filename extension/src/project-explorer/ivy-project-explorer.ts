@@ -7,6 +7,7 @@ import { addNewProject } from './new-project';
 import { TreeSelection, treeSelectionToProjectPath, treeSelectionToUri } from './tree-selection';
 import { DialogType, addNewUserDialog } from './new-user-dialog';
 import { IvyEngineManager } from '../engine/engine-manager';
+import { addNewDataClass } from './new-data-class';
 
 export const VIEW_ID = 'ivyProjects';
 
@@ -61,6 +62,7 @@ export class IvyProjectExplorer {
     registerCmd(`${VIEW_ID}.addNewOfflineDialog`, (s: TreeSelection, selections?: [TreeSelection], pid?: string) =>
       this.addUserDialog(s, 'JSFOffline', pid)
     );
+    registerCmd(`${VIEW_ID}.addNewDataClass`, (s: TreeSelection) => this.addDataClass(s));
     registerCmd(`${VIEW_ID}.revealInExplorer`, (entry: Entry) => executeCommand('revealInExplorer', this.getCmdEntry(entry)?.uri));
   }
 
@@ -116,6 +118,15 @@ export class IvyProjectExplorer {
       return;
     }
     vscode.window.showWarningMessage('Add User Dialog: no valid Axon Ivy Project selected.');
+  }
+
+  private async addDataClass(selection: TreeSelection) {
+    const projectPath = await treeSelectionToProjectPath(selection, this.getIvyProjects());
+    if (projectPath) {
+      await addNewDataClass(await treeSelectionToUri(selection), projectPath);
+      return;
+    }
+    vscode.window.showWarningMessage('Add Data Class: no valid Axon Ivy Project selected.');
   }
 
   public async setProjectExplorerActivationCondition(hasIvyProjects: boolean) {
