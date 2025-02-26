@@ -5,6 +5,8 @@ import path from 'path';
 import { prebuiltWorkspacePath } from '../workspaces/workspace';
 import { FileExplorer } from '../page-objects/explorer-view';
 import { downloadVersion } from '../utils/download-version';
+import os from 'os';
+import fs from 'fs';
 
 export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
@@ -31,6 +33,8 @@ const runBrowserTest = async (workspace: string, take: (r: Page) => Promise<void
 
 const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<void>) => {
   const vscodePath = await downloadAndUnzipVSCode(downloadVersion);
+  const tempDir = await createTempDir();
+  await fs.promises.cp(workspace, tempDir, { recursive: true });
   const electronApp = await _electron.launch({
     executablePath: vscodePath,
     args: [
@@ -41,7 +45,7 @@ const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<
       '--skip-release-notes',
       '--disable-workspace-trust',
       `--extensionDevelopmentPath=${path.resolve(__dirname, '../../../extension/')}`,
-      workspace
+      tempDir
     ]
   });
   const page = await electronApp.firstWindow();
@@ -57,6 +61,7 @@ const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<
     test.info().attachments.push({ name: 'screenshot', path: tracePath, contentType: 'image/png' });
   }
   await electronApp.close();
+  await fs.promises.rm(tempDir, { recursive: true });
 };
 
 const initialize = async (page: Page) => {
@@ -65,4 +70,8 @@ const initialize = async (page: Page) => {
   await fileExplorer.saveAllFiles();
   await fileExplorer.closeAllTabs();
   await fileExplorer.collapseFolders();
+};
+
+const createTempDir = async () => {
+  return await fs.promises.realpath(await fs.promises.mkdtemp(path.join(os.tmpdir(), 'playwrightTestWorkspace')));
 };
