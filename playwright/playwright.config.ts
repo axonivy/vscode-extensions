@@ -3,7 +3,8 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   use: {
     permissions: ['clipboard-read'],
-    trace: 'retain-on-failure'
+    trace: 'retain-on-failure',
+    headless: true
   },
   testDir: './tests',
   workers: 1,
