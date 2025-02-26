@@ -29,7 +29,7 @@
   "dependencies": {
     "@eclipse-glsp/vscode-integration": "2.3.0",
     "axios": "1.7.9",
-    "fast-xml-parser": "5.0.2",
+    "fast-xml-parser": "5.0.7",
     "htmlparser2": "10.0.0",
     "vscode-messenger": "0.4.5",
     "vscode-ws-jsonrpc": "3.4.0",
