@@ -30,12 +30,12 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/dataclass-editor": "13.1.0-next.457",
-    "@axonivy/form-editor": "13.1.0-next.595",
-    "@axonivy/form-editor-core": "13.1.0-next.595",
+    "@axonivy/dataclass-editor": "13.1.0-next.461",
+    "@axonivy/form-editor": "13.1.0-next.597",
+    "@axonivy/form-editor-core": "13.1.0-next.597",
     "@axonivy/process-editor": "13.1.0-next.1423",
     "@axonivy/process-editor-inscription": "13.1.0-next.1423",
-    "@axonivy/variable-editor": "13.1.0-next.605",
+    "@axonivy/variable-editor": "13.1.0-next.607",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {

@@ -1,4 +1,3 @@
-import { prebuiltEmptyWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
@@ -7,20 +6,12 @@ import { test } from './fixtures/baseTest';
 test.describe('Create Process', () => {
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
-  let processName: string;
-  const cleanUp = () => removeFromWorkspace(prebuiltEmptyWorkspacePath, 'processes');
-
-  test.use({ workspace: prebuiltEmptyWorkspacePath });
+  const processName = 'testCreateProcess';
 
   test.beforeEach(async ({ page }) => {
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
-    processName = randomArtefactName();
     processEditor = new ProcessEditor(page, `${processName}.p.json`);
-  });
-
-  test.afterAll(async () => {
-    cleanUp();
   });
 
   test('Add business process, execute, edit and redeploy', async ({ page }) => {

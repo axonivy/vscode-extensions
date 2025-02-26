@@ -107,10 +107,6 @@ export class FileExplorer extends ExplorerView {
     await this.provideUserInput(dataClass);
     await this.provideUserInput(namespace);
   }
-
-  async collapseFolders() {
-    await this.executeCommand('Collapse Folders in Explorer');
-  }
 }
 
 export class ProjectExplorerView extends ExplorerView {

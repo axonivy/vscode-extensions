@@ -29,7 +29,7 @@ export class VariablesEditor extends Editor {
 
   async selectFirstRow() {
     const firstRow = this.viewFrameLoactor().locator('tbody > tr');
-    await firstRow.click();
+    await firstRow.first().click();
   }
 
   async updateValue(value: string) {

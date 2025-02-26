@@ -1,18 +1,14 @@
 import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { animationWorkspacePath } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
 import { test } from './fixtures/baseTest';
 
 test.describe('Process Animation', () => {
-  test.use({ workspace: animationWorkspacePath });
-
   test.beforeEach(async ({ page }) => {
     await new FileExplorer(page).hasDeployProjectStatusMessage();
   });
 
   test('with activated animation and reset afterwards', async ({ page }) => {
-    test.skip(process.platform === 'win32');
     const processEditor = new ProcessEditor(page, 'Animation.p.json');
     await processEditor.openEditorFile();
     const start = processEditor.locatorForPID('190EEC366DECC66A-f0');

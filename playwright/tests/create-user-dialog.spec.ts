@@ -1,35 +1,19 @@
 import { test } from './fixtures/baseTest';
-import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
 import { FileExplorer } from './page-objects/explorer-view';
-import path from 'path';
 import { FormEditor } from './page-objects/form-editor';
 
 test.describe('Create User Dialog', () => {
   let explorer: FileExplorer;
   let processEditor: ProcessEditor;
-  let userDialogName: string;
-  const cleanUp = () => {
-    const projectPath = path.join(prebuiltWorkspacePath);
-    removeFromWorkspace(projectPath, 'src_hd', 'ch');
-    removeFromWorkspace(projectPath, 'src_dataClasses', 'ch');
-  };
-
-  test.beforeAll(async ({}) => {
-    cleanUp();
-  });
+  const userDialogName = 'testCreateUserDialog';
 
   test.beforeEach(async ({ page }) => {
     explorer = new FileExplorer(page);
     await explorer.hasDeployProjectStatusMessage();
     processEditor = new ProcessEditor(page);
-    userDialogName = randomArtefactName();
     await explorer.hasNoStatusMessage();
-  });
-
-  test.afterAll(async () => {
-    cleanUp();
   });
 
   test('Add Html Dialog', async () => {

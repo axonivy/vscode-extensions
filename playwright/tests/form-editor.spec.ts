@@ -1,5 +1,4 @@
 import { expect } from 'playwright/test';
-import { randomArtefactName } from './workspaces/workspace';
 import { FormEditor } from './page-objects/form-editor';
 import { BrowserView } from './page-objects/browser-view';
 import { test } from './fixtures/baseTest';
@@ -23,7 +22,7 @@ test.describe('Form Editor', () => {
     const input = editor.locatorFor('.block-input');
     await input.dblclick();
     const labelProperty = editor.locatorFor('#properties').getByLabel('Label');
-    const newLabel = randomArtefactName();
+    const newLabel = 'newTestLabel';
     await labelProperty.click();
     await expect(labelProperty).toBeFocused();
     await page.keyboard.type(newLabel);
