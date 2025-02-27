@@ -8,6 +8,7 @@ test.describe('Data Class Editor', () => {
   test('Open help and add attribute', async ({ page }) => {
     const editor = new DataClassEditor(page);
     await editor.hasDeployProjectStatusMessage();
+    await editor.hasNoStatusMessage();
     await editor.openEditorFile();
     await editor.executeCommand('View: Reopen Editor With...', 'Axon Ivy Data Class Editor');
     await editor.isViewVisible();
