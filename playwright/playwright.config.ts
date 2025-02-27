@@ -4,7 +4,8 @@ export default defineConfig({
   use: {
     permissions: ['clipboard-read'],
     trace: 'retain-on-failure',
-    headless: true
+    screenshot: 'on',
+    video: 'retain-on-failure'
   },
   testDir: './tests',
   workers: 1,

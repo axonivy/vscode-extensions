@@ -51,6 +51,11 @@ export class PageObject {
     await this.quickInputBox().press('Enter');
   }
 
+  async closeAllTabs() {
+    await this.executeCommand('View: Close All Editor Groups');
+    await expect(this.page.locator('div.tab')).toBeHidden();
+  }
+
   async isTabWithNameVisible(name: string) {
     const tabSelector = `div.tab:has-text("${name}")`;
     await expect(this.page.locator(tabSelector)).toBeVisible();

@@ -68,6 +68,7 @@ const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<
 const initialize = async (page: Page) => {
   const fileExplorer = new FileExplorer(page);
   await fileExplorer.hasIvyStatusBarIcon();
+  await fileExplorer.closeAllTabs();
 };
 
 const createTmpWorkspace = async (workspace: string) => {
