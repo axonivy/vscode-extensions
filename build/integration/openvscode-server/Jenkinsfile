@@ -38,7 +38,7 @@ pipeline {
             sh 'tar -xzf openvscode-server-v1.96.4-linux-x64.tar.gz'
             sh 'cp -r extension/. openvscode-server-v1.96.4-linux-x64/extensions/extension'
             sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
-            sh 'nohup openvscode-server-v1.96.4-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &'
+            sh 'nohup openvscode-server-v1.96.4-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust --skip-welcome --skip-release-notes &'
             sh 'npx playwright install --with-deps chromium'
           }
         }
