@@ -3,9 +3,9 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   use: {
     permissions: ['clipboard-read'],
-    trace: 'retain-on-failure',
+    trace: 'on-first-retry',
     screenshot: 'on',
-    video: 'retain-on-failure'
+    video: 'on-first-retry'
   },
   testDir: './tests',
   workers: 1,
