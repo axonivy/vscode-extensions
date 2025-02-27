@@ -31,16 +31,18 @@ pipeline {
       steps {
         script {
           nodejs(nodeJSInstallationName: '22.11.0') {
-            sh 'npm run update:axonivy:next'
-            sh 'npm install'
-            sh 'npm run build:production'
-            sh 'npm run download:engine ' + params.engineDownloadUrl
-            sh 'wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-${params.openvscodeVersion}/openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz'
-            sh 'tar -xzf openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz'
-            sh 'cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension'
-            sh 'nohup extension/AxonIvyEngine/bin/AxonIvyEngine &'
-            sh 'nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust --skip-welcome --skip-release-notes &'
-            sh 'npx playwright install --with-deps chromium'
+            sh """
+            npm run update:axonivy:next
+            npm install
+            npm run build:production
+            npm run download:engine ${params.engineDownloadUrl}
+            wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-${params.openvscodeVersion}/openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
+            tar -xzf openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
+            cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension
+            nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
+            nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
+            npx playwright install --with-deps chromium
+            """
           }
         }
       }
