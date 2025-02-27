@@ -1,6 +1,5 @@
 import { expect } from '@playwright/test';
 import { ProcessEditor } from './page-objects/process-editor';
-import { prebuiltWorkspacePath, randomArtefactName, removeFromWorkspace } from './workspaces/workspace';
 import { BrowserView } from './page-objects/browser-view';
 import { wait } from './utils/timeout';
 import { test } from './fixtures/baseTest';
@@ -12,24 +11,12 @@ const namespace = 'testNamespace';
 
 test.describe('Inscription View', () => {
   let processEditor: ProcessEditor;
-  const cleanUp = () => {
-    removeFromWorkspace(prebuiltWorkspacePath, 'src_hd', 'prebuiltProject');
-    removeFromWorkspace(prebuiltWorkspacePath, 'processes', namespace);
-  };
-
-  test.beforeAll(async () => {
-    cleanUp();
-  });
 
   test.beforeEach(async ({ page }) => {
     processEditor = new ProcessEditor(page);
     await processEditor.hasDeployProjectStatusMessage();
     await processEditor.openEditorFile();
     await processEditor.isViewVisible();
-  });
-
-  test.afterAll(() => {
-    cleanUp();
   });
 
   test('Check Process Editor Connector', async () => {
@@ -115,7 +102,7 @@ test.describe('Inscription View', () => {
     const processStartField = inscriptionView.parent.getByRole('combobox');
     await expect(processStartField).toBeEmpty();
     await inscriptionView.clickButton('Create new Sub Process');
-    const processName = randomArtefactName();
+    const processName = 'subProcess';
     await inscriptionView.provideUserInput(`${namespace}/${processName}`);
     await processEditor.isDirty();
     await processEditor.isInactive();
@@ -131,7 +118,7 @@ test.describe('Inscription View', () => {
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
-    const userDialogName = randomArtefactName();
+    const userDialogName = 'htmlDialog';
     await inscriptionView.provideUserInput('JSF');
     await inscriptionView.provideUserInput(userDialogName);
     await inscriptionView.provideUserInput();
@@ -152,7 +139,7 @@ test.describe('Inscription View', () => {
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
-    const userDialogName = randomArtefactName();
+    const userDialogName = 'formDialog';
     await inscriptionView.provideUserInput('Form');
     await inscriptionView.provideUserInput(userDialogName);
     await inscriptionView.provideUserInput();
@@ -171,7 +158,7 @@ test.describe('Inscription View', () => {
     const dialogField = inscriptionView.parent.getByRole('combobox');
     await expect(dialogField).toBeEmpty();
     await inscriptionView.clickButton('Create new Html Dialog');
-    const userDialogName = randomArtefactName();
+    const userDialogName = 'offlineDialog';
     await inscriptionView.provideUserInput('JSFOffline');
     await inscriptionView.provideUserInput(userDialogName);
     await inscriptionView.provideUserInput();

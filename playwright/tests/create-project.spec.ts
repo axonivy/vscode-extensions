@@ -1,25 +1,15 @@
 import { test } from './fixtures/baseTest';
 import { ProcessEditor } from './page-objects/process-editor';
-import { empty, removeFromWorkspace } from './workspaces/workspace';
+import { empty } from './workspaces/workspace';
 import { FileExplorer } from './page-objects/explorer-view';
 import { ProblemsView } from './page-objects/problems-view';
 
 test.describe('Create Project', () => {
-  const rootFolder = 'parent';
-
-  test.beforeAll(async () => {
-    removeFromWorkspace(empty, rootFolder);
-  });
-
-  test.afterAll(async () => {
-    removeFromWorkspace(empty, rootFolder);
-  });
-
   test.use({ workspace: empty });
 
   test('Add Project and execute init Process', async ({ page }) => {
     const explorer = new FileExplorer(page);
-    await explorer.addNestedProject(rootFolder, 'testProject');
+    await explorer.addNestedProject('parent', 'testProject');
     await explorer.hasStatusMessage('Finished: Create new Project', 60_000);
     await explorer.hasNoStatusMessage();
 

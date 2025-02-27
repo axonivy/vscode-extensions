@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  tools {
+    jdk 'temurin-jdk-21.0.6.7'
+    maven '3.9'
+  }
+
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
     disableConcurrentBuilds()
@@ -12,24 +17,33 @@ pipeline {
 
   parameters {
     string(name: 'engineDownloadUrl', defaultValue: 'https://jenkins.ivyteam.io/job/core_product-engine/job/master/lastSuccessfulBuild/artifact/workspace/ch.ivyteam.ivy.server.product/target/products/*_Slim_*.zip/*zip*/products.zip', description: 'engine that will be packaged')
+    string(name: 'openvscodeVersion', defaultValue: 'v1.96.4', description: 'openvscode version that will be used')
+  }
+
+  environment {
+    JAVA_OPTS_IVY_SYSTEM = '-Divy.engine.testheadless=true'
+    CI = 'true'
+    RUN_IN_BRWOSER = 'true'
   }
 
   stages {
     stage('Build') {
-      agent {
-        dockerfile {
-          filename 'build/Dockerfile'
-          reuseNode true
-        }
-      }
-
       steps {
         script {
-          sh 'npm run update:axonivy:next'
-          sh 'npm install'
-          sh 'npm run build:production'
-          sh 'npm run download:engine ' + params.engineDownloadUrl
-          sh 'npm run package'
+          nodejs(nodeJSInstallationName: '22.11.0') {
+            sh """
+            npm run update:axonivy:next
+            npm install
+            npm run build:production
+            npm run download:engine ${params.engineDownloadUrl}
+            wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-${params.openvscodeVersion}/openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
+            tar -xzf openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
+            cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension
+            nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
+            nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
+            npx playwright install --with-deps chromium
+            """
+          }
         }
       }
     }
@@ -37,15 +51,13 @@ pipeline {
     stage('Playwright Tests') {
       steps {
         script {
-          docker.build('openvscode-server', '-f build/integration/openvscode-server/Dockerfile .').withRun("--network host", "--disable-workspace-trust")  { container ->
-            docker.image('docker-registry.ivyteam.io/axonivy/playwright-base:dev').inside("--network host -e RUN_IN_BRWOSER=true") {
-              catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                sh 'npm run test:playwright:browser'
-              }
-              archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
-              withChecks('WebTests') {
-                junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
-              }
+          nodejs(nodeJSInstallationName: '22.11.0') {
+            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+              sh 'npm run test:playwright:browser'
+            }
+            archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
+            withChecks('WebTests') {
+              junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
             }
           }
         }

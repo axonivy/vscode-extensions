@@ -5,6 +5,8 @@ import path from 'path';
 import { prebuiltWorkspacePath } from '../workspaces/workspace';
 import { FileExplorer } from '../page-objects/explorer-view';
 import { downloadVersion } from '../utils/download-version';
+import os from 'os';
+import fs from 'fs';
 
 export const runInBrowser = process.env.RUN_IN_BRWOSER ? true : false;
 
@@ -23,14 +25,17 @@ const runBrowserTest = async (workspace: string, take: (r: Page) => Promise<void
   const browser = await chromium.launch();
   const page = await browser.newPage();
   await page.setViewportSize({ width: 1920, height: 1080 });
-  await page.goto(`http://localhost:3000/?folder=/home/workspace/${workspace.split('/tests/workspaces/')[1]}`);
+  const tmpWorkspace = await createTmpWorkspace(workspace);
+  await page.goto(`http://localhost:3000/?folder=${tmpWorkspace}`);
   await initialize(page);
   await take(page);
   await browser.close();
+  await fs.promises.rm(tmpWorkspace, { recursive: true });
 };
 
 const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<void>) => {
   const vscodePath = await downloadAndUnzipVSCode(downloadVersion);
+  const tmpWorkspace = await createTmpWorkspace(workspace);
   const electronApp = await _electron.launch({
     executablePath: vscodePath,
     args: [
@@ -41,7 +46,7 @@ const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<
       '--skip-release-notes',
       '--disable-workspace-trust',
       `--extensionDevelopmentPath=${path.resolve(__dirname, '../../../extension/')}`,
-      workspace
+      tmpWorkspace
     ]
   });
   const page = await electronApp.firstWindow();
@@ -57,12 +62,17 @@ const runElectronAppTest = async (workspace: string, take: (r: Page) => Promise<
     test.info().attachments.push({ name: 'screenshot', path: tracePath, contentType: 'image/png' });
   }
   await electronApp.close();
+  await fs.promises.rm(tmpWorkspace, { recursive: true });
 };
 
 const initialize = async (page: Page) => {
   const fileExplorer = new FileExplorer(page);
   await fileExplorer.hasIvyStatusBarIcon();
-  await fileExplorer.saveAllFiles();
   await fileExplorer.closeAllTabs();
-  await fileExplorer.collapseFolders();
+};
+
+const createTmpWorkspace = async (workspace: string) => {
+  const tmpDir = await fs.promises.realpath(await fs.promises.mkdtemp(path.join(os.tmpdir(), 'playwrightTestWorkspace')));
+  await fs.promises.cp(workspace, tmpDir, { recursive: true });
+  return tmpDir;
 };
