@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@eclipse-glsp/vscode-integration-webview": "2.3.0",
-    "inversify": "6.2.2",
+    "inversify": "7.0.1",
     "vscode-webview-common": "13.1.0"
   },
   "devDependencies": {
