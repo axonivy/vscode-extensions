@@ -46,7 +46,7 @@
     "@vitejs/plugin-react": "4.3.4",
     "adm-zip": "0.5.16",
     "lerna": "8.2.0",
-    "orval": "7.5.0",
+    "orval": "7.6.0",
     "path": "0.12.7",
     "prettier": "3.5.2",
     "react": "19.0.0",
