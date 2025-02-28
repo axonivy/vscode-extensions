@@ -11,7 +11,7 @@ jobs:
       IVY_JAVA_HOME: $JAVA_HOME
       CI: true
       RUN_IN_BRWOSER: true
-      OPEN_VSCODE_VERSION: v1.96.4
+      OPEN_VSCODE_VERSION: v1.97.2
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
