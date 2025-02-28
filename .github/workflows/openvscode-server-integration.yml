@@ -1,0 +1,45 @@
+name: Playwright Tests - openvscode-server
+on:
+  push:
+  schedule:
+    - cron: '21 21 * * *'
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    env:
+      IVY_JAVA_HOME: $JAVA_HOME
+      CI: true
+      RUN_IN_BRWOSER: true
+      OPEN_VSCODE_VERSION: v1.97.2
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+      - name: Install dependencies
+        run: |
+          npm run update:axonivy:next
+          npm install
+          npm run build:production
+          npx playwright install --with-deps chromium
+          npm run download:engine https://dev.axonivy.com/permalink/nightly/axonivy-engine.zip
+          rm -r extension/AxonIvyEngine/system/demo-applications
+          wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-$OPEN_VSCODE_VERSION/openvscode-server-$OPEN_VSCODE_VERSION-linux-x64.tar.gz
+          tar -xzf openvscode-server-$OPEN_VSCODE_VERSION-linux-x64.tar.gz
+          cp -r extension/. openvscode-server-$OPEN_VSCODE_VERSION-linux-x64/extensions/extension
+          nohup openvscode-server-$OPEN_VSCODE_VERSION-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
+          extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
+      - name: Run Playwright tests
+        run: npm run test:playwright:browser
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: |
+            playwright/test-results
+          retention-days: 10
