@@ -32,7 +32,7 @@ jobs:
           wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-$OPEN_VSCODE_VERSION/openvscode-server-$OPEN_VSCODE_VERSION-linux-x64.tar.gz
           tar -xzf openvscode-server-$OPEN_VSCODE_VERSION-linux-x64.tar.gz
           cp -r extension/. openvscode-server-$OPEN_VSCODE_VERSION-linux-x64/extensions/extension
-          nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
+          nohup openvscode-server-$OPEN_VSCODE_VERSION-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
           extension/AxonIvyEngine/bin/AxonIvyEngine startdaemon
       - name: Run Playwright tests
         run: npm run test:playwright:browser
