@@ -17,6 +17,10 @@
       "path": "webviews/config-editor"
     },
     {
+      "name": "webview/cms-editor",
+      "path": "webviews/cms-editor"
+    },
+    {
       "name": "webview/process-editor",
       "path": "webviews/process-editor"
     },
