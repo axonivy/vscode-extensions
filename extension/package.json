@@ -60,15 +60,6 @@
         ]
       },
       {
-        "viewType": "ivy.cmsEditor",
-        "displayName": "Axon Ivy CMS Editor",
-        "selector": [
-          {
-            "filenamePattern": "cms_*.yaml"
-          }
-        ]
-      },
-      {
         "viewType": "ivy.glspDiagram",
         "displayName": "Axon Ivy Process Editor",
         "selector": [
@@ -102,6 +93,12 @@
         "title": "Create a new Variables file",
         "category": "Ivy Variables Editor",
         "icon": "$(add)"
+      },
+      {
+        "command": "cms-editor.open",
+        "title": "Open CMS Editor",
+        "category": "Ivy CMS Editor",
+        "icon": "$(open)"
       },
       {
         "command": "yaml-cms-editor.new",
@@ -362,6 +359,10 @@
           "id": "ivyProjects",
           "name": "Axon Ivy Projects",
           "when": "ivy:hasIvyProjects"
+        },
+        {
+          "id": "ivy.cmsEditor",
+          "name": "Axon Ivy CMS Editor"
         }
       ]
     },

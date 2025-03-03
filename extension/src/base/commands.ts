@@ -16,6 +16,7 @@ export type Command =
   | ViewCommand
   | 'yaml-variables-editor.new'
   | 'yaml-cms-editor.new'
+  | 'cms-editor.open'
   | 'ivy.addDevContainer';
 type VSCodeCommand = 'revealInExplorer' | 'setContext' | 'vscode.open' | 'copyFilePath';
 type EngineCommand =

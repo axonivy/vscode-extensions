@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
-import { messenger } from '../..';
-import { createWebViewContent } from '../webview-helper';
 import { registerNewCmsFileCmd } from './new-cms-file-cmd';
-import { setupCommunication } from './webview-communication';
+import { registerOpenCmsEditorCmd } from './open-cms-editor-cmd';
 
-export class CmsEditorProvider implements vscode.CustomTextEditorProvider {
+export class CmsEditorProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
   static readonly viewType = 'ivy.cmsEditor';
 
   private constructor(
@@ -12,16 +10,24 @@ export class CmsEditorProvider implements vscode.CustomTextEditorProvider {
     readonly websocketUrl: URL
   ) {}
 
-  static register(context: vscode.ExtensionContext, websocketUrl: URL) {
-    registerNewCmsFileCmd(context);
-    const provider = new CmsEditorProvider(context, websocketUrl);
-    const providerRegistration = vscode.window.registerCustomEditorProvider(CmsEditorProvider.viewType, provider);
-    return providerRegistration;
+  getTreeItem(element: vscode.TreeItem) {
+    return element;
   }
 
-  resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel) {
-    setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
-    webviewPanel.webview.options = { enableScripts: true };
-    webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'cms-editor');
+  getChildren() {
+    const item = new vscode.TreeItem('Open CMS Editor', vscode.TreeItemCollapsibleState.None);
+    item.command = {
+      command: 'cms-editor.open',
+      title: 'Open CMS Editor'
+    };
+    return Promise.resolve([item]);
+  }
+
+  static register(context: vscode.ExtensionContext, websocketUrl: URL) {
+    registerNewCmsFileCmd(context);
+    registerOpenCmsEditorCmd(context, websocketUrl);
+    const provider = new CmsEditorProvider(context, websocketUrl);
+    const providerRegistration = vscode.window.registerTreeDataProvider(CmsEditorProvider.viewType, provider);
+    return providerRegistration;
   }
 }

@@ -9,31 +9,19 @@ import { WebSocketForwarder } from '../websocket-forwarder';
 
 const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'cmsWebSocketMessage' };
 
-export const setupCommunication = (
-  websocketUrl: URL,
-  messenger: Messenger,
-  webviewPanel: vscode.WebviewPanel,
-  document: vscode.TextDocument
-) => {
+export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: vscode.WebviewPanel) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new CmsEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
-    messenger.onNotification(
-      WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
-      { sender: messageParticipant }
-    )
+    new CmsEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant),
+    messenger.onNotification(WebviewReadyNotification, () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant), {
+      sender: messageParticipant
+    })
   );
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
 
 class CmsEditorWebSocketForwarder extends WebSocketForwarder {
-  constructor(
-    websocketUrl: URL,
-    messenger: Messenger,
-    messageParticipant: MessageParticipant,
-    readonly document: vscode.TextDocument
-  ) {
+  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant) {
     super(websocketUrl, 'ivy-cms-lsp', messenger, messageParticipant, ConfigWebSocketMessage);
   }
 
