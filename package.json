@@ -36,6 +36,7 @@
     "@axonivy/process-editor": "13.1.0-next.1437",
     "@axonivy/process-editor-inscription": "13.1.0-next.1437",
     "@axonivy/variable-editor": "13.1.0-next.647",
+    "@axonivy/cms-editor": "13.1.0-next.76",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {

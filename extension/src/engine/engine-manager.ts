@@ -16,6 +16,7 @@ import { setStatusBarMessage } from '../base/status-bar';
 import { DataClassInit, NewProjectParams } from './api/generated/client';
 import { WebSocketClientProvider } from './ws-client';
 import DataClassEditorProvider from '../editors/dataclass-editor/dataclass-editor-provider';
+import { CmsEditorProvider } from '../editors/cms-editor/cms-editor-provider';
 
 export class IvyEngineManager {
   private static _instance: IvyEngineManager;
@@ -53,6 +54,7 @@ export class IvyEngineManager {
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
     VariableEditorProvider.register(this.context, websocketUrl);
+    CmsEditorProvider.register(this.context, websocketUrl);
     DataClassEditorProvider.register(this.context, websocketUrl);
     WebSocketClientProvider(websocketUrl);
   }
