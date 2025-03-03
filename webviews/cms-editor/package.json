@@ -1,0 +1,16 @@
+{
+  "name": "vscode-cms-editor-webview",
+  "version": "13.1.0",
+  "private": true,
+  "dependencies": {
+    "vscode-webview-common": "13.1.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite build --mode development --emptyOutDir",
+    "build:production": "vite build --emptyOutDir",
+    "clean": "rimraf dist lib",
+    "type": "tsc --noEmit",
+    "watch": "vite build --mode development --watch --emptyOutDir"
+  }
+}
