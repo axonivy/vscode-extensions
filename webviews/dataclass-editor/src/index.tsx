@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
 import { InitializeConnection, initMessenger, toConnection } from 'vscode-webview-common';
 import 'vscode-webview-common/css/colors.css';
-import '@axonivy/dataclass-editor/lib/DataClassEditor.css';
+import '@axonivy/dataclass-editor/lib/editor.css';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
