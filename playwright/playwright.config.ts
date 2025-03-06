@@ -12,5 +12,5 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   timeout: 60_000,
   expect: { timeout: 30_000 },
-  reporter: process.env.CI ? [['junit', { outputFile: 'report.xml' }]] : 'html'
+  reporter: 'github'
 });
