@@ -5,6 +5,7 @@ import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
 import { InitializeConnection, initMessenger, toConnection } from 'vscode-webview-common';
 import 'vscode-webview-common/css/colors.css';
 import '@axonivy/dataclass-editor/lib/editor.css';
+import { ThemeProvider } from '@axonivy/ui-components';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
@@ -19,11 +20,13 @@ export async function start({ file }: InitializeConnection) {
   }
   createRoot(rootElement).render(
     <React.StrictMode>
-      <ClientContextProvider client={client}>
-        <QueryProvider client={queryClient}>
-          <DataClassEditor context={{ app: '', pmv: '', file }} />
-        </QueryProvider>
-      </ClientContextProvider>
+      <ThemeProvider disabled={true}>
+        <ClientContextProvider client={client}>
+          <QueryProvider client={queryClient}>
+            <DataClassEditor context={{ app: '', pmv: '', file }} />
+          </QueryProvider>
+        </ClientContextProvider>
+      </ThemeProvider>
     </React.StrictMode>
   );
 }
