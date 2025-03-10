@@ -36,7 +36,7 @@
     "ws": "8.18.1"
   },
   "devDependencies": {
-    "@types/vscode": "1.97.0",
+    "@types/vscode": "1.98.0",
     "@types/vscode-webview": "1.57.5",
     "@types/ws": "8.18.0",
     "@vscode/vsce": "3.2.2",
