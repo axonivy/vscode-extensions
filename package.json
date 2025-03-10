@@ -30,16 +30,16 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/dataclass-editor": "13.1.0-next.461",
-    "@axonivy/form-editor": "13.1.0-next.597",
-    "@axonivy/form-editor-core": "13.1.0-next.597",
-    "@axonivy/process-editor": "13.1.0-next.1423",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1423",
-    "@axonivy/variable-editor": "13.1.0-next.607",
+    "@axonivy/dataclass-editor": "13.1.0-next.487",
+    "@axonivy/form-editor": "13.1.0-next.622",
+    "@axonivy/form-editor-core": "13.1.0-next.622",
+    "@axonivy/process-editor": "13.1.0-next.1426",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1426",
+    "@axonivy/variable-editor": "13.1.0-next.637",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.586",
+    "@axonivy/eslint-config": "13.1.0-next.592",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
@@ -54,7 +54,7 @@
     "reflect-metadata": "0.2.2",
     "rimraf": "6.0.1",
     "ts-loader": "9.5.2",
-    "typescript": "5.8.2",
+    "typescript": "5.7.3",
     "vite": "6.2.1",
     "vite-tsconfig-paths": "5.1.4"
   },
