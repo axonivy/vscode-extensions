@@ -1,11 +1,6 @@
 pipeline {
   agent any
 
-  tools {
-    jdk 'temurin-jdk-21.0.6.7'
-    maven '3.9'
-  }
-
   options {
     buildDiscarder(logRotator(numToKeepStr: '60', artifactNumToKeepStr: '2'))
     disableConcurrentBuilds()
@@ -20,17 +15,11 @@ pipeline {
     string(name: 'openvscodeVersion', defaultValue: 'v1.98.0', description: 'openvscode version that will be used')
   }
 
-  environment {
-    JAVA_OPTS_IVY_SYSTEM = '-Divy.engine.testheadless=true'
-    CI = 'true'
-    RUN_IN_BRWOSER = 'true'
-  }
-
   stages {
-    stage('Build') {
+    stage('Integration Test') {
       steps {
         script {
-          nodejs(nodeJSInstallationName: '22.11.0') {
+          docker.build('node-webtest', '-f build/integration/openvscode-server/Dockerfile .').inside {
             sh """
             npm run update:axonivy:next
             npm install
@@ -41,24 +30,13 @@ pipeline {
             cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension
             nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
             nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
-            npx playwright install --with-deps chromium
+            npm run test:playwright:browser
             """
           }
-        }
-      }
-    }
-
-    stage('Playwright Tests') {
-      steps {
-        script {
-          nodejs(nodeJSInstallationName: '22.11.0') {
-            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-              sh 'npm run test:playwright:browser'
-            }
-            archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
-            withChecks('WebTests') {
-              junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
-            }
+          archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'extension/AxonIvyEngine/logs/ivy.log', allowEmptyArchive: true
+          withChecks('WebTests') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: '**/node_modules/**/report.xml'
           }
         }
       }
