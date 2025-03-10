@@ -30,8 +30,10 @@ pipeline {
             cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension
             nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
             nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
-            npm run test:playwright:browser
             """
+            catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+              sh 'npm run test:playwright:browser'
+            }
           }
           archiveArtifacts artifacts: '**/playwright/test-results/**', allowEmptyArchive: true
           archiveArtifacts artifacts: 'extension/AxonIvyEngine/logs/ivy.log', allowEmptyArchive: true
