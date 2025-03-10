@@ -10,6 +10,7 @@ import { hasEditorFileContent, isAction } from '../notification-helper';
 import { updateTextDocumentContent } from '../content-writer';
 
 const DataClassWebSocketMessage: NotificationType<unknown> = { method: 'dataclassWebSocketMessage' };
+const InvalidateNotifaction: NotificationType<{ content: string }> = { method: 'invalidate' };
 
 export const setupCommunication = (
   websocketUrl: URL,
@@ -24,7 +25,12 @@ export const setupCommunication = (
       WebviewReadyNotification,
       () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
       { sender: messageParticipant }
-    )
+    ),
+    vscode.workspace.onDidChangeTextDocument(e => {
+      if (e.document.uri === document.uri && e.reason) {
+        messenger.sendNotification(InvalidateNotifaction, messageParticipant, { content: document.getText() });
+      }
+    })
   );
   webviewPanel.onDidDispose(() => toDispose.dispose());
 };
