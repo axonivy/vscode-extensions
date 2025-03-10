@@ -38,3 +38,4 @@ jobs:
           path: |
             playwright/test-results
           retention-days: 10
+          if-no-files-found: ignore
