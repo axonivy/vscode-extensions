@@ -40,3 +40,4 @@ gen-webpack.config.js
 dist/
 AxonIvyEngine/
 container-workspace/
+target/

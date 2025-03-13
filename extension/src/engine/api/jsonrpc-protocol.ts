@@ -1,5 +1,5 @@
 import type { Disposable } from '@axonivy/jsonrpc';
-import { ProcessBean } from './generated/openapi-dev';
+import { ProcessBean } from './generated/client';
 import { AnimationSettings } from './jsonrpc';
 
 export class Callback<T, R = void> implements Disposable {

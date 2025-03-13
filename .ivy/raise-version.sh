@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+mvn --batch-mode -f pom.xml versions:set versions:commit -DnewVersion=${1}
+
 npm install
 npx lerna version ${1/-SNAPSHOT/} --no-git-tag-version --no-push --ignore-scripts --exact --yes
 npm install

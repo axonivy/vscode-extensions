@@ -13,7 +13,7 @@ import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
 import { setStatusBarMessage } from '../base/status-bar';
-import { DataClassInit, NewProjectParams } from './api/generated/openapi-dev';
+import { DataClassInit, NewProjectParams } from './api/generated/client';
 import { WebSocketClientProvider } from './ws-client';
 import DataClassEditorProvider from '../editors/dataclass-editor/dataclass-editor-provider';
 

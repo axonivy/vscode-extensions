@@ -15,9 +15,9 @@ import {
   findOrCreatePmv,
   stopBpmEngine,
   createDataClass,
-  DataClassInit
-} from './generated/openapi-dev';
-import { createWorkspace } from './generated/openapi-default';
+  DataClassInit,
+  createWorkspace
+} from './generated/client';
 import { handleAxiosError } from './axios-error-handler';
 
 const progressOptions = (title: string) => {
