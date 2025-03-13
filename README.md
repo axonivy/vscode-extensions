@@ -16,7 +16,7 @@ The available VS Code extension can be found under `/extension`.
 To access the REST API of the engine, we generate the Axios client from OpenAPI. For the creation, it is expected that the OpenAPI specification is located under `target/engine/openapi.json`. The easiest way to retrieve the specification is to run the following Maven command. Otherwise, you can load the file from https://jenkins.ivyteam.io/job/core_openapi/
 
 ```shellscript
-mvn clean package
+mvn clean validate
 ```
 
 For client generation run:

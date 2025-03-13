@@ -64,7 +64,7 @@ pipeline {
         nodejs(nodeJSInstallationName: '22.11.0') {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             script {
-              bat 'mvn clean package && npm run codegen:openapi'
+              bat 'mvn clean validate && npm run codegen:openapi'
               bat 'npm run type'
               bat 'npm run lint:ci'
             }
