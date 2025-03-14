@@ -11,6 +11,7 @@
     "build": "lerna run build",
     "build:production": "lerna run build:production",
     "download:engine": "node --experimental-strip-types scripts/download-engine.cts",
+    "download:openapi": "mvn clean validate",
     "codegen:openapi": "orval",
     "clean": "lerna run clean",
     "lint": "eslint",
@@ -29,16 +30,16 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/dataclass-editor": "13.1.0-next.495",
-    "@axonivy/form-editor": "13.1.0-next.628",
-    "@axonivy/form-editor-core": "13.1.0-next.628",
-    "@axonivy/process-editor": "13.1.0-next.1431",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1431",
-    "@axonivy/variable-editor": "13.1.0-next.645",
+    "@axonivy/dataclass-editor": "13.1.0-next.497",
+    "@axonivy/form-editor": "13.1.0-next.632",
+    "@axonivy/form-editor-core": "13.1.0-next.632",
+    "@axonivy/process-editor": "13.1.0-next.1437",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1437",
+    "@axonivy/variable-editor": "13.1.0-next.647",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.594",
+    "@axonivy/eslint-config": "13.1.0-next.596",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
