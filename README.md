@@ -13,7 +13,7 @@ The available VS Code extension can be found under `/extension`.
 
 ### Generate REST Client from Axon Ivy OpenAPI
 
-To access the REST API of the engine, we generate the Axios client from OpenAPI. For the creation, it is expected that the OpenAPI specification is located under `target/engine/openapi.json`. The easiest way to retrieve the specification is to run the following command (Maven needede). Otherwise, you can load the file from https://jenkins.ivyteam.io/job/core_openapi/
+To access the REST API of the engine, we generate the Axios client from OpenAPI. For the creation, it is expected that the OpenAPI specification is located under `target/engine/openapi.json`. The easiest way to retrieve the specification is to run the following command (Maven needed). Otherwise, you can load the file from https://jenkins.ivyteam.io/job/core_openapi/
 
 ```shellscript
 npm run download:openapi
