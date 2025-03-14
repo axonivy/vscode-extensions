@@ -16,7 +16,7 @@ export default tseslint.config(
   // Project specific configs
   {
     name: 'ignore-files',
-    ignores: ['**/scripts/download-*', '**/.vscode-test/*', '**/generated/openapi-*', '**/browser/media/*']
+    ignores: ['**/scripts/download-*', '**/.vscode-test/*', '**/generated/client*', '**/browser/media/*']
   },
   {
     name: 'vscode/rules',
