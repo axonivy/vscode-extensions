@@ -11,19 +11,14 @@ test('Open by command', async ({ page }) => {
   await editor.hasContentObject('/contentObject');
 });
 
-test('Open by file', async ({ page }) => {
+test('Open by file and open help', async ({ page }) => {
   const editor = new CmsEditor(page);
   await editor.hasDeployProjectStatusMessage();
   await editor.openEditorFile();
   await editor.isTabVisible();
   await editor.isViewVisible();
   await editor.hasContentObject('/contentObject');
-});
 
-test('Open help', async ({ page }) => {
-  const editor = new CmsEditor(page);
-  await editor.hasDeployProjectStatusMessage();
-  await editor.openEditorFile();
   await editor.help.click();
   const browserView = new BrowserView(page);
   expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*cms\/index.html$/);
