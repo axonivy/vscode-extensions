@@ -5,7 +5,7 @@
     "node": ">=20.10.0"
   },
   "volta": {
-    "node": "22.14.0"
+    "node": "22.11.0"
   },
   "scripts": {
     "build": "lerna run build",
@@ -30,28 +30,30 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/dataclass-editor": "13.1.0-next.497",
-    "@axonivy/form-editor": "13.1.0-next.632",
-    "@axonivy/form-editor-core": "13.1.0-next.632",
-    "@axonivy/process-editor": "13.1.0-next.1437",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1437",
-    "@axonivy/variable-editor": "13.1.0-next.647",
-    "@axonivy/cms-editor": "13.1.0-next.76",
+    "@axonivy/dataclass-editor": "13.1.0-next.505",
+    "@axonivy/form-editor": "13.1.0-next.638",
+    "@axonivy/form-editor-core": "13.1.0-next.638",
+    "@axonivy/process-editor": "13.1.0-next.1445",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1445",
+    "@axonivy/variable-editor": "13.1.0-next.655",
+    "@axonivy/cms-editor": "13.1.0-next.78",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.596",
+    "@axonivy/eslint-config": "13.1.0-next.606",
     "@types/node": "22.13.10",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
     "@vitejs/plugin-react": "4.3.4",
     "adm-zip": "0.5.16",
+    "i18next": "^24.2.3",
     "lerna": "8.2.1",
     "orval": "7.7.0",
     "path": "0.12.7",
     "prettier": "3.5.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-i18next": "^15.4.1",
     "reflect-metadata": "0.2.2",
     "rimraf": "6.0.1",
     "ts-loader": "9.5.2",
