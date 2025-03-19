@@ -15,6 +15,7 @@ export const initMessenger = (messenger: Messenger, start: (init: InitializeConn
 
 type Method =
   | 'configWebSocketMessage'
+  | 'cmsWebSocketMessage'
   | 'dataclassWebSocketMessage'
   | 'formWebSocketMessage'
   | 'inscriptionWebSocketMessage'
