@@ -6,6 +6,7 @@ import { InitializeConnection, initMessenger, toConnection } from 'vscode-webvie
 import 'vscode-webview-common/css/colors.css';
 import '@axonivy/variable-editor/lib/editor.css';
 import { ThemeProvider } from '@axonivy/ui-components';
+import { initTranslation } from './i18n';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
@@ -18,6 +19,7 @@ export async function start({ file }: InitializeConnection) {
   if (!rootElement) {
     throw new Error('Root element not found');
   }
+  initTranslation();
   createRoot(rootElement).render(
     <React.StrictMode>
       <ThemeProvider disabled={true}>
