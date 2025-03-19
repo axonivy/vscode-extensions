@@ -25,11 +25,11 @@ pipeline {
             npm install
             npm run build:production
             npm run download:engine ${params.engineDownloadUrl}
-            wget https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-${params.openvscodeVersion}/openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
-            tar -xzf openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
-            cp -r extension/. openvscode-server-${params.openvscodeVersion}-linux-x64/extensions/extension
             nohup extension/AxonIvyEngine/bin/AxonIvyEngine &
-            nohup openvscode-server-${params.openvscodeVersion}-linux-x64/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
+            wget -O openvsc.tar.gz https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-${params.openvscodeVersion}/openvscode-server-${params.openvscodeVersion}-linux-x64.tar.gz
+            tar -xzf openvsc.tar.gz --strip-components=1 --one-top-level=openvsc
+            cp -r extension/. openvsc/extensions/extension
+            nohup openvsc/bin/openvscode-server --host 0.0.0.0 --without-connection-token --disable-workspace-trust &
             """
             catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
               sh 'npm run test:playwright:browser'
