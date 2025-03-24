@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { Messenger, VsCodeApi } from 'vscode-messenger-webview';
 import { InitializeConnection, initMessenger, toConnection } from 'vscode-webview-common';
 import 'vscode-webview-common/css/colors.css';
+import { initTranslation } from './i18n';
 
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
@@ -17,6 +18,7 @@ export async function start({ file }: InitializeConnection) {
   if (!rootElement) {
     throw new Error('Root element not found');
   }
+  initTranslation();
   createRoot(rootElement).render(
     <React.StrictMode>
       <ClientContextProvider client={client}>
