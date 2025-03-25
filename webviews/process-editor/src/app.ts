@@ -14,6 +14,7 @@ import { Messenger } from 'vscode-messenger-webview';
 import ivyStartActionModule from './start/di.config';
 import { ivyStartupDiagramModule } from './startup';
 import noopContextMenuServiceModule from './context-menu/di.config';
+import { initTranslation } from './i18n';
 
 type ColorTheme = 'dark' | 'light';
 const ColorThemeChangedNotification: NotificationType<ColorTheme> = { method: 'colorThemeChanged' };
@@ -46,6 +47,7 @@ class IvyGLSPStarter extends GLSPStarter {
 
 export function launch() {
   initMonaco();
+  initTranslation();
   new IvyGLSPStarter();
 }
 
