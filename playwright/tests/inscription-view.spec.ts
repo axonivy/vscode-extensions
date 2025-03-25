@@ -70,7 +70,7 @@ test.describe('Inscription View', () => {
   test('OpenPage-Action in Browers - Open Help', async ({ page }) => {
     const browserView = new BrowserView(page);
     const inscriptionView = await processEditor.openInscriptionView(userDialogPID1);
-    await inscriptionView.clickButton('Open Help for User Dialog');
+    await inscriptionView.clickButton('Open Help');
     expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*process-elements\/user-dialog\.html$/);
   });
 
