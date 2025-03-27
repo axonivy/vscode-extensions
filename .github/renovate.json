@@ -1,7 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["local>axonivy/renovate-config:npm"],
-  "dependencyDashboardApproval": true,
   "packageRules": [
     {
       "matchBaseBranches": ["release/*", "master"],
