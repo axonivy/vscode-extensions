@@ -1,16 +1,19 @@
-import * as vscode from 'vscode';
 import * as path from 'path';
+import * as vscode from 'vscode';
 import { config } from '../base/configurations';
 
 export interface Entry {
   uri: vscode.Uri;
   type: vscode.FileType;
-  iconPath?: string;
+  iconPath?: string | vscode.IconPath;
   contextValue?: string;
   parent?: Entry;
+  collapsibleState?: vscode.TreeItemCollapsibleState;
+  command?: vscode.Command;
 }
 
 export const IVY_RPOJECT_FILE_PATTERN = '**/.project';
+const IVY_PROJECT_CONTEXT_VALUE = 'ivyProject';
 
 export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry> {
   private ivyProjects: Promise<string[]>;
@@ -91,9 +94,8 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   getTreeItem(element: Entry): vscode.TreeItem {
     const collapsibleState = this.collapsibleStateOf(element);
     const treeItem = new vscode.TreeItem(element.uri, collapsibleState);
-    if (element.type === vscode.FileType.File) {
-      treeItem.command = { command: 'vscode.open', title: 'Open File', arguments: [element.uri] };
-      treeItem.contextValue = 'file';
+    if (element.command) {
+      treeItem.command = element.command;
     }
     if (element.iconPath) {
       treeItem.iconPath = element.iconPath;
@@ -106,6 +108,9 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
   }
 
   private collapsibleStateOf(element: Entry): vscode.TreeItemCollapsibleState {
+    if (element.collapsibleState !== undefined) {
+      return element.collapsibleState;
+    }
     if (element.type !== vscode.FileType.Directory) {
       return vscode.TreeItemCollapsibleState.None;
     }
@@ -134,7 +139,7 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
       uri: vscode.Uri.file(ivyProjectDir),
       type: vscode.FileType.Directory,
       iconPath: path.join(__dirname, '..', 'assets', 'ivy-logo-black-background.svg'),
-      contextValue: 'ivyProject'
+      contextValue: IVY_PROJECT_CONTEXT_VALUE
     };
     this.cacheEntry(entry);
     return entry;
@@ -142,9 +147,29 @@ export class IvyProjectTreeDataProvider implements vscode.TreeDataProvider<Entry
 
   private createAndCacheChild(parent: Entry, childName: string, childType: vscode.FileType): Entry {
     const childUri = vscode.Uri.file(path.join(parent.uri.fsPath, childName));
-    const entry = { uri: childUri, type: childType, parent };
+    const entry: Entry = { uri: childUri, type: childType, parent };
+    if (childType === vscode.FileType.File) {
+      entry.command = { command: 'vscode.open', title: 'Open File', arguments: [childUri] };
+      entry.contextValue = 'file';
+    }
+    if (this.isCmsDirectory(parent, childName, childType)) {
+      this.makeCmsEntry(entry);
+    }
     this.cacheEntry(entry);
     return entry;
+  }
+
+  private isCmsDirectory(parent: Entry, name: string, type: vscode.FileType) {
+    return parent.contextValue === IVY_PROJECT_CONTEXT_VALUE && name === 'cms' && type === vscode.FileType.Directory;
+  }
+
+  private makeCmsEntry(entry: Entry) {
+    entry.collapsibleState = vscode.TreeItemCollapsibleState.None;
+    entry.iconPath = {
+      light: vscode.Uri.file(path.join(__dirname, '..', 'assets', 'light', 'cms.svg')),
+      dark: vscode.Uri.file(path.join(__dirname, '..', 'assets', 'dark', 'cms.svg'))
+    };
+    entry.command = { command: 'ivyBrowserView.openCmsEditor', title: 'Open CMS Editor', arguments: [entry.uri] };
   }
 
   private openTabPathStartsWith(childPath: string): boolean {
