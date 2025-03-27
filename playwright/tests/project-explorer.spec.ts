@@ -1,4 +1,5 @@
 import { test } from './fixtures/baseTest';
+import { CmsEditor } from './page-objects/cms-editor';
 import { FileExplorer, ProjectExplorerView } from './page-objects/explorer-view';
 import { multiProjectWorkspacePath, noProjectWorkspacePath } from './workspaces/workspace';
 
@@ -27,4 +28,12 @@ test.describe('Project Explorer - several Ivy Projects', () => {
     await fileExplorer.isSelected('dummy.txt');
     await explorer.closeView();
   });
+});
+
+test('cms entry', async ({ page }) => {
+  const explorer = new ProjectExplorerView(page);
+  explorer.openView();
+  explorer.selectNode('playwrightTestWorkspace');
+  explorer.selectNode('cms');
+  await new CmsEditor(page).isViewVisible();
 });

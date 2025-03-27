@@ -2,11 +2,12 @@ import { expect } from 'playwright/test';
 import { test } from './fixtures/baseTest';
 import { BrowserView } from './page-objects/browser-view';
 import { CmsEditor } from './page-objects/cms-editor';
+import { FileExplorer } from './page-objects/explorer-view';
 
 test('Open by command', async ({ page }) => {
   const editor = new CmsEditor(page);
   await editor.hasDeployProjectStatusMessage();
-  await page.getByRole('treeitem', { name: 'cms' }).click();
+  await new FileExplorer(page).selectNode('cms');
   await editor.executeCommand('Axon Ivy: Open CMS Editor');
   await editor.isViewVisible();
   await editor.hasContentObject('/contentObject');
