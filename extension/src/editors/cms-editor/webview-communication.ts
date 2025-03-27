@@ -9,21 +9,13 @@ import { WebSocketForwarder } from '../websocket-forwarder';
 
 const ConfigWebSocketMessage: NotificationType<unknown> = { method: 'cmsWebSocketMessage' };
 
-export const setupCommunication = (
-  websocketUrl: URL,
-  messenger: Messenger,
-  webviewPanel: vscode.WebviewPanel,
-  document?: vscode.TextDocument
-) => {
+export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: vscode.WebviewPanel, file: string) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
     new CmsEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant),
     messenger.onNotification(
       WebviewReadyNotification,
-      () =>
-        messenger.sendNotification(InitializeConnectionRequest, messageParticipant, {
-          file: document?.fileName ?? vscode.workspace.workspaceFolders?.[0].uri.path
-        }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file }),
       { sender: messageParticipant }
     )
   );

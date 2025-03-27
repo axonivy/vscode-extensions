@@ -19,7 +19,7 @@ export class CmsEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel) {
-    setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
+    setupCommunication(this.websocketUrl, messenger, webviewPanel, document.fileName);
     webviewPanel.webview.options = { enableScripts: true };
     webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'cms-editor');
   }

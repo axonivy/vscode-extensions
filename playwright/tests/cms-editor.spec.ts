@@ -6,6 +6,7 @@ import { CmsEditor } from './page-objects/cms-editor';
 test('Open by command', async ({ page }) => {
   const editor = new CmsEditor(page);
   await editor.hasDeployProjectStatusMessage();
+  await page.getByRole('treeitem', { name: 'cms' }).click();
   await editor.executeCommand('Axon Ivy: Open CMS Editor');
   await editor.isViewVisible();
   await editor.hasContentObject('/contentObject');
