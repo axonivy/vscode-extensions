@@ -30,17 +30,20 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/dataclass-editor": "13.1.0-next.511",
-    "@axonivy/form-editor": "13.1.0-next.648",
-    "@axonivy/form-editor-core": "13.1.0-next.648",
-    "@axonivy/process-editor": "13.1.0-next.1450",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1450",
-    "@axonivy/variable-editor": "13.1.0-next.661",
-    "@axonivy/cms-editor": "13.1.0-next.93",
+    "@axonivy/jsonrpc": "~13.1.0-next.620",
+    "@axonivy/ui-components": "~13.1.0-next.620",
+    "@axonivy/ui-icons": "~13.1.0-next.620",
+    "@axonivy/dataclass-editor": "13.1.0-next.519",
+    "@axonivy/form-editor": "13.1.0-next.662.f155c9e",
+    "@axonivy/form-editor-core": "13.1.0-next.662.f155c9e",
+    "@axonivy/process-editor": "13.1.0-next.1467.d4adab02",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1467.d4adab02",
+    "@axonivy/variable-editor": "13.1.0-next.671.1c43925",
+    "@axonivy/cms-editor": "13.1.0-next.119",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.610",
+    "@axonivy/eslint-config": "13.1.0-next.620",
     "@types/node": "22.13.14",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
