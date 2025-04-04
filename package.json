@@ -30,6 +30,9 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
+    "@axonivy/jsonrpc": "~13.1.0-next.620",
+    "@axonivy/ui-components": "~13.1.0-next.620",
+    "@axonivy/ui-icons": "~13.1.0-next.620",
     "@axonivy/dataclass-editor": "13.1.0-next.519",
     "@axonivy/form-editor": "13.1.0-next.662.f155c9e",
     "@axonivy/form-editor-core": "13.1.0-next.662.f155c9e",
