@@ -33,13 +33,13 @@
     "@axonivy/jsonrpc": "~13.1.0-next.624",
     "@axonivy/ui-components": "~13.1.0-next.624",
     "@axonivy/ui-icons": "~13.1.0-next.624",
-    "@axonivy/dataclass-editor": "13.1.0-next.525.24df80c",
+    "@axonivy/dataclass-editor": "13.1.0-next.527.1bcbdda",
     "@axonivy/form-editor": "13.1.0-next.684.dbf3ec3",
     "@axonivy/form-editor-core": "13.1.0-next.684.dbf3ec3",
     "@axonivy/process-editor": "13.1.0-next.1473.bb636b87",
     "@axonivy/process-editor-inscription": "13.1.0-next.1473.bb636b87",
-    "@axonivy/variable-editor": "13.1.0-next.675.846bbc7",
-    "@axonivy/cms-editor": "13.1.0-next.135.c0a59cb",
+    "@axonivy/variable-editor": "13.1.0-next.677.11e04ba",
+    "@axonivy/cms-editor": "13.1.0-next.137.d65ad0c",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
