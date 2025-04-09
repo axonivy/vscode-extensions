@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { enTranslation } from '@axonivy/cms-editor';
+import { enMessages } from '@axonivy/form-editor';
 
 export const initTranslation = () => {
   if (i18n.isInitializing || i18n.isInitialized) return;
@@ -8,8 +8,8 @@ export const initTranslation = () => {
     debug: true,
     supportedLngs: ['en'],
     fallbackLng: 'en',
-    ns: ['cms-editor'],
-    defaultNS: 'cms-editor',
-    resources: { en: { 'cms-editor': enTranslation } }
+    ns: ['form-editor'],
+    defaultNS: 'form-editor',
+    resources: { en: { 'form-editor': enMessages } }
   });
 };
