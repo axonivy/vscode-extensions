@@ -1,4 +1,4 @@
-const https = require('https');
+const { Readable } = require('stream');
 const fs = require('fs');
 const path = require('path');
 const AdmZip = require('adm-zip');
@@ -18,13 +18,9 @@ function downloadEngine() {
 
 function downloadEngineReq(engineDir: string, downloadUrl: string) {
   const filename = path.join(engineDir, path.basename(downloadUrl));
-  https.get(downloadUrl, res => {
-    if (res.statusCode === 302 && res.headers.location) {
-      downloadEngineReq(engineDir, res.headers.location);
-      return;
-    }
+  fetch(downloadUrl).then(res => {
     const fileStream = fs.createWriteStream(filename);
-    res.pipe(fileStream);
+    Readable.fromWeb(res.body).pipe(fileStream);
     fileStream.on('finish', () => {
       fileStream.close();
       console.log('Download', filename, 'finished');
