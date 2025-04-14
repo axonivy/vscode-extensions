@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@axonivy/eslint-config": "13.1.0-next.624",
-    "@types/node": "22.14.0",
+    "@types/node": "22.14.1",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.2",
     "@vitejs/plugin-react": "4.3.4",
