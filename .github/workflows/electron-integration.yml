@@ -11,6 +11,7 @@ jobs:
       IVY_JAVA_HOME: $JAVA_HOME
       CI: true
       RUN_STABLE_VERSION: true
+      JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
