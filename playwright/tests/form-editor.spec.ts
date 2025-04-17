@@ -47,6 +47,7 @@ test.describe('Form Editor', () => {
 
   test('Preview', async ({ page }) => {
     const browserView = new BrowserView(page);
+    await expect(editor.locatorFor('.selected')).toHaveCount(0);
     await editor.toolbar.getByRole('button', { name: 'Open Preview' }).click();
     const browser = browserView.content();
     await expect(browser.locator('#iFrameForm\\:frameTaskName')).toHaveText('Preview');
@@ -63,6 +64,6 @@ test.describe('Form Editor', () => {
     await expect(overlay).toBeHidden();
 
     await editor.isViewVisible();
-    await expect(editor.locatorFor('.block-input')).toHaveClass(/selected/);
+    await expect(editor.locatorFor('.selected')).toHaveCount(1);
   });
 });
