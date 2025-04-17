@@ -13,7 +13,7 @@ export const animationSettings = () => {
   };
 };
 
-export const handleOpenEditor = async (process: ProcessBean) => {
+export const handleOpenProcessEditor = async (process: ProcessBean) => {
   if (!process.uri) {
     return false;
   }
@@ -39,11 +39,11 @@ export const handleOpenEditor = async (process: ProcessBean) => {
   }
 };
 
-const openEditor = async (process: ProcessBean) => {
-  if (!process.uri) {
+export const openEditor = async (editor: { uri?: string }) => {
+  if (!editor.uri) {
     return false;
   }
-  await executeCommand('vscode.open', vscode.Uri.parse(process.uri));
+  await executeCommand('vscode.open', vscode.Uri.parse(editor.uri));
   return true;
 };
 
