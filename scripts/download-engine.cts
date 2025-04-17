@@ -45,6 +45,17 @@ function unzipEngine(zipName: string, targetDir: string) {
       }
     });
   });
+  addDevModeSystemProperty(targetDir);
+}
+
+function addDevModeSystemProperty(targetDir: string) {
+  const jvmOptionsFile = path.join(targetDir, 'configuration', 'jvm.options');
+  if (fs.existsSync(jvmOptionsFile)) {
+    const jvmOptions = fs.readFileSync(jvmOptionsFile, 'utf8');
+    if (!jvmOptions.includes('-Ddev.mode=true')) {
+      fs.appendFileSync(jvmOptionsFile, '\n-Ddev.mode=true');
+    }
+  }
 }
 
 downloadEngine();

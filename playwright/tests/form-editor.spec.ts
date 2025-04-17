@@ -45,7 +45,7 @@ test.describe('Form Editor', () => {
     expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/);
   });
 
-  test('preview', async ({ page }) => {
+  test('Preview', async ({ page }) => {
     const browserView = new BrowserView(page);
     await editor.toolbar.getByRole('button', { name: 'Open Preview' }).click();
     const browser = browserView.content();
