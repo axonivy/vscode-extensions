@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws';
 import { WebIdeClientJsonRpc } from './api/jsonrpc';
 import * as vscode from 'vscode';
-import { animationSettings, handleOpenEditor } from './animation';
+import { animationSettings, handleOpenProcessEditor, openEditor } from './animation';
 import { IWebSocket, WebSocketMessageReader, WebSocketMessageWriter } from 'vscode-ws-jsonrpc';
 
 export const WebSocketClientProvider = (webSocketUrl: URL) => {
@@ -10,7 +10,8 @@ export const WebSocketClientProvider = (webSocketUrl: URL) => {
     const connection = toSocketConnection(webSocket);
     WebIdeClientJsonRpc.startClient(connection).then(client => {
       client.animationSettings(animationSettings());
-      client.onOpenEditor.set(process => handleOpenEditor(process));
+      client.onOpenProcessEditor.set(process => handleOpenProcessEditor(process));
+      client.onOpenFormEditor.set(form => openEditor(form));
       vscode.workspace.onDidChangeConfiguration(e => {
         if (e.affectsConfiguration('process.animation')) {
           client.animationSettings(animationSettings());

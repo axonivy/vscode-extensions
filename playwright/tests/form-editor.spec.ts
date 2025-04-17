@@ -44,4 +44,31 @@ test.describe('Form Editor', () => {
     await inscriptionView.getByRole('button', { name: /Help/ }).click();
     expect((await browserView.input().inputValue()).toString()).toMatch(/^https:\/\/developer\.axonivy\.com.*user-dialogs\/form-editor\.html$/);
   });
+
+  test('Preview', async ({ page }) => {
+    const browserView = new BrowserView(page);
+    await browserView.openDevWfUi();
+    const browser = browserView.content();
+    await expect(browser.getByRole('menuitem', { name: /Home/ })).toBeVisible();
+    await editor.executeCommand('View: Move Panel Right');
+
+    await expect(editor.locatorFor('.selected')).toHaveCount(0);
+    await editor.toolbar.getByRole('button', { name: 'Open Preview' }).click();
+    await expect(browser.locator('#iFrameForm\\:frameTaskName')).toHaveText('Preview');
+    const frame = browser.frameLocator('iframe');
+    const input = frame.getByRole('textbox');
+    await expect(input).toBeVisible();
+
+    await editor.closeAllTabs();
+
+    const overlay = frame.locator('#selectionOverlay');
+    await expect(overlay).toHaveCount(0);
+    await browser.locator('#iFrameForm\\:previewElementPicker').click();
+    await expect(overlay).toHaveCount(1);
+    await input.click();
+    await expect(overlay).toHaveCount(0);
+
+    await editor.isViewVisible();
+    await expect(editor.locatorFor('.selected')).toHaveCount(1);
+  });
 });
