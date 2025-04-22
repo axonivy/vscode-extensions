@@ -1,9 +1,10 @@
 import { BaseRpcClient, Connection, createMessageConnection, Disposable } from '@axonivy/jsonrpc';
 import { Callback, WebIdeClient } from './jsonrpc-protocol';
-import { ProcessBean } from './generated/client';
+import { ProcessBean, type HdBean } from './generated/client';
 
 export interface WebIdeOnRequestTypes {
-  openEditor: [ProcessBean, Promise<boolean>];
+  openProcessEditor: [ProcessBean, Promise<boolean>];
+  openFormEditor: [HdBean, Promise<boolean>];
 }
 
 export type AnimationSettings = {
@@ -17,11 +18,14 @@ export interface WebIdeNotificationTypes {
 }
 
 export class WebIdeClientJsonRpc extends BaseRpcClient implements WebIdeClient {
-  onOpenEditor = new Callback<ProcessBean, Promise<boolean>>();
+  onOpenProcessEditor = new Callback<ProcessBean, Promise<boolean>>();
+  onOpenFormEditor = new Callback<HdBean, Promise<boolean>>();
   protected override setupConnection(): void {
     super.setupConnection();
-    this.toDispose.push(this.onOpenEditor);
-    this.onRequest('openEditor', data => this.onOpenEditor.call(data) ?? new Promise(() => false));
+    this.toDispose.push(this.onOpenProcessEditor);
+    this.toDispose.push(this.onOpenFormEditor);
+    this.onRequest('openProcessEditor', data => this.onOpenProcessEditor.call(data) ?? new Promise(() => false));
+    this.onRequest('openFormEditor', data => this.onOpenFormEditor.call(data) ?? new Promise(() => false));
   }
 
   animationSettings(settings: AnimationSettings) {
