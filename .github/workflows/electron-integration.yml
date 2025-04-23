@@ -3,6 +3,7 @@ on:
   push:
   schedule:
     - cron: '21 21 * * *'
+permissions: {}
 jobs:
   test:
     timeout-minutes: 30
