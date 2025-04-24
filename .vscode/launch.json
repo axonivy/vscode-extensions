@@ -12,8 +12,7 @@
       ],
       "outFiles": ["${workspaceFolder}/extension/dist/**/*.js"],
       "sourceMaps": true,
-      "preLaunchTask": "Watch",
-      "postDebugTask": "Terminate All Tasks"
+      "preLaunchTask": "Watch"
     }
   ]
 }
