@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@axonivy/vscode-extensions-playwright",
+  "name": "@axonivy/vscode-designer-playwright",
   "scripts": {
     "download:vscode": "ts-node tests/utils/download-vscode.ts",
     "ui-tests": "playwright test"

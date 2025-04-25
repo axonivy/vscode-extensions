@@ -20,7 +20,7 @@ pipeline {
                 sh 'npm install'
                 sh 'npm run sbom'
                 def version = sh (script: "node -p \"require('./extension/package.json').version\"", returnStdout: true)
-                uploadBOM(projectName: 'vscode-extensions', projectVersion: version, bomFile: 'bom.json')               
+                uploadBOM(projectName: 'vscode-designer', projectVersion: version, bomFile: 'bom.json')               
               }
             }
           }
