@@ -11,7 +11,7 @@
     "url": "https://github.com/axonivy/vscode-extensions"
   },
   "icon": "assets/ivy-logo.png",
-  "displayName": "Axon Ivy Designer 13",
+  "displayName": "Axon Ivy Designer 13 testee",
   "engines": {
     "vscode": "^1.98.0"
   },
