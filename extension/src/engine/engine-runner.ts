@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import { config } from '../base/configurations';
-import fs from 'fs';
 import { downloadDevEngine } from '..';
 
 export class EngineRunner {
@@ -46,12 +45,24 @@ export class EngineRunner {
   private async engineDirectory(): Promise<vscode.Uri> {
     const engineDirectory = config.engineDirectory();
     if (engineDirectory) {
-      return vscode.Uri.file(engineDirectory);
+      const engineDirUri = vscode.Uri.file(engineDirectory);
+      if (await this.isDirectory(engineDirUri)) {
+        return engineDirUri;
+      }
     }
-    if (fs.existsSync(this.embeddedEngineDirectory.fsPath)) {
+    if (await this.isDirectory(this.embeddedEngineDirectory)) {
       return this.embeddedEngineDirectory;
     }
     return await this.askForEngineDirectory();
+  }
+
+  private async isDirectory(uri: vscode.Uri) {
+    try {
+      const stat = await vscode.workspace.fs.stat(uri);
+      return stat.type === vscode.FileType.Directory;
+    } catch {
+      return false;
+    }
   }
 
   private async askForEngineDirectory(): Promise<vscode.Uri> {
