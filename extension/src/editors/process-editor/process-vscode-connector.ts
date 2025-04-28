@@ -24,7 +24,6 @@ const severityMap = new Map([
 ]);
 
 export const DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM = 'glspVscodeIntegrationNavigationTargetElementId';
-export const DIAGNOSTIC_CLIENT_ID_QUERY_PARAM = 'glspVscodeIntegrationNavigationClientId';
 
 export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
@@ -162,7 +161,6 @@ export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.Cus
       const updatedDiagnostics: [vscode.Uri, vscode.Diagnostic[]][] = message.action.markers.map(marker => {
         const queryParams = new URLSearchParams(client.document.uri.query);
         queryParams.append(DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM, marker.elementId);
-        queryParams.append(DIAGNOSTIC_CLIENT_ID_QUERY_PARAM, client.clientId);
 
         const diagnostic = new vscode.Diagnostic(new vscode.Range(0, 0, 0, 0), marker.description, severityMap.get(marker.kind));
         diagnostic.source = marker.elementId;
