@@ -28,7 +28,7 @@ const progressOptions = (title: string) => {
   };
 };
 const headers = { 'X-Requested-By': 'web-ide' };
-const options = { headers, auth: { username: 'Developer', password: 'Developer' }, paramsSerializer: { indexes: null } };
+const options = { headers, paramsSerializer: { indexes: null } };
 
 export class IvyEngineApi {
   private readonly _devContextPath: Promise<string>;
