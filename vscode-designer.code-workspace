@@ -13,8 +13,8 @@
       "path": "webviews/webview-common"
     },
     {
-      "name": "webview/config-editor",
-      "path": "webviews/config-editor"
+      "name": "webview/variable-editor",
+      "path": "webviews/variable-editor"
     },
     {
       "name": "webview/cms-editor",

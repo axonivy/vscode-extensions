@@ -1,5 +1,5 @@
 {
-  "name": "vscode-config-editor-webview",
+  "name": "vscode-variable-editor-webview",
   "version": "13.1.0",
   "private": true,
   "dependencies": {
