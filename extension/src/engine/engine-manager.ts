@@ -7,7 +7,7 @@ import { config } from '../base/configurations';
 import { NewUserDialogParams } from '../project-explorer/new-user-dialog';
 import { toWebSocketUrl } from '../base/url-util';
 import { EngineRunner } from './engine-runner';
-import { VariableEditorProvider } from '../editors/config-editor/variable-editor-provider';
+import { VariableEditorProvider } from '../editors/variable-editor/variable-editor-provider';
 import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';

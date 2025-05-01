@@ -6,7 +6,7 @@ export default defineConfig(() => {
     plugins: [tsconfigPaths()],
     build: {
       manifest: 'build.manifest.json',
-      outDir: '../../extension/dist/webviews/config-editor',
+      outDir: '../../extension/dist/webviews/variable-editor',
       chunkSizeWarningLimit: 5000
     },
     server: {

@@ -22,6 +22,6 @@ export class VariableEditorProvider implements vscode.CustomTextEditorProvider {
   resolveCustomTextEditor(document: vscode.TextDocument, webviewPanel: vscode.WebviewPanel) {
     setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
     webviewPanel.webview.options = { enableScripts: true };
-    webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'config-editor');
+    webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'variable-editor');
   }
 }
