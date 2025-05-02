@@ -66,6 +66,8 @@ test.describe('Form Editor', () => {
     await browser.locator('#iFrameForm\\:previewElementPicker').click();
     await expect(overlay).toHaveCount(1);
     await input.click();
+    await expect(overlay).toHaveCount(1);
+    await browser.locator('#iFrameForm\\:previewElementPicker').click();
     await expect(overlay).toHaveCount(0);
 
     await editor.isViewVisible();
