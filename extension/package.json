@@ -3,7 +3,7 @@
   "private": true,
   "preview": true,
   "version": "13.1.0",
-  "description": "This extension enables you to turn your business processes into real and fully functional web applications.",
+  "description": "This extension gives you all the tools you need to design, automate and optimize workflows from simple tasks to complex enterprise processes.",
   "publisher": "axonivy",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
@@ -11,7 +11,7 @@
     "url": "https://github.com/axonivy/vscode-designer"
   },
   "icon": "assets/ivy-logo.png",
-  "displayName": "Axon Ivy Designer 13",
+  "displayName": "Axon Ivy PRO Designer 13",
   "engines": {
     "vscode": "^1.98.0"
   },
