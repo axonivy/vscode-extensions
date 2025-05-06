@@ -1,11 +1,11 @@
-## Axon Ivy Designer for Visual Studio Code
+## Axon Ivy PRO Designer
 
-The Axon Ivy Designer is a state of the art process modelling tool that enables you to turn your business processes into real and fully functional web applications.
+Axon Ivy PRO Designer is the official Visual Studio Code extension for developing powerful business applications with the Axon Ivy Platform. It provides all the tools you need to design, automate, and optimize workflows from simple tasks to complex enterprise processes. The PRO Designer combines intuitive visual modeling with the flexibility of advanced development tools, offering a unified environment for process orchestration and application development.
 
 ## Setup
 
 This extension can be used locally or in a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers). Different installations are required for the two options, see below.
-[Or simply start by cloning our demo-projects repository into your GitHub codespace.](https://github.com/codespaces/new/axonivy-market/demo-projects)
+[Or simply start by cloning our demo-projects repository into your GitHub codespace.](https://github.com/codespaces/new/axonivy/demo-projects)
 
 ### Local ussage
 
@@ -45,7 +45,7 @@ See how it works:
 
 ### With existing project
 
-When you open an existing project for the first time, e.g. [demo-projects](https://github.com/axonivy-market/demo-projects), initially run **Build and Deploy all Projects** command.
+When you open an existing project for the first time, e.g. [demo-projects](https://github.com/axonivy/demo-projects), initially run **Build and Deploy all Projects** command.
 
 See how it works:
 ![Build and Deploy](extension/assets/readme/build-and-deploy.gif)
