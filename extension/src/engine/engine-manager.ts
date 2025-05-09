@@ -12,8 +12,8 @@ import FormEditorProvider from '../editors/form-editor/form-editor-provider';
 import { IvyBrowserViewProvider } from '../browser/ivy-browser-view-provider';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import ProcessEditorProvider from '../editors/process-editor/process-editor-provider';
-import { setStatusBarMessage } from '../base/status-bar';
-import { DataClassInit, NewProjectParams } from './api/generated/client';
+import { setStatusBarMessage, statusBarItem } from '../base/status-bar';
+import { DataClassInit, EngineInfo, NewProjectParams } from './api/generated/client';
 import { WebSocketClientProvider } from './ws-client';
 import DataClassEditorProvider from '../editors/dataclass-editor/dataclass-editor-provider';
 import { CmsEditorProvider } from '../editors/cms-editor/cms-editor-provider';
@@ -48,6 +48,7 @@ export class IvyEngineManager {
     this.ivyEngineApi = new IvyEngineApi(engineUrl.toString());
     let devContextPath = await this.ivyEngineApi.devContextPath;
     devContextPath += devContextPath.endsWith('/') ? '' : '/';
+    this.ivyEngineApi.getEngineInfo().then(this.updateStatusBarItemTooltip);
     await this.initExistingProjects();
     const websocketUrl = new URL(devContextPath, toWebSocketUrl(engineUrl));
     IvyBrowserViewProvider.register(this.context, engineUrl, devContextPath);
@@ -164,6 +165,12 @@ export class IvyEngineManager {
 
   async stop() {
     await this.engineRunner.stop();
+  }
+
+  private async updateStatusBarItemTooltip(info: EngineInfo) {
+    statusBarItem.tooltip = `Axon Ivy Engine
+Version: ${info.version}
+Name: ${info.engineName}`;
   }
 
   public static get instance() {

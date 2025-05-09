@@ -279,8 +279,39 @@ export interface LocationBean {
   position?: GeoPositionBean;
 }
 
+export type SetConfigParams = {
+  /**
+   * new value for config
+   */
+  value?: string;
+};
+
+export type SetVariableParams = {
+  /**
+   * new value for variable
+   */
+  value?: string;
+};
+
+export type DeployBody = {
+  /** project .iar file or multiple projects in a .zip file */
+  fileToDeploy: Blob;
+  /** deployment options as YAML file. If defined, the specific params below will be ignored. */
+  deploymentOptions?: string;
+  deployTestUsers?: string;
+  targetVersion?: string;
+  targetState?: string;
+  targetFileFormat?: string;
+};
+
 export type ReadConfigParams = {
   path?: string;
+  app?: string;
+  pmv?: string;
+};
+
+export type ComponentFormParams = {
+  componentId?: string;
   app?: string;
   pmv?: string;
 };
@@ -300,6 +331,118 @@ export type StopBpmEngineParams = {
 export type ImportProjectsBody = {
   file?: Blob;
   dependentProject?: Blob;
+};
+
+/**
+ * Returns the value of the config with the given name.
+ */
+export const getConfig = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  configKey: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/apps/${applicationName}/configs/${configKey}`, options);
+};
+
+/**
+ * Sets a new value for the config with the given name.
+ */
+export const setConfig = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  configKey: string,
+  setConfigBody: string,
+  params?: SetConfigParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/apps/${applicationName}/configs/${configKey}`, setConfigBody, {
+    ...options,
+    params: { ...params, ...options?.params }
+  });
+};
+
+/**
+ * Resets the config with the given name to the default value.
+ */
+export const resetConfig = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  configKey: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/apps/${applicationName}/configs/${configKey}`, options);
+};
+
+/**
+ * Returns the value of the variable with the given name.
+ */
+export const getVariable = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  variableName: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/apps/${applicationName}/variables/${variableName}`, options);
+};
+
+/**
+ * Sets a new value for the variable with the given name.
+ */
+export const setVariable = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  variableName: string,
+  setVariableBody: string,
+  params?: SetVariableParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.post(`/apps/${applicationName}/variables/${variableName}`, setVariableBody, {
+    ...options,
+    params: { ...params, ...options?.params }
+  });
+};
+
+/**
+ * Resets the variable with the given name to the default value.
+ */
+export const resetVariable = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  variableName: string,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.delete(`/apps/${applicationName}/variables/${variableName}`, options);
+};
+
+/**
+ * Deploys a project .iar file or multiple projects in a .zip file to an application.
+ */
+export const deploy = <TData = AxiosResponse<void>>(
+  applicationName: string,
+  deployBody: DeployBody,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  const formData = new FormData();
+  formData.append(`fileToDeploy`, deployBody.fileToDeploy);
+  if (deployBody.deploymentOptions !== undefined) {
+    formData.append(`deploymentOptions`, deployBody.deploymentOptions);
+  }
+  if (deployBody.deployTestUsers !== undefined) {
+    formData.append(`deployTestUsers`, deployBody.deployTestUsers);
+  }
+  if (deployBody.targetVersion !== undefined) {
+    formData.append(`targetVersion`, deployBody.targetVersion);
+  }
+  if (deployBody.targetState !== undefined) {
+    formData.append(`targetState`, deployBody.targetState);
+  }
+  if (deployBody.targetFileFormat !== undefined) {
+    formData.append(`targetFileFormat`, deployBody.targetFileFormat);
+  }
+
+  return axios.post(`/apps/${applicationName}`, formData, options);
+};
+
+/**
+ * Returns the version and the name of the engine
+ */
+export const getInfo = <TData = AxiosResponse<EngineInfo>>(options?: AxiosRequestConfig): Promise<TData> => {
+  return axios.get(`/engine/info`, options);
 };
 
 export const configurations = <TData = AxiosResponse<ConfigurationIdentifier[]>>(options?: AxiosRequestConfig): Promise<TData> => {
@@ -343,6 +486,16 @@ export const deleteDataClass = <TData = AxiosResponse<DataClassIdentifier>>(
 
 export const forms = <TData = AxiosResponse<HdBean[]>>(options?: AxiosRequestConfig): Promise<TData> => {
   return axios.get(`/web-ide/forms`, options);
+};
+
+export const componentForm = <TData = AxiosResponse<HdBean>>(
+  params?: ComponentFormParams,
+  options?: AxiosRequestConfig
+): Promise<TData> => {
+  return axios.get(`/web-ide/form`, {
+    ...options,
+    params: { ...params, ...options?.params }
+  });
 };
 
 export const deleteForm = <TData = AxiosResponse<unknown>>(
@@ -496,6 +649,14 @@ export const installMarketProduct = <TData = AxiosResponse<MarketInstallResult>>
   return axios.post(`/web-ide/workspace/install/${id}`, productInstallParams, options);
 };
 
+export type GetConfigResult = AxiosResponse<void>;
+export type SetConfigResult = AxiosResponse<void>;
+export type ResetConfigResult = AxiosResponse<void>;
+export type GetVariableResult = AxiosResponse<void>;
+export type SetVariableResult = AxiosResponse<void>;
+export type ResetVariableResult = AxiosResponse<void>;
+export type DeployResult = AxiosResponse<void>;
+export type GetInfoResult = AxiosResponse<EngineInfo>;
 export type ConfigurationsResult = AxiosResponse<ConfigurationIdentifier[]>;
 export type ReadConfigResult = AxiosResponse<ConfigurationBean>;
 export type WriteConfigResult = AxiosResponse<ConfigurationBean>;
@@ -503,6 +664,7 @@ export type DataClassesResult = AxiosResponse<DataClassBean[]>;
 export type CreateDataClassResult = AxiosResponse<DataClassBean>;
 export type DeleteDataClassResult = AxiosResponse<DataClassIdentifier>;
 export type FormsResult = AxiosResponse<HdBean[]>;
+export type ComponentFormResult = AxiosResponse<HdBean>;
 export type DeleteFormResult = AxiosResponse<unknown>;
 export type CreateHdResult = AxiosResponse<HdBean>;
 export type GetProcessesResult = AxiosResponse<ProcessBean[]>;
