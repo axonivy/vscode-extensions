@@ -30,20 +30,21 @@
     "watch": "lerna run watch --parallel"
   },
   "dependencies": {
-    "@axonivy/cms-editor": "13.1.0-next.170.50f588c",
-    "@axonivy/dataclass-editor": "13.1.0-next.546.c06bb4e",
-    "@axonivy/form-editor": "13.1.0-next.736.f1a35a4",
-    "@axonivy/form-editor-core": "13.1.0-next.736.f1a35a4",
-    "@axonivy/jsonrpc": "~13.1.0-next.664",
-    "@axonivy/process-editor": "13.1.0-next.1526.40ea9269",
-    "@axonivy/process-editor-inscription": "13.1.0-next.1526.40ea9269",
-    "@axonivy/ui-components": "~13.1.0-next.664",
-    "@axonivy/ui-icons": "~13.1.0-next.664",
-    "@axonivy/variable-editor": "13.1.0-next.695.4219c22",
+    "@axonivy/cms-editor": "13.1.0-next.216.d5cd970",
+    "@axonivy/dataclass-editor": "13.1.0-next.552.3aef5a6",
+    "@axonivy/form-editor": "13.1.0-next.761.bd4f551",
+    "@axonivy/form-editor-core": "13.1.0-next.761.bd4f551",
+    "@axonivy/jsonrpc": "~13.1.0-next.672",
+    "@axonivy/process-editor": "13.1.0-next.1536.5e15f405",
+    "@axonivy/process-editor-inscription": "13.1.0-next.1536.5e15f405",
+    "@axonivy/ui-components": "~13.1.0-next.672",
+    "@axonivy/ui-icons": "~13.1.0-next.672",
+    "@axonivy/variable-editor": "13.1.0-next.699.83205a6",
     "vscode-messenger-common": "0.4.5"
   },
   "devDependencies": {
-    "@axonivy/eslint-config": "13.1.0-next.664",
+    "@axonivy/eslint-config": "13.1.0-next.672",
+    "@axonivy/prettier-config": "~13.1.0-next.672",
     "@types/adm-zip": "^0.5.7",
     "@types/node": "22.15.2",
     "@types/react": "19.1.2",
@@ -54,7 +55,6 @@
     "lerna": "8.2.2",
     "orval": "7.9.0",
     "path": "0.12.7",
-    "prettier": "3.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-i18next": "^15.4.1",
@@ -72,5 +72,6 @@
     "extension",
     "webviews/*",
     "playwright/"
-  ]
+  ],
+  "prettier": "@axonivy/prettier-config"
 }
