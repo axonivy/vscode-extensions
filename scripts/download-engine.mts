@@ -54,19 +54,6 @@ async function unzipEngine(zipName: string, targetDir: string) {
     }
   });
   console.log('--> Extract finished');
-  addDevModeSystemProperty(targetDir);
-}
-
-function addDevModeSystemProperty(targetDir: string) {
-  const config = path.join(targetDir, 'configuration');
-  const jvmOptionsFile = path.join(targetDir, 'configuration', 'jvm.options');
-  console.log(`Add '-Ddev.mode=true' option to jvmOptions file '${jvmOptionsFile}'`);
-  if (fs.existsSync(jvmOptionsFile)) {
-    const jvmOptions = fs.readFileSync(jvmOptionsFile, 'utf8');
-    if (!jvmOptions.includes('-Ddev.mode=true')) {
-      fs.appendFileSync(jvmOptionsFile, '\n-Ddev.mode=true');
-    }
-  }
 }
 
 downloadEngine();
