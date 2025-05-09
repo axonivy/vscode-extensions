@@ -6,7 +6,7 @@ import { config } from './base/configurations';
 import { addDevContainer } from './dev-container/command';
 import { IvyEngineManager } from './engine/engine-manager';
 import { IvyProjectExplorer } from './project-explorer/ivy-project-explorer';
-import { setStatusBarIcon } from './base/status-bar';
+import { statusBarItem } from './base/status-bar';
 
 let ivyEngineManager: IvyEngineManager;
 
@@ -27,7 +27,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<Messen
   registerCommand('engine.deactivateAnimation', context, async () => await config.setProcessAnimationAnimate(false));
   registerCommand('ivy.addDevContainer', context, () => addDevContainer(context.extensionUri));
   IvyProjectExplorer.init(context);
-  setStatusBarIcon();
+
+  context.subscriptions.push(statusBarItem);
+  statusBarItem.show();
 
   return messenger.diagnosticApi();
 }

@@ -16,7 +16,8 @@ import {
   stopBpmEngine,
   createDataClass,
   DataClassInit,
-  createWorkspace
+  createWorkspace,
+  getInfo
 } from './generated/client';
 import { handleAxiosError } from './axios-error-handler';
 
@@ -127,6 +128,13 @@ export class IvyEngineApi {
     await vscode.window.withProgress(progressOptions('Delete Project'), async () => {
       await deleteProject({ projectDir }, { baseURL, ...options }).catch(handleAxiosError);
     });
+  }
+
+  public async getEngineInfo() {
+    const baseURL = await this.baseURL;
+    return getInfo({ baseURL })
+      .then(res => res.data)
+      .catch(handleAxiosError);
   }
 
   public get devContextPath(): Promise<string> {

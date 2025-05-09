@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 
-export function setStatusBarMessage(text: string) {
-  vscode.window.setStatusBarMessage(text, 5_000);
-}
+export const setStatusBarMessage = (text: string) => vscode.window.setStatusBarMessage(text, 5_000);
 
-export function setStatusBarIcon() {
+const createStatusBarItem = () => {
   const item = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left);
   item.text = '$(type-hierarchy) Axon Ivy';
   if (vscode.workspace.workspaceFolders) {
@@ -14,5 +12,7 @@ export function setStatusBarIcon() {
       title: 'Add new Project'
     };
   }
-  item.show();
-}
+  return item;
+};
+
+export const statusBarItem = createStatusBarItem();
