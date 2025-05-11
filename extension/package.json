@@ -33,7 +33,7 @@
     "htmlparser2": "10.0.0",
     "vscode-messenger": "0.4.5",
     "vscode-ws-jsonrpc": "3.4.0",
-    "ws": "8.18.1"
+    "ws": "8.18.2"
   },
   "devDependencies": {
     "@types/vscode": "1.98.0",
