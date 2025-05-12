@@ -4,13 +4,13 @@ import fs from 'fs';
 import path from 'path';
 import AdmZip from 'adm-zip';
 
-export const downloadEngine = (url: string) => {
-  const engineDir = 'extension/AxonIvyEngine';
+export const downloadEngine = async (url: string, engineDir: string) => {
   if (fs.existsSync(engineDir)) {
-    fs.rmSync(engineDir, { recursive: true, force: true });
+    console.log(`Engine does already exist under '${engineDir}'`);
+    return;
   }
-  fs.mkdirSync(engineDir);
-  downloadEngineReq(engineDir, url);
+  fs.mkdirSync(engineDir, { recursive: true });
+  await downloadEngineReq(engineDir, url);
 };
 
 const downloadEngineReq = (engineDir: string, downloadUrl: string) => {
@@ -18,17 +18,19 @@ const downloadEngineReq = (engineDir: string, downloadUrl: string) => {
   console.log(`Download engine from '${downloadUrl}' to '${filename}'`);
 
   const requestInit: RequestInit = {};
-  fetch(downloadUrl, requestInit).then(response => {
-    if (!response.ok) {
-      console.error(`--> Download engine failed with status code ${response.status}`);
-      return;
-    }
-    const fileStream = fs.createWriteStream(filename);
-    Readable.fromWeb(response.body as ReadableStream<Uint8Array>).pipe(fileStream);
-    fileStream.on('finish', () => {
-      fileStream.close();
-      console.log('--> Download finished');
-      unzipEngine(filename, engineDir);
+  return new Promise<void>((resolve, reject) => {
+    fetch(downloadUrl, requestInit).then(response => {
+      if (!response.ok) {
+        return reject(`Download engine failed with status code ${response.status}`);
+      }
+      const fileStream = fs.createWriteStream(filename);
+      Readable.fromWeb(response.body as ReadableStream<Uint8Array>).pipe(fileStream);
+      fileStream.on('finish', () => {
+        fileStream.close();
+        console.log('--> Download finished');
+        unzipEngine(filename, engineDir);
+        return resolve();
+      });
     });
   });
 };

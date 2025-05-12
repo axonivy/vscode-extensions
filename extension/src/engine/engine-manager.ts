@@ -27,9 +27,9 @@ export class IvyEngineManager {
   private started = false;
 
   private constructor(readonly context: vscode.ExtensionContext) {
-    const embeddedEngineDirectory = vscode.Uri.joinPath(context.extensionUri, 'AxonIvyEngine');
-    this.mavenBuilder = new MavenBuilder(embeddedEngineDirectory);
-    this.engineRunner = new EngineRunner(embeddedEngineDirectory);
+    const globalStorageEngineDirectory = vscode.Uri.joinPath(context.globalStorageUri, 'axonivy-engine');
+    this.mavenBuilder = new MavenBuilder(globalStorageEngineDirectory);
+    this.engineRunner = new EngineRunner(globalStorageEngineDirectory);
   }
 
   static init(context: vscode.ExtensionContext) {
@@ -171,6 +171,10 @@ export class IvyEngineManager {
     statusBarItem.tooltip = `Axon Ivy Engine
 Version: ${info.version}
 Name: ${info.engineName}`;
+  }
+
+  async reloadEngine() {
+    await this.engineRunner.reloadEngine();
   }
 
   public static get instance() {

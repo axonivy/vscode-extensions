@@ -171,11 +171,6 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "engine.downloadDevEngine",
-        "title": "Download Dev Engine",
-        "category": "Axon Ivy"
-      },
-      {
         "command": "engine.setEngineDirectory",
         "title": "Set Engine Directory Configuration",
         "category": "Axon Ivy"
@@ -268,6 +263,11 @@
         "command": "engine.deactivateAnimation",
         "title": "Deactivate Process Animation",
         "category": "Axon Ivy"
+      },
+      {
+        "command": "engine.reloadEngine",
+        "title": "Reload Engine from specified `#engine.downloadUrl#`",
+        "category": "Axon Ivy"
       }
     ],
     "configuration": [
@@ -279,6 +279,12 @@
             "default": true,
             "markdownDescription": "Configure whether a local Axon Ivy Engine will be run by this extension. If set true, you must specify `#engine.directory#`. If set false, you have to define `#engine.url#`.",
             "order": 1000
+          },
+          "engine.downloadUrl": {
+            "type": "string",
+            "default": "https://dev.axonivy.com/permalink/dev/axonivy-engine-slim.zip",
+            "markdownDescription": "Specifies the download URL to retrieve a zipped Axon Ivy Engine. Only relevant if `#engine.runByExtension#` is set to true.",
+            "order": 1050
           },
           "engine.directory": {
             "type": "string",

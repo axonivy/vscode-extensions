@@ -2,14 +2,17 @@ import * as vscode from 'vscode';
 import { ChildProcess, execFile } from 'child_process';
 import Os from 'os';
 import { config } from '../base/configurations';
-import { downloadDevEngine } from '..';
+import { downloadEngine } from './download';
 
 export class EngineRunner {
   private childProcess: ChildProcess;
   private _engineUrl: string;
   private outputChannel = vscode.window.createOutputChannel('Axon Ivy Engine');
+  private engineDirectory: Promise<vscode.Uri | undefined>;
 
-  constructor(private readonly embeddedEngineDirectory: vscode.Uri) {}
+  constructor(readonly globalStorageEngineDirectory: vscode.Uri) {
+    this.engineDirectory = this.downloadEngineIfNeeded();
+  }
 
   public async start(): Promise<void> {
     this.outputChannel.show(true);
@@ -33,7 +36,10 @@ export class EngineRunner {
 
   private async launchEngineChildProcess(): Promise<ChildProcess> {
     const executable = Os.platform() === 'win32' ? 'AxonIvyEngineC.exe' : 'AxonIvyEngine';
-    const engineDirectory = await this.engineDirectory();
+    const engineDirectory = await this.engineDirectory;
+    if (!engineDirectory) {
+      throw new Error('No valid Axon Ivy Engine directory available.');
+    }
     const engineLauncherScriptPath = vscode.Uri.joinPath(engineDirectory, 'bin', executable).fsPath;
     const env = {
       env: { ...process.env, JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true' }
@@ -42,44 +48,47 @@ export class EngineRunner {
     return execFile(engineLauncherScriptPath, env);
   }
 
-  private async engineDirectory(): Promise<vscode.Uri> {
+  public async reloadEngine() {
+    await this.stop();
+    await this.deleteEngineDirectory();
+    await this.downloadEngineIfNeeded();
+    vscode.commands.executeCommand('workbench.action.reloadWindow');
+  }
+
+  private async downloadEngineIfNeeded() {
+    if (!config.engineRunByExtension()) {
+      return;
+    }
     const engineDirectory = config.engineDirectory();
     if (engineDirectory) {
-      const engineDirUri = vscode.Uri.file(engineDirectory);
-      if (await this.isDirectory(engineDirUri)) {
-        return engineDirUri;
+      return vscode.Uri.file(engineDirectory);
+    }
+    const url = await this.resolveEngineDownloadUrl();
+    const options = { location: vscode.ProgressLocation.Window, cancellable: false, title: `Downloading Axon Ivy Engine from ${url}` };
+    return await vscode.window.withProgress(options, async () => {
+      try {
+        await downloadEngine(url, this.globalStorageEngineDirectory.fsPath);
+        return this.globalStorageEngineDirectory;
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to downlaod Axon Ivy Engine from ${url} Error: ${error}`);
+        this.deleteEngineDirectory();
+        return;
       }
-    }
-    if (await this.isDirectory(this.embeddedEngineDirectory)) {
-      return this.embeddedEngineDirectory;
-    }
-    return await this.askForEngineDirectory();
+    });
   }
 
-  private async isDirectory(uri: vscode.Uri) {
-    try {
-      const stat = await vscode.workspace.fs.stat(uri);
-      return stat.type === vscode.FileType.Directory;
-    } catch {
-      return false;
+  private async resolveEngineDownloadUrl() {
+    const url = config.engineDownloadUrl();
+    if (url) {
+      return url;
     }
+    const message = 'No Axon Ivy Engine download URL configured. Please set it in the settings.';
+    vscode.window.showErrorMessage(message);
+    throw new Error(message);
   }
 
-  private async askForEngineDirectory(): Promise<vscode.Uri> {
-    return vscode.window
-      .showInformationMessage('There is no Axon Ivy Engine directory defined.', 'Select Engine Directory', 'Download Dev Engine')
-      .then(async answer => {
-        if (answer === 'Select Engine Directory') {
-          await config.setEngineDirectory();
-          return this.engineDirectory();
-        }
-        if (answer === 'Download Dev Engine') {
-          if (await downloadDevEngine()) {
-            return this.askForEngineDirectory();
-          }
-        }
-        throw Error('No Axon Ivy Engine available.');
-      });
+  private deleteEngineDirectory() {
+    return vscode.workspace.fs.delete(this.globalStorageEngineDirectory, { recursive: true, useTrash: false });
   }
 
   public async stop() {
