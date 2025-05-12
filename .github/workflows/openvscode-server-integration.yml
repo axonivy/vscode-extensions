@@ -13,6 +13,7 @@ jobs:
       CI: true
       RUN_IN_BRWOSER: true
       OPEN_VSCODE_VERSION: v1.98.0
+      JAVA_OPTS_IVY_SYSTEM: '-Ddev.mode=true -Divy.engine.testheadless=true'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

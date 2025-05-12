@@ -16,6 +16,6 @@ RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
 
 
-ENV JAVA_OPTS_IVY_SYSTEM=-Divy.engine.testheadless=true
+ENV JAVA_OPTS_IVY_SYSTEM='-Divy.engine.testheadless=true -Ddev.mode=true'
 ENV CI=true
 ENV RUN_IN_BRWOSER=true
