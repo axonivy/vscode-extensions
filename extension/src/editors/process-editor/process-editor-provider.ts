@@ -1,20 +1,24 @@
 import {
-  GlspVscodeConnector,
+  CenterAction,
+  configureDefaultCommands,
+  GLSPDiagramIdentifier,
   GlspEditorProvider,
+  GlspVscodeConnector,
+  SelectAction,
   SocketGlspVscodeServer,
-  Writable,
-  configureDefaultCommands
+  WebviewEndpoint,
+  Writable
 } from '@eclipse-glsp/vscode-integration';
 import * as vscode from 'vscode';
-import { setupCommunication } from './webview-communication';
-import { createWebViewContent } from '../webview-helper';
-import { ProcessVscodeConnector } from './process-vscode-connector';
 import { messenger } from '../..';
-
+import { createWebViewContent } from '../webview-helper';
+import { DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM, ProcessVscodeConnector } from './process-vscode-connector';
+import { setupCommunication } from './webview-communication';
 export default class ProcessEditorProvider extends GlspEditorProvider {
   diagramType = 'ivy-glsp-process';
   static readonly viewType = 'ivy.glspDiagram';
 
+  private webViewCount = 0;
   private constructor(
     protected readonly extensionContext: vscode.ExtensionContext,
     protected override readonly glspVscodeConnector: GlspVscodeConnector,
@@ -33,6 +37,45 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
     setupCommunication(this.websocketUrl, this.glspVscodeConnector.messenger, webviewPanel, client?.webviewEndpoint.messageParticipant);
     webviewPanel.webview.options = { enableScripts: true };
     webviewPanel.webview.html = createWebViewContent(this.extensionContext, webviewPanel.webview, 'process-editor');
+  }
+
+  override async resolveCustomEditor(
+    document: vscode.CustomDocument,
+    webviewPanel: vscode.WebviewPanel,
+    token: vscode.CancellationToken
+  ): Promise<void> {
+    const documentUriParams = new URLSearchParams(document.uri.query);
+    const navigationTarget = documentUriParams.get(DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM);
+    // This is used to initialize GLSP for our diagram
+    const diagramIdentifier: GLSPDiagramIdentifier = {
+      diagramType: this.diagramType,
+      uri: serializeUri(document.uri),
+      clientId: `${this.diagramType}_${this.webViewCount++}`
+    };
+
+    const endpoint = new WebviewEndpoint({ diagramIdentifier, messenger: this.glspVscodeConnector.messenger, webviewPanel });
+
+    // Register document/diagram panel/model in vscode connector
+    this.glspVscodeConnector.registerClient({
+      clientId: diagramIdentifier.clientId,
+      diagramType: diagramIdentifier.diagramType,
+      document: document,
+      webviewEndpoint: endpoint
+    });
+
+    this.setUpWebview(document, webviewPanel, token, diagramIdentifier.clientId);
+
+    if (navigationTarget) {
+      endpoint.ready.then(() => {
+        setTimeout(() => {
+          endpoint.sendMessage({ clientId: diagramIdentifier.clientId, action: CenterAction.create([navigationTarget]) });
+          endpoint.sendMessage({
+            clientId: diagramIdentifier.clientId,
+            action: SelectAction.setSelection([navigationTarget])
+          });
+        }, 500);
+      });
+    }
   }
 
   static register(context: vscode.ExtensionContext, websocketUrl: URL) {
@@ -66,4 +109,15 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
 
     configureDefaultCommands({ extensionContext: context, connector: ivyVscodeConnector, diagramPrefix: 'workflow' });
   }
+}
+
+function serializeUri(uri: vscode.Uri): string {
+  // Remove optional navigation query parameters from the URI
+  const uriWithoutQuery = uri.with({ query: '' });
+  let uriString = uriWithoutQuery.toString();
+  const match = uriString.match(/file:\/\/\/([a-z])%3A/i);
+  if (match) {
+    uriString = 'file:///' + match[1] + ':' + uriString.substring(match[0].length);
+  }
+  return uriString;
 }

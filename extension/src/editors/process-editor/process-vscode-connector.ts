@@ -23,11 +23,14 @@ const severityMap = new Map([
   ['error', vscode.DiagnosticSeverity.Error]
 ]);
 
+export const DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM = 'glspVscodeIntegrationNavigationTargetElementId';
+
 export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.CustomDocument> extends GlspVscodeConnector {
   private readonly emitter = new vscode.EventEmitter<SelectedElement>();
   private readonly onSelectedElementUpdate = this.emitter.event;
   protected readonly onDidChangeActiveGlspEditorEventEmitter = new vscode.EventEmitter<{ client: GlspVscodeClient<D> }>();
   private readonly modelLoading: vscode.StatusBarItem;
+  private readonly diagnosticsMap = new Map<string, vscode.DiagnosticCollection>(); // maps clientId to DiagnosticCollections
 
   constructor(options: GlspVscodeConnectorOptions) {
     super(options);
@@ -48,6 +51,13 @@ export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.Cus
         this.onDidChangeActiveGlspEditorEventEmitter.fire({ client });
       }
     });
+
+    const diagnostics = vscode.languages.createDiagnosticCollection();
+    client.webviewEndpoint.webviewPanel.onDidDispose(() => {
+      diagnostics.dispose();
+    });
+    this.diagnosticsMap.set(client.clientId, diagnostics);
+
     super.registerClient(client);
   }
 
@@ -148,12 +158,16 @@ export class ProcessVscodeConnector<D extends vscode.CustomDocument = vscode.Cus
     _origin: MessageOrigin
   ): MessageProcessingResult {
     if (client) {
-      const updatedDiagnostics = message.action.markers.map(marker => {
+      const updatedDiagnostics: [vscode.Uri, vscode.Diagnostic[]][] = message.action.markers.map(marker => {
+        const queryParams = new URLSearchParams(client.document.uri.query);
+        queryParams.append(DIAGNOSTIC_ELEMENT_ID_QUERY_PARAM, marker.elementId);
+
         const diagnostic = new vscode.Diagnostic(new vscode.Range(0, 0, 0, 0), marker.description, severityMap.get(marker.kind));
         diagnostic.source = marker.elementId;
-        return diagnostic;
+
+        return [client.document.uri.with({ query: queryParams.toString() }), [diagnostic]];
       });
-      this.diagnostics.set(client.document.uri, updatedDiagnostics);
+      this.diagnosticsMap.get(client.clientId)?.set(updatedDiagnostics);
     }
     return { processedMessage: message, messageChanged: false };
   }
