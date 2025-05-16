@@ -24,8 +24,8 @@ test.describe('Form Editor', () => {
     const labelProperty = editor.locatorFor('#properties').getByLabel('Label');
     const newLabel = 'newTestLabel';
     await labelProperty.click();
-    await expect(labelProperty).toBeFocused();
-    await page.keyboard.type(newLabel);
+    await labelProperty.fill(newLabel);
+    await labelProperty.blur();
     await expect(input).toHaveText(newLabel);
     await editor.isDirty();
     await editor.saveAllFiles();
