@@ -115,10 +115,7 @@
       ],
       "visual" : {
         "at" : { "x" : 352, "y" : 48 },
-        "size" : { "width" : 576, "height" : 60 },
-        "description" : "",
-        "color" : "",
-        "icon" : ""
+        "size" : { "width" : 576 }
       }
     }, {
       "id" : "f5",
