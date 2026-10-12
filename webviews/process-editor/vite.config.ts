@@ -24,6 +24,9 @@ export default defineConfig(() => ({
       }
     }
   },
+  resolve: {
+    dedupe: ['react', 'react-dom', 'inversify', 'i18next', 'react-i18next', '@eclipse-glsp/client', '@eclipse-glsp/protocol']
+  },
   css: {
     lightningcss: {
       errorRecovery: true

@@ -3,7 +3,7 @@
   "version": "14.0.1",
   "private": true,
   "dependencies": {
-    "@axonivy/ui-components": "next-14.0.1",
+    "@axonivy/ui-components": "link:../../../ui-components/packages/components",
     "@axonivy/variable-editor": "next-14.0.1",
     "@axonivy/vscode-webview-common": "workspace:~",
     "@tanstack/react-query": "^5.101.4",

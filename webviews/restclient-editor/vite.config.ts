@@ -8,6 +8,9 @@ export default defineConfig(() => ({
     outDir: '../../extension/dist/webviews/restclient-editor',
     chunkSizeWarningLimit: 5000
   },
+  resolve: {
+    dedupe: ['react', 'react-dom', 'i18next', 'react-i18next', '@tanstack/react-query']
+  },
   server: {
     port: 3001,
     open: false
