@@ -5,10 +5,18 @@
     "group:allNonMajor",
     "security:minimumReleaseAgeNpm"
   ],
-  "printConfig": true,
   "lockFileMaintenance": {
     "enabled": true
   },
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/examples/**",
+    "**/__tests__/**",
+    "**/test/**",
+    "**/__fixtures__/**"
+  ],
   "postUpdateOptions": ["pnpmDedupe"],
   "customManagers": [
     {
