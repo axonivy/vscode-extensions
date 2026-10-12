@@ -7,7 +7,7 @@
   "dependencies": {
     "@axonivy/form-editor": "next-14.0.1",
     "@axonivy/form-editor-core": "next-14.0.1",
-    "@axonivy/ui-components": "next-14.0.1",
+    "@axonivy/ui-components": "link:../../../ui-components/packages/components",
     "@axonivy/vscode-webview-common": "workspace:~",
     "@tanstack/react-query": "^5.101.4",
     "i18next": "26.4.2",
