@@ -3,8 +3,20 @@ import { env, l10n, Uri } from 'vscode';
 import type { NotificationType } from 'vscode-messenger-common';
 import { logErrorMessage, logInformationMessage } from '../base/logging-util';
 
+export type InitializeConnectionMessage =
+  | {
+      method: 'selectElement';
+      payload: string;
+    }
+  | {
+      method: 'openAdd';
+      payload?: never;
+    };
+
 export const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-export const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
+export const InitializeConnectionRequest: NotificationType<{ file: string; message?: InitializeConnectionMessage }> = {
+  method: 'initializeConnection'
+};
 
 export const isAction = <T>(obj: unknown): obj is { method: string; params: T } => {
   return (

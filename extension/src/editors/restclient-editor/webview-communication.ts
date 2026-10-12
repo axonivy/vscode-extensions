@@ -23,19 +23,30 @@ import {
   noUnknownAction,
   noUnknownIntegrationMethod,
   openUrlExternally,
-  WebviewReadyNotification
+  WebviewReadyNotification,
+  type InitializeConnectionMessage
 } from '../notification-helper';
 import { runMavenCommand } from './maven-runner';
 
 const RestClientWebSocketMessage: NotificationType<unknown> = { method: 'restClientWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: WebviewPanel,
+  document: TextDocument,
+  initializeMessage?: InitializeConnectionMessage
+) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
     new RestClientWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () =>
+        messenger.sendNotification(InitializeConnectionRequest, messageParticipant, {
+          file: document.fileName,
+          message: initializeMessage
+        }),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())

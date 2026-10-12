@@ -1,13 +1,19 @@
 import fs from 'fs';
 import type { ExtensionContext } from 'vscode';
-import { Uri, commands, l10n, workspace } from 'vscode';
-import { registerCommand, type ConfigEditorCommand, type EditorCommand } from '../base/commands';
+import { Uri, l10n, workspace } from 'vscode';
+import { executeCommand, registerCommand, type ConfigEditorCommand, type EditorCommand } from '../base/commands';
 import { logErrorMessage } from '../base/logging-util';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
 import { treeSelectionToProjectUri, treeUriToProjectPath, type TreeSelection } from '../project-explorer/tree-selection';
+import type { InitializeConnectionMessage } from './notification-helper';
 
-export const registerOpenConfigEditorCmd = (command: ConfigEditorCommand, context: ExtensionContext, file: string) =>
-  registerCommand(command, context, async (selection: TreeSelection) => {
+export const registerOpenConfigEditorCmd = (
+  command: ConfigEditorCommand,
+  context: ExtensionContext,
+  file: string,
+  onOpen?: (message?: InitializeConnectionMessage) => void
+) =>
+  registerCommand(command, context, async (selection: TreeSelection, message?: InitializeConnectionMessage) => {
     const projectPath = await getEditorCmdProjectPath(command, selection);
     if (!projectPath) {
       return;
@@ -18,7 +24,8 @@ export const registerOpenConfigEditorCmd = (command: ConfigEditorCommand, contex
       await workspace.fs.createDirectory(configDir);
       await workspace.fs.writeFile(fileUri, new Uint8Array());
     }
-    commands.executeCommand('vscode.open', fileUri);
+    onOpen?.(message);
+    executeCommand('vscode.open', fileUri);
   });
 
 export const getEditorCmdProjectPath = async (command: ConfigEditorCommand | EditorCommand, selection: TreeSelection) => {
