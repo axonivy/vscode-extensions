@@ -22,3 +22,15 @@ Apply these rules specifically to process JSON files (`*.p.json`):
 Data Mapping:
 
 - In `*.p.json`, a `map` entry is `"<target>": "<IvyScript source>"`: start `input.map` maps `out.<attr>` from `param.<name>` (e.g. `"out.name": "param.name"`), start `result.map` maps `result.<name>` from `in.<attr>`, call `call.map` maps `param.<name>` from `in.<attr>`, and `output.map` maps `out.<attr>` from `in.<attr>` or a call's `result.<name>`. Mapped attributes must exist in the process data class.
+
+## Data Class
+
+Apply these rules specifically to data class JSON files (`*.d.json`):
+
+- A field `type` is either an Ivy type by simple name (`Boolean`, `Number`, `String`, `Date`, `DateTime`, `Time`, `Duration`, `Binary`, `File`, `Record`, `Recordset`, `Tree`, `Xml`) or any other Java type by fully qualified name (e.g. `java.lang.Integer`, never `Integer`). Omit `type` for `String`, it is the default.
+
+## Form
+
+Apply these rules specifically to form JSON files (`*.f.json`):
+
+- A component `value` binds to the dialog data as `#{data.<attr>}` (e.g. `"value": "#{data.product}"`), never `in.<attr>`. Bound attributes must exist in the dialog data class (`<Name>Data.d.json`).
