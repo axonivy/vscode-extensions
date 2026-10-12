@@ -5,6 +5,7 @@
     "group:allNonMajor",
     "security:minimumReleaseAgeNpm"
   ],
+  "printConfig": true,
   "lockFileMaintenance": {
     "enabled": true
   },
