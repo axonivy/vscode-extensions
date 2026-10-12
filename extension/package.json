@@ -1167,16 +1167,10 @@
       ],
       "commandPalette": [
         {
-          "command": "ivyProjects.convertDialogFormToJsf",
-          "when": "resourceFilename =~ /\\.f\\.json$/"
+          "command": "ivyProjects.convertDialogFormToJsf"
         }
       ],
       "explorer/context": [
-        {
-          "command": "ivyProjects.convertDialogFormToJsf",
-          "when": "resourceFilename =~ /\\.f\\.json$/",
-          "group": "1@0"
-        },
         {
           "submenu": "explorer.ivy",
           "group": "1@1"
@@ -1194,7 +1188,6 @@
         },
         {
           "submenu": "explorer.ivy.runDebug",
-          "when": "ivy:hasIvyProjects",
           "group": "1@3"
         },
         {
@@ -1312,6 +1305,10 @@
         {
           "command": "ivy.debug.attachProcess",
           "group": "1@3"
+        },
+        {
+          "command": "ivyProjects.convertDialogFormToJsf",
+          "group": "1@4"
         }
       ],
       "explorer.ivy.projectSetup": [

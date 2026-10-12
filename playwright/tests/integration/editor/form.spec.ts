@@ -34,6 +34,19 @@ test('Convert dialog form to JSF', async ({ wsPage }) => {
 
   await wsPage.executeCommand('Axon Ivy: Convert Dialog Form to JSF');
 
+  const quickInput = wsPage.quickInputBox.getByRole('textbox');
+  await expect(quickInput).toHaveValue(/testForm\.f\.json$/);
+  const formPath = await quickInput.inputValue();
+  await expect(quickInput).toBeFocused();
+
+  await quickInput.fill('/not-a-form.txt');
+  await quickInput.press('Enter');
+  const validationMessage = wsPage.page.locator('div.quick-input-message');
+  await expect(validationMessage).toHaveText('The file must be a .f.json file.');
+
+  await quickInput.fill(formPath);
+  await quickInput.press('Enter');
+
   const xhtmlEditor = new TextEditor(wsPage, 'testForm.xhtml');
   await xhtmlEditor.expectTabVisible();
   await xhtmlEditor.expectTabActive();
