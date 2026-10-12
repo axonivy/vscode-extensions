@@ -284,15 +284,24 @@ export class IvyProjectExplorer {
 
   private async convertSelectedDialogFormToJsf(selection: TreeSelection) {
     const activeTabInput = window.tabGroups.activeTabGroup.activeTab?.input;
-    const uri =
+    const selectedUri =
       (await treeSelectionToUri(selection)) ??
       (activeTabInput instanceof TabInputText || activeTabInput instanceof TabInputCustom
         ? activeTabInput.uri
         : window.activeTextEditor?.document.uri);
-    if (!uri) {
-      logErrorMessage('Select a dialog form to convert to JSF.');
+    const formPath = await window.showInputBox({
+      title: l10n.t('Convert Dialog Form to JSF'),
+      prompt: l10n.t('Enter the path of a dialog form file to convert to JSF.'),
+      placeHolder: l10n.t('Path to a .f.json file'),
+      value: selectedUri?.fsPath,
+      ignoreFocusOut: true,
+      validateInput: value =>
+        path.basename(value.trim()).endsWith('.f.json') ? undefined : l10n.t('The file must be a .f.json file.')
+    });
+    if (!formPath) {
       return;
     }
+    const uri = Uri.file(formPath.trim());
     const projectDirectory = await treeUriToProjectPath(uri, this.getIvyProjects());
     if (!projectDirectory) {
       logErrorMessage(`The selected dialog form does not belong to an Axon Ivy project: ${uri.fsPath}`);
