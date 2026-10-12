@@ -40,6 +40,7 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
   );
+  return messageParticipant;
 };
 
 class RestClientWebSocketForwarder extends EditorWebSocketForwarder {
