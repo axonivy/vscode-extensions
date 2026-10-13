@@ -2,9 +2,9 @@ package ch.ivyteam.smart.core.copilot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Objects;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -15,9 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ch.ivyteam.smart.core.AgentRuntime;
 import ch.ivyteam.smart.core.AgentRuntimeExtension;
 import ch.ivyteam.smart.core.aspire.AspireSpans.UsedTool;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.databind.node.ArrayNode;
-import tools.jackson.databind.node.StringNode;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(AgentRuntimeExtension.class)
@@ -111,26 +110,39 @@ public class CopilotIntegrationTest {
         After the start, a Script activity should print a 'Hello Ivy in.name!' log.
         """);
 
-    var processDir = rt.ivyWorkspace().path().resolve("purchase/process");
-    var plantProcess = Files.walk(processDir)
-        .filter(p -> p.getFileName().toString().equals("treePlanting.p.json"))
-        .findFirst()
-        .orElseThrow(() -> new AssertionError("Process treePlanting.p.json not found under " + processDir));
-    try (var in = Files.newInputStream(plantProcess, StandardOpenOption.READ)) {
-      var procJson = JsonMapper.shared().readTree(in);
-
-      assertThat(procJson.get("$schema").asString())
-          .as("valid $schema was set by new_process_tool")
-          .startsWith("https://json-schema.axonivy.com/");
-
-      var elements = (ArrayNode) procJson.get("elements");
-      var script = elements.valueStream()
-          .filter(e -> e.get("type") instanceof StringNode type && Objects.equals(type.asString(), "Script"))
-          .findFirst().orElseThrow(() -> new IllegalStateException("Script activity not found in " + procJson.toPrettyString()));
-      assertThat(script.get("config").get("output").get("code").toPrettyString())
-          .as("Script Activity is configured schema-aware")
-          .contains("Hello Ivy");
+    var purchase = rt.ivyWorkspace().path().resolve("purchase");
+    var processDir = purchase.resolve("process");
+    Path plantProcess;
+    try (var stream = Files.walk(processDir)) {
+      plantProcess = stream
+          .filter(p -> p.getFileName().toString().equals("treePlanting.p.json"))
+          .findFirst()
+          .orElseThrow(() -> new AssertionError("Process treePlanting.p.json not found under " + processDir));
     }
+    var procJson = readJson(plantProcess);
+    assertThat(procJson.get("$schema").asString())
+        .as("valid $schema was set by new_process_tool")
+        .startsWith("https://json-schema.axonivy.com/");
+
+    var dataClass = procJson.path("config").path("data").asString().replace('.', '/');
+    var dataJson = readJson(purchase.resolve("dataclass/" + dataClass + ".d.json"));
+    assertThat(dataJson.path("fields").valueStream().map(f -> f.path("name").asString()))
+        .as("mapped attribute 'out.name' exists in data class: %s", dataJson.toPrettyString())
+        .contains("name");
+
+    var start = procElement(procJson, "RequestStart");
+    var input = start.path("config").path("input");
+    assertThat(input.path("params").valueStream().map(p -> p.path("name").asString()))
+        .as("start declares the 'name' parameter: %s", start.toPrettyString())
+        .contains("name");
+    assertThat(input.path("map").path("out.name").asString())
+        .as("start maps the parameter into process data: %s", start.toPrettyString())
+        .isEqualTo("param.name");
+
+    var script = procElement(procJson, "Script");
+    assertThat(script.get("config").get("output").get("code").toPrettyString())
+        .as("Script Activity is configured schema-aware")
+        .contains("ivy.log.", "Hello Ivy", "in.name");
 
     assertThat(spans.usedTools())
         .extracting(UsedTool::name)
@@ -145,6 +157,18 @@ public class CopilotIntegrationTest {
     assertThat(viewSchema.arguments())
         .as("schema read was enforced by skill")
         .contains("project/process.json");
+  }
+
+  private static JsonNode readJson(Path file) throws IOException {
+    try (var in = Files.newInputStream(file)) {
+      return JsonMapper.shared().readTree(in);
+    }
+  }
+
+  private static JsonNode procElement(JsonNode process, String type) {
+    return process.path("elements").valueStream()
+        .filter(e -> type.equals(e.path("type").asString()))
+        .findFirst().orElseThrow(() -> new IllegalStateException(type + " not found in " + process.toPrettyString()));
   }
 
 }

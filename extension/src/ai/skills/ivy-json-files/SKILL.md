@@ -14,3 +14,11 @@ Apply these rules whenever creating or editing a JSON file in this repository:
 - Treat the schema as authoritative: follow all required fields, types, and constraints; do not omit schema requirements or invent structure.
 - No routine post-edit validation is required. Check only when the user asks or a concrete tool-reported problem needs diagnosis.
 - For a new file, use `new_axon_ivy_...`; inspect its `$schema` and apply the same local-schema rule before follow-up edits.
+
+## Process
+
+Apply these rules specifically to process JSON files (`*.p.json`):
+
+Data Mapping:
+
+- In `*.p.json`, a `map` entry is `"<target>": "<IvyScript source>"`: start `input.map` maps `out.<attr>` from `param.<name>` (e.g. `"out.name": "param.name"`), start `result.map` maps `result.<name>` from `in.<attr>`, call `call.map` maps `param.<name>` from `in.<attr>`, and `output.map` maps `out.<attr>` from `in.<attr>` or a call's `result.<name>`. Mapped attributes must exist in the process data class.

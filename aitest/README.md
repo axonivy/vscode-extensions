@@ -27,38 +27,39 @@ The containers are kept running after test execution to allow fast development c
 
 ## 🏃️ Running tests
 
-1. Run the PNPM build to craft the extension. 
-```bash
-# see .github/workflows/ai.yml
-pnpm install
-pnpm run build:production
-pnpm run package
-```
-2. Set the environment variables (see TestEnv section above)
-```bash
-# linux example
-export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64/
-export HOST_UID=$(id -u)
-export HOST_GID=$(id -g)
-export COPILOT_TOKEN=github_pat_xyz...
-```
+1. Run the PNPM build to craft the extension.
+   ```bash
+   # see .github/workflows/ai.yml
+   pnpm install
+   pnpm run build:production
+   pnpm run package
+   ```
+2. Set the environment variables (see TestEnv section above).  
+   Note that `JAVA_HOME` works with Temurin:25 (but not with OpenJDK).
+
+   ```bash
+   # linux example
+   export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64/
+   export HOST_UID=$(id -u)
+   export HOST_GID=$(id -g)
+   export COPILOT_TOKEN=github_pat_xyz...
+   ```
 
 3. Run the tests in Maven
 
-```bash
-# maven
-mvn clean verify
+   ```bash
+   # maven
+   mvn clean verify
 
-# or in vscode
-code aitest
-# 1. Open File: CopilotIntegrationTest.java
-# 2. Command: `Java: Run Tests`
-```
+   # or in vscode
+   code aitest
+   # 1. Open File: CopilotIntegrationTest.java
+   # 2. Command: `Java: Run Tests`
+   ```
 
 ## 🧑‍💻️ Developing Tests
 
 - Work on a git branch with prefix `ai.`, since these branches will automatically run the AI pipeline (and be excluded from other vscode centric builds).
-
 
 ## ❤️‍🩹 Troubleshooting
 
@@ -66,9 +67,11 @@ code aitest
 
 > 1. Run a prompt test locally.
 > 2. Get the Aspire Dashboard URI from the console log
+>
 > ```bash
 >   Aspire dashboard bound: http://localhost:32770/api/telemetry
->   ```
+> ```
+>
 > 2. Visit the 'Traces' view (e.g. http://localhost:32770/traces )
 > 3. Click on the prompt that reflects your test
 > 4. Review the tools invoked
@@ -78,10 +81,12 @@ code aitest
 
 > 1. Lease a Fine Grained token on Github: [lease-token](https://github.com/settings/personal-access-tokens/new)
 > 2. Scope
+>
 > ```
 > RepositoryAccess = public
-> Permissions = Copilot Chat     
+> Permissions = Copilot Chat
 > ```
+>
 > 3. use it as (COPILOT_TOKEN) env.
 
 🤔 How to configure vscode for aitest development?

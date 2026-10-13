@@ -98,7 +98,7 @@ test.describe('new project', () => {
     const problemsView = await ProblemsView.initProblemsView(wsPage);
     await problemsView.hasNumOfMarkers(0);
 
-    const processEditor = new ProcessEditor(wsPage, 'BusinessProcess.p.json');
+    const processEditor = new ProcessEditor(wsPage, 'BusinessProcess.p.json', 1);
     await processEditor.expectWebViewVisible();
 
     await screenshot(wsPage.page, 'new-project');
