@@ -1,0 +1,83 @@
+name: AI skill install
+on:
+  push:
+    branches:
+      - master
+      - release/*
+      - ai.*
+    paths:
+      - '.github/workflows/gh-skill-install.yml'
+      - 'extension/src/ai/skills/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Verify gh skill install includes schemas
+        shell: bash
+        run: |
+          gh --version
+          install_dir="$HOME/.copilot/skills"
+          source_dir="$RUNNER_TEMP/skill-source"
+          mkdir -p "$source_dir"
+          git archive HEAD extension/src/ai/skills | tar -x -C "$source_dir"
+          gh skill install "$source_dir" --from-local --all --dir "$install_dir"
+
+          expected_yaml_files=(
+            SKILL.md
+            schemas/config/custom-fields.json
+            schemas/config/databases.json
+            schemas/config/formats.json
+            schemas/config/persistence.json
+            schemas/config/rest-clients.json
+            schemas/config/roles.json
+            schemas/config/users.json
+            schemas/config/variables.json
+            schemas/config/webservice-clients.json
+          )
+          expected_json_files=(
+            SKILL.md
+            schemas/project/casemap.json
+            schemas/project/data-class.json
+            schemas/project/form.json
+            schemas/project/process.json
+          )
+
+          exit_code=0
+          diff -u \
+            <(printf '%s\n' "${expected_yaml_files[@]}" | sort) \
+            <(find "$install_dir/ivy-yaml-files" -type f -printf '%P\n' | sed -E 's#^schemas/[^/]+/#schemas/#' | sort) || exit_code=1
+          diff -u \
+            <(printf '%s\n' "${expected_json_files[@]}" | sort) \
+            <(find "$install_dir/ivy-json-files" -type f -printf '%P\n' | sed -E 's#^schemas/[^/]+/#schemas/#' | sort) || exit_code=1
+          exit "$exit_code"
+
+      - name: Install Copilot CLI
+        shell: bash
+        run: |
+          npm install --global @github/copilot
+          copilot --version
+
+      - name: Verify Copilot reads the installed schemas
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+        run: |
+          if [[ -z "${GH_TOKEN:-}" ]]; then
+            echo '::error::Set the COPILOT_TOKEN secret with Copilot Requests permission.'
+            exit 1
+          fi
+
+          workspace="$RUNNER_TEMP/copilot-workspace"
+          mkdir -p "$workspace"
+          cd "$workspace"
+          response="$(copilot -p 'Use the ivy-yaml-files and ivy-json-files skills. Read their installed schemas and return only JSON with roles_required (the required fields inside the Role definition in roles.json) and process_required (the root required fields in process.json). Preserve exact field names.' --no-ask-user --yolo -s)"
+          printf '%s\n' "$response" | jq -e '(.roles_required | sort) == ["Id"] and (.process_required | sort) == ["$schema", "config", "id"]'
