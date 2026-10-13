@@ -1,5 +1,5 @@
 import path from 'path';
-import { l10n, Uri } from 'vscode';
+import { l10n } from 'vscode';
 import { localizeProcessKind } from '../base/localized-labels';
 import { logErrorMessage } from '../base/logging-util';
 import type { CreateProcessParams } from '../engine/api/engine-api';
@@ -26,22 +26,16 @@ interface NewProcessState extends MSStateBase {
   projectFromSelection?: ProjectSelection | undefined;
 }
 
-interface ProcessObject {
-  name: string;
-  namespace: string;
-}
-
 export const addNewProcess = async (selectionContext: AddCommandSelectionContext, kind: ProcessKind = 'Business Process', pid?: string) => {
-
-  const validateProcessNameAndNamespace = (typedProcessNamespace: string, ): string | undefined => {
-    return validateSyntax(typedProcessNamespace) ?? validateNotExisting(typedProcessNamespace, , selectedUri, deployedProjects);
+  const validateProcessNameAndNamespace = (typedProcessNamespace: string): string | undefined => {
+    return validateSyntax(typedProcessNamespace);
   };
 
-  const validateNotExisting = (typedProcessNamespace: string, typedProcessName: string, selectedUri: Uri, existingProcesses: ProcessObject[]): string | undefined => {
-    if (existingProcesses.some(process => project.id.name === typedProjectName)) {
-      return l10n.t('A project with this name already exists in the workspace or as a Maven dependency.');
-    }
-  };
+  // const validateNotExisting = (typedProcessNamespace: string, selectedUri: Uri, existingProcesses: ProcessObject[]): string | undefined => {
+  //   if (existingProcesses.some(process => process.namespace === typedProcessNamespace)) {
+  //     return l10n.t('A process with this namespace already exists in the workspace or as a Maven dependency.');
+  //   }
+  // };
 
   const resourceDirectoryTarget: ResourceDirectoryTarget = 'process';
   const existingProjects = selectionContext.existingIvyProjects;
@@ -99,7 +93,6 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       totalSteps: state.totalSteps,
       value: state.namespace,
       validationFunction: validateProcessNameAndNamespace,
-      validationFunctionArgs: [state.name ?? ''],
       onBack: (typedValue: string) => {
         state.namespace = typedValue;
       }
