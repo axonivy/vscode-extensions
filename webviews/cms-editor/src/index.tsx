@@ -1,7 +1,7 @@
 import { ClientContextProvider, ClientJsonRpc, CmsEditor, initQueryClient } from '@axonivy/cms-editor';
 import { QueryClientProvider } from '@tanstack/react-query';
 import '@axonivy/cms-editor/lib/editor.css';
-import { HotkeysProvider, ThemeProvider, Toaster } from '@axonivy/ui-components';
+import { HotkeysProvider, ReadonlyProvider, ThemeProvider, Toaster } from '@axonivy/ui-components';
 import { type InitializeConnection, initMessenger, toConnection } from '@axonivy/vscode-webview-common';
 import '@axonivy/vscode-webview-common/css/colors.css';
 import * as React from 'react';
@@ -12,7 +12,7 @@ import { initTranslation } from './i18n';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-export async function start({ app = '', project = '', file }: InitializeConnection) {
+export async function start({ app = '', project = '', file, readOnly = false }: InitializeConnection) {
   const connection = toConnection(messenger, 'cmsWebSocketMessage');
   const client = await ClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
@@ -28,10 +28,12 @@ export async function start({ app = '', project = '', file }: InitializeConnecti
       <ThemeProvider disabled={true}>
         <ClientContextProvider client={client}>
           <QueryClientProvider client={queryClient}>
-            <HotkeysProvider initiallyActiveScopes={['global']}>
-              <CmsEditor context={context} initializePromise={initializePromise} />
-              <Toaster closeButton={true} />
-            </HotkeysProvider>
+            <ReadonlyProvider readonly={readOnly}>
+              <HotkeysProvider initiallyActiveScopes={['global']}>
+                <CmsEditor context={context} initializePromise={initializePromise} />
+                <Toaster closeButton={true} />
+              </HotkeysProvider>
+            </ReadonlyProvider>
           </QueryClientProvider>
         </ClientContextProvider>
       </ThemeProvider>

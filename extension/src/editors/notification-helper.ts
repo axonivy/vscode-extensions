@@ -5,14 +5,14 @@ import { logErrorMessage, logInformationMessage } from '../base/logging-util';
 import { iarEditorLocation } from '../project-explorer/iar-content-provider';
 
 export const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-export const InitializeConnectionRequest: NotificationType<{ file: string; app?: string; project?: string }> = {
+export const InitializeConnectionRequest: NotificationType<{ file: string; app?: string; project?: string; readOnly?: boolean }> = {
   method: 'initializeConnection'
 };
 
 export const editorInitializationParams = (document: Pick<TextDocument, 'uri' | 'fileName'>) => {
   const iarLocation = iarEditorLocation(document.uri);
   return iarLocation
-    ? { app: iarLocation.app, project: iarLocation.project, file: iarLocation.file }
+    ? { app: iarLocation.app, project: iarLocation.project, file: iarLocation.file, readOnly: true }
     : { file: document.fileName };
 };
 

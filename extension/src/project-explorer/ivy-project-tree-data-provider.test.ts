@@ -1,5 +1,5 @@
 import { beforeEach, expect, test, vi } from 'vitest';
-import { FileType, ThemeIcon, TreeItemCollapsibleState } from 'vscode';
+import { FilePermission, FileType, ThemeIcon, TreeItemCollapsibleState } from 'vscode';
 import { applicationNameFromIvyProjectId, iarEditorLocation, IarContentFileSystemProvider } from './iar-content-provider';
 import { IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
 
@@ -55,6 +55,7 @@ vi.mock('vscode', () => {
     Disposable,
     EventEmitter,
     FileSystemError,
+    FilePermission: { Readonly: 1 },
     FileType: { File: 1, Directory: 2 },
     Range,
     ThemeIcon,
@@ -169,6 +170,7 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
   const fileUri = processFile!.command!.arguments![0] as import('vscode').Uri;
   expect(fileUri.path).toBe('/shared-project-2.1.0.iar/process/hello.p.json');
   expect(iarEditorLocation(fileUri)).toEqual({ app: 'test-app', project: 'shared-project', file: 'process/hello.p.json' });
+  expect(fsProvider.stat(fileUri).permissions).toBe(FilePermission.Readonly);
   expect(Buffer.from(fsProvider.readFile(fileUri)).toString('utf8')).toBe('{"name":"IAR process"}');
   expect(fsProvider.readDirectory(iarDependency!.uri)).toEqual([['process', FileType.Directory], ['variables.yaml', FileType.File]]);
   expect(() => fsProvider.writeFile(fileUri, new Uint8Array(), { create: true, overwrite: true })).toThrow();

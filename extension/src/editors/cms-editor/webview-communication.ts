@@ -32,7 +32,7 @@ export const setupCommunication = (
         messenger.sendNotification(
           InitializeConnectionRequest,
           messageParticipant,
-          iarProjectContext ? { ...iarProjectContext, file: '' } : { file: projectPath }
+          iarProjectContext ? { ...iarProjectContext, file: '', readOnly: true } : { file: projectPath }
         ),
       { sender: messageParticipant }
     )

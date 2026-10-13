@@ -5,6 +5,7 @@ import {
   Disposable,
   EventEmitter,
   FileSystemError,
+  FilePermission,
   FileType,
   Uri,
   type FileChangeEvent,
@@ -76,7 +77,8 @@ export class IarContentFileSystemProvider implements FileSystemProvider {
           type: stat.isDirectory() ? FileType.Directory : FileType.File,
           ctime: stat.birthtimeMs,
           mtime: stat.mtimeMs,
-          size: stat.size
+          size: stat.size,
+          permissions: FilePermission.Readonly
         };
       } catch {
         throw FileSystemError.FileNotFound(uri);
@@ -88,12 +90,18 @@ export class IarContentFileSystemProvider implements FileSystemProvider {
     const archiveEntry = archive.getEntry(normalizedPath) ?? archive.getEntry(`${normalizedPath}/`);
     if (archiveEntry && !archiveEntry.isDirectory) {
       const mtime = this.archiveMtime(archivePath);
-      return { type: FileType.File, ctime: mtime, mtime, size: archiveEntry.getData().byteLength };
+      return {
+        type: FileType.File,
+        ctime: mtime,
+        mtime,
+        size: archiveEntry.getData().byteLength,
+        permissions: FilePermission.Readonly
+      };
     }
     const isDirectory = archiveEntry?.isDirectory || archive.getEntries().some(entry => entry.entryName.startsWith(`${normalizedPath}/`));
     if (isDirectory) {
       const mtime = this.archiveMtime(archivePath);
-      return { type: FileType.Directory, ctime: mtime, mtime, size: 0 };
+      return { type: FileType.Directory, ctime: mtime, mtime, size: 0, permissions: FilePermission.Readonly };
     }
     throw FileSystemError.FileNotFound(uri);
   }
