@@ -18,6 +18,7 @@ vi.mock('vscode', () => {
     description?: string;
     tooltip?: string;
     iconPath?: unknown;
+    resourceUri?: unknown;
     contextValue?: string;
     command?: unknown;
     constructor(
@@ -139,6 +140,7 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
   const [processFile] = await provider.getChildren(rootEntries[0]);
   expect(processFile?.label).toBe('hello.p.json');
   expect(processFile?.command?.command).toBe('vscode.open');
+  expect(provider.getTreeItem(processFile!).resourceUri).toBe(processFile?.uri);
   const textProvider = new IarContentDocumentProvider();
   expect(textProvider.provideTextDocumentContent(processFile!.command!.arguments![0] as import('vscode').Uri)).toBe(
     '{"name":"IAR process"}'

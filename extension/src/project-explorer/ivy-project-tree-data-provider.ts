@@ -145,6 +145,9 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
     const treeItem = element.label
       ? new TreeItem(element.label, element.collapsibleState)
       : new TreeItem(element.uri, element.collapsibleState);
+    if (element.kind === 'iarContentDirectory' || element.kind === 'iarContentFile') {
+      treeItem.resourceUri = element.uri;
+    }
     if (projectNeedsConversion) {
       treeItem.description = '(needs conversion)';
     } else if (element.description) {
@@ -233,7 +236,6 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         uri: iarContentUri(archivePath, entryPath),
         type: isDirectory ? FileType.Directory : FileType.File,
         label: path.posix.basename(entryPath),
-        iconPath: isDirectory ? new ThemeIcon('folder') : undefined,
         collapsibleState: isDirectory ? TreeItemCollapsibleState.Collapsed : undefined,
         kind: isDirectory ? 'iarContentDirectory' : 'iarContentFile',
         archivePath,
