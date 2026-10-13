@@ -1,5 +1,5 @@
 import path from 'path';
-import { l10n } from 'vscode';
+import { l10n, Uri, workspace } from 'vscode';
 import { localizeProcessKind } from '../base/localized-labels';
 import { logErrorMessage } from '../base/logging-util';
 import type { CreateProcessParams } from '../engine/api/engine-api';
@@ -15,7 +15,7 @@ import {
   type MSStateBase,
   type ProjectSelection
 } from './utils/multi-step-input';
-import { validateNamespace, validateProjectArtifactName as validateSyntax, type ResourceDirectoryTarget } from './utils/util';
+import { validateNamespace, validateProjectArtifactName, type ResourceDirectoryTarget } from './utils/util';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process' | '';
 
@@ -27,15 +27,21 @@ interface NewProcessState extends MSStateBase {
 }
 
 export const addNewProcess = async (selectionContext: AddCommandSelectionContext, kind: ProcessKind = 'Business Process', pid?: string) => {
-  const validateProcessNameAndNamespace = (typedProcessNamespace: string): string | undefined => {
-    return validateSyntax(typedProcessNamespace);
+  const validateFinal = async (typedProcessNamespace: string): string | undefined => {
+    return validateNamespace(typedProcessNamespace) ?? validateNotExisting(typedProcessNamespace);
   };
 
-  // const validateNotExisting = (typedProcessNamespace: string, selectedUri: Uri, existingProcesses: ProcessObject[]): string | undefined => {
-  //   if (existingProcesses.some(process => process.namespace === typedProcessNamespace)) {
-  //     return l10n.t('A process with this namespace already exists in the workspace or as a Maven dependency.');
-  //   }
-  // };
+  const validateNotExisting = async (typedProcessNamespace: string): Promise<string | undefined> => {
+    try {
+      const absPathProcess = Uri.file(
+        path.join(newProcessData.project?.path ?? '', typedProcessNamespace, newProcessData.name ?? '', '.p.json')
+      );
+      await workspace.fs.stat(absPathProcess);
+      return l10n.t('A process with this name and namespace already exists in the workspace.');
+    } catch {
+      return undefined;
+    }
+  };
 
   const resourceDirectoryTarget: ResourceDirectoryTarget = 'process';
   const existingProjects = selectionContext.existingIvyProjects;
@@ -77,7 +83,7 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       currentStep: state.currentStep,
       totalSteps: state.totalSteps,
       value: state.name,
-      validationFunction: validateSyntax,
+      validationFunction: validateProjectArtifactName,
       onBack: (typedValue: string) => {
         state.name = typedValue;
       }
@@ -92,7 +98,7 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       currentStep: state.currentStep,
       totalSteps: state.totalSteps,
       value: state.namespace,
-      validationFunction: validateProcessNameAndNamespace,
+      validationFunction: validateFinal,
       onBack: (typedValue: string) => {
         state.namespace = typedValue;
       }
