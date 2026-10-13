@@ -82,7 +82,7 @@ const resolvedParams = (args: NewDialogToolArgs) => {
   if (params.type === 'JSF') {
     params.layout = args.layout ?? 'Page Responsive Grid 2 Columns';
     if (params.layout !== 'Component') {
-      params.template = args.template ?? 'basic-10';
+      params.template = args.template ?? 'frame-10';
     }
   }
   if (params.type === 'JSFOffline') {

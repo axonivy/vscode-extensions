@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -157,6 +158,104 @@ public class CopilotIntegrationTest {
     assertThat(viewSchema.arguments())
         .as("schema read was enforced by skill")
         .contains("project/process.json");
+  }
+
+  @Test
+  @Order(2)
+  void formDialog(AgentRuntime rt) throws Exception {
+    var spans = rt.prompt("""
+        create a new dialog 'OrderForm' in 'purchase' project.
+        The form lets the user enter an order: 'product' (text), 'quantity' (number) and 'deliveryDate' (date),
+        each bound to the dialog data.
+        """);
+
+    var purchase = rt.ivyWorkspace().path().resolve("purchase");
+    var form = findFile(purchase.resolve("dialog"), "OrderForm.f.json");
+    assertThat(form.getParent().toFile().list())
+        .as("Form dialog consists of form, data class and process")
+        .containsExactlyInAnyOrder("OrderForm.f.json", "OrderFormData.d.json", "OrderFormProcess.p.json");
+
+    assertOrderData(form.resolveSibling("OrderFormData.d.json"));
+
+    var formJson = readJson(form);
+    var bindings = formJson.path("components").findParents("type").stream()
+        .collect(Collectors.toMap(c -> c.path("config").path("value").asString(), c -> c.path("type").asString(), (a, b) -> a));
+    assertThat(bindings)
+        .as("components are bound to the data attributes: %s", formJson.toPrettyString())
+        .containsEntry("#{data.product}", "Input")
+        .containsEntry("#{data.quantity}", "Input")
+        .containsEntry("#{data.deliveryDate}", "DatePicker");
+
+    assertThat(spans.usedTools())
+        .extracting(UsedTool::name)
+        .as("Must use create-tool for initial correct creation; then the skill to edit the form")
+        .contains("skill", "axonivy-designer-new_axon_ivy_dialog")
+        .doesNotContain("web_fetch"); // skill cache!
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("view"))
+        .extracting(UsedTool::arguments)
+        .as("schema read was enforced by skill")
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/14.0/project/form.json"));
+  }
+
+  @Test
+  @Order(2)
+  void jsfDialog(AgentRuntime rt) throws Exception {
+    var spans = rt.prompt("""
+        create a new JSF dialog 'OrderOverview' in 'purchase' project.
+        The view lets the user enter an order: 'product' (text), 'quantity' (number) and 'deliveryDate' (date),
+        each bound to the dialog data.
+        """);
+
+    var purchase = rt.ivyWorkspace().path().resolve("purchase");
+    var view = findFile(purchase.resolve("dialog"), "OrderOverview.xhtml");
+    assertThat(view.getParent().toFile().list())
+        .as("JSF dialog consists of view, data class and process")
+        .containsExactlyInAnyOrder("OrderOverview.xhtml", "OrderOverviewData.d.json", "OrderOverviewProcess.p.json");
+
+    assertOrderData(view.resolveSibling("OrderOverviewData.d.json"));
+
+    assertThat(view).content()
+        .as("requested template is used by the view")
+        .contains("template=\"/layouts/frame-10.xhtml\"");
+    assertThat(view).content()
+        .as("view components are bound to the data attributes")
+        .contains("#{data.product}", "#{data.quantity}", "#{data.deliveryDate}");
+
+    assertThat(spans.usedTools())
+        .extracting(UsedTool::name)
+        .as("Must use create-tool for initial correct creation; then the skill to edit the data class")
+        .contains("skill", "axonivy-designer-new_axon_ivy_dialog")
+        .doesNotContain("web_fetch"); // skill cache!
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("view"))
+        .extracting(UsedTool::arguments)
+        .as("schema read was enforced by skill")
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/14.0/project/data-class.json"));
+  }
+
+  private static void assertOrderData(Path dataClass) throws IOException {
+    var dataJson = readJson(dataClass);
+    var fieldTypes = dataJson.path("fields").valueStream()
+        .collect(Collectors.toMap(f -> f.path("name").asString(), f -> f.path("type").asString()));
+    assertThat(fieldTypes)
+        .as("bound attributes exist in dialog data class: %s", dataJson.toPrettyString())
+        .containsKeys("product", "quantity", "deliveryDate");
+    assertThat(fieldTypes.get("product"))
+        .isIn("", "String", "java.lang.String");
+    assertThat(fieldTypes.get("quantity"))
+        .matches("Number|java\\.lang\\.(Number|Integer|Long|Double)|java\\.math\\.BigDecimal");
+    assertThat(fieldTypes.get("deliveryDate"))
+        .matches("Date|ch\\.ivyteam\\.ivy\\.scripting\\.objects\\.Date|java\\.util\\.Date|java\\.time\\.LocalDate");
+  }
+
+  private static Path findFile(Path dir, String fileName) throws IOException {
+    try (var files = Files.walk(dir)) {
+      return files.filter(f -> f.getFileName().toString().equals(fileName))
+          .findFirst().orElseThrow(() -> new IllegalStateException(fileName + " not found in " + dir));
+    }
   }
 
   private static JsonNode readJson(Path file) throws IOException {
