@@ -2,14 +2,18 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const schemaIndexes = ['https://json-schema.axonivy.com/14.0/config/', 'https://json-schema.axonivy.com/14.0/project/'];
-
 const skillsRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/ai/skills');
-const cacheRoots: Record<string, string> = {
-  config: path.join(skillsRoot, 'ivy-yaml-files/schemas/14.0/config'),
-  project: path.join(skillsRoot, 'ivy-json-files/schemas/14.0/project')
+const schemaVersion = process.env.IVY_SCHEMA_VERSION ?? '14.0';
+const schemaIndexes = ['config', 'project'].map(directory => `https://json-schema.axonivy.com/${schemaVersion}/${directory}/`);
+const schemaRoots: Record<string, string> = {
+  config: path.join(skillsRoot, 'ivy-yaml-files/schemas'),
+  project: path.join(skillsRoot, 'ivy-json-files/schemas')
 };
-const legacyCacheRoot = path.join(skillsRoot, 'schemas/14.0');
+const cacheRoots: Record<string, string> = {
+  config: path.join(schemaRoots.config, 'config'),
+  project: path.join(schemaRoots.project, 'project')
+};
+const legacyCacheRoot = path.join(skillsRoot, 'schemas');
 
 async function fetchText(url: string): Promise<string> {
   const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
@@ -64,7 +68,7 @@ async function generateIvySchemas(): Promise<void> {
     throw new Error('No JSON schemas found in the Axon Ivy schema indexes.');
   }
 
-  await Promise.all([...Object.values(cacheRoots), legacyCacheRoot].map(cacheRoot => rm(cacheRoot, { recursive: true, force: true })));
+  await Promise.all([...Object.values(schemaRoots), legacyCacheRoot].map(cacheRoot => rm(cacheRoot, { recursive: true, force: true })));
   await Promise.all(
     files.map(async ({ relativePath, content }) => {
       const [directory, file] = relativePath.split(path.sep);
@@ -77,7 +81,7 @@ async function generateIvySchemas(): Promise<void> {
       await writeFile(destination, content);
     })
   );
-  console.log(`[ivy-schemas] Generated ${files.length} schema(s).`);
+  console.log(`[ivy-schemas] Generated ${files.length} schema(s) for ${schemaVersion}.`);
 }
 
 await generateIvySchemas();

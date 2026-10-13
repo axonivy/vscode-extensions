@@ -54,8 +54,8 @@ jobs:
           exit_code=0
           diff -u \
             <(printf '%s\n' "${expected_yaml_files[@]}" | sort) \
-            <(find "$install_dir/ivy-yaml-files" -type f -printf '%P\n' | sed -E 's#^schemas/[^/]+/#schemas/#' | sort) || exit_code=1
+            <(find "$install_dir/ivy-yaml-files" -type f -printf '%P\n' | sort) || exit_code=1
           diff -u \
             <(printf '%s\n' "${expected_json_files[@]}" | sort) \
-            <(find "$install_dir/ivy-json-files" -type f -printf '%P\n' | sed -E 's#^schemas/[^/]+/#schemas/#' | sort) || exit_code=1
+            <(find "$install_dir/ivy-json-files" -type f -printf '%P\n' | sort) || exit_code=1
           exit "$exit_code"
