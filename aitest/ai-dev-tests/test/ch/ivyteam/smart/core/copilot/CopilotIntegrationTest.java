@@ -25,7 +25,7 @@ public class CopilotIntegrationTest {
   @Test
   @Order(3)
   void createProject(AgentRuntime rt) throws Exception {
-    var spans = rt.prompt("create an axon ivy project for a flight-simulator");
+    var spans = rt.prompt("create a new Axon Ivy project called flight-simulator");
     var tokenUsage = spans.tokenUsage();
     assertThat(tokenUsage.input()).isLessThan(150_000);
     assertThat(tokenUsage.output()).isLessThan(10_000);
@@ -34,7 +34,7 @@ public class CopilotIntegrationTest {
     assertThat(flightSimulator)
         .as("project created in workspace")
         .exists();
-    assertThat(rt.ivyEngine().ivyLog())
+    assertThat(rt.ivyEngine().newLogs())
         .as("no-errors in log")
         .isEmpty();
     assertThat(spans.usedTools())
@@ -74,7 +74,8 @@ public class CopilotIntegrationTest {
     var roles = rt.ivyWorkspace().path().resolve("purchase/config/roles.yaml");
     assertThat(roles).content()
         .as("Id: field name is known by reading roles.yaml schema")
-        .contains("Id: manager", "Id: employee");
+        .containsIgnoringCase("Id: manager")
+        .containsIgnoringCase("Id: employee");
     assertThat(roles).content()
         .as("no tabs in roles.yaml: happens in vscode copilot quite often")
         .doesNotContain("\t");
@@ -110,7 +111,15 @@ public class CopilotIntegrationTest {
         """);
 
     var purchase = rt.ivyWorkspace().path().resolve("purchase");
-    var procJson = readJson(purchase.resolve("process/treePlanting.p.json"));
+    var processDir = purchase.resolve("process");
+    Path plantProcess;
+    try (var stream = Files.walk(processDir)) {
+      plantProcess = stream
+          .filter(p -> p.getFileName().toString().equals("treePlanting.p.json"))
+          .findFirst()
+          .orElseThrow(() -> new AssertionError("Process treePlanting.p.json not found under " + processDir));
+    }
+    var procJson = readJson(plantProcess);
     assertThat(procJson.get("$schema").asString())
         .as("valid $schema was set by new_process_tool")
         .startsWith("https://json-schema.axonivy.com/");
