@@ -166,7 +166,8 @@ public class CopilotIntegrationTest {
     var spans = rt.prompt("""
         create a new dialog 'OrderForm' in 'purchase' project.
         The form lets the user enter an order: 'product' (text), 'quantity' (number) and 'deliveryDate' (date),
-        each bound to the dialog data.
+        and the 'customer' as the existing data class 'User' with all its fields.
+        Each input is bound to the dialog data.
         """);
 
     var purchase = rt.ivyWorkspace().path().resolve("purchase");
@@ -175,7 +176,7 @@ public class CopilotIntegrationTest {
         .as("Form dialog consists of form, data class and process")
         .containsExactlyInAnyOrder("OrderForm.f.json", "OrderFormData.d.json", "OrderFormProcess.p.json");
 
-    assertOrderData(form.resolveSibling("OrderFormData.d.json"));
+    assertOrderData(form.resolveSibling("OrderFormData.d.json"), userType(purchase));
 
     var formJson = readJson(form);
     var bindings = formJson.path("components").findParents("type").stream()
@@ -184,7 +185,11 @@ public class CopilotIntegrationTest {
         .as("components are bound to the data attributes: %s", formJson.toPrettyString())
         .containsEntry("#{data.product}", "Input")
         .containsEntry("#{data.quantity}", "Input")
-        .containsEntry("#{data.deliveryDate}", "DatePicker");
+        .containsEntry("#{data.deliveryDate}", "DatePicker")
+        .containsEntry("#{data.customer.fullName}", "Input")
+        .containsEntry("#{data.customer.address}", "Input")
+        .containsEntry("#{data.customer.phone}", "Input")
+        .containsEntry("#{data.customer.age}", "Input");
 
     assertThat(spans.usedTools())
         .extracting(UsedTool::name)
@@ -196,7 +201,7 @@ public class CopilotIntegrationTest {
         .filteredOn(t -> t.name().equals("view"))
         .extracting(UsedTool::arguments)
         .as("schema read was enforced by skill")
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/14.0/project/form.json"));
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/form.json"));
   }
 
   @Test
@@ -205,7 +210,8 @@ public class CopilotIntegrationTest {
     var spans = rt.prompt("""
         create a new JSF dialog 'OrderOverview' in 'purchase' project.
         The view lets the user enter an order: 'product' (text), 'quantity' (number) and 'deliveryDate' (date),
-        each bound to the dialog data.
+        and the 'customer' as the existing data class 'User' with all its fields.
+        Each input is bound to the dialog data.
         """);
 
     var purchase = rt.ivyWorkspace().path().resolve("purchase");
@@ -214,14 +220,15 @@ public class CopilotIntegrationTest {
         .as("JSF dialog consists of view, data class and process")
         .containsExactlyInAnyOrder("OrderOverview.xhtml", "OrderOverviewData.d.json", "OrderOverviewProcess.p.json");
 
-    assertOrderData(view.resolveSibling("OrderOverviewData.d.json"));
+    assertOrderData(view.resolveSibling("OrderOverviewData.d.json"), userType(purchase));
 
     assertThat(view).content()
         .as("requested template is used by the view")
         .contains("template=\"/layouts/frame-10.xhtml\"");
     assertThat(view).content()
         .as("view components are bound to the data attributes")
-        .contains("#{data.product}", "#{data.quantity}", "#{data.deliveryDate}");
+        .contains("#{data.product}", "#{data.quantity}", "#{data.deliveryDate}",
+            "#{data.customer.fullName}", "#{data.customer.address}", "#{data.customer.phone}", "#{data.customer.age}");
 
     assertThat(spans.usedTools())
         .extracting(UsedTool::name)
@@ -233,16 +240,103 @@ public class CopilotIntegrationTest {
         .filteredOn(t -> t.name().equals("view"))
         .extracting(UsedTool::arguments)
         .as("schema read was enforced by skill")
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/14.0/project/data-class.json"));
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
   }
 
-  private static void assertOrderData(Path dataClass) throws IOException {
+  @Test
+  @Order(1)
+  void dataClass(AgentRuntime rt) throws Exception {
+    var spans = rt.prompt("""
+        create a data class 'User' in the purchase project
+        with the fields 'fullName', 'address', 'phone' (text) and 'age' (integer).
+        """);
+
+    var purchase = rt.ivyWorkspace().path().resolve("purchase");
+    var user = purchase.resolve("dataclass/com/acme/demo/User.d.json");
+    assertThat(user).exists();
+    assertUserFields(user);
+
+    assertThat(spans.usedTools())
+        .extracting(UsedTool::name)
+        .contains("skill", "axonivy-designer-new_axon_ivy_data_class")
+        .doesNotContain("web_fetch");
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("axonivy-designer-new_axon_ivy_data_class"))
+        .extracting(UsedTool::arguments)
+        .noneMatch(args -> args.contains("namespace")); // model don't try to guess a namespace
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("view"))
+        .extracting(UsedTool::arguments)
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
+  }
+
+  @Test
+  @Order(1)
+  void entityClass(AgentRuntime rt) throws Exception {
+    var spans = rt.prompt("""
+        create an entity class 'UserEntity' in the purchase project
+        with the fields 'fullName', 'address', 'phone' (text) and 'age' (integer).
+        """);
+
+    var purchase = rt.ivyWorkspace().path().resolve("purchase");
+    var entity = purchase.resolve("dataclass/com/acme/demo/UserEntity.d.json");
+    assertThat(entity).exists();
+    assertUserFields(entity);
+
+    var entityJson = readJson(entity);
+    assertThat(entityJson.has("entity")).isTrue();
+    var id = entityJson.path("fields").valueStream()
+        .filter(f -> f.path("name").asString().equals("id"))
+        .findFirst().orElseThrow(() -> new IllegalStateException("generated 'id' field was removed: " + entityJson.toPrettyString()));
+    assertThat(id.path("modifiers").valueStream().map(JsonNode::asString)).contains("ID");
+
+    assertThat(spans.usedTools())
+        .extracting(UsedTool::name)
+        .contains("skill", "axonivy-designer-new_axon_ivy_data_class")
+        .doesNotContain("web_fetch");
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("axonivy-designer-new_axon_ivy_data_class"))
+        .extracting(UsedTool::arguments)
+        .noneMatch(args -> args.contains("namespace"));
+
+    assertThat(spans.usedTools())
+        .filteredOn(t -> t.name().equals("view"))
+        .extracting(UsedTool::arguments)
+        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
+  }
+
+  private static void assertUserFields(Path dataClass) throws IOException {
+    var dataJson = readJson(dataClass);
+    var fieldTypes = dataJson.path("fields").valueStream()
+        .collect(Collectors.toMap(f -> f.path("name").asString(), f -> f.path("type").asString()));
+
+    assertThat(fieldTypes).containsKeys("fullName", "address", "phone", "age");
+    assertThat(fieldTypes.get("fullName"))
+        .isIn("", "String", "java.lang.String");
+    assertThat(fieldTypes.get("address"))
+        .isIn("", "String", "java.lang.String");
+    assertThat(fieldTypes.get("phone"))
+        .isIn("", "String", "java.lang.String");
+    assertThat(fieldTypes.get("age"))
+        .matches("Number|java\\.lang\\.(Number|Integer|Long)");
+  }
+
+  private static String userType(Path project) throws IOException {
+    var user = readJson(findFile(project.resolve("dataclass"), "User.d.json"));
+    return user.path("namespace").asString() + ".User";
+  }
+
+  private static void assertOrderData(Path dataClass, String userType) throws IOException {
     var dataJson = readJson(dataClass);
     var fieldTypes = dataJson.path("fields").valueStream()
         .collect(Collectors.toMap(f -> f.path("name").asString(), f -> f.path("type").asString()));
     assertThat(fieldTypes)
         .as("bound attributes exist in dialog data class: %s", dataJson.toPrettyString())
-        .containsKeys("product", "quantity", "deliveryDate");
+        .containsKeys("product", "quantity", "deliveryDate")
+        .containsEntry("customer", userType);
     assertThat(fieldTypes.get("product"))
         .isIn("", "String", "java.lang.String");
     assertThat(fieldTypes.get("quantity"))
