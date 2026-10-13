@@ -8,7 +8,7 @@ import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import * as path from 'path';
 import { l10n, type TextDocument, type WebviewPanel } from 'vscode';
 import { Messenger } from 'vscode-messenger';
-import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
+import type { MessageParticipant, NotificationType, RequestType } from 'vscode-messenger-common';
 import { runJavaProjectConfigurationUpdate } from '../../base/java-extension-api';
 import { logErrorMessage, logInformationMessage } from '../../base/logging-util';
 import { updateTextDocumentContent } from '../content-writer';
@@ -27,20 +27,33 @@ import {
 } from '../notification-helper';
 import { runMavenCommand } from './maven-runner';
 
-const RestClientWebSocketMessage: NotificationType<unknown> = { method: 'restClientWebSocketMessage' };
+export const RestClientWebSocketMessage: NotificationType<unknown> = { method: 'restClientWebSocketMessage' };
+const InitializeRestClientConnectionRequest: RequestType<{ file: string }, void> = InitializeConnectionRequest;
 
 export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
-  const toDispose = new DisposableCollection(
-    new RestClientWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
-    messenger.onNotification(
-      WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
-      { sender: messageParticipant }
-    ),
-    webviewPanel.onDidDispose(() => toDispose.dispose())
-  );
-  return messageParticipant;
+  return new Promise<MessageParticipant | undefined>(resolve => {
+    const toDispose = new DisposableCollection(
+      new RestClientWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+      messenger.onNotification(
+        WebviewReadyNotification,
+        async () => {
+          try {
+            await messenger.sendRequest(InitializeRestClientConnectionRequest, messageParticipant, { file: document.fileName });
+            resolve(messageParticipant);
+          } catch (error) {
+            logErrorMessage(String(error));
+            resolve(undefined);
+          }
+        },
+        { sender: messageParticipant }
+      ),
+      webviewPanel.onDidDispose(() => {
+        resolve(undefined);
+        toDispose.dispose();
+      })
+    );
+  });
 };
 
 class RestClientWebSocketForwarder extends EditorWebSocketForwarder {

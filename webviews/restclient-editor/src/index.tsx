@@ -23,20 +23,22 @@ export async function start({ file }: InitializeConnection) {
   initTranslation();
   const context = { app: '', project: '', file };
   await client.initialize(context);
-  createRoot(rootElement).render(
-    <React.StrictMode>
-      <ThemeProvider disabled={true}>
-        <ClientContextProvider client={client}>
-          <QueryClientProvider client={queryClient}>
-            <HotkeysProvider initiallyActiveScopes={['global']}>
-              <App context={context} />
-              <Toaster closeButton={true} />
-            </HotkeysProvider>
-          </QueryClientProvider>
-        </ClientContextProvider>
-      </ThemeProvider>
-    </React.StrictMode>
-  );
+  await new Promise<void>(resolve => {
+    createRoot(rootElement).render(
+      <React.StrictMode>
+        <ThemeProvider disabled={true}>
+          <ClientContextProvider client={client}>
+            <QueryClientProvider client={queryClient}>
+              <HotkeysProvider initiallyActiveScopes={['global']}>
+                <App context={context} onReady={resolve} />
+                <Toaster closeButton={true} />
+              </HotkeysProvider>
+            </QueryClientProvider>
+          </ClientContextProvider>
+        </ThemeProvider>
+      </React.StrictMode>
+    );
+  });
 }
 
-initMessenger(messenger, start);
+initMessenger(messenger, start, true);

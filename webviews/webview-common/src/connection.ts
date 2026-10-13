@@ -1,4 +1,4 @@
-import { HOST_EXTENSION, type NotificationType } from 'vscode-messenger-common';
+import { HOST_EXTENSION, type NotificationType, type RequestType } from 'vscode-messenger-common';
 import { Messenger } from 'vscode-messenger-webview';
 import { WebviewMessageReader } from './message-reader';
 import { WebviewMessageWriter } from './message-writer';
@@ -15,8 +15,13 @@ export const getVscodeLanguage = () => {
   return 'en';
 };
 
-export const initMessenger = (messenger: Messenger, start: (init: InitializeConnection) => Promise<void>) => {
-  messenger.onNotification(InitializeConnectionNotification, start);
+export const initMessenger = (messenger: Messenger, start: (init: InitializeConnection) => Promise<void>, awaitInitialization = false) => {
+  if (awaitInitialization) {
+    const request: RequestType<InitializeConnection, void> = InitializeConnectionNotification;
+    messenger.onRequest(request, start);
+  } else {
+    messenger.onNotification(InitializeConnectionNotification, start);
+  }
   messenger.start();
   messenger.sendNotification(WebviewReadyNotification, HOST_EXTENSION);
 };

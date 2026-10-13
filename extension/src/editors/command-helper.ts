@@ -11,7 +11,7 @@ export const registerOpenConfigEditorCmd = (
   command: ConfigEditorCommand,
   context: ExtensionContext,
   file: string,
-  onOpenMessage?: (message?: OpenActionMessage) => void
+  onOpenMessage?: (message: OpenActionMessage | undefined, uri: Uri) => void | Promise<void>
 ) =>
   registerCommand(command, context, async (selection: TreeSelection, message?: OpenActionMessage) => {
     const projectPath = await getEditorCmdProjectPath(command, selection);
@@ -24,7 +24,8 @@ export const registerOpenConfigEditorCmd = (
       await workspace.fs.createDirectory(configDir);
       await workspace.fs.writeFile(fileUri, new Uint8Array());
     }
-    executeCommand('vscode.open', fileUri).then(() => onOpenMessage?.(message));
+    await executeCommand('vscode.open', fileUri);
+    await onOpenMessage?.(message, fileUri);
   });
 
 export const getEditorCmdProjectPath = async (command: ConfigEditorCommand | EditorCommand, selection: TreeSelection) => {
