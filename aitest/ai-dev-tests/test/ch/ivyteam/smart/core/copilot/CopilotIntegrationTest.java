@@ -203,7 +203,7 @@ public class CopilotIntegrationTest {
   @Order(2)
   void jsfDialog(AgentRuntime rt) throws Exception {
     var spans = rt.prompt("""
-        create a new JSF dialog 'OrderOverview' with the 'frame-10' template in 'purchase' project.
+        create a new JSF dialog 'OrderOverview' in 'purchase' project.
         The view lets the user enter an order: 'product' (text), 'quantity' (number) and 'deliveryDate' (date),
         each bound to the dialog data.
         """);
