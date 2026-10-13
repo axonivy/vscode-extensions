@@ -26,6 +26,8 @@ export class MultiStepInvalidStateError extends Error {
   }
 }
 
+type InputBoxValidationResult = string | InputBoxValidationMessage | undefined;
+
 export interface MSStateBase {
   dialogTitle: string;
   currentStep: number;
@@ -113,7 +115,7 @@ interface TextInputParameters {
   value?: string;
   prompt?: string;
   placeholder?: string;
-  validationFunction?: (value: string) => string | InputBoxValidationMessage | undefined;
+  validationFunction?: (value: string) => InputBoxValidationResult | Promise<InputBoxValidationResult>;
   onBack?: (typedValue: string) => void;
   onChange?: (typedValue: string, input: InputBox) => void;
   ignoreFocusOut?: boolean;
@@ -202,6 +204,7 @@ export class MultiStepInput<T extends MSStateBase> {
     placeholder
   }: TextInputParameters): Promise<string> {
     const disposables: Disposable[] = [];
+    const initialValidation = await validationFunction?.(value ?? '');
 
     const p = new Promise<string>((resolve, reject) => {
       const input = window.createInputBox();
@@ -213,7 +216,7 @@ export class MultiStepInput<T extends MSStateBase> {
       input.placeholder = placeholder ?? '';
       input.ignoreFocusOut = ignoreFocusOut ?? true;
       input.buttons = currentStep > 1 ? [QuickInputButtons.Back] : [];
-      input.validationMessage = validationFunction ? validationFunction(input.value) : '';
+      input.validationMessage = initialValidation;
       disposables.push(
         input.onDidTriggerButton(item => {
           if (item === QuickInputButtons.Back) {
@@ -224,7 +227,7 @@ export class MultiStepInput<T extends MSStateBase> {
         input.onDidAccept(async () => {
           input.enabled = false;
           input.busy = true;
-          const validationResult = validationFunction ? validationFunction(input.value) : '';
+          const validationResult = await validationFunction?.(input.value ?? '');
           if (typeof validationResult === 'string' ? validationResult : validationResult?.severity === InputBoxValidationSeverity.Error) {
             input.validationMessage = validationResult;
           } else {
@@ -237,11 +240,11 @@ export class MultiStepInput<T extends MSStateBase> {
           reject(InputFlowAction.cancel);
         }),
         input.onDidChangeValue(async () => {
-          const validationResult = validationFunction ? validationFunction(input.value) : '';
+          const validationResult = await validationFunction?.(input.value ?? '');
           if (validationResult) {
             input.validationMessage = validationResult;
           } else {
-            input.validationMessage = '';
+            input.validationMessage = undefined;
           }
           onChange?.(input.value, input);
         })

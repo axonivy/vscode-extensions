@@ -27,14 +27,14 @@ interface NewProcessState extends MSStateBase {
 }
 
 export const addNewProcess = async (selectionContext: AddCommandSelectionContext, kind: ProcessKind = 'Business Process', pid?: string) => {
-  const validateFinal = async (typedProcessNamespace: string): string | undefined => {
-    return validateNamespace(typedProcessNamespace) ?? validateNotExisting(typedProcessNamespace);
+  const validateFinal = async (typedProcessNamespace: string): Promise<string | undefined> => {
+    return validateNamespace(typedProcessNamespace) ?? (await validateNotExisting(typedProcessNamespace));
   };
 
   const validateNotExisting = async (typedProcessNamespace: string): Promise<string | undefined> => {
     try {
       const absPathProcess = Uri.file(
-        path.join(newProcessData.project?.path ?? '', typedProcessNamespace, newProcessData.name ?? '', '.p.json')
+        path.join(newProcessData.project?.path ?? '', resourceDirectoryTarget, typedProcessNamespace, `${newProcessData.name ?? ''}.p.json`)
       );
       await workspace.fs.stat(absPathProcess);
       return l10n.t('A process with this name and namespace already exists in the workspace.');
