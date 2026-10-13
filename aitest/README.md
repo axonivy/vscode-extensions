@@ -11,19 +11,29 @@ We use test-containers to run the complete environment in Docker.
 - **Copilot**: runs copilot CLI with the designer MCP enabled.
 - **Aspire**: runs the opentelemetry compatible Aspire dashboard to trace the copilot execution. The collected spans are asserted to verify copilot behavior.
 
-The containers are kept running after test execution to allow fast development cycles. Container reuse requires two settings:
+### ♻️ Validation flow
 
-1. **Project level (enabled by default for local development)**:
-   Controlled via the `TESTCONTAINERS_REUSE_ENABLE` environment variable (defaults to `true` locally, set to `false` in CI).
-   ```bash
-   export TESTCONTAINERS_REUSE_ENABLE=true
-   ```
+The prompt tests verify both what the agent reports and what it actually does:
 
-2. **Global level (user machine configuration)**:
-   Testcontainers requires container reuse to be explicitly enabled in your user home config (`~/.testcontainers.properties`), otherwise Ryuk will clean up the containers when the test process finishes:
-   ```bash
-   echo "testcontainers.reuse.enable=true" >> ~/.testcontainers.properties
-   ```
+```mermaid
+flowchart LR
+   Test[✅️ JUnit prompt test] -->|prompt via AgentRuntime| Copilot
+
+   subgraph Docker[🐳️ Docker test environment]
+      Copilot[🧑‍💻️ Copilot CLI]
+      Designer[⚒️ Designer-MCP<br/>VS Code + vscode-designer]
+      Aspire[📶️ Aspire dashboard]
+   end
+
+   Copilot -->|MCP tool calls| Designer
+   Designer -->|project changes| Project[Ivy workspace + engine]
+   Copilot -->|OpenTelemetry spans| Aspire
+   Test -->|collects spans| Aspire
+   Test -->|reports token usage + asserts tool calls| Result[📝️ Test result]
+   Project -->|asserts generated files + engine logs| Result
+```
+
+The tests report token usage from Aspire spans, assert tool calls where applicable, and validate generated files in the Ivy workspace and engine logs from the Designer-managed Ivy engine.
 
 ## 🏃️ Running tests
 
@@ -60,6 +70,13 @@ The containers are kept running after test execution to allow fast development c
 ## 🧑‍💻️ Developing Tests
 
 - Work on a git branch with prefix `ai.`, since these branches will automatically run the AI pipeline (and be excluded from other vscode centric builds).
+
+- For faster local test runs, enable Testcontainers reuse:
+  1.  **Project setting:** `TESTCONTAINERS_REUSE_ENABLE` env defaults to `true` locally and `false` in CI.
+  2.  **User setting:** Enable reuse in `~/.testcontainers.properties`:
+      ```bash
+      echo "testcontainers.reuse.enable=true" >> ~/.testcontainers.properties
+      ```
 
 ## ❤️‍🩹 Troubleshooting
 
