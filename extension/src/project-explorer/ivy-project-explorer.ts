@@ -11,6 +11,7 @@ import { installMarketProduct } from '../market/market-install';
 import { installLocalMarketProduct } from '../market/market-install-local';
 import { exportIvyProject } from './export-ivy-project';
 import { importIvyProject } from './import-ivy-project';
+import { IAR_CONTENT_SCHEME, IarContentFileSystemProvider } from './iar-content-provider';
 import { importNewProcess } from './import-process';
 import { runProjectConversion } from './ivy-project-conversion';
 import { IvyProjectTreeDataProvider, type Entry } from './ivy-project-tree-data-provider';
@@ -33,8 +34,20 @@ export class IvyProjectExplorer {
   private constructor(context: ExtensionContext) {
     this.context = context;
     const activateEnginePromise = this.activateEngineIfNeeded();
-    this.treeDataProvider = new IvyProjectTreeDataProvider(activateEnginePromise, () => IvyEngineManager.instance.projects(true));
+    const iarContentProvider = new IarContentFileSystemProvider();
+    this.treeDataProvider = new IvyProjectTreeDataProvider(
+      activateEnginePromise,
+      () => IvyEngineManager.instance.projects(true),
+      iarContentProvider
+    );
     this.treeView = window.createTreeView(VIEW_ID, { treeDataProvider: this.treeDataProvider });
+    context.subscriptions.push(
+      iarContentProvider,
+      workspace.registerFileSystemProvider(IAR_CONTENT_SCHEME, iarContentProvider, {
+        isCaseSensitive: true,
+        isReadonly: true
+      })
+    );
     this.treeView.onDidChangeSelection(async (event: TreeViewSelectionChangeEvent<Entry>) => {
       if (event.selection?.[0]?.uri && event.selection[0].kind === 'workspaceProject') {
         const projectUri = event.selection[0]?.uri;

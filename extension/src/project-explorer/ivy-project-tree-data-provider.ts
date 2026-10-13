@@ -19,6 +19,7 @@ import { executeCommand, type KnownCommand } from '../base/commands';
 import { config } from '../base/configurations';
 import type { ProjectBean } from '../engine/api/generated/client';
 import { IvyDiagnostics } from '../engine/diagnostics';
+import { IarContentFileSystemProvider, iarContentUri } from './iar-content-provider';
 
 const __dirname = import.meta.dirname;
 interface IvyCommand extends VSCodeCommand {
@@ -34,7 +35,7 @@ export interface Entry {
   iconPath?: TreeItem['iconPath'];
   collapsibleState?: TreeItemCollapsibleState;
   contextValue?: string;
-  kind?: 'workspaceProject' | 'iarDependencyGroup' | 'iarDependency';
+  kind?: 'workspaceProject' | 'iarDependencyGroup' | 'iarDependency' | 'iarContentDirectory' | 'iarContentFile';
   parent?: Entry;
   command?: IvyCommand;
 }
@@ -74,7 +75,8 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
 
   constructor(
     readonly activateEnginePromise: Promise<void>,
-    private readonly findEngineProjects: () => Promise<ProjectBean[] | undefined>
+    private readonly findEngineProjects: () => Promise<ProjectBean[] | undefined>,
+    private readonly iarContentProvider = new IarContentFileSystemProvider()
   ) {
     this.excludePattern = config.projectExcludePattern() ?? '';
     this.maxResults = config.projectMaximumNumber() ?? 50;
@@ -124,6 +126,7 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   refresh() {
     this.ivyProjects = this.findIvyProjects();
     this.iarProjects = undefined;
+    this.iarContentProvider.refresh();
     this._onDidChangeTreeData.fire(undefined);
   }
 
@@ -139,6 +142,9 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
     const treeItem = element.label
       ? new TreeItem(element.label, element.collapsibleState)
       : new TreeItem(element.uri, element.collapsibleState);
+    if (element.kind === 'iarContentDirectory' || element.kind === 'iarContentFile') {
+      treeItem.resourceUri = element.uri;
+    }
     if (projectNeedsConversion) {
       treeItem.description = '(needs conversion)';
     } else if (element.description) {
@@ -169,15 +175,19 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
     await this.activateEnginePromise;
     if (element?.kind === 'iarDependencyGroup') {
       return (await this.getIarProjects()).map(project => ({
-        uri: Uri.file(project.projectDirectory),
+        uri: iarContentUri(project.projectDirectory, 'META-INF/ivy'),
         type: FileType.Directory,
         label: project.artifactId,
         description: project.version,
         tooltip: `${project.groupId}:${project.artifactId}:${project.version}`,
         iconPath: new ThemeIcon('lock'),
+        collapsibleState: TreeItemCollapsibleState.Collapsed,
         kind: 'iarDependency',
         parent: element
       }));
+    }
+    if (element?.kind === 'iarDependency' || element?.kind === 'iarContentDirectory') {
+      return this.getIarContentChildren(element);
     }
     if (element) {
       return [];
@@ -201,6 +211,30 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         })
     );
     return this.iarProjects;
+  }
+
+  private getIarContentChildren(parent: Entry): Entry[] {
+    return this.iarContentProvider
+      .readDirectory(parent.uri)
+      .sort(([aName, aType], [bName, bType]) => {
+        if (aType !== bType) {
+          return aType === FileType.Directory ? -1 : 1;
+        }
+        return aName.localeCompare(bName);
+      })
+      .map(([name, type]) => {
+        const uri = Uri.joinPath(parent.uri, name);
+        const isDirectory = type === FileType.Directory;
+        return {
+          uri,
+          type,
+          label: name,
+          collapsibleState: isDirectory ? TreeItemCollapsibleState.Collapsed : undefined,
+          kind: isDirectory ? 'iarContentDirectory' : 'iarContentFile',
+          command: isDirectory ? undefined : { command: 'vscode.openWith', title: 'Open', arguments: [uri, 'default'] },
+          parent
+        };
+      });
   }
 
   private createIarGroup(): Entry {
