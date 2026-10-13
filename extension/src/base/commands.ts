@@ -25,6 +25,7 @@ export type KnownCommand =
 type VSCodeCommand =
   | 'setContext'
   | 'vscode.open'
+  | 'vscode.openWith'
   | 'vscode.executeCompletionItemProvider'
   | 'vscode.executeDefinitionProvider'
   | 'copyFilePath'

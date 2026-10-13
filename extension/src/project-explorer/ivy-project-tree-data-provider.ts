@@ -240,7 +240,9 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         kind: isDirectory ? 'iarContentDirectory' : 'iarContentFile',
         archivePath,
         archiveEntryPath: entryPath,
-        command: isDirectory ? undefined : { command: 'vscode.open', title: 'Open', arguments: [iarContentUri(archivePath, entryPath)] },
+        command: isDirectory
+          ? undefined
+          : { command: 'vscode.openWith', title: 'Open', arguments: [iarContentUri(archivePath, entryPath), 'default'] },
         parent
       }));
   }

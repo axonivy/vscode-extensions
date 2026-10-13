@@ -139,7 +139,8 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
 
   const [processFile] = await provider.getChildren(rootEntries[0]);
   expect(processFile?.label).toBe('hello.p.json');
-  expect(processFile?.command?.command).toBe('vscode.open');
+  expect(processFile?.command?.command).toBe('vscode.openWith');
+  expect(processFile?.command?.arguments).toContain('default');
   expect(provider.getTreeItem(processFile!).resourceUri).toBe(processFile?.uri);
   const textProvider = new IarContentDocumentProvider();
   expect(textProvider.provideTextDocumentContent(processFile!.command!.arguments![0] as import('vscode').Uri)).toBe(
