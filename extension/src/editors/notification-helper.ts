@@ -1,10 +1,20 @@
 import type { EditorFileContent } from '@axonivy/dataclass-editor-protocol';
-import { env, l10n, Uri } from 'vscode';
+import { env, l10n, Uri, type TextDocument } from 'vscode';
 import type { NotificationType } from 'vscode-messenger-common';
 import { logErrorMessage, logInformationMessage } from '../base/logging-util';
+import { iarEditorLocation } from '../project-explorer/iar-content-provider';
 
 export const WebviewReadyNotification: NotificationType<void> = { method: 'ready' };
-export const InitializeConnectionRequest: NotificationType<{ file: string }> = { method: 'initializeConnection' };
+export const InitializeConnectionRequest: NotificationType<{ file: string; app?: string; project?: string }> = {
+  method: 'initializeConnection'
+};
+
+export const editorInitializationParams = (document: Pick<TextDocument, 'uri' | 'fileName'>) => {
+  const iarLocation = iarEditorLocation(document.uri);
+  return iarLocation
+    ? { app: iarLocation.app, project: iarLocation.project, file: iarLocation.file }
+    : { file: document.fileName };
+};
 
 export const isAction = <T>(obj: unknown): obj is { method: string; params: T } => {
   return (

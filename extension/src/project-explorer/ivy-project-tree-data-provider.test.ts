@@ -1,6 +1,6 @@
 import { beforeEach, expect, test, vi } from 'vitest';
 import { FileType, ThemeIcon, TreeItemCollapsibleState } from 'vscode';
-import { IarContentFileSystemProvider } from './iar-content-provider';
+import { applicationNameFromIvyProjectId, iarEditorLocation, IarContentFileSystemProvider } from './iar-content-provider';
 import { IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
 
 const mocks = vi.hoisted(() => ({
@@ -47,7 +47,7 @@ vi.mock('vscode', () => {
   const parseUri = (value: string) => {
     const parsed = new URL(value);
     const uriPath = decodeURIComponent(parsed.pathname);
-    return { fsPath: uriPath, path: uriPath, query: parsed.search.slice(1) };
+    return { fsPath: uriPath, path: uriPath, scheme: parsed.protocol.slice(0, -1), query: parsed.search.slice(1) };
   };
   return {
     Diagnostic,
@@ -104,14 +104,19 @@ beforeEach(() => {
     {
       artifactId: 'workspace-project',
       groupId: 'com.example',
-      id: { id: 'workspace-project', isIar: false },
+      id: { id: 'workspace-project', name: 'workspace-project', project: 'test-app', isIar: false },
       version: '1.0.0',
       projectDirectory: '/workspace/local'
     },
     {
       artifactId: 'shared-project',
       groupId: 'com.example',
-      id: { id: 'shared-project', isIar: true },
+      id: {
+        id: '~test-app/test-app/1/shared-project',
+        name: 'shared-project',
+        project: 'shared-project',
+        isIar: true
+      },
       version: '2.1.0',
       projectDirectory: '/home/user/.m2/repository/com/example/shared-project/2.1.0/shared-project-2.1.0.iar'
     }
@@ -139,6 +144,13 @@ test('lists IAR projects in a separate read-only section', async () => {
   expect(provider.getTreeItem(dependencies[0]!).contextValue).toBeUndefined();
 });
 
+test('extracts the hosting application name from an engine project id', () => {
+  expect(applicationNameFromIvyProjectId('~Developer-prebuiltproject/Developer-prebuiltproject/1/genderize-io-connector')).toBe(
+    'Developer-prebuiltproject'
+  );
+  expect(applicationNameFromIvyProjectId('genderize-io-connector')).toBeUndefined();
+});
+
 test('shows only the META-INF/ivy tree and opens files as read-only documents', async () => {
   const provider = new IvyProjectTreeDataProvider(Promise.resolve(), mocks.findEngineProjects);
   const [workspaceProject, iarGroup] = await provider.getChildren();
@@ -151,12 +163,12 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
 
   const [processFile] = await provider.getChildren(rootEntries[0]);
   expect(processFile?.label).toBe('hello.p.json');
-  expect(processFile?.command?.command).toBe('vscode.openWith');
-  expect(processFile?.command?.arguments).toContain('default');
+  expect(processFile?.command?.command).toBe('vscode.open');
   expect(provider.getTreeItem(processFile!).resourceUri).toBe(processFile?.uri);
   const fsProvider = new IarContentFileSystemProvider();
   const fileUri = processFile!.command!.arguments![0] as import('vscode').Uri;
   expect(fileUri.path).toBe('/shared-project-2.1.0.iar/process/hello.p.json');
+  expect(iarEditorLocation(fileUri)).toEqual({ app: 'test-app', project: 'shared-project', file: 'process/hello.p.json' });
   expect(Buffer.from(fsProvider.readFile(fileUri)).toString('utf8')).toBe('{"name":"IAR process"}');
   expect(fsProvider.readDirectory(iarDependency!.uri)).toEqual([['process', FileType.Directory], ['variables.yaml', FileType.File]]);
   expect(() => fsProvider.writeFile(fileUri, new Uint8Array(), { create: true, overwrite: true })).toThrow();

@@ -18,6 +18,7 @@ import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import { pickFile } from '../file-picker';
 import {
   createJsonRpcSuccessResponse,
+  editorInitializationParams,
   hasEditorFileContent,
   InitializeConnectionRequest,
   isAction,
@@ -37,7 +38,7 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
     new WebServiceClientWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, editorInitializationParams(document)),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())

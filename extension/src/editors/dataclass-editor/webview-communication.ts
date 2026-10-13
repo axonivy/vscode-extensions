@@ -8,6 +8,7 @@ import { updateTextDocumentContent } from '../content-writer';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import { JavaProvider } from '../java-provider';
 import {
+  editorInitializationParams,
   hasEditorFileContent,
   InitializeConnectionRequest,
   isAction,
@@ -26,7 +27,7 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
     new DataClassEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, editorInitializationParams(document)),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())

@@ -4,6 +4,7 @@ import type { WebviewPanel } from 'vscode';
 import { commands, Uri } from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
+import type { IarProjectContext } from '../../project-explorer/iar-content-provider';
 import {
   InitializeConnectionRequest,
   isAction,
@@ -15,13 +16,24 @@ import { WebSocketForwarder } from '../websocket-forwarder';
 
 const CmsWebSocketMessage: NotificationType<unknown> = { method: 'cmsWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, projectPath: string) => {
+export const setupCommunication = (
+  websocketUrl: URL,
+  messenger: Messenger,
+  webviewPanel: WebviewPanel,
+  projectPath: string,
+  iarProjectContext?: IarProjectContext
+) => {
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
     new CmsEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, projectPath),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: projectPath }),
+      () =>
+        messenger.sendNotification(
+          InitializeConnectionRequest,
+          messageParticipant,
+          iarProjectContext ? { ...iarProjectContext, file: '' } : { file: projectPath }
+        ),
       { sender: messageParticipant }
     )
   );

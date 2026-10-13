@@ -15,13 +15,46 @@ import {
 export const IAR_CONTENT_SCHEME = 'axonivy-iar-content';
 const IVY_CONTENT_PATH = 'META-INF/ivy';
 
-export const iarContentUri = (archivePath: string, entryPath: string) => {
+export interface IarProjectContext {
+  app: string;
+  project: string;
+}
+
+export interface IarEditorLocation extends IarProjectContext {
+  file: string;
+}
+
+export const applicationNameFromIvyProjectId = (projectId: string) => /^~([^/]+)\//.exec(projectId)?.[1];
+
+export const iarContentUri = (archivePath: string, entryPath: string, projectContext?: IarProjectContext) => {
   const contentPath = entryPath.replace(/^META-INF\/ivy\/?/, '');
   const uriPath = [path.basename(archivePath), ...contentPath.split('/').filter(Boolean)]
     .map(segment => encodeURIComponent(segment))
     .join('/');
-  const query = new URLSearchParams({ archive: archivePath });
+  const query = new URLSearchParams({ archive: archivePath, entry: entryPath });
+  if (projectContext) {
+    query.set('app', projectContext.app);
+    query.set('project', projectContext.project);
+  }
   return Uri.parse(`${IAR_CONTENT_SCHEME}:/${uriPath}?${query.toString()}`);
+};
+
+export const iarEditorLocation = (uri: Uri): IarEditorLocation | undefined => {
+  if (uri.scheme !== IAR_CONTENT_SCHEME) {
+    return;
+  }
+  const query = new URLSearchParams(uri.query);
+  const app = query.get('app');
+  const project = query.get('project');
+  const archiveEntryPath = query.get('entry');
+  if (!app || !project || !archiveEntryPath) {
+    return;
+  }
+  const file = archiveEntryPath.replace(/^META-INF\/ivy\/?/, '');
+  if (!file || file.split('/').some(segment => segment === '.' || segment === '..')) {
+    return;
+  }
+  return { app, project, file };
 };
 
 export class IarContentFileSystemProvider implements FileSystemProvider {

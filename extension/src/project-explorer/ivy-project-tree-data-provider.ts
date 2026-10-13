@@ -20,7 +20,7 @@ import { executeCommand, type KnownCommand } from '../base/commands';
 import { config } from '../base/configurations';
 import { IvyDiagnostics } from '../engine/diagnostics';
 import type { ProjectBean } from '../engine/api/generated/client';
-import { iarContentUri } from './iar-content-provider';
+import { applicationNameFromIvyProjectId, iarContentUri, type IarProjectContext } from './iar-content-provider';
 
 const __dirname = import.meta.dirname;
 interface IvyCommand extends VSCodeCommand {
@@ -39,6 +39,7 @@ export interface Entry {
   kind?: 'workspaceProject' | 'iarDependencyGroup' | 'iarDependency' | 'iarContentDirectory' | 'iarContentFile';
   archivePath?: string;
   archiveEntryPath?: string;
+  iarProjectContext?: IarProjectContext;
   parent?: Entry;
   command?: IvyCommand;
 }
@@ -177,19 +178,24 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   async getChildren(element?: Entry): Promise<Entry[]> {
     await this.activateEnginePromise;
     if (element?.kind === 'iarDependencyGroup') {
-      return (await this.getIarProjects()).map(project => ({
-        uri: iarContentUri(project.projectDirectory, 'META-INF/ivy'),
-        type: FileType.Directory,
-        label: project.artifactId,
-        description: project.version,
-        tooltip: `${project.groupId}:${project.artifactId}:${project.version}`,
-        iconPath: new ThemeIcon('lock'),
-        collapsibleState: TreeItemCollapsibleState.Collapsed,
-        kind: 'iarDependency',
-        archivePath: project.projectDirectory,
-        archiveEntryPath: 'META-INF/ivy',
-        parent: element
-      }));
+      return (await this.getIarProjects()).map(project => {
+        const app = applicationNameFromIvyProjectId(project.id.id) ?? (project.id.project !== project.id.name ? project.id.project : '');
+        const iarProjectContext = { app, project: project.id.name };
+        return {
+          uri: iarContentUri(project.projectDirectory, 'META-INF/ivy', iarProjectContext),
+          type: FileType.Directory,
+          label: project.artifactId,
+          description: project.version,
+          tooltip: `${project.groupId}:${project.artifactId}:${project.version}`,
+          iconPath: new ThemeIcon('lock'),
+          collapsibleState: TreeItemCollapsibleState.Collapsed,
+          kind: 'iarDependency' as const,
+          archivePath: project.projectDirectory,
+          archiveEntryPath: 'META-INF/ivy',
+          iarProjectContext,
+          parent: element
+        };
+      });
     }
     if (element?.kind === 'iarDependency' || element?.kind === 'iarContentDirectory') {
       return this.getIarContentChildren(element);
@@ -233,16 +239,19 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         return a.entryPath.localeCompare(b.entryPath);
       })
       .map(({ entryPath, isDirectory }) => ({
-        uri: iarContentUri(archivePath, entryPath),
+        uri: iarContentUri(archivePath, entryPath, parent.iarProjectContext),
         type: isDirectory ? FileType.Directory : FileType.File,
         label: path.posix.basename(entryPath),
         collapsibleState: isDirectory ? TreeItemCollapsibleState.Collapsed : undefined,
         kind: isDirectory ? 'iarContentDirectory' : 'iarContentFile',
         archivePath,
         archiveEntryPath: entryPath,
+        iarProjectContext: parent.iarProjectContext,
         command: isDirectory
           ? undefined
-          : { command: 'vscode.openWith', title: 'Open', arguments: [iarContentUri(archivePath, entryPath), 'default'] },
+          : parent.iarProjectContext?.app && parent.iarProjectContext.project
+            ? { command: 'vscode.open', title: 'Open', arguments: [iarContentUri(archivePath, entryPath, parent.iarProjectContext)] }
+            : { command: 'vscode.openWith', title: 'Open', arguments: [iarContentUri(archivePath, entryPath), 'default'] },
         parent
       }));
   }

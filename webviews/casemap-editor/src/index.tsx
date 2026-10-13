@@ -12,7 +12,7 @@ import { initTranslation } from './i18n';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-export async function start({ file }: InitializeConnection) {
+export async function start({ app = '', project = '', file }: InitializeConnection) {
   const connection = toConnection(messenger, 'caseMapWebSocketMessage');
   const client = await CaseMapClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
@@ -24,8 +24,8 @@ export async function start({ file }: InitializeConnection) {
   const normalized = file.replace(/\\/g, '/');
   const processPathIndex = normalized.indexOf('/process/');
   const projectPath = processPathIndex >= 0 ? normalized.slice(0, processPathIndex) : normalized;
-  const projectName = projectPath.substring(projectPath.lastIndexOf('/') + 1);
-  const context = { app: '', project: projectName, file };
+  const projectName = project || projectPath.substring(projectPath.lastIndexOf('/') + 1);
+  const context = { app, project: projectName, file };
   await client.initialize(context);
   createRoot(rootElement).render(
     <React.StrictMode>

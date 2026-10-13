@@ -12,14 +12,14 @@ import { initTranslation } from './i18n';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-export async function start({ file }: InitializeConnection) {
+export async function start({ app = '', project = '', file }: InitializeConnection) {
   const connection = toConnection(messenger, 'databaseWebSocketMessage');
   const client = await ClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
 
   const normalized = file.replace(/\\/g, '/');
   const path = normalized.replace('/config/databases.yaml', '');
-  const projectName = path.substring(path.lastIndexOf('/') + 1);
+  const projectName = project || path.substring(path.lastIndexOf('/') + 1);
 
   const rootElement = document.getElementById('root');
   if (!rootElement) {
@@ -32,7 +32,7 @@ export async function start({ file }: InitializeConnection) {
         <ClientContextProvider client={client}>
           <QueryClientProvider client={queryClient}>
             <HotkeysProvider initiallyActiveScopes={['global']}>
-              <DatabaseEditor context={{ app: '', projects: [projectName], file }} />
+              <DatabaseEditor context={{ app, projects: [projectName], file }} />
               <Toaster closeButton={true} />
             </HotkeysProvider>
           </QueryClientProvider>

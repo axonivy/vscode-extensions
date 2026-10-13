@@ -12,7 +12,7 @@ import { initTranslation } from './i18n';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-export async function start({ file }: InitializeConnection) {
+export async function start({ app = '', project = '', file }: InitializeConnection) {
   const connection = toConnection(messenger, 'variableWebSocketMessage');
   const client = await ClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
@@ -27,7 +27,7 @@ export async function start({ file }: InitializeConnection) {
         <ClientContextProvider client={client}>
           <QueryClientProvider client={queryClient}>
             <HotkeysProvider initiallyActiveScopes={['global']}>
-              <VariableEditor context={{ app: '', project: '', file }} />
+              <VariableEditor context={{ app, project, file }} />
               <Toaster closeButton={true} />
             </HotkeysProvider>
           </QueryClientProvider>

@@ -3,6 +3,7 @@ import type { ExtensionContext, WebviewPanel } from 'vscode';
 import { ViewColumn, window } from 'vscode';
 import { messenger } from '../..';
 import { registerCommand } from '../../base/commands';
+import { type IarProjectContext } from '../../project-explorer/iar-content-provider';
 import { type TreeSelection } from '../../project-explorer/tree-selection';
 import { getEditorCmdProjectPath } from '../command-helper';
 import { createWebViewContent } from '../webview-helper';
@@ -33,13 +34,19 @@ export const revealExistingPanel = (projectPath: string) => {
   return true;
 };
 
-export const setupWebviewPanel = (context: ExtensionContext, websocketUrl: URL, projectPath: string, webviewPanel: WebviewPanel) => {
+export const setupWebviewPanel = (
+  context: ExtensionContext,
+  websocketUrl: URL,
+  projectPath: string,
+  webviewPanel: WebviewPanel,
+  iarProjectContext?: IarProjectContext
+) => {
   CmsEditorRegistry.register(projectPath, webviewPanel);
 
   const projectName = projectPath.split(path.sep).pop();
   webviewPanel.title = `CMS - ${projectName}`;
 
-  setupCommunication(websocketUrl, messenger, webviewPanel, projectPath);
+  setupCommunication(websocketUrl, messenger, webviewPanel, projectPath, iarProjectContext);
   webviewPanel.webview.options = { enableScripts: true };
   webviewPanel.webview.html = createWebViewContent(context, webviewPanel.webview, 'cms-editor');
 };

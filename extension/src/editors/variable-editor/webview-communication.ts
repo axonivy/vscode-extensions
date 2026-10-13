@@ -6,6 +6,7 @@ import type { MessageParticipant, NotificationType } from 'vscode-messenger-comm
 import { updateTextDocumentContent } from '../content-writer';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import {
+  editorInitializationParams,
   hasEditorFileContent,
   InitializeConnectionRequest,
   isAction,
@@ -22,7 +23,7 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
     new VariableEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, editorInitializationParams(document)),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
