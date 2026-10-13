@@ -16,3 +16,5 @@ AI tooling to help developers build Axon Ivy projects using natural language.
 ## 🔎 Scope
 
 We optimize Axon Ivy project formats, schemas, and included technologies for use with AI assistants. We maintain the shared AI-facing understanding and Designer capabilities needed to create, understand, and validate Ivy projects.
+
+See the [AI tooling decisions](./decisions.md) for concise rationale behind current implementation choices.
