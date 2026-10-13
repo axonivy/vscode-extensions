@@ -1,6 +1,6 @@
 import { beforeEach, expect, test, vi } from 'vitest';
 import { FileType, ThemeIcon, TreeItemCollapsibleState } from 'vscode';
-import { IarContentDocumentProvider } from './iar-content-provider';
+import { IarContentFileSystemProvider } from './iar-content-provider';
 import { IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
 
 const mocks = vi.hoisted(() => ({
@@ -35,14 +35,26 @@ vi.mock('vscode', () => {
   class Diagnostic {
     constructor(..._args: unknown[]) {}
   }
+  class Disposable {
+    constructor(_dispose: () => void) {}
+  }
+  class FileSystemError extends Error {
+    static FileNotFound = (message?: string) => new FileSystemError(message);
+    static FileNotADirectory = (message?: string) => new FileSystemError(message);
+    static FileIsADirectory = (message?: string) => new FileSystemError(message);
+    static NoPermissions = (message?: string) => new FileSystemError(message);
+  }
   const parseUri = (value: string) => {
-    const [fsPath, query = ''] = value.split('?');
-    return { fsPath, query };
+    const parsed = new URL(value);
+    const uriPath = decodeURIComponent(parsed.pathname);
+    return { fsPath: uriPath, path: uriPath, query: parsed.search.slice(1) };
   };
   return {
     Diagnostic,
     DiagnosticSeverity: { Error: 0 },
+    Disposable,
     EventEmitter,
+    FileSystemError,
     FileType: { File: 1, Directory: 2 },
     Range,
     ThemeIcon,
@@ -77,7 +89,7 @@ vi.mock('adm-zip', () => ({
       if (entryPath !== 'META-INF/ivy/process/hello.p.json') {
         return undefined;
       }
-      return { getData: () => Buffer.from('{"name":"IAR process"}') };
+      return { entryName: entryPath, isDirectory: false, getData: () => Buffer.from('{"name":"IAR process"}') };
     }
   }
 }));
@@ -142,9 +154,11 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
   expect(processFile?.command?.command).toBe('vscode.openWith');
   expect(processFile?.command?.arguments).toContain('default');
   expect(provider.getTreeItem(processFile!).resourceUri).toBe(processFile?.uri);
-  const textProvider = new IarContentDocumentProvider();
-  expect(textProvider.provideTextDocumentContent(processFile!.command!.arguments![0] as import('vscode').Uri)).toBe(
-    '{"name":"IAR process"}'
-  );
+  const fsProvider = new IarContentFileSystemProvider();
+  const fileUri = processFile!.command!.arguments![0] as import('vscode').Uri;
+  expect(fileUri.path).toBe('/shared-project-2.1.0.iar/process/hello.p.json');
+  expect(Buffer.from(fsProvider.readFile(fileUri)).toString('utf8')).toBe('{"name":"IAR process"}');
+  expect(fsProvider.readDirectory(iarDependency!.uri)).toEqual([['process', FileType.Directory], ['variables.yaml', FileType.File]]);
+  expect(() => fsProvider.writeFile(fileUri, new Uint8Array(), { create: true, overwrite: true })).toThrow();
   expect(workspaceProject?.kind).toBe('workspaceProject');
 });

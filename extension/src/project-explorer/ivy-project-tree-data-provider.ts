@@ -178,7 +178,7 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
     await this.activateEnginePromise;
     if (element?.kind === 'iarDependencyGroup') {
       return (await this.getIarProjects()).map(project => ({
-        uri: Uri.file(project.projectDirectory),
+        uri: iarContentUri(project.projectDirectory, 'META-INF/ivy'),
         type: FileType.Directory,
         label: project.artifactId,
         description: project.version,
