@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2019-09/schema","$defs":{"VariableMap":{"type":"object"}},"type":"object","properties":{"Variables":{"$ref":"#/$defs/VariableMap","examples":["myVar: myValue"]}},"additionalProperties":false}
