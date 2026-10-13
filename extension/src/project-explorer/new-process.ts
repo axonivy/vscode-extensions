@@ -1,5 +1,5 @@
 import path from 'path';
-import { l10n } from 'vscode';
+import { l10n, Uri } from 'vscode';
 import { localizeProcessKind } from '../base/localized-labels';
 import { logErrorMessage } from '../base/logging-util';
 import type { CreateProcessParams } from '../engine/api/engine-api';
@@ -15,7 +15,7 @@ import {
   type MSStateBase,
   type ProjectSelection
 } from './utils/multi-step-input';
-import { validateNamespace, validateProjectArtifactName, type ResourceDirectoryTarget } from './utils/util';
+import { validateNamespace, validateProjectArtifactName as validateSyntax, type ResourceDirectoryTarget } from './utils/util';
 
 export type ProcessKind = 'Business Process' | 'Callable Sub Process' | 'Web Service Process' | '';
 
@@ -26,7 +26,23 @@ interface NewProcessState extends MSStateBase {
   projectFromSelection?: ProjectSelection | undefined;
 }
 
+interface ProcessObject {
+  name: string;
+  namespace: string;
+}
+
 export const addNewProcess = async (selectionContext: AddCommandSelectionContext, kind: ProcessKind = 'Business Process', pid?: string) => {
+
+  const validateProcessNameAndNamespace = (typedProcessNamespace: string, ): string | undefined => {
+    return validateSyntax(typedProcessNamespace) ?? validateNotExisting(typedProcessNamespace, , selectedUri, deployedProjects);
+  };
+
+  const validateNotExisting = (typedProcessNamespace: string, typedProcessName: string, selectedUri: Uri, existingProcesses: ProcessObject[]): string | undefined => {
+    if (existingProcesses.some(process => project.id.name === typedProjectName)) {
+      return l10n.t('A project with this name already exists in the workspace or as a Maven dependency.');
+    }
+  };
+
   const resourceDirectoryTarget: ResourceDirectoryTarget = 'process';
   const existingProjects = selectionContext.existingIvyProjects;
   const { projectFromSelection, namespaceFromSelection } = await resolveAddCommandSelectionContext(
@@ -67,7 +83,7 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       currentStep: state.currentStep,
       totalSteps: state.totalSteps,
       value: state.name,
-      validationFunction: validateProjectArtifactName,
+      validationFunction: validateSyntax,
       onBack: (typedValue: string) => {
         state.name = typedValue;
       }
@@ -82,7 +98,8 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       currentStep: state.currentStep,
       totalSteps: state.totalSteps,
       value: state.namespace,
-      validationFunction: validateNamespace,
+      validationFunction: validateProcessNameAndNamespace,
+      validationFunctionArgs: [state.name ?? ''],
       onBack: (typedValue: string) => {
         state.namespace = typedValue;
       }
