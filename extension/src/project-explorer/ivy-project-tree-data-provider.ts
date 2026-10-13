@@ -172,7 +172,7 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         uri: Uri.file(project.projectDirectory),
         type: FileType.Directory,
         label: project.artifactId,
-        description: l10n.t('Read-only IAR dependency · {0}', project.version),
+        description: project.version,
         tooltip: `${project.groupId}:${project.artifactId}:${project.version}`,
         iconPath: new ThemeIcon('lock'),
         kind: 'iarDependency',

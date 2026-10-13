@@ -90,7 +90,7 @@ test('lists IAR projects in a separate read-only section', async () => {
   expect(dependencies).toHaveLength(1);
   expect(dependencies[0]).toMatchObject({
     label: 'shared-project',
-    description: 'Read-only IAR dependency · 2.1.0',
+    description: '2.1.0',
     kind: 'iarDependency',
     type: FileType.Directory
   });
