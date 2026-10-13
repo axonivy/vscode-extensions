@@ -28,6 +28,12 @@ jobs:
         uses: stCarolas/setup-maven@v5.1
         with:
           maven-version: 3.10.0
+      - name: Verify GH skill installable
+        shell: bash
+        run: |
+          gh --version
+          install_dir="$RUNNER_TEMP/gh-skills"
+          bash aitest/skill-install.sh "$install_dir"
       - name: Build VSC
         run: |
           corepack enable
