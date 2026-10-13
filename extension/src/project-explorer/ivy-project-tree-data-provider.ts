@@ -1,5 +1,6 @@
 import fs from 'fs';
 import * as path from 'path';
+import AdmZip from 'adm-zip';
 import {
   Diagnostic,
   DiagnosticSeverity,
@@ -19,6 +20,7 @@ import { executeCommand, type KnownCommand } from '../base/commands';
 import { config } from '../base/configurations';
 import { IvyDiagnostics } from '../engine/diagnostics';
 import type { ProjectBean } from '../engine/api/generated/client';
+import { iarContentUri } from './iar-content-provider';
 
 const __dirname = import.meta.dirname;
 interface IvyCommand extends VSCodeCommand {
@@ -34,7 +36,9 @@ export interface Entry {
   iconPath?: TreeItem['iconPath'];
   collapsibleState?: TreeItemCollapsibleState;
   contextValue?: string;
-  kind?: 'workspaceProject' | 'iarDependencyGroup' | 'iarDependency';
+  kind?: 'workspaceProject' | 'iarDependencyGroup' | 'iarDependency' | 'iarContentDirectory' | 'iarContentFile';
+  archivePath?: string;
+  archiveEntryPath?: string;
   parent?: Entry;
   command?: IvyCommand;
 }
@@ -64,6 +68,7 @@ type ProjectFindResult = {
 export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   private ivyProjects: Promise<ProjectFindResult>;
   private iarProjects?: Promise<ProjectBean[]>;
+  private iarArchives = new Map<string, AdmZip>();
   private _onDidChangeTreeData = new EventEmitter<Entry | undefined | null>();
   readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
@@ -124,6 +129,7 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   refresh() {
     this.ivyProjects = this.findIvyProjects();
     this.iarProjects = undefined;
+    this.iarArchives.clear();
     this._onDidChangeTreeData.fire(undefined);
   }
 
@@ -175,9 +181,15 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
         description: project.version,
         tooltip: `${project.groupId}:${project.artifactId}:${project.version}`,
         iconPath: new ThemeIcon('lock'),
+        collapsibleState: TreeItemCollapsibleState.Collapsed,
         kind: 'iarDependency',
+        archivePath: project.projectDirectory,
+        archiveEntryPath: 'META-INF/ivy',
         parent: element
       }));
+    }
+    if (element?.kind === 'iarDependency' || element?.kind === 'iarContentDirectory') {
+      return this.getIarContentChildren(element);
     }
     if (element) {
       return [];
@@ -199,6 +211,91 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
       })
     );
     return this.iarProjects;
+  }
+
+  private getIarContentChildren(parent: Entry): Entry[] {
+    const archivePath = parent.archivePath;
+    const parentEntryPath = parent.archiveEntryPath;
+    if (!archivePath || !parentEntryPath) {
+      return [];
+    }
+    const children = this.isDirectory(archivePath)
+      ? this.getIarDirectoryChildren(archivePath, parentEntryPath)
+      : this.getIarArchiveChildren(archivePath, parentEntryPath);
+    return children
+      .sort((a, b) => {
+        if (a.isDirectory !== b.isDirectory) {
+          return a.isDirectory ? -1 : 1;
+        }
+        return a.entryPath.localeCompare(b.entryPath);
+      })
+      .map(({ entryPath, isDirectory }) => ({
+        uri: iarContentUri(archivePath, entryPath),
+        type: isDirectory ? FileType.Directory : FileType.File,
+        label: path.posix.basename(entryPath),
+        iconPath: isDirectory ? new ThemeIcon('folder') : undefined,
+        collapsibleState: isDirectory ? TreeItemCollapsibleState.Collapsed : undefined,
+        kind: isDirectory ? 'iarContentDirectory' : 'iarContentFile',
+        archivePath,
+        archiveEntryPath: entryPath,
+        command: isDirectory ? undefined : { command: 'vscode.open', title: 'Open', arguments: [iarContentUri(archivePath, entryPath)] },
+        parent
+      }));
+  }
+
+  private getIarArchiveChildren(archivePath: string, parentEntryPath: string) {
+    const archive = this.getIarArchive(archivePath);
+    const prefix = `${parentEntryPath.replace(/\/$/, '')}/`;
+    const children = new Map<string, boolean>();
+    for (const archiveEntry of archive.getEntries()) {
+      if (!archiveEntry.entryName.startsWith(prefix)) {
+        continue;
+      }
+      const relativePath = archiveEntry.entryName.slice(prefix.length);
+      if (!relativePath) {
+        continue;
+      }
+      const [name, ...remainingPath] = relativePath.split('/').filter(Boolean);
+      if (!name) {
+        continue;
+      }
+      const childPath = `${prefix}${name}`;
+      const isDirectory = archiveEntry.isDirectory || remainingPath.length > 0;
+      children.set(childPath, (children.get(childPath) ?? false) || isDirectory);
+    }
+    return [...children].map(([entryPath, isDirectory]) => ({ entryPath, isDirectory }));
+  }
+
+  private getIarDirectoryChildren(projectDirectory: string, parentEntryPath: string) {
+    const directory = path.join(projectDirectory, ...parentEntryPath.split('/'));
+    try {
+      return fs
+        .readdirSync(directory, { withFileTypes: true })
+        .filter(entry => entry.isDirectory() || entry.isFile())
+        .map(entry => ({
+          entryPath: path.posix.join(parentEntryPath, entry.name),
+          isDirectory: entry.isDirectory()
+        }));
+    } catch {
+      return [];
+    }
+  }
+
+  private isDirectory(filePath: string) {
+    try {
+      return fs.statSync(filePath).isDirectory();
+    } catch {
+      return false;
+    }
+  }
+
+  private getIarArchive(archivePath: string) {
+    let archive = this.iarArchives.get(archivePath);
+    if (!archive) {
+      archive = new AdmZip(archivePath);
+      this.iarArchives.set(archivePath, archive);
+    }
+    return archive;
   }
 
   private createIarGroup(): Entry {
