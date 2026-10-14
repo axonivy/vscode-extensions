@@ -922,10 +922,10 @@
             "template": {
               "type": "string",
               "enum": [
-                "basic-10",
                 "frame-10",
                 "frame-10-right",
-                "frame-10-full-width"
+                "frame-10-full-width",
+                "basic-10"
               ],
               "default": "frame-10",
               "description": "Template to use for the new Dialog. Only applicable if type is 'JSF' and layout is not 'Component'."
