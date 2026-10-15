@@ -46,6 +46,7 @@ pipeline {
             bat 'pnpm run test:playwright:performance'
           }
           archiveArtifacts artifacts: 'playwright/test-results/**', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright/test-user-data-dir/logs/**', allowEmptyArchive: true
           archiveArtifacts artifacts: 'playwright/test-user-data-dir/User/globalStorage/axonivy.vscode-designer*/engines/*_All_*/logs/**', allowEmptyArchive: true
           withChecks('Performance Tests') {
             junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'node_modules/**/report.xml'
