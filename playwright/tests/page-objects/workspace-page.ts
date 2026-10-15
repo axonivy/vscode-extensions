@@ -25,7 +25,7 @@ export class WorkspacePage {
   }
 
   async provideUserInput(input?: string) {
-    if (input) {
+    if (input !== undefined) {
       const textBox = this.quickInputBox.getByRole('textbox');
       await expect(textBox).toBeFocused();
       await textBox.fill(input);
@@ -62,6 +62,10 @@ export class WorkspacePage {
 
   get quickInputTitle() {
     return this.page.locator('div.quick-input-title');
+  }
+
+  get quickInputMessage() {
+    return this.page.locator('div.quick-input-message');
   }
 
   get toasts() {
