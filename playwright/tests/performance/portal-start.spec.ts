@@ -17,10 +17,12 @@ test.describe('Portal performance', () => {
 
   test('Portal home', async ({ wsPage, electronApp }) => {
     const openingJavaProjects = wsPage.toasts.getByText('Opening Java Projects');
-    await expect(openingJavaProjects).toBeVisible();
+    const javaReadyStatus = wsPage.page.locator('div.statusbar-item[id*="redhat.java"]').filter({ hasText: 'Java: Ready' });
+    // the Java import can already be finished (toast gone) while the fixtures wait for the engine
+    await expect(openingJavaProjects.or(javaReadyStatus).first()).toBeVisible();
     await expect(openingJavaProjects).toBeHidden();
     await expect(async () => {
-      const javaReady = async () => await expect(wsPage.page.locator('div.statusbar-item[id*="redhat.java"]').filter({ hasText: 'Java: Ready' })).toBeVisible({ timeout: 1_000 });
+      const javaReady = async () => await expect(javaReadyStatus).toBeVisible({ timeout: 1_000 });
       for (let i = 0; i < 2; i++) {
         await javaReady();
         await wsPage.page.waitForTimeout(1_000);
