@@ -45,6 +45,14 @@ pipeline {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
             bat 'pnpm run test:playwright:performance'
           }
+          powershell returnStatus: true, script: '''
+            $ws = Get-ChildItem $env:TEMP -Directory -Filter 'portalPerformance*' | Sort-Object LastWriteTime | Select-Object -Last 1
+            Write-Output "[diag] workspace: $($ws.FullName)"
+            Get-ChildItem -Path $ws.FullName -Recurse -Directory -Filter 'mvn-deps' | ForEach-Object {
+              Write-Output "[diag] $($_.FullName) created=$($_.CreationTime.ToString('HH:mm:ss.fff'))"
+              Get-ChildItem $_.FullName | ForEach-Object { Write-Output "[diag]   $($_.Name) created=$($_.CreationTime.ToString('HH:mm:ss.fff')) written=$($_.LastWriteTime.ToString('HH:mm:ss.fff'))" }
+            }
+          '''
           archiveArtifacts artifacts: 'playwright/test-results/**', allowEmptyArchive: true
           archiveArtifacts artifacts: 'playwright/test-user-data-dir/logs/**', allowEmptyArchive: true
           archiveArtifacts artifacts: 'playwright/test-user-data-dir/User/globalStorage/axonivy.vscode-designer*/engines/*_All_*/logs/**', allowEmptyArchive: true

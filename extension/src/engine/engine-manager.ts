@@ -3,6 +3,7 @@ import type { ExtensionContext } from 'vscode';
 import { commands, l10n, Uri } from 'vscode';
 import { DidChangeWatchedFilesNotification } from 'vscode-languageserver-protocol';
 import { executeCommand } from '../base/commands';
+import { extensionLogOutputChannel } from '../base/extension-output-channel';
 import { config } from '../base/configurations';
 import { runJavaProjectImport } from '../base/java-extension-api';
 import { logErrorMessage } from '../base/logging-util';
@@ -175,10 +176,13 @@ export class IvyEngineManager {
         text: l10n.t('Initialize projects')
       },
       async () => {
+        extensionLogOutputChannel.appendLine(`[diag] initProjects start ${ivyProjectDirectories.length} projects`);
         for (const projectDir of ivyProjectDirectories) {
           await this.ivyEngineApi?.findOrCreateProject(projectDir);
         }
+        extensionLogOutputChannel.appendLine('[diag] initProjects deploy start');
         await this.ivyEngineApi?.deployProjects({ projectDirs: ivyProjectDirectories });
+        extensionLogOutputChannel.appendLine('[diag] initProjects deploy done');
       }
     );
   }
@@ -199,6 +203,7 @@ export class IvyEngineManager {
   }
 
   public async deployProjects(ivyProjectDirectory?: string) {
+    extensionLogOutputChannel.appendLine(`[diag] deployProjects ${ivyProjectDirectory ?? 'all'} locked=${isWorkspaceLocked()}`);
     if (isWorkspaceLocked()) {
       return;
     }
@@ -213,6 +218,7 @@ export class IvyEngineManager {
       { text: statusMessage },
       async () => await this.ivyEngineApi?.deployProjects({ projectDirs: ivyProjectDirectories })
     );
+    extensionLogOutputChannel.appendLine(`[diag] deployProjects done ${ivyProjectDirectories.join(', ')}`);
   }
 
   public async stopBpmEngine(ivyProjectDirectory: string) {
@@ -355,13 +361,16 @@ export class IvyEngineManager {
   }
 
   public async invalidateClassLoader(ivyProjectDirectory: string) {
+    extensionLogOutputChannel.appendLine(`[diag] invalidateClassLoader ${ivyProjectDirectory} locked=${isWorkspaceLocked()}`);
     if (isWorkspaceLocked()) {
       return;
     }
-    return await StatusBar.withStatusBarProgress(
+    const result = await StatusBar.withStatusBarProgress(
       { text: l10n.t('Invalidating class loader') },
       async () => await this.ivyEngineApi?.invalidateClassLoader({ projectDir: ivyProjectDirectory })
     );
+    extensionLogOutputChannel.appendLine(`[diag] invalidateClassLoader done ${ivyProjectDirectory}`);
+    return result;
   }
 
   public async getEngineVersion() {

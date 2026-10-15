@@ -1,6 +1,7 @@
 import path from 'path';
 import { l10n, Uri, workspace, type ExtensionContext } from 'vscode';
 import { debouncedAction, hasDeployActionInQueue, type ActionKey } from '../base/debounce';
+import { extensionLogOutputChannel } from '../base/extension-output-channel';
 import { askToRunJavaCleanWorkspace } from '../base/java-extension-api';
 import { isWorkspaceLocked, onWorkspaceUnlocked } from '../base/workspace-lock';
 import { IvyEngineManager } from '../engine/engine-manager';
@@ -39,6 +40,7 @@ export class ProjectFileWatcherManager {
     });
     const pendingDeploys = new Map<string, Uri>();
     const deployProject = (uri: Uri) => {
+      extensionLogOutputChannel.appendLine(`[diag] mvn-deps event ${uri.fsPath} locked=${isWorkspaceLocked()}`);
       if (isWorkspaceLocked()) {
         // e.g. the Java extension's Maven import copies dependencies before the engine has deployed the projects
         pendingDeploys.set(uri.toString(), uri);
@@ -48,6 +50,7 @@ export class ProjectFileWatcherManager {
     };
     onWorkspaceUnlocked(() => {
       const uris = [...pendingDeploys.values()];
+      extensionLogOutputChannel.appendLine(`[diag] workspace unlocked, pending mvn-deps events: ${uris.length}`);
       pendingDeploys.clear();
       uris.forEach(deployProject);
     });
