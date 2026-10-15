@@ -13,10 +13,11 @@ import {
 import { localizeDataClassType } from '../../base/localized-labels';
 import type { DataClassBean } from '../../engine/api/generated/client';
 import { IvyEngineManager } from '../../engine/engine-manager';
+import { resolveDefaultNamespace } from '../../project-explorer/utils/util';
 
 export type NewDataClassToolArgs = {
   name: string;
-  namespace: string;
+  namespace?: string;
   projectPath: string;
   type?: DataClassType;
 };
@@ -30,12 +31,15 @@ export class NewDataClassTool implements LanguageModelTool<NewDataClassToolArgs>
 
   prepareInvocation?(options: LanguageModelToolInvocationPrepareOptions<NewDataClassToolArgs>): ProviderResult<PreparedToolInvocation> {
     const type = resolvedType(options.input.type);
-    const confirmationMessage = [
+    const confirmationLines = [
       l10n.t('Create an Axon Ivy {0} with the following details?', localizeDataClassType(type)),
-      `- ${l10n.t('Name')}: ${options.input.name}`,
-      `- ${l10n.t('Namespace')}: ${options.input.namespace}`,
-      `- ${l10n.t('Project')}: ${path.basename(options.input.projectPath)}`
-    ].join('\n');
+      `- ${l10n.t('Name')}: ${options.input.name}`
+    ];
+    if (options.input.namespace) {
+      confirmationLines.push(`- ${l10n.t('Namespace')}: ${options.input.namespace}`);
+    }
+    confirmationLines.push(`- ${l10n.t('Project')}: ${path.basename(options.input.projectPath)}`);
+    const confirmationMessage = confirmationLines.join('\n');
     return {
       invocationMessage: l10n.t('Creating new Axon Ivy {0} "{1}"', localizeDataClassType(type), options.input.name),
       confirmationMessages: {
@@ -49,7 +53,7 @@ export class NewDataClassTool implements LanguageModelTool<NewDataClassToolArgs>
 export const createNewDataClass = async (input: NewDataClassToolArgs): Promise<string> => {
   const type = resolvedType(input.type);
   const newDataClassParams = {
-    name: `${input.namespace}.${input.name}`,
+    name: `${await resolvedNamespace(input)}.${input.name}`,
     projectDir: input.projectPath
   };
 
@@ -65,3 +69,6 @@ export const createNewDataClass = async (input: NewDataClassToolArgs): Promise<s
 };
 
 const resolvedType = (type?: DataClassType) => type ?? 'Data Class';
+
+const resolvedNamespace = async (input: NewDataClassToolArgs) =>
+  input.namespace || (await resolveDefaultNamespace(input.projectPath, 'dataclass'));
