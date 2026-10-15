@@ -2,7 +2,7 @@ import path from 'path';
 import { l10n, Uri, workspace, type ExtensionContext } from 'vscode';
 import { debouncedAction, hasDeployActionInQueue, type ActionKey } from '../base/debounce';
 import { askToRunJavaCleanWorkspace } from '../base/java-extension-api';
-import { isWorkspaceLocked } from '../base/workspace-lock';
+import { isWorkspaceLocked, onWorkspaceUnlocked } from '../base/workspace-lock';
 import { IvyEngineManager } from '../engine/engine-manager';
 import { IvyProjectExplorer } from './ivy-project-explorer';
 import { isIvyProject, IVY_PROJECT_FILE_PATTERN } from './ivy-project-tree-data-provider';
@@ -37,12 +37,20 @@ export class ProjectFileWatcherManager {
       }
       await this.deleteProjectOnEngine(e.fsPath);
     });
+    const pendingDeploys = new Map<string, Uri>();
     const deployProject = (uri: Uri) => {
       if (isWorkspaceLocked()) {
+        // e.g. the Java extension's Maven import copies dependencies before the engine has deployed the projects
+        pendingDeploys.set(uri.toString(), uri);
         return;
       }
       this.runEngineActionDebounced((d: string) => IvyEngineManager.instance.deployProjects(d), 'deploy', uri);
     };
+    onWorkspaceUnlocked(() => {
+      const uris = [...pendingDeploys.values()];
+      pendingDeploys.clear();
+      uris.forEach(deployProject);
+    });
     // a newly created folder may be reported as a single event without its content (e.g. Maven creating mvn-deps with its jars)
     const mvnDepsWatcher = workspace.createFileSystemWatcher('**/target/{lib,lib/mvn-deps,lib/mvn-deps/*.jar}');
     mvnDepsWatcher.onDidCreate(deployProject);
