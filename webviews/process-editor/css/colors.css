@@ -13,7 +13,7 @@ body {
 
   --glsp-execution-failed: var(--vscode-editorError-foreground);
 
-  --glsp-inline-label-background: var(--vscode-textSeparator-foreground);
+  --glsp-inline-label-background: var(--vscode-editor-background);
 
   --glsp-issue-background: var(--glsp-editor-background);
 }
