@@ -240,7 +240,11 @@ export class MultiStepInput<T extends MSStateBase> {
           reject(InputFlowAction.cancel);
         }),
         input.onDidChangeValue(async () => {
-          const validationResult = await validationFunction?.(input.value ?? '');
+          const validatedValue = input.value;
+          const validationResult = await validationFunction?.(validatedValue);
+          if (input.value !== validatedValue) {
+            return;
+          }
           if (validationResult) {
             input.validationMessage = validationResult;
           } else {
