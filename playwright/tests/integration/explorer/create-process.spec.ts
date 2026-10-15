@@ -58,8 +58,14 @@ test('Process validation', async ({ wsPage }) => {
   await explorer.addProcess('default', 'Business Process');
   await expect(wsPage.toasts.first()).toContainText("Error validating Artifact Name: The input 'default' is not allowed (Java keywords are not allowed)");
 
-  // Validate duplicate
+  // Validate duplicate empty namespace
   await explorer.addProcess('Actions', 'Business Process', '');
+  await expect(wsPage.quickInputMessage).toBeVisible();
+  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in the workspace.');
+
+  // Validate duplicate nested namespace
+  await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
+  await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
   await expect(wsPage.quickInputMessage).toBeVisible();
   await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in the workspace.');
 });
