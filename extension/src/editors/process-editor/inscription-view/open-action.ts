@@ -32,5 +32,5 @@ const resolveProjectUri = async (projectName: string) => {
   if (!project) {
     return;
   }
-  return Uri.parse(project.projectDirectory);
+  return Uri.file(project.projectDirectory);
 };
