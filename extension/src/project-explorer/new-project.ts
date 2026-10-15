@@ -22,10 +22,10 @@ interface NewProjectState extends MSStateBase {
 
 export const addNewProject = async (selectedUri: Uri) => {
   const validateProjectName = (typedProjectName: string): string | undefined => {
-    return validateProjectNameSyntax(typedProjectName) ?? validateNotExisting(typedProjectName, selectedUri, deployedProjects);
+    return validateProjectNameSyntax(typedProjectName) ?? validateNotExisting(typedProjectName, deployedProjects);
   };
 
-  const validateNotExisting = (typedProjectName: string, selectedUri: Uri, existingProjects: ProjectBean[]): string | undefined => {
+  const validateNotExisting = (typedProjectName: string, existingProjects: ProjectBean[]): string | undefined => {
     if (existingProjects.some(project => project.id.name === typedProjectName)) {
       return l10n.t('A project with this name already exists in the workspace or as a Maven dependency.');
     }

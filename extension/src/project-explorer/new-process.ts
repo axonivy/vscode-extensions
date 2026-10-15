@@ -1,5 +1,5 @@
 import path from 'path';
-import { l10n } from 'vscode';
+import { l10n, Uri, workspace } from 'vscode';
 import { localizeProcessKind } from '../base/localized-labels';
 import { logErrorMessage } from '../base/logging-util';
 import type { CreateProcessParams } from '../engine/api/engine-api';
@@ -27,6 +27,22 @@ interface NewProcessState extends MSStateBase {
 }
 
 export const addNewProcess = async (selectionContext: AddCommandSelectionContext, kind: ProcessKind = 'Business Process', pid?: string) => {
+  const validateFinal = async (typedProcessNamespace: string): Promise<string | undefined> => {
+    return validateNamespace(typedProcessNamespace) ?? (await validateNotExisting(typedProcessNamespace));
+  };
+
+  const validateNotExisting = async (typedProcessNamespace: string): Promise<string | undefined> => {
+    try {
+      const absPathProcess = Uri.file(
+        path.join(newProcessData.project?.path ?? '', resourceDirectoryTarget, typedProcessNamespace, `${newProcessData.name ?? ''}.p.json`)
+      );
+      await workspace.fs.stat(absPathProcess);
+      return l10n.t('A process with this name and namespace already exists in this project.');
+    } catch {
+      return undefined;
+    }
+  };
+
   const resourceDirectoryTarget: ResourceDirectoryTarget = 'process';
   const existingProjects = selectionContext.existingIvyProjects;
   const { projectFromSelection, namespaceFromSelection } = await resolveAddCommandSelectionContext(
@@ -82,7 +98,7 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
       currentStep: state.currentStep,
       totalSteps: state.totalSteps,
       value: state.namespace,
-      validationFunction: validateNamespace,
+      validationFunction: validateFinal,
       onBack: (typedValue: string) => {
         state.namespace = typedValue;
       }

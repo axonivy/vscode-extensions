@@ -38,8 +38,7 @@ test.describe('Project already exists', () => {
 
     await wsPage.executeCommand('Axon Ivy: New Project');
     await wsPage.provideUserInput(projectName);
-    const quickInputMessage = wsPage.page.locator('div.quick-input-message');
-    await expect(quickInputMessage).toBeVisible();
-    await expect(quickInputMessage).toHaveText('A project with this name already exists in the workspace or as a Maven dependency.');
+    await expect(wsPage.quickInputMessage).toBeVisible();
+    await expect(wsPage.quickInputMessage).toHaveText('A project with this name already exists in the workspace or as a Maven dependency.');
   });
 });

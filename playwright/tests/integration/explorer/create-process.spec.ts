@@ -52,8 +52,20 @@ test('Add web service process', async ({ wsPage }) => {
   await expect(start).toBeVisible();
 });
 
-test('Process name validation', async ({ wsPage }) => {
+test('Process validation', async ({ wsPage }) => {
+  // Validate Java Keywords Validation from Backend
   const explorer = new FileExplorer(wsPage);
   await explorer.addProcess('default', 'Business Process');
   await expect(wsPage.toasts.first()).toContainText("Error validating Artifact Name: The input 'default' is not allowed (Java keywords are not allowed)");
+
+  // Validate duplicate empty namespace
+  await explorer.addProcess('Actions', 'Business Process', '');
+  await expect(wsPage.quickInputMessage).toBeVisible();
+  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in this project.');
+
+  // Validate duplicate nested namespace
+  await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
+  await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
+  await expect(wsPage.quickInputMessage).toBeVisible();
+  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in this project.');
 });
