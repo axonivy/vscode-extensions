@@ -61,11 +61,11 @@ test('Process validation', async ({ wsPage }) => {
   // Validate duplicate empty namespace
   await explorer.addProcess('Actions', 'Business Process', '');
   await expect(wsPage.quickInputMessage).toBeVisible();
-  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in the workspace.');
+  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in this project.');
 
   // Validate duplicate nested namespace
   await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
   await explorer.addProcess(processName, 'Business Process', 'parent1/parent2');
   await expect(wsPage.quickInputMessage).toBeVisible();
-  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in the workspace.');
+  await expect(wsPage.quickInputMessage).toHaveText('A process with this name and namespace already exists in this project.');
 });

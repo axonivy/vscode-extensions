@@ -37,7 +37,7 @@ export const addNewProcess = async (selectionContext: AddCommandSelectionContext
         path.join(newProcessData.project?.path ?? '', resourceDirectoryTarget, typedProcessNamespace, `${newProcessData.name ?? ''}.p.json`)
       );
       await workspace.fs.stat(absPathProcess);
-      return l10n.t('A process with this name and namespace already exists in the workspace.');
+      return l10n.t('A process with this name and namespace already exists in this project.');
     } catch {
       return undefined;
     }
