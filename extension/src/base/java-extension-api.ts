@@ -127,7 +127,7 @@ const runJavaBuild = async () => {
     if (!ready) {
       return JavaBuildStatus.Unavailable;
     }
-    const status = await executeCommand<JavaBuildStatus>('java.workspace.compile', true);
+    const status = await executeCommand<JavaBuildStatus>('java.workspace.compile', false);
     return status ?? JavaBuildStatus.Unavailable;
   } catch {
     return JavaBuildStatus.Unavailable;
