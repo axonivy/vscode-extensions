@@ -1,5 +1,6 @@
 import { expect, test } from '~/fixtures/baseTest';
 import { ProjectExplorerView } from '~/page-objects/explorer-view';
+import { ProcessEditor } from '~/page-objects/process-editor';
 import { RestClientEditor } from '~/page-objects/restclient-editor';
 import { buildTestIar, installTestIar, testIarProject } from '~/utils/test-iar';
 import { iarDependencyWorkspacePath, prebuiltWorkspacePath } from '~/workspaces/workspace';
@@ -32,7 +33,6 @@ test.describe('IAR project dependencies', () => {
   });
 
   test('opens an IAR file in its webview editor and keeps it read-only', async ({ wsPage }) => {
-    test.setTimeout(90_000);
     const projectExplorer = new ProjectExplorerView(wsPage);
     await projectExplorer.openView();
     await projectExplorer.expandNodeExact('IAR Dependencies');
@@ -50,5 +50,25 @@ test.describe('IAR project dependencies', () => {
     const keyInput = editor.detail.getByRole('textbox', { name: 'Key' });
     await expect(keyInput).toHaveValue('personService');
     await expect(keyInput).toBeDisabled();
+  });
+
+  test('opens an IAR process with its app and project options', async ({ wsPage }) => {
+    const projectExplorer = new ProjectExplorerView(wsPage);
+    await projectExplorer.openView();
+    await projectExplorer.expandNodeExact('IAR Dependencies');
+    await projectExplorer.expandNodeExact(projectExplorerItem);
+    await projectExplorer.scrollToNodeExact('process');
+    await projectExplorer.expandNodeExact('process');
+    await projectExplorer.scrollToNodeExact('Animation.p.json');
+    await projectExplorer.selectNodeExact('Animation.p.json');
+
+    const editor = new ProcessEditor(wsPage, 'Animation.p.json');
+    await editor.expectTabVisible();
+    await editor.expectTabActive();
+    await expect(editor.elementByPID('190EEC366DECC66A-f0')).toBeVisible();
+
+    await expect(editor.toolbar.getByRole('button', { name: 'All Elements' })).toBeHidden();
+    const inscriptionView = await editor.openInscriptionView('190EEC366DECC66A-f0');
+    await expect(inscriptionView.inputFieldFor('Display name')).toBeDisabled();
   });
 });

@@ -25,9 +25,34 @@ export interface IarEditorLocation extends IarProjectContext {
   file: string;
 }
 
+const iarProjectContexts = new Map<string, IarProjectContext>();
+const iarEditorLocations = new Map<string, IarEditorLocation>();
+
 export const applicationNameFromIvyProjectId = (projectId: string) => /^~([^/]+)\//.exec(projectId)?.[1];
 
 export const iarContentUri = (archivePath: string, entryPath: string, projectContext?: IarProjectContext) => {
+  if (projectContext) {
+    iarProjectContexts.set(path.resolve(archivePath), projectContext);
+  }
+  const rememberEditorLocation = (uri: Uri) => {
+    if (projectContext) {
+      const file = entryPath.replace(/^META-INF\/ivy\/?/, '');
+      if (file) {
+        iarEditorLocations.set(iarUriKey(uri), { ...projectContext, file });
+      }
+    }
+    return uri;
+  };
+  if (isIarArchive(archivePath) && entryPath.endsWith('.p.json')) {
+    const archiveUri = Uri.file(path.resolve(archivePath)).toString();
+    const encodedEntryPath = entryPath
+      .split('/')
+      .filter(Boolean)
+      .map(segment => encodeURIComponent(segment))
+      .join('/');
+    return rememberEditorLocation(Uri.parse(`jar:${archiveUri}!/${encodedEntryPath}`));
+  }
+
   const contentPath = entryPath.replace(/^META-INF\/ivy\/?/, '');
   const uriPath = [path.basename(archivePath), ...contentPath.split('/').filter(Boolean)]
     .map(segment => encodeURIComponent(segment))
@@ -37,10 +62,26 @@ export const iarContentUri = (archivePath: string, entryPath: string, projectCon
     query.set('app', projectContext.app);
     query.set('project', projectContext.project);
   }
-  return Uri.parse(`${IAR_CONTENT_SCHEME}:/${uriPath}?${query.toString()}`);
+  return rememberEditorLocation(Uri.parse(`${IAR_CONTENT_SCHEME}:/${uriPath}?${query.toString()}`));
 };
 
 export const iarEditorLocation = (uri: Uri): IarEditorLocation | undefined => {
+  const registeredLocation = iarEditorLocations.get(iarUriKey(uri));
+  if (registeredLocation) {
+    return registeredLocation;
+  }
+  if (uri.scheme === 'jar') {
+    const jarLocation = parseJarUri(uri);
+    const projectContext = jarLocation && iarProjectContexts.get(path.resolve(jarLocation.archivePath));
+    if (!jarLocation || !projectContext) {
+      return;
+    }
+    const file = jarLocation.entryPath.replace(/^META-INF\/ivy\/?/, '');
+    if (!file || file.split('/').some(segment => segment === '.' || segment === '..')) {
+      return;
+    }
+    return { ...projectContext, file };
+  }
   if (uri.scheme !== IAR_CONTENT_SCHEME) {
     return;
   }
@@ -182,6 +223,13 @@ export class IarContentFileSystemProvider implements FileSystemProvider {
   }
 
   private resolveUri(uri: Uri) {
+    if (uri.scheme === 'jar') {
+      const jarLocation = parseJarUri(uri);
+      if (!jarLocation) {
+        throw FileSystemError.FileNotFound(uri);
+      }
+      return jarLocation;
+    }
     const archivePath = new URLSearchParams(uri.query).get('archive');
     if (!archivePath) {
       throw FileSystemError.FileNotFound(uri);
@@ -219,3 +267,49 @@ export class IarContentFileSystemProvider implements FileSystemProvider {
     return archive;
   }
 }
+
+const isIarArchive = (archivePath: string) => {
+  try {
+    return fs.statSync(archivePath).isFile();
+  } catch {
+    return archivePath.toLowerCase().endsWith('.iar');
+  }
+};
+
+const iarUriKey = (uri: Uri) => {
+  const uriString = uri.toString();
+  return uri.scheme === 'jar'
+    ? uriString.replace(/^jar:file%3a/i, 'jar:file:').replace(/%21(?=\/)/gi, '!')
+    : uriString;
+};
+
+const parseJarUri = (uri: Uri) => {
+  // Uri.toString() may escape the nested file URI (`file:` and `!/`). Depending
+  // on how the URI was created, `path` can be decoded already or still contain
+  // those escapes, so handle both representations.
+  const uriString = uri.toString();
+  const paths = [uri.path, uriString.startsWith('jar:') ? uriString.slice('jar:'.length) : uriString];
+  for (const rawPath of paths) {
+    let nestedUri = rawPath;
+    try {
+      nestedUri = decodeURIComponent(rawPath);
+    } catch {
+      // Keep the URI path as-is if it contains a literal percent character.
+    }
+    const fileUriStart = nestedUri.indexOf('file:');
+    if (fileUriStart < 0) {
+      continue;
+    }
+    nestedUri = nestedUri.slice(fileUriStart);
+    const separatorIndex = nestedUri.indexOf('!/');
+    if (separatorIndex < 0) {
+      continue;
+    }
+    const archiveUri = Uri.parse(nestedUri.slice(0, separatorIndex));
+    if (archiveUri.scheme !== 'file') {
+      continue;
+    }
+    const entryPath = nestedUri.slice(separatorIndex + 2).replace(/^\/+/, '');
+    return { archivePath: archiveUri.fsPath, entryPath };
+  }
+};

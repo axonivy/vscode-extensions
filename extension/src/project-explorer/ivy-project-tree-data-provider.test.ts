@@ -1,6 +1,13 @@
 import { beforeEach, expect, test, vi } from 'vitest';
 import { FilePermission, FileType, ThemeIcon, TreeItemCollapsibleState } from 'vscode';
-import { applicationNameFromIvyProjectId, iarEditorLocation, IarContentFileSystemProvider } from './iar-content-provider';
+import { editorInitializationParams } from '../editors/notification-helper';
+import {
+  applicationNameFromIvyProjectId,
+  IAR_CONTENT_SCHEME,
+  iarContentUri,
+  iarEditorLocation,
+  IarContentFileSystemProvider
+} from './iar-content-provider';
 import { IvyProjectTreeDataProvider } from './ivy-project-tree-data-provider';
 
 const mocks = vi.hoisted(() => ({
@@ -47,7 +54,13 @@ vi.mock('vscode', () => {
   const parseUri = (value: string) => {
     const parsed = new URL(value);
     const uriPath = decodeURIComponent(parsed.pathname);
-    return { fsPath: uriPath, path: uriPath, scheme: parsed.protocol.slice(0, -1), query: parsed.search.slice(1) };
+    return {
+      fsPath: uriPath,
+      path: uriPath,
+      scheme: parsed.protocol.slice(0, -1),
+      query: parsed.search.slice(1),
+      toString: () => value
+    };
   };
   return {
     Diagnostic,
@@ -62,7 +75,10 @@ vi.mock('vscode', () => {
     TreeItem,
     TreeItemCollapsibleState: { None: 0, Collapsed: 1, Expanded: 2 },
     Uri: {
-      file: (fsPath: string) => ({ fsPath }),
+      file: (fsPath: string) => ({
+        fsPath,
+        toString: () => `file://${fsPath.split('/').map(segment => encodeURIComponent(segment)).join('/')}`
+      }),
       parse: parseUri
     },
     l10n: {
@@ -87,16 +103,21 @@ vi.mock('adm-zip', () => ({
     }
 
     getEntry(entryPath: string) {
-      if (entryPath !== 'META-INF/ivy/process/hello.p.json') {
+      if (entryPath !== 'META-INF/ivy/process/hello.p.json' && entryPath !== 'META-INF/ivy/config/rest-clients.yaml') {
         return undefined;
       }
-      return { entryName: entryPath, isDirectory: false, getData: () => Buffer.from('{"name":"IAR process"}') };
+      return {
+        entryName: entryPath,
+        isDirectory: false,
+        getData: () => Buffer.from(entryPath.endsWith('rest-clients.yaml') ? 'clients: []' : '{"name":"IAR process"}')
+      };
     }
   }
 }));
 
 vi.mock('../base/commands', () => ({ executeCommand: mocks.executeCommand }));
 vi.mock('../base/configurations', () => ({ config: { projectExcludePattern: () => '', projectMaximumNumber: () => 50 } }));
+vi.mock('../base/logging-util', () => ({ logErrorMessage: vi.fn(), logInformationMessage: vi.fn() }));
 vi.mock('../engine/diagnostics', () => ({ IvyDiagnostics: { instance: { projectFileUrisToBeConverted: () => [] } } }));
 
 beforeEach(() => {
@@ -152,6 +173,34 @@ test('extracts the hosting application name from an engine project id', () => {
   expect(applicationNameFromIvyProjectId('genderize-io-connector')).toBeUndefined();
 });
 
+test('creates absolute jar URIs and escapes IAR entry paths', () => {
+  const uri = iarContentUri(
+    '/home/user/.m2/repository/com/example/demo/demo-1.0.0.iar',
+    'META-INF/ivy/process/Functional Processes/InitPersons.p.json',
+    { app: 'test-app', project: 'demo' }
+  );
+
+  expect(uri.toString()).toBe(
+    'jar:file:///home/user/.m2/repository/com/example/demo/demo-1.0.0.iar!/META-INF/ivy/process/Functional%20Processes/InitPersons.p.json'
+  );
+  expect(iarEditorLocation(uri)).toEqual({
+    app: 'test-app',
+    project: 'demo',
+    file: 'process/Functional Processes/InitPersons.p.json'
+  });
+});
+
+test('keeps config editor documents on the IAR filesystem provider', () => {
+  const archivePath = '/home/user/.m2/repository/com/example/demo/demo-1.0.0.iar';
+  const uri = iarContentUri(archivePath, 'META-INF/ivy/config/rest-clients.yaml', { app: 'test-app', project: 'demo' });
+
+  expect(uri.scheme).toBe(IAR_CONTENT_SCHEME);
+  expect(
+    editorInitializationParams({ uri, fileName: uri.toString() })
+  ).toEqual({ app: 'test-app', project: 'demo', file: 'config/rest-clients.yaml', readOnly: true });
+  expect(Buffer.from(new IarContentFileSystemProvider().readFile(uri)).toString('utf8')).toBe('clients: []');
+});
+
 test('shows only the META-INF/ivy tree and opens files as read-only documents', async () => {
   const provider = new IvyProjectTreeDataProvider(Promise.resolve(), mocks.findEngineProjects);
   const [workspaceProject, iarGroup] = await provider.getChildren();
@@ -168,7 +217,9 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
   expect(provider.getTreeItem(processFile!).resourceUri).toBe(processFile?.uri);
   const fsProvider = new IarContentFileSystemProvider();
   const fileUri = processFile!.command!.arguments![0] as import('vscode').Uri;
-  expect(fileUri.path).toBe('/shared-project-2.1.0.iar/process/hello.p.json');
+  expect(fileUri.toString()).toBe(
+    'jar:file:///home/user/.m2/repository/com/example/shared-project/2.1.0/shared-project-2.1.0.iar!/META-INF/ivy/process/hello.p.json'
+  );
   expect(iarEditorLocation(fileUri)).toEqual({ app: 'test-app', project: 'shared-project', file: 'process/hello.p.json' });
   expect(fsProvider.stat(fileUri).permissions).toBe(FilePermission.Readonly);
   expect(Buffer.from(fsProvider.readFile(fileUri)).toString('utf8')).toBe('{"name":"IAR process"}');
