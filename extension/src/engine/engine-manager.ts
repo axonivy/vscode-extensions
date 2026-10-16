@@ -4,7 +4,7 @@ import { commands, l10n, Uri } from 'vscode';
 import { DidChangeWatchedFilesNotification } from 'vscode-languageserver-protocol';
 import { executeCommand } from '../base/commands';
 import { config } from '../base/configurations';
-import { runJavaProjectImport } from '../base/java-extension-api';
+import { javaBuildFinished, runJavaProjectImport } from '../base/java-extension-api';
 import { logErrorMessage } from '../base/logging-util';
 import { askToReloadWindow } from '../base/reload-window';
 import { StatusBar } from '../base/status-bar';
@@ -27,6 +27,7 @@ import { VariableEditorProvider } from '../editors/variable-editor/variable-edit
 import { WebServiceEditorProvider } from '../editors/webservice-editor/webservice-editor-provider';
 import { XhtmlLanguageClientProvider } from '../editors/xhtml-lsp/xhtml-language-client';
 import { IvyProjectExplorer } from '../project-explorer/ivy-project-explorer';
+import { ProjectFileWatcherManager } from '../project-explorer/project-file-watcher';
 import { resolveDefaultNamespace } from '../project-explorer/utils/util';
 import { extensionVersion } from '../version/extension-version';
 import { IvyBrowserViewProvider } from '../views/browser/ivy-browser-view-provider';
@@ -128,7 +129,9 @@ export class IvyEngineManager {
     IvyBrowserViewProvider.register(this.context, this.resolvedEngineUrl, devContextPath);
     devContextPath += devContextPath.endsWith('/') ? '' : '/';
     await this.initExistingProjects();
-    decreaseWorkspaceLock(); // enable file watchers etc.
+    await IvyDiagnostics.instance.refresh();
+    await javaBuildFinished();
+
     const websocketUrl = new URL(devContextPath, toWebSocketUrl(this.resolvedEngineUrl));
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);
@@ -147,9 +150,11 @@ export class IvyEngineManager {
     RuntimeLogViewProvider(websocketUrl);
     WebIdeWebSocketProvider(websocketUrl);
     registerProcessDebugging(this.context, this.ivyEngineApi);
-    this.registerLanguageClients(websocketUrl);
+    decreaseWorkspaceLock();
 
-    await IvyDiagnostics.instance.refresh();
+    await this.deployProjects();
+    ProjectFileWatcherManager.init(this.context);
+    this.registerLanguageClients(websocketUrl);
   }
 
   private async resolveEngineUrl() {
@@ -178,7 +183,9 @@ export class IvyEngineManager {
         for (const projectDir of ivyProjectDirectories) {
           await this.ivyEngineApi?.findOrCreateProject(projectDir);
         }
-        await this.ivyEngineApi?.deployProjects({ projectDirs: ivyProjectDirectories });
+        if (!isWorkspaceLocked) {
+          await this.ivyEngineApi?.deployProjects({ projectDirs: ivyProjectDirectories });
+        }
       }
     );
   }

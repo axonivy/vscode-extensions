@@ -86,4 +86,5 @@ export type JavaCommand =
   | 'java.project.import.command'
   | 'java.clean.workspace'
   | 'java.projectConfiguration.update'
-  | 'java.server.mode.switch';
+  | 'java.server.mode.switch'
+  | 'java.workspace.compile';

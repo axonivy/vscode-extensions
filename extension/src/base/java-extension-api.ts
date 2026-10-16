@@ -3,7 +3,7 @@ import { commands, extensions, l10n, window, workspace } from 'vscode';
 import { executeCommand, type JavaCommand } from './commands';
 import { logInformationMessage, logWarningMessage } from './logging-util';
 
-export const JAVA_EXTENSION_ID = 'redhat.java';
+const JAVA_EXTENSION_ID = 'redhat.java';
 
 export const runJavaProjectImport = async () => {
   return await runJavaCommand('java.project.import.command');
@@ -81,8 +81,9 @@ export const ensureJavaLightWeightMode = async (task: string) => {
   }
 };
 
-export const ensureJavaExtensionInstalled = () => {
-  if (extensions.getExtension(JAVA_EXTENSION_ID)) {
+export const ensureJavaExtensionInstalled = async () => {
+  const javaExtension = extensions.getExtension(JAVA_EXTENSION_ID);
+  if (javaExtension) {
     return;
   }
   const installLabel = l10n.t('Install');
@@ -92,4 +93,43 @@ export const ensureJavaExtensionInstalled = () => {
       commands.executeCommand('workbench.extensions.installExtension', JAVA_EXTENSION_ID);
     }
   });
+};
+
+// mirrors CompileWorkspaceStatus of redhat.java
+export enum JavaBuildStatus {
+  Failed = 0,
+  Succeed = 1,
+  WithError = 2,
+  Cancelled = 3,
+  Unavailable = -1
+}
+
+let javaBuild: Promise<JavaBuildStatus> | undefined;
+
+export const javaBuildFinished = () => {
+  if (!javaBuild) {
+    javaBuild = runJavaBuild();
+  }
+  return javaBuild;
+};
+
+const runJavaBuild = async () => {
+  const javaExtension = extensions.getExtension(JAVA_EXTENSION_ID);
+  if (!javaExtension) {
+    return JavaBuildStatus.Unavailable;
+  }
+  try {
+    const api = await javaExtension.activate();
+    if (api.serverMode === 'LightWeight') {
+      return JavaBuildStatus.Unavailable;
+    }
+    const ready = await api.serverReady();
+    if (!ready) {
+      return JavaBuildStatus.Unavailable;
+    }
+    const status = await executeCommand<JavaBuildStatus>('java.workspace.compile', true);
+    return status ?? JavaBuildStatus.Unavailable;
+  } catch {
+    return JavaBuildStatus.Unavailable;
+  }
 };
