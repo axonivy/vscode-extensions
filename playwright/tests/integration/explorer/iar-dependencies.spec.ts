@@ -71,4 +71,8 @@ test.describe('IAR project dependencies', () => {
     const inscriptionView = await editor.openInscriptionView('190EEC366DECC66A-f0');
     await expect(inscriptionView.inputFieldFor('Display name')).toBeDisabled();
   });
+
+  // TODO: add test for jump into IAR sub process
+
+  // TODO: add test for animate into IAR sub process
 });
