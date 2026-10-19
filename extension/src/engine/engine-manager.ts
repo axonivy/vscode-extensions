@@ -4,7 +4,7 @@ import { commands, l10n, Uri } from 'vscode';
 import { DidChangeWatchedFilesNotification } from 'vscode-languageserver-protocol';
 import { executeCommand } from '../base/commands';
 import { config } from '../base/configurations';
-import { javaBuildFinished, runJavaProjectImport } from '../base/java-extension-api';
+import { runJavaProjectImport } from '../base/java-extension-api';
 import { logErrorMessage } from '../base/logging-util';
 import { askToReloadWindow } from '../base/reload-window';
 import { StatusBar } from '../base/status-bar';
@@ -56,6 +56,7 @@ export class IvyEngineManager {
   private readonly engineRunner: EngineRunner;
   private ivyEngineApi?: IvyEngineApi;
   private started = false;
+  private postCompileStarted = false;
   private resolvedEngineUrl?: string;
   private resolvedEngineDir?: string;
 
@@ -125,13 +126,21 @@ export class IvyEngineManager {
     this.resolvedEngineUrl = await this.resolveEngineUrl();
     await executeCommand('setContext', 'ivy:isStarted', 'true');
     this.ivyEngineApi = await IvyEngineApi.init(this.resolvedEngineUrl.toString());
+    await this.initExistingProjects();
+    await IvyDiagnostics.instance.refresh();
+  }
+
+  async postCompileStart() {
+    if (this.postCompileStarted) {
+      return;
+    }
+    if (!this.ivyEngineApi || !this.resolvedEngineUrl) {
+      return;
+    }
+    this.postCompileStarted = true;
     let devContextPath = this.ivyEngineApi.devContextPath;
     IvyBrowserViewProvider.register(this.context, this.resolvedEngineUrl, devContextPath);
     devContextPath += devContextPath.endsWith('/') ? '' : '/';
-    await this.initExistingProjects();
-    await IvyDiagnostics.instance.refresh();
-    await javaBuildFinished();
-
     const websocketUrl = new URL(devContextPath, toWebSocketUrl(this.resolvedEngineUrl));
     ProcessEditorProvider.register(this.context, websocketUrl);
     FormEditorProvider.register(this.context, websocketUrl);

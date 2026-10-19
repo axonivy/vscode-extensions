@@ -82,8 +82,7 @@ export const ensureJavaLightWeightMode = async (task: string) => {
 };
 
 export const ensureJavaExtensionInstalled = async () => {
-  const javaExtension = extensions.getExtension(JAVA_EXTENSION_ID);
-  if (javaExtension) {
+  if (extensions.getExtension(JAVA_EXTENSION_ID)) {
     return;
   }
   const installLabel = l10n.t('Install');
@@ -95,8 +94,8 @@ export const ensureJavaExtensionInstalled = async () => {
   });
 };
 
-// mirrors CompileWorkspaceStatus of redhat.java
-export enum JavaBuildStatus {
+// fron redhat.java
+enum CompileWorkspaceStatus {
   Failed = 0,
   Succeed = 1,
   WithError = 2,
@@ -104,32 +103,35 @@ export enum JavaBuildStatus {
   Unavailable = -1
 }
 
-let javaBuild: Promise<JavaBuildStatus> | undefined;
+let javaCompileStatus: Promise<CompileWorkspaceStatus> | undefined;
 
-export const javaBuildFinished = () => {
-  if (!javaBuild) {
-    javaBuild = runJavaBuild();
+export const initialJavaCompileStatus = async () => {
+  if (!javaCompileStatus) {
+    javaCompileStatus = runInitialJavaCompile();
   }
-  return javaBuild;
+  if ((await javaCompileStatus) !== CompileWorkspaceStatus.Succeed) {
+    logWarningMessage('Java workspace compilation did not succeed.');
+  }
 };
 
-const runJavaBuild = async () => {
+const runInitialJavaCompile = async () => {
   const javaExtension = extensions.getExtension(JAVA_EXTENSION_ID);
   if (!javaExtension) {
-    return JavaBuildStatus.Unavailable;
+    return CompileWorkspaceStatus.Unavailable;
   }
   try {
     const api = await javaExtension.activate();
     if (api.serverMode === 'LightWeight') {
-      return JavaBuildStatus.Unavailable;
+      logWarningMessage('backend is in LightWeight mode');
+      return CompileWorkspaceStatus.Unavailable;
     }
     const ready = await api.serverReady();
     if (!ready) {
-      return JavaBuildStatus.Unavailable;
+      return CompileWorkspaceStatus.Unavailable;
     }
-    const status = await executeCommand<JavaBuildStatus>('java.workspace.compile', false);
-    return status ?? JavaBuildStatus.Unavailable;
+    const status = await executeCommand<CompileWorkspaceStatus>('java.workspace.compile', false);
+    return status ?? CompileWorkspaceStatus.Unavailable;
   } catch {
-    return JavaBuildStatus.Unavailable;
+    return CompileWorkspaceStatus.Unavailable;
   }
 };
