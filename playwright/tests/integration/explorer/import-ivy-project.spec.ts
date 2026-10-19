@@ -2,16 +2,12 @@ import { expect } from '@playwright/test';
 import path from 'path';
 import { test } from '~/fixtures/baseTest';
 import { FileExplorer } from '~/page-objects/explorer-view';
-import { buildTestIar, copyTestIar } from '~/utils/test-iar';
+import { copyTestIar } from '~/utils/test-iar';
 import { emptyWithFolder, minimalProjectWorkspacePath, multiRootWorkspacePath } from '../../workspaces/workspace';
 
 const iarFileName = 'ivy-project.iar';
 const iarFileNameDuplicateAfterSanitization = 'ivy.project.iar';
 const iarProjectName = 'ivy-project';
-
-test.beforeAll(async () => {
-  await buildTestIar();
-});
 
 test.describe('Single root workspace', () => {
   test.use({ workspace: emptyWithFolder });
