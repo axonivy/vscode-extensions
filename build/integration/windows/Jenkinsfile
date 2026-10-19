@@ -35,6 +35,7 @@ pipeline {
           bat 'pnpm run build:production'
         }
         script {
+          maven cmd: "-ntp -f playwright/tests/workspaces/prebuiltProject/pom.xml clean package"
           maven cmd: "-ntp com.axonivy.ivy.ci:project-build-plugin:installEngine -Divy.engine.list.url=${params.engineListUrl}"
         }
       }
