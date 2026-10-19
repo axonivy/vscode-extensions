@@ -120,7 +120,7 @@ export const initialJavaCompileStatus = async () => {
   javaCompileStatus = runInitialJavaCompile();
   await StatusBar.withStatusBarProgress({ text: 'Waiting for initial Java compile' }, async () => {
     const status = await javaCompileStatus;
-    extensionLogOutputChannel.info(`Initial Java compile finished with status: ${status ? CompileWorkspaceStatus[status] : 'Unknown'}`);
+    extensionLogOutputChannel.info(`Initial Java compile finished with status: ${status === undefined ? 'Unknown' : CompileWorkspaceStatus[status]}`);
   });
 };
 
