@@ -1,7 +1,9 @@
 import type { Uri } from 'vscode';
 import { commands, extensions, l10n, window, workspace } from 'vscode';
 import { executeCommand, type JavaCommand } from './commands';
+import { extensionLogOutputChannel } from './extension-output-channel';
 import { logInformationMessage, logWarningMessage } from './logging-util';
+import { StatusBar } from './status-bar';
 
 const JAVA_EXTENSION_ID = 'redhat.java';
 
@@ -13,14 +15,20 @@ export const runJavaProjectConfigurationUpdate = async (uris: Uri | Uri[]) => {
   return await runJavaCommand('java.projectConfiguration.update', uris);
 };
 
+let hasExecutedServerModeSwitch = false;
+
 export const runJavaServerModeSwitch = async () => {
+  if (hasExecutedServerModeSwitch) {
+    return;
+  }
   if (workspace.getConfiguration().inspect('java.server.launchMode')?.workspaceValue) {
     return; // user has specified a workspace value for the launch mode
   }
   if (workspace.getConfiguration().get<string>('java.server.launchMode') == 'Standard') {
     return; // already in Standard mode
   }
-  return await runJavaCommand('java.server.mode.switch', 'Standard', true);
+  hasExecutedServerModeSwitch = true;
+  await runJavaCommand('java.server.mode.switch', 'Standard', true);
 };
 
 export const askToRunJavaCleanWorkspace = async (reason: string) => {
@@ -106,12 +114,14 @@ enum CompileWorkspaceStatus {
 let javaCompileStatus: Promise<CompileWorkspaceStatus> | undefined;
 
 export const initialJavaCompileStatus = async () => {
-  if (!javaCompileStatus) {
-    javaCompileStatus = runInitialJavaCompile();
+  if (javaCompileStatus) {
+    return;
   }
-  if ((await javaCompileStatus) !== CompileWorkspaceStatus.Succeed) {
-    logWarningMessage('Java workspace compilation did not succeed.');
-  }
+  javaCompileStatus = runInitialJavaCompile();
+  await StatusBar.withStatusBarProgress({ text: 'Waiting for initial Java compile...' }, async () => {
+    const status = await javaCompileStatus;
+    extensionLogOutputChannel.info(`Initial Java compile finished with status: ${status ? CompileWorkspaceStatus[status] : 'Unknown'}`);
+  });
 };
 
 const runInitialJavaCompile = async () => {
@@ -122,7 +132,6 @@ const runInitialJavaCompile = async () => {
   try {
     const api = await javaExtension.activate();
     if (api.serverMode === 'LightWeight') {
-      logWarningMessage('backend is in LightWeight mode');
       return CompileWorkspaceStatus.Unavailable;
     }
     const ready = await api.serverReady();
