@@ -102,7 +102,7 @@ export const ensureJavaExtensionInstalled = async () => {
   });
 };
 
-// fron redhat.java
+// from redhat.java
 enum CompileWorkspaceStatus {
   Failed = 0,
   Succeed = 1,
