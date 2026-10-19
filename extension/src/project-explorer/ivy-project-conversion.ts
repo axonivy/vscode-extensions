@@ -25,7 +25,6 @@ export const runProjectConversion = async (projectsToConvert: string[]) => {
   } finally {
     decreaseWorkspaceLock();
   }
-  await IvyEngineManager.instance.deployProjects();
   await IvyDiagnostics.instance.refresh();
 };
 
