@@ -59,6 +59,7 @@ export class IvyEngineManager {
   private postCompileStarted = false;
   private resolvedEngineUrl?: string;
   private resolvedEngineDir?: string;
+  private websocketUrl?: URL;
 
   private constructor(readonly context: ExtensionContext) {
     const engineDir = this.resolveEngineDir();
@@ -127,6 +128,10 @@ export class IvyEngineManager {
     await executeCommand('setContext', 'ivy:isStarted', 'true');
     this.ivyEngineApi = await IvyEngineApi.init(this.resolvedEngineUrl.toString());
     await this.initExistingProjects();
+    let devContextPath = this.ivyEngineApi.devContextPath;
+    devContextPath += devContextPath.endsWith('/') ? '' : '/';
+    this.websocketUrl = new URL(devContextPath, toWebSocketUrl(this.resolvedEngineUrl));
+    WebIdeWebSocketProvider(this.websocketUrl);
     await IvyDiagnostics.instance.refresh();
   }
 
@@ -134,36 +139,32 @@ export class IvyEngineManager {
     if (this.postCompileStarted) {
       return;
     }
-    if (!this.ivyEngineApi || !this.resolvedEngineUrl) {
+    if (!this.ivyEngineApi || !this.resolvedEngineUrl || !this.websocketUrl) {
       return;
     }
     this.postCompileStarted = true;
-    let devContextPath = this.ivyEngineApi.devContextPath;
-    IvyBrowserViewProvider.register(this.context, this.resolvedEngineUrl, devContextPath);
-    devContextPath += devContextPath.endsWith('/') ? '' : '/';
-    const websocketUrl = new URL(devContextPath, toWebSocketUrl(this.resolvedEngineUrl));
-    ProcessEditorProvider.register(this.context, websocketUrl);
-    FormEditorProvider.register(this.context, websocketUrl);
-    VariableEditorProvider.register(this.context, websocketUrl);
-    CmsEditorProvider.register(this.context, websocketUrl);
-    DatabaseEditorProvider.register(this.context, websocketUrl);
-    DataClassEditorProvider.register(this.context, websocketUrl);
-    RoleEditorProvider.register(this.context, websocketUrl);
-    PersistenceEditorProvider.register(this.context, websocketUrl);
-    UserEditorProvider.register(this.context, websocketUrl);
-    CaseMapEditorProvider.register(this.context, websocketUrl);
-    RestClientEditorProvider.register(this.context, websocketUrl);
-    WebServiceEditorProvider.register(this.context, websocketUrl);
+    IvyBrowserViewProvider.register(this.context, this.resolvedEngineUrl, this.ivyEngineApi.devContextPath);
+    ProcessEditorProvider.register(this.context, this.websocketUrl);
+    FormEditorProvider.register(this.context, this.websocketUrl);
+    VariableEditorProvider.register(this.context, this.websocketUrl);
+    CmsEditorProvider.register(this.context, this.websocketUrl);
+    DatabaseEditorProvider.register(this.context, this.websocketUrl);
+    DataClassEditorProvider.register(this.context, this.websocketUrl);
+    RoleEditorProvider.register(this.context, this.websocketUrl);
+    PersistenceEditorProvider.register(this.context, this.websocketUrl);
+    UserEditorProvider.register(this.context, this.websocketUrl);
+    CaseMapEditorProvider.register(this.context, this.websocketUrl);
+    RestClientEditorProvider.register(this.context, this.websocketUrl);
+    WebServiceEditorProvider.register(this.context, this.websocketUrl);
     CustomFieldEditorProvider.register(this.context);
 
-    RuntimeLogViewProvider(websocketUrl);
-    WebIdeWebSocketProvider(websocketUrl);
+    RuntimeLogViewProvider(this.websocketUrl);
     registerProcessDebugging(this.context, this.ivyEngineApi);
     decreaseWorkspaceLock();
 
     await this.deployProjects();
     ProjectFileWatcherManager.init(this.context);
-    this.registerLanguageClients(websocketUrl);
+    this.registerLanguageClients(this.websocketUrl);
   }
 
   private async resolveEngineUrl() {
