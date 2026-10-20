@@ -1,4 +1,6 @@
+import { l10n } from 'vscode';
 import { extensionLogOutputChannel } from './extension-output-channel';
+import { logWarningMessage } from './logging-util';
 
 let lockCount = 1; // make sure workspace is initially locked, will be unlocked if engine is available
 
@@ -21,6 +23,10 @@ export const decreaseWorkspaceLock = () => {
   extensionLogOutputChannel.appendLine(`Workspace lock decremented, current count: ${lockCount}`);
 };
 
-export const isWorkspaceLocked = () => {
-  return lockCount > 0;
+export const isWorkspaceLocked = ({ warn = false } = {}) => {
+  const isLocked = lockCount > 0;
+  if (warn && isLocked) {
+    logWarningMessage(l10n.t('The action cannot be performed because the workspace is locked.'));
+  }
+  return isLocked;
 };

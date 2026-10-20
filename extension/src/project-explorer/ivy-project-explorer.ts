@@ -4,6 +4,7 @@ import { commands, l10n, TabInputCustom, TabInputText, Uri, window, workspace } 
 import { registerCommand, type KnownCommand } from '../base/commands';
 import { ensureJavaLightWeightMode, runJavaProjectImport } from '../base/java-extension-api';
 import { logErrorMessage, logInformationMessage } from '../base/logging-util';
+import { isWorkspaceLocked } from '../base/workspace-lock';
 import { convertDialogFormToJsf } from '../editors/form-editor/convert-dialog-form';
 import { IVY_PROJECT_FILE, IvyDiagnostics } from '../engine/diagnostics';
 import { IvyEngineManager } from '../engine/engine-manager';
@@ -160,6 +161,9 @@ export class IvyProjectExplorer {
   }
 
   private async addProject(selection: TreeSelection) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const selectedUri = await this.selectWorkspace(selection);
     if (!selectedUri) {
       logInformationMessage(l10n.t('No valid workspace selected.'));
@@ -176,6 +180,9 @@ export class IvyProjectExplorer {
   }
 
   public async addProcess(selection: TreeSelection, kind: ProcessKind, pid?: string) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const addCommandSelectionContext = await this.getAddCommandSelectionContext(selection);
     if (!addCommandSelectionContext) {
       return;
@@ -204,6 +211,9 @@ export class IvyProjectExplorer {
   }
 
   private async importIvyProject(selection: TreeSelection) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const selectedUri = await this.selectWorkspace(selection);
     if (!selectedUri) {
       logInformationMessage(l10n.t('No valid import directory selected.'));
@@ -232,15 +242,24 @@ export class IvyProjectExplorer {
   }
 
   private async installLocalMarketProduct() {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     await installLocalMarketProduct(await this.getIvyProjects(), this.context);
   }
 
   private async installMarketProduct() {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const engineVersion = (await IvyEngineManager.instance.getEngineVersion()) ?? '';
     await installMarketProduct(await this.getIvyProjects(), engineVersion);
   }
 
   public async addUserDialog(selection: TreeSelection, type: DialogType, pid?: string) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const addCommandContext = await this.getAddCommandSelectionContext(selection);
     if (!addCommandContext) {
       return;
@@ -249,6 +268,9 @@ export class IvyProjectExplorer {
   }
 
   private async addDataClass(selection: TreeSelection) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const addCommandContext = await this.getAddCommandSelectionContext(selection);
     if (!addCommandContext) {
       return;
@@ -257,6 +279,9 @@ export class IvyProjectExplorer {
   }
 
   private async addEntityClass(selection: TreeSelection) {
+    if (isWorkspaceLocked({ warn: true })) {
+      return;
+    }
     const addCommandContext = await this.getAddCommandSelectionContext(selection);
     if (!addCommandContext) {
       return;
@@ -308,8 +333,7 @@ export class IvyProjectExplorer {
       placeHolder: l10n.t('Path to a .f.json file'),
       value: selectedUri?.fsPath,
       ignoreFocusOut: true,
-      validateInput: value =>
-        path.basename(value.trim()).endsWith('.f.json') ? undefined : l10n.t('The file must be a .f.json file.')
+      validateInput: value => (path.basename(value.trim()).endsWith('.f.json') ? undefined : l10n.t('The file must be a .f.json file.'))
     });
     if (!formPath) {
       return;

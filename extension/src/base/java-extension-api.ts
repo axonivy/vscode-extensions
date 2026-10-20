@@ -2,8 +2,9 @@ import type { Uri } from 'vscode';
 import { commands, extensions, l10n, window, workspace } from 'vscode';
 import { executeCommand, type JavaCommand } from './commands';
 import { logInformationMessage, logWarningMessage } from './logging-util';
+import { StatusBar } from './status-bar';
 
-export const JAVA_EXTENSION_ID = 'redhat.java';
+const JAVA_EXTENSION_ID = 'redhat.java';
 
 export const runJavaProjectImport = async () => {
   return await runJavaCommand('java.project.import.command');
@@ -13,14 +14,20 @@ export const runJavaProjectConfigurationUpdate = async (uris: Uri | Uri[]) => {
   return await runJavaCommand('java.projectConfiguration.update', uris);
 };
 
+let hasExecutedServerModeSwitch = false;
+
 export const runJavaServerModeSwitch = async () => {
+  if (hasExecutedServerModeSwitch) {
+    return;
+  }
+  hasExecutedServerModeSwitch = true;
   if (workspace.getConfiguration().inspect('java.server.launchMode')?.workspaceValue) {
     return; // user has specified a workspace value for the launch mode
   }
   if (workspace.getConfiguration().get<string>('java.server.launchMode') == 'Standard') {
     return; // already in Standard mode
   }
-  return await runJavaCommand('java.server.mode.switch', 'Standard', true);
+  await runJavaCommand('java.server.mode.switch', 'Standard', true);
 };
 
 export const askToRunJavaCleanWorkspace = async (reason: string) => {
@@ -92,4 +99,42 @@ export const ensureJavaExtensionInstalled = () => {
       commands.executeCommand('workbench.extensions.installExtension', JAVA_EXTENSION_ID);
     }
   });
+};
+
+// from redhat.java
+enum CompileWorkspaceStatus {
+  Failed = 0,
+  Succeed = 1,
+  WithError = 2,
+  Cancelled = 3,
+  Unavailable = -1
+}
+
+let javaCompileStatus: Promise<CompileWorkspaceStatus | undefined>;
+
+export const initialJavaCompileStatus = async () => {
+  javaCompileStatus ??= StatusBar.withStatusBarProgress({ text: l10n.t('Waiting for initial Java compile') }, async () => {
+    return await runInitialJavaCompile();
+  });
+  await javaCompileStatus;
+};
+
+const runInitialJavaCompile = async () => {
+  const javaExtension = extensions.getExtension(JAVA_EXTENSION_ID);
+  if (!javaExtension) {
+    return CompileWorkspaceStatus.Unavailable;
+  }
+  try {
+    const api = await javaExtension.activate();
+    if (api.serverMode === 'LightWeight') {
+      return CompileWorkspaceStatus.Unavailable;
+    }
+    const ready = await api.serverReady();
+    if (!ready) {
+      return CompileWorkspaceStatus.Unavailable;
+    }
+    return await executeCommand<CompileWorkspaceStatus>('java.workspace.compile', false);
+  } catch {
+    return CompileWorkspaceStatus.Unavailable;
+  }
 };
