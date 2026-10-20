@@ -58,6 +58,21 @@ export class ExplorerView {
     await this.wsPage.page.keyboard.press('ArrowRight');
   }
 
+  async scrollToNodeExact(name: string) {
+    const node = this.view.getByText(name, { exact: true }).first();
+    for (let attempt = 0; attempt < 20; attempt++) {
+      if (await node.count()) {
+        await node.scrollIntoViewIfNeeded();
+        if (await node.isVisible()) {
+          return;
+        }
+      }
+      await this.view.hover();
+      await this.wsPage.page.mouse.wheel(0, 400);
+    }
+    throw new Error(`Could not scroll tree node into view: ${name}`);
+  }
+
   async isSelected(name: string) {
     const selected = this.view.locator('.monaco-list-row.selected');
     await expect(selected).toContainText(name);
