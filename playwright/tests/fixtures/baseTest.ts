@@ -1,4 +1,4 @@
-import { _electron, test as base, chromium, type ElectronApplication, type Page } from '@playwright/test';
+import { _electron, test as base, chromium, expect, type ElectronApplication, type Page } from '@playwright/test';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -52,7 +52,7 @@ export const test = base.extend<TestFixtures>({
   isReady: [
     async ({ tmpWorkspace, page, wsPage, closeWelcomePage }, take) => {
       if (tmpWorkspace) {
-        await wsPage.hasReadyStatusMessage();
+        await expect(wsPage.ivyStatusBar).toContainText(/Axon Ivy: Connected|Success - Deploying/);
       }
       if (closeWelcomePage) {
         await page

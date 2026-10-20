@@ -4,7 +4,7 @@ import { test } from '~/fixtures/baseTest';
 import { FileExplorer } from '~/page-objects/explorer-view';
 import { ProblemsView } from '~/page-objects/problems-view';
 import { ProcessEditor } from '~/page-objects/process-editor';
-import { empty, multiProjectWorkspacePath } from '~/workspaces/workspace';
+import { empty, multiProjectWithoutDuplicatesWorkspacePath } from '~/workspaces/workspace';
 
 test.describe('Add Project and execute init Process', () => {
   test.use({ workspace: empty });
@@ -30,12 +30,10 @@ test.describe('Add Project and execute init Process', () => {
 });
 
 test.describe('Project already exists', () => {
-  test.use({ workspace: multiProjectWorkspacePath });
+  test.use({ workspace: multiProjectWithoutDuplicatesWorkspacePath });
 
   test('Existing Project', async ({ wsPage }) => {
     const projectName = 'ivy-project-1';
-    await wsPage.hasReadyStatusMessage();
-
     await wsPage.executeCommand('Axon Ivy: New Project');
     await wsPage.provideUserInput(projectName);
     await expect(wsPage.quickInputMessage).toBeVisible();
