@@ -7,7 +7,10 @@
   "editor.insertSpaces": true,
   "search.exclude": {
     "**/node_modules": true,
-    "**/lib": true
+    "**/lib": true,
+    "**/.vscode-test": true,
+    "**/test-extension-dir": true,
+    "**/test-user-data-dir": true
   },
   "task.autoDetect": "off",
   "typescript.tsdk": "node_modules/typescript/lib",

@@ -1,10 +1,26 @@
 import { test as setup } from '@playwright/test';
 import { resolveCliArgsFromVSCodeExecutablePath } from '@vscode/test-electron';
-import { execFileSync } from 'child_process';
+import { exec, execFileSync } from 'child_process';
+import { promisify } from 'node:util';
 import path from 'path';
 import { runDownloadAndUnzipVSCode } from './utils/download-vscode';
 
+const execAsync = promisify(exec);
+const PATH_PREBUILT_PROJECT = path.resolve('playwright/tests/workspaces/prebuiltProject');
+
+const buildPrebuiltProject = async () => {
+  const { stdout, stderr } = await execAsync(`mvn -ntp -f ${PATH_PREBUILT_PROJECT}/pom.xml clean package`, {
+    encoding: 'utf8',
+    windowsHide: true
+  });
+};
+
 setup('Setup', async ({}) => {
+  // Only build the prebuilt project if running locally
+  if (process.env.CI !== 'true') {
+    await buildPrebuiltProject();
+  }
+
   const skipVSCodeDownload = process.env.RUN_IN_BROWSER ? true : false;
   if (!skipVSCodeDownload) {
     const vscodePath = await runDownloadAndUnzipVSCode();
