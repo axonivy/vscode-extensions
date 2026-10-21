@@ -1,5 +1,6 @@
 package ch.ivyteam.smart.core.copilot;
 
+import static ch.ivyteam.smart.core.assertion.AspireSpansAssert.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
@@ -15,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import ch.ivyteam.smart.core.AgentRuntime;
 import ch.ivyteam.smart.core.AgentRuntimeExtension;
-import ch.ivyteam.smart.core.aspire.AspireSpans.UsedTool;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -27,9 +27,9 @@ public class CopilotIntegrationTest {
   @Order(3)
   void createProject(AgentRuntime rt) throws Exception {
     var spans = rt.prompt("create a new Axon Ivy project called flight-simulator");
-    var tokenUsage = spans.tokenUsage();
-    assertThat(tokenUsage.input()).isLessThan(150_000);
-    assertThat(tokenUsage.output()).isLessThan(10_000);
+    assertThat(spans)
+        .usedTools("axonivy-designer-new_axon_ivy_project")
+        .usedTokensBelow(150_000, 10_000);
 
     var flightSimulator = rt.ivyWorkspace().path().resolve("flight-simulator");
     assertThat(flightSimulator)
@@ -38,10 +38,6 @@ public class CopilotIntegrationTest {
     assertThat(rt.ivyEngine().newLogs())
         .as("no-errors in log")
         .isEmpty();
-    assertThat(spans.usedTools())
-        .as("new_axon_ivy_project tool was used")
-        .extracting(UsedTool::name)
-        .contains("axonivy-designer-new_axon_ivy_project");
   }
 
   @Test
@@ -61,10 +57,7 @@ public class CopilotIntegrationTest {
     assertThat(spans.tools().names())
         .as("tools from vscode-designer MCP are propagated to harness")
         .contains("axonivy-designer-new_axon_ivy_project");
-
-    var tokenUsage = spans.tokenUsage();
-    assertThat(tokenUsage.input()).isLessThan(150_000);
-    assertThat(tokenUsage.output()).isLessThan(10_000);
+    assertThat(spans).usedTokensBelow(150_000, 10_000);
   }
 
   @Test
@@ -81,25 +74,11 @@ public class CopilotIntegrationTest {
         .as("no tabs in roles.yaml: happens in vscode copilot quite often")
         .doesNotContain("\t");
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
-        .contains("skill")
-        .doesNotContain("web_fetch"); // skill cache!
-
-    var skillTool = spans.usedTools().stream().filter(t -> t.name().equals("skill")).findFirst().orElseThrow();
-    assertThat(skillTool.arguments()).contains("ivy-yaml-files");
-
-    var viewSchema = spans.usedTools().stream()
-        .filter(t -> t.name().equals("view"))
-        .filter(t -> t.arguments().contains("skills/ivy-yaml-files/schemas/"))
-        .findFirst().orElseThrow();
-    assertThat(viewSchema.arguments())
-        .as("schema read was enforced by skill")
-        .contains("config/roles.json");
-
-    var tokenUsage = spans.tokenUsage();
-    assertThat(tokenUsage.input()).isLessThan(200_000); // around: 170_000 in local tests
-    assertThat(tokenUsage.output()).isLessThan(10_000);
+    assertThat(spans)
+        .loadedSkill("ivy-yaml-files")
+        .viewed("skills/ivy-yaml-files/schemas/config/roles.json")
+        .didNotUseTools("web_fetch", "web_search")
+        .usedTokensBelow(200_000, 10_000); // around: 170_000 in local tests
   }
 
   @Test
@@ -145,19 +124,11 @@ public class CopilotIntegrationTest {
         .as("Script Activity is configured schema-aware")
         .contains("ivy.log.", "Hello Ivy", "in.name");
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
-        .as("Must use create-tool for initial correct creation; then web_fetch to get aware of the schema")
-        .contains("skill", "axonivy-designer-new_axon_ivy_process")
-        .doesNotContain("web_fetch"); // skill cache!
-
-    var viewSchema = spans.usedTools().stream()
-        .filter(t -> t.name().equals("view"))
-        .filter(t -> t.arguments().contains("skills/ivy-json-files/schemas/"))
-        .findFirst().orElseThrow();
-    assertThat(viewSchema.arguments())
-        .as("schema read was enforced by skill")
-        .contains("project/process.json");
+    assertThat(spans)
+        .as("Must use create-tool for initial correct creation; then the skill's local schema, not web_fetch")
+        .usedTools("skill", "axonivy-designer-new_axon_ivy_process")
+        .viewed("skills/ivy-json-files/schemas/project/process.json")
+        .didNotUseTools("web_fetch", "web_search");
   }
 
   @Test
@@ -191,17 +162,11 @@ public class CopilotIntegrationTest {
         .containsEntry("#{data.customer.phone}", "Input")
         .containsEntry("#{data.customer.age}", "Input");
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
+    assertThat(spans)
         .as("Must use create-tool for initial correct creation; then the skill to edit the form")
-        .contains("skill", "axonivy-designer-new_axon_ivy_dialog")
-        .doesNotContain("web_fetch"); // skill cache!
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("view"))
-        .extracting(UsedTool::arguments)
-        .as("schema read was enforced by skill")
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/form.json"));
+        .usedTools("skill", "axonivy-designer-new_axon_ivy_dialog")
+        .viewed("skills/ivy-json-files/schemas/project/form.json")
+        .didNotUseTools("web_fetch", "web_search");
   }
 
   @Test
@@ -230,17 +195,11 @@ public class CopilotIntegrationTest {
         .contains("#{data.product}", "#{data.quantity}", "#{data.deliveryDate}",
             "#{data.customer.fullName}", "#{data.customer.address}", "#{data.customer.phone}", "#{data.customer.age}");
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
+    assertThat(spans)
         .as("Must use create-tool for initial correct creation; then the skill to edit the data class")
-        .contains("skill", "axonivy-designer-new_axon_ivy_dialog")
-        .doesNotContain("web_fetch"); // skill cache!
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("view"))
-        .extracting(UsedTool::arguments)
-        .as("schema read was enforced by skill")
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
+        .usedTools("skill", "axonivy-designer-new_axon_ivy_dialog")
+        .viewed("skills/ivy-json-files/schemas/project/data-class.json")
+        .didNotUseTools("web_fetch", "web_search");
   }
 
   @Test
@@ -256,20 +215,11 @@ public class CopilotIntegrationTest {
     assertThat(user).exists();
     assertUserFields(user);
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
-        .contains("skill", "axonivy-designer-new_axon_ivy_data_class")
-        .doesNotContain("web_fetch");
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("axonivy-designer-new_axon_ivy_data_class"))
-        .extracting(UsedTool::arguments)
-        .noneMatch(args -> args.contains("namespace")); // model don't try to guess a namespace
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("view"))
-        .extracting(UsedTool::arguments)
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
+    assertThat(spans)
+        .usedTools("skill", "axonivy-designer-new_axon_ivy_data_class")
+        .calledToolWithout("axonivy-designer-new_axon_ivy_data_class", "namespace") // model don't try to guess a namespace
+        .viewed("skills/ivy-json-files/schemas/project/data-class.json")
+        .didNotUseTools("web_fetch", "web_search");
   }
 
   @Test
@@ -292,20 +242,11 @@ public class CopilotIntegrationTest {
         .findFirst().orElseThrow(() -> new IllegalStateException("generated 'id' field was removed: " + entityJson.toPrettyString()));
     assertThat(id.path("modifiers").valueStream().map(JsonNode::asString)).contains("ID");
 
-    assertThat(spans.usedTools())
-        .extracting(UsedTool::name)
-        .contains("skill", "axonivy-designer-new_axon_ivy_data_class")
-        .doesNotContain("web_fetch");
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("axonivy-designer-new_axon_ivy_data_class"))
-        .extracting(UsedTool::arguments)
-        .noneMatch(args -> args.contains("namespace"));
-
-    assertThat(spans.usedTools())
-        .filteredOn(t -> t.name().equals("view"))
-        .extracting(UsedTool::arguments)
-        .anyMatch(args -> args.contains("skills/ivy-json-files/schemas/project/data-class.json"));
+    assertThat(spans)
+        .usedTools("skill", "axonivy-designer-new_axon_ivy_data_class")
+        .calledToolWithout("axonivy-designer-new_axon_ivy_data_class", "namespace")
+        .viewed("skills/ivy-json-files/schemas/project/data-class.json")
+        .didNotUseTools("web_fetch", "web_search");
   }
 
   private static void assertUserFields(Path dataClass) throws IOException {
