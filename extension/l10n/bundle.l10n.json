@@ -306,5 +306,7 @@
   "New Axon Ivy {0}": "New Axon Ivy {0}",
   "{0} created successfully at '{1}'": "{0} created successfully at '{1}'",
   "Layout": "Layout",
-  "Template": "Template"
+  "Template": "Template",
+  "Waiting for initial Java compile": "Waiting for initial Java compile",
+  "The action cannot be performed because the workspace is locked.": "The action cannot be performed because the workspace is locked."
 }
