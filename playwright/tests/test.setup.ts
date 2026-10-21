@@ -6,12 +6,12 @@ import path from 'path';
 import { runDownloadAndUnzipVSCode } from './utils/download-vscode';
 
 const execAsync = promisify(exec);
-const PATH_PREBUILT_PROJECT = path.resolve('playwright/tests/workspaces/prebuiltProject');
+const PATH_PREBUILT_PROJECT = path.resolve(import.meta.dirname, 'workspaces/prebuiltProject');
 
 const isExecException = (error: unknown): error is ExecException => error instanceof Error && 'stdout' in error && 'stderr' in error;
 
 const buildPrebuiltProject = async () => {
-  const mvnCommand = `mvn -ntp -f ${PATH_PREBUILT_PROJECT}/pom.xml clean package`;
+  const mvnCommand = `mvn -ntp -f "${PATH_PREBUILT_PROJECT}/pom.xml" clean package`;
   let stdout: string;
   try {
     ({ stdout } = await execAsync(mvnCommand, {
@@ -33,9 +33,12 @@ const buildPrebuiltProject = async () => {
   if (!stdout.includes('BUILD SUCCESS')) {
     throw new Error(`Maven build did not report "BUILD SUCCESS". Output:\n\n${stdout}`);
   }
+  console.log('Maven build of prebuiltProject succeeded');
 };
 
 setup('Setup', async ({}) => {
+  setup.setTimeout(60 * 1000); // 1 minute
+
   // Only build the prebuilt project if running locally
   if (process.env.CI !== 'true') {
     await buildPrebuiltProject();
