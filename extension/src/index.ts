@@ -15,6 +15,7 @@ import { newMarkdownString, StatusBar, type QuickPickOptionId } from './base/sta
 import { addDevContainer } from './dev-container/command';
 import { conditionalWelcomePage, showWelcomePage } from './editors/welcome-page/welcome-page';
 import { registerXhtmlCssLanguageFeatures } from './editors/xhtml-lsp/xhtml-css-language-features';
+import { registerXhtmlJavascriptLanguageFeatures } from './editors/xhtml-lsp/xhtml-javascript-language-features';
 import { IvyDiagnostics } from './engine/diagnostics';
 import { IvyEngineManager } from './engine/engine-manager';
 import { showEngineLog } from './engine/engine-output-channel';
@@ -46,6 +47,7 @@ export async function activate(context: ExtensionContext): Promise<MessengerDiag
     ensureJavaExtensionInstalled();
     resolveExtensionVersion(context);
     registerXhtmlCssLanguageFeatures(context);
+    registerXhtmlJavascriptLanguageFeatures(context);
     ivyEngineManager = IvyEngineManager.init(context);
     registerCommand('engine.deployProjects', context, () => ivyEngineManager.deployProjects());
     registerCommand('engine.switchEngineReleaseTrain', context, () => ivyEngineManager.switchEngineReleaseTrain());

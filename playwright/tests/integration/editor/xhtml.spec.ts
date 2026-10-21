@@ -24,6 +24,19 @@ test('XHTML provides CSS completions and hover in style blocks', async ({ wsPage
   await expect(hover).toContainText(/color/i);
 });
 
+test('XHTML provides JavaScript completions and type hover in script blocks', async ({ wsPage }) => {
+  const editor = new XhtmlEditor(wsPage, 'xhtml-validation.xhtml');
+  await editor.open();
+
+  await editor.expectCompletionAtLineColumn('focus', 13, 16);
+
+  await editor.goToLineColumn(13, 10);
+  await wsPage.page.keyboard.press('Control+K');
+  await wsPage.page.keyboard.press('Control+I');
+  const hover = wsPage.page.locator('.monaco-hover');
+  await expect(hover).toContainText(/HTMLElement\s*\|\s*null/);
+});
+
 test('xhtml completions', async ({ wsPage }) => {
   const editor = new XhtmlEditor(wsPage);
   await editor.open();
