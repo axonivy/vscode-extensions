@@ -74,7 +74,6 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   private readonly maxResults: number;
 
   constructor(
-    readonly activateEnginePromise: Promise<void>,
     private readonly findEngineProjects: () => Promise<ProjectBean[] | undefined>,
     private readonly iarContentProvider = new IarContentFileSystemProvider()
   ) {
@@ -172,7 +171,6 @@ export class IvyProjectTreeDataProvider implements TreeDataProvider<Entry> {
   }
 
   async getChildren(element?: Entry): Promise<Entry[]> {
-    await this.activateEnginePromise;
     if (element?.kind === 'iarDependencyGroup') {
       return (await this.getIarProjects()).map(project => ({
         uri: iarContentUri(project.projectDirectory, 'META-INF/ivy'),
