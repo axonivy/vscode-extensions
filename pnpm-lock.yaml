@@ -155,6 +155,9 @@ importers:
       htmlparser2:
         specifier: 12.0.0
         version: 12.0.0
+      vscode-css-languageservice:
+        specifier: 6.3.10
+        version: 6.3.10
       vscode-languageclient:
         specifier: 10.1.2
         version: 10.1.2
@@ -3143,6 +3146,9 @@ packages:
     resolution: {integrity: sha512-s6uzBXsVDSL69Z85HSqpc5dfKswQkeucY8L00t1TWzGalw7wkLQUKMRwuzqTq+AMwQKrRd7Po14cMoTcd11iDw==}
     hasBin: true
 
+  '@vscode/l10n@0.0.18':
+    resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+
   '@vscode/test-electron@3.1.0':
     resolution: {integrity: sha512-CRqv5u+YYoseuNVJ6Tyo4k0sF0mx4qnKMihRB0PjsUF8Dc0WKtCXo6CNL6nWWm5esfFQsQA/pejMj4ZbpJVLTw==}
     engines: {node: '>=22'}
@@ -5634,6 +5640,9 @@ packages:
       jsdom:
         optional: true
 
+  vscode-css-languageservice@6.3.10:
+    resolution: {integrity: sha512-eq5N9Er3fC4vA9zd9EFhyBG90wtCCuXgRSpAndaOgXMh1Wgep5lBgRIeDgjZBW9pa+332yC9+49cZMW8jcL3MA==}
+
   vscode-jsonrpc@8.2.0:
     resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
     engines: {node: '>=14.0.0'}
@@ -5656,6 +5665,9 @@ packages:
   vscode-languageserver-textdocument@1.0.15:
     resolution: {integrity: sha512-Gsfr9S8LU3S6885cS+NaleasJ0n3V5y/SOTqHCifQiXWFw3G9w9/YItDfwHrlCz+dSZWWZ8ilYVMcJe7Sz7Sxw==}
 
+  vscode-languageserver-types@3.17.5:
+    resolution: {integrity: sha512-Ld1VelNuX9pdF39h2Hgaeb5hEZM2Z3jUrrMgWQAu82jMtZp7p3vJT3BzToKtZI7NgQssZje5o0zryOrhQvzQAg==}
+
   vscode-languageserver-types@3.18.4:
     resolution: {integrity: sha512-nQsacoiijvl0fRf2q28uFDrAVwRhdCa3QveiF7/CX0r18mLR5FU/1WskSsCKOjmEbtteKUnY8x8Yzxop+k0zwg==}
 
@@ -5667,6 +5679,9 @@ packages:
 
   vscode-messenger@0.4.5:
     resolution: {integrity: sha512-a6e54dpPRi/ITmVex49LGU6YXlqcuxGPlDPauvZig20G1D1/QD2E8GfhtvlTj3ml5aU/QV3LHghyepq3riy7sw==}
+
+  vscode-uri@3.2.0:
+    resolution: {integrity: sha512-m2gXo3bn0G1kT9InzMf07fTbqMbGtyckj3bH5ktLO+1Ssv+yiATZ4dhwaQv9UZWxJh6E9IFGnQyjgWVDWVBDrg==}
 
   vscode-ws-jsonrpc@3.5.0:
     resolution: {integrity: sha512-13ZDy7Od4AfEPK2HIfY3DtyRi4FVsvFql1yobVJrpIoHOKGGJpIjVvIJpMxkrHzCZzWlYlg+WEu2hrYkCTvM0Q==}
@@ -8372,6 +8387,8 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@vscode/l10n@0.0.18': {}
+
   '@vscode/test-electron@3.1.0(supports-color@7.2.0)':
     dependencies:
       http-proxy-agent: 7.0.2(supports-color@7.2.0)
@@ -10858,6 +10875,13 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
+  vscode-css-languageservice@6.3.10:
+    dependencies:
+      '@vscode/l10n': 0.0.18
+      vscode-languageserver-textdocument: 1.0.15
+      vscode-languageserver-types: 3.17.5
+      vscode-uri: 3.2.0
+
   vscode-jsonrpc@8.2.0: {}
 
   vscode-jsonrpc@8.2.1: {}
@@ -10878,6 +10902,8 @@ snapshots:
 
   vscode-languageserver-textdocument@1.0.15: {}
 
+  vscode-languageserver-types@3.17.5: {}
+
   vscode-languageserver-types@3.18.4: {}
 
   vscode-messenger-common@0.4.5: {}
@@ -10889,6 +10915,8 @@ snapshots:
   vscode-messenger@0.4.5:
     dependencies:
       vscode-messenger-common: 0.4.5
+
+  vscode-uri@3.2.0: {}
 
   vscode-ws-jsonrpc@3.5.0:
     dependencies:

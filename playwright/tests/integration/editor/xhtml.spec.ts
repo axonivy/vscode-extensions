@@ -11,6 +11,19 @@ test('XHTML uses a dedicated language mode without HTML/CSS diagnostics', async 
   await expect(problems.view).not.toContainText(/property value expected|self-closing|trailing solidus/i);
 });
 
+test('XHTML provides CSS completions and hover in style blocks', async ({ wsPage }) => {
+  const editor = new XhtmlEditor(wsPage, 'xhtml-validation.xhtml');
+  await editor.open();
+
+  await editor.expectCompletionAtLineColumn('background', 8, 9);
+
+  await editor.goToLineColumn(7, 10);
+  await wsPage.page.keyboard.press('Control+K');
+  await wsPage.page.keyboard.press('Control+I');
+  const hover = wsPage.page.locator('.monaco-hover');
+  await expect(hover).toContainText(/color/i);
+});
+
 test('xhtml completions', async ({ wsPage }) => {
   const editor = new XhtmlEditor(wsPage);
   await editor.open();
