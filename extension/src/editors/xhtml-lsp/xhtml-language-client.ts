@@ -24,7 +24,7 @@ export const XhtmlLanguageClientProvider = async (webSocketUrl: URL) => {
   };
 
   const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ language: 'html', scheme: 'file', pattern: '**/*.xhtml' }],
+    documentSelector: [{ language: 'ivy-xhtml', scheme: 'file', pattern: '**/*.xhtml' }],
 
     synchronize: {
       fileEvents: [

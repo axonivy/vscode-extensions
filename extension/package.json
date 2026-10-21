@@ -87,6 +87,25 @@
     "vscjava.vscode-java-dependency"
   ],
   "contributes": {
+    "languages": [
+      {
+        "id": "ivy-xhtml",
+        "aliases": ["Ivy XHTML"],
+        "extensions": [".xhtml"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ivy-xhtml",
+        "scopeName": "text.xml.ivy-xhtml",
+        "path": "./syntaxes/ivy-xhtml.tmLanguage.json",
+        "embeddedLanguages": {
+          "source.css": "css",
+          "source.js": "javascript"
+        }
+      }
+    ],
     "configurationDefaults": {
       "workbench.iconTheme": "ivy-icon-theme-colored",
       "workbench.editorAssociations": {
@@ -105,6 +124,12 @@
           "approveRequest": true,
           "approveResponse": true
         }
+      },
+      "files.associations": {
+        "*.xhtml": "ivy-xhtml"
+      },
+      "emmet.includeLanguages": {
+        "ivy-xhtml": "html"
       },
       "html.suggest.html5": false,
       "java.server.launchMode": "LightWeight",

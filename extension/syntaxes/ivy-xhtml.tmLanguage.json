@@ -1,0 +1,107 @@
+{
+  "scopeName": "text.xml.ivy-xhtml",
+  "injections": {
+    "L:text.xml meta.tag.xml": {
+      "patterns": [{ "include": "#styleAttribute" }]
+    },
+    "L:source.css": {
+      "patterns": [{ "include": "#ivyExpression" }]
+    }
+  },
+  "patterns": [{ "include": "#styleElement" }, { "include": "#scriptElement" }, { "include": "text.xml" }],
+  "repository": {
+    "styleElement": {
+      "begin": "(?i)(<)(style)(?=\\s|>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.xml" },
+        "2": { "name": "entity.name.tag.xml" }
+      },
+      "end": "(?i)(</)(style)(\\s*)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.xml" },
+        "2": { "name": "entity.name.tag.xml" },
+        "4": { "name": "punctuation.definition.tag.xml" }
+      },
+      "name": "meta.element.style.xml",
+      "patterns": [
+        {
+          "begin": ">",
+          "beginCaptures": { "0": { "name": "punctuation.definition.tag.xml" } },
+          "end": "(?=</style\\s*>)",
+          "name": "meta.embedded.block.css",
+          "contentName": "source.css",
+          "patterns": [
+            {
+              "begin": "<!\\[CDATA\\[",
+              "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.xml" } },
+              "end": "\\]\\]>",
+              "endCaptures": { "0": { "name": "punctuation.definition.string.end.xml" } },
+              "name": "meta.embedded.block.cdata.css",
+              "contentName": "source.css",
+              "patterns": [{ "include": "source.css" }]
+            },
+            { "include": "source.css" }
+          ]
+        },
+        { "include": "text.xml#tagStuff" }
+      ]
+    },
+    "scriptElement": {
+      "begin": "(?i)(<)(script)(?=\\s|>)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.tag.xml" },
+        "2": { "name": "entity.name.tag.xml" }
+      },
+      "end": "(?i)(</)(script)(\\s*)(>)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.tag.xml" },
+        "2": { "name": "entity.name.tag.xml" },
+        "4": { "name": "punctuation.definition.tag.xml" }
+      },
+      "name": "meta.element.script.xml",
+      "patterns": [
+        {
+          "begin": ">",
+          "beginCaptures": { "0": { "name": "punctuation.definition.tag.xml" } },
+          "end": "(?=</script\\s*>)",
+          "name": "meta.embedded.block.javascript",
+          "contentName": "source.js",
+          "patterns": [
+            {
+              "begin": "<!\\[CDATA\\[",
+              "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.xml" } },
+              "end": "\\]\\]>",
+              "endCaptures": { "0": { "name": "punctuation.definition.string.end.xml" } },
+              "name": "meta.embedded.block.cdata.javascript",
+              "contentName": "source.js",
+              "patterns": [{ "include": "source.js" }]
+            },
+            { "include": "source.js" }
+          ]
+        },
+        { "include": "text.xml#tagStuff" }
+      ]
+    },
+    "styleAttribute": {
+      "begin": "(?i)(?<![\\w:-])(style)(\\s*)(=)(\\s*)([\"'])",
+      "beginCaptures": {
+        "1": { "name": "entity.other.attribute-name.xml" },
+        "3": { "name": "punctuation.separator.key-value.xml" },
+        "5": { "name": "punctuation.definition.string.begin.xml" }
+      },
+      "end": "\\5",
+      "endCaptures": { "0": { "name": "punctuation.definition.string.end.xml" } },
+      "name": "meta.attribute.style.xml",
+      "contentName": "source.css",
+      "patterns": [{ "include": "source.css" }]
+    },
+    "ivyExpression": {
+      "begin": "#\\{",
+      "beginCaptures": { "0": { "name": "punctuation.section.embedded.begin.ivy" } },
+      "end": "\\}",
+      "endCaptures": { "0": { "name": "punctuation.section.embedded.end.ivy" } },
+      "name": "meta.embedded.expression.ivy",
+      "contentName": "source.ivy-expression"
+    }
+  }
+}

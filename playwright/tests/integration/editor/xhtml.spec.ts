@@ -1,6 +1,15 @@
 import { expect, test } from '~/fixtures/baseTest';
+import { ProblemsView } from '~/page-objects/problems-view';
 import { VsCodeBrowser } from '~/page-objects/vscode-browser';
 import { XhtmlEditor } from '~/page-objects/xhtml-editor';
+
+test('XHTML uses a dedicated language mode without HTML/CSS diagnostics', async ({ wsPage }) => {
+  const editor = new XhtmlEditor(wsPage, 'xhtml-validation.xhtml');
+  await editor.open();
+
+  const problems = await ProblemsView.initProblemsView(wsPage);
+  await expect(problems.view).not.toContainText(/property value expected|self-closing|trailing solidus/i);
+});
 
 test('xhtml completions', async ({ wsPage }) => {
   const editor = new XhtmlEditor(wsPage);
