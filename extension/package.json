@@ -661,6 +661,20 @@
             ],
             "markdownDescription": "%setting.process.animation.mode%"
           },
+          "axonivy.xhtml.languageMode": {
+            "type": "string",
+            "default": "ivy-xhtml",
+            "enum": [
+              "ivy-xhtml",
+              "html"
+            ],
+            "enumItemLabels": [
+              "%setting.xhtml.languageMode.ivy%",
+              "%setting.xhtml.languageMode.html%"
+            ],
+            "markdownDescription": "%setting.xhtml.languageMode%",
+            "order": 2200
+          },
           "axonivy.workspaceValidation": {
             "type": "object",
             "default": {
