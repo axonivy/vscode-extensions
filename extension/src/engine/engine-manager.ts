@@ -165,6 +165,7 @@ export class IvyEngineManager {
     await this.deployProjects();
     ProjectFileWatcherManager.init(this.context);
     this.registerLanguageClients(this.websocketUrl);
+    await IvyDiagnostics.instance.refresh();
   }
 
   private async resolveEngineUrl() {

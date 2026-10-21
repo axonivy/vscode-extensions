@@ -8,8 +8,13 @@ import type { ProjectBean } from './api/generated/client';
 import { IvyEngineManager } from './engine-manager';
 
 const DIAGNOSTIC_SOURCE = 'Axon Ivy';
-const CONVERSION_TOO_OLD_MESSAGE_PREFIX = 'Project is too old and needs to be converted in VS Code.';
-const CONVERSION_OUTDATED_MESSAGE_PREFIX = 'Project is outdated and needs to be converted.';
+const RUNNABLE_CONVERSION_PREFIX = 'Project exists and ready to use, but is outdated.';
+const CONVERSION_PREFIXES = [
+  'Project is too old and needs to be converted in VS Code.',
+  'Project is outdated and needs to be converted.',
+  RUNNABLE_CONVERSION_PREFIX
+];
+
 export const IVY_PROJECT_FILE = '.ivyproject';
 const POM_FILE = 'pom.xml';
 export class IvyDiagnostics {
@@ -42,6 +47,7 @@ export class IvyDiagnostics {
     const projects = await IvyEngineManager.instance.projects(true);
     projects
       ?.filter(p => p && p.errorMessage)
+      .filter(p => !p.id.isIar || !p.errorMessage.startsWith(RUNNABLE_CONVERSION_PREFIX))
       .forEach(project => {
         hasProjectWithError = true;
         if (project.id.isIar) {
@@ -153,5 +159,4 @@ export class ConvertProjectQuickFix implements CodeActionProvider {
 const isConversionDiagnostic = (diagnostic: Diagnostic) =>
   diagnostic.source === DIAGNOSTIC_SOURCE && isConversionMessage(diagnostic.message);
 
-const isConversionMessage = (message: string) =>
-  message.startsWith(CONVERSION_TOO_OLD_MESSAGE_PREFIX) || message.startsWith(CONVERSION_OUTDATED_MESSAGE_PREFIX);
+const isConversionMessage = (message: string) => CONVERSION_PREFIXES.some(prefix => message.startsWith(prefix));
