@@ -1,6 +1,6 @@
 import { getCSSLanguageService } from 'vscode-css-languageservice/lib/esm/cssLanguageService.js';
 import { expect, test } from 'vitest';
-import { createEmbeddedCssDocument } from './embedded-css-document';
+import { createEmbeddedCssDocument, createEmbeddedCssDocumentForDocument } from './embedded-css-document';
 
 const source = [
   '<html>',
@@ -11,7 +11,7 @@ const source = [
   '  ',
   '}',
   ']]></style>',
-  '<span style="color: ; width: #{basis / 42 * 100}%;" />',
+  '<span style="color: ; background: #c9c8c4; width: #{basis / 42 * 100}%;" />',
   '</body>',
   '</html>'
 ].join('\n');
@@ -24,7 +24,7 @@ test('creates an offset-preserving CSS document from XHTML regions', () => {
 
   expect(document).toBeDefined();
   expect(document?.getText()).toContain('.sample {');
-  expect(document?.getText()).toMatch(/a\{\s*color: ; width:/);
+  expect(document?.getText()).toMatch(/a\{\s*color: ; background: #c9c8c4; width:/);
   expect(document?.getText()).not.toContain('<html>');
   expect(document?.getText()).not.toContain('<![CDATA[');
   expect(document?.getText()).not.toContain('#{basis');
@@ -46,6 +46,22 @@ test('CSS language service provides hover and inline style value completion', ()
 
   const completions = cssLanguageService.doComplete(document, document.positionAt(inlineValueOffset), stylesheet);
   expect(completions.items.map(item => item.label)).toContain('red');
+});
+
+test('CSS language service finds colors in embedded styles and style attributes', () => {
+  const embeddedCss = createEmbeddedCssDocumentForDocument(source, 'file:///test.xhtml', 1);
+  expect(embeddedCss).toBeDefined();
+  if (!embeddedCss) {
+    return;
+  }
+
+  const stylesheet = cssLanguageService.parseStylesheet(embeddedCss.document);
+  const colors = cssLanguageService.findDocumentColors(embeddedCss.document, stylesheet);
+  const sourceColors = colors.map(color =>
+    source.slice(embeddedCss.document.offsetAt(color.range.start), embeddedCss.document.offsetAt(color.range.end))
+  );
+
+  expect(sourceColors.filter(color => color === '#c9c8c4')).toHaveLength(2);
 });
 
 test('does not create a CSS document outside CSS regions or inside an Ivy expression', () => {

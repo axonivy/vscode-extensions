@@ -1,11 +1,20 @@
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
-type CssRegion = { start: number; end: number; tagStart?: number };
+export type EmbeddedCssRegion = { start: number; end: number; tagStart?: number };
+export type EmbeddedCssDocument = { document: TextDocument; regions: EmbeddedCssRegion[] };
 
 export const createEmbeddedCssDocument = (source: string, uri: string, version: number, offset: number) => {
-  const regions = findCssRegions(source);
-  const containingRegion = regions.find(region => offset >= region.start && offset <= region.end);
+  const embeddedCss = createEmbeddedCssDocumentForDocument(source, uri, version);
+  const containingRegion = embeddedCss?.regions.find(region => offset >= region.start && offset <= region.end);
   if (!containingRegion || isInsideIvyExpression(source, containingRegion, offset)) {
+    return;
+  }
+  return embeddedCss?.document;
+};
+
+export const createEmbeddedCssDocumentForDocument = (source: string, uri: string, version: number): EmbeddedCssDocument | undefined => {
+  const regions = findCssRegions(source);
+  if (regions.length === 0) {
     return;
   }
 
@@ -29,11 +38,14 @@ export const createEmbeddedCssDocument = (source: string, uri: string, version: 
     }
   }
 
-  return TextDocument.create(`${uri}#embedded-css`, 'css', version, cssCharacters.join(''));
+  return {
+    document: TextDocument.create(`${uri}#embedded-css`, 'css', version, cssCharacters.join('')),
+    regions
+  };
 };
 
-const findCssRegions = (source: string): CssRegion[] => {
-  const regions: CssRegion[] = [];
+const findCssRegions = (source: string): EmbeddedCssRegion[] => {
+  const regions: EmbeddedCssRegion[] = [];
   let cursor = 0;
 
   while (cursor < source.length) {
@@ -128,7 +140,7 @@ const maskNonCssSyntax = (cssText: string) =>
 
 const maskPreservingLines = (text: string) => text.replace(/[^\r\n]/g, ' ');
 
-const isInsideIvyExpression = (source: string, region: CssRegion, offset: number) => {
+const isInsideIvyExpression = (source: string, region: EmbeddedCssRegion, offset: number) => {
   const regionText = source.slice(region.start, region.end);
   const expression = /#\{[^}]*\}/g;
   let match: RegExpExecArray | null;
