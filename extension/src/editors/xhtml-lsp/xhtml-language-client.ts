@@ -8,6 +8,7 @@ import {
 } from 'vscode-languageclient/node';
 import { createWebSocket, toSocketConnection } from '../../engine/ws-client';
 import { onExecuteClientCommand } from './client-commands';
+import { formatXhtmlWithHtmlLanguageService } from './xhtml-html-formatter';
 
 const ExecuteClientCommandRequest: RequestType<ExecuteCommandParams, unknown, void> = new RequestType('xml/executeClientCommand');
 
@@ -28,6 +29,17 @@ export const XhtmlLanguageClientProvider = async (webSocketUrl: URL) => {
       { language: 'ivy-xhtml', scheme: 'file', pattern: '**/*.xhtml' },
       { language: 'html', scheme: 'file', pattern: '**/*.xhtml' }
     ],
+
+    middleware: {
+      provideDocumentFormattingEdits: (document, options, token, next) =>
+        document.languageId === 'ivy-xhtml'
+          ? formatXhtmlWithHtmlLanguageService(document, options)
+          : next(document, options, token),
+      provideDocumentRangeFormattingEdits: (document, range, options, token, next) =>
+        document.languageId === 'ivy-xhtml'
+          ? formatXhtmlWithHtmlLanguageService(document, options, range)
+          : next(document, range, options, token)
+    },
 
     synchronize: {
       fileEvents: [
