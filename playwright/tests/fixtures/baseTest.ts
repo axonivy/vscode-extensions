@@ -52,7 +52,7 @@ export const test = base.extend<TestFixtures>({
   isReady: [
     async ({ tmpWorkspace, page, wsPage, closeWelcomePage }, take) => {
       if (tmpWorkspace) {
-        await expect(wsPage.ivyStatusBar).toContainText(/Axon Ivy: Connected|Success - Deploying/);
+        await expect(wsPage.ivyStatusBar).toContainText(/Axon Ivy: Connected|Success - Deploying|Waiting for initial Java compile/);
       }
       if (closeWelcomePage) {
         await page
