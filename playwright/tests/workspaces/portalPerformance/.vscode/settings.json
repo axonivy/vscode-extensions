@@ -3,6 +3,5 @@
   "git.openRepositoryInParentFolders": "never",
   "chat.disableAIFeatures": true,
   "axonivy.process.animation.animate": false,
-  "redhat.telemetry.enabled": false,
-  "java.server.launchMode": "Standard"
+  "redhat.telemetry.enabled": false
 }
