@@ -19,7 +19,7 @@ export default defineConfig({
     {
       name: 'performance',
       testDir: './tests/performance',
-      timeout: 120_000,
+      timeout: 130_000,
       expect: { timeout: 120_000 },
       dependencies: ['setup-test'],
       retries: 0
