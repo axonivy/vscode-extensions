@@ -126,7 +126,7 @@ afterEach(() => {
 });
 
 test('lists IAR projects in a separate read-only section', async () => {
-  const provider = new IvyProjectTreeDataProvider(Promise.resolve(), mocks.findEngineProjects);
+  const provider = new IvyProjectTreeDataProvider(mocks.findEngineProjects);
 
   const roots = await provider.getChildren();
   expect(roots.map(entry => entry.kind)).toEqual(['workspaceProject', 'iarDependencyGroup']);
@@ -147,7 +147,7 @@ test('lists IAR projects in a separate read-only section', async () => {
 });
 
 test('shows only the META-INF/ivy tree and opens files as read-only documents', async () => {
-  const provider = new IvyProjectTreeDataProvider(Promise.resolve(), mocks.findEngineProjects);
+  const provider = new IvyProjectTreeDataProvider(mocks.findEngineProjects);
   const [workspaceProject, iarGroup] = await provider.getChildren();
   const [iarDependency] = await provider.getChildren(iarGroup);
   const rootEntries = await provider.getChildren(iarDependency);
@@ -165,7 +165,10 @@ test('shows only the META-INF/ivy tree and opens files as read-only documents', 
   const fileUri = processFile!.command!.arguments![0] as import('vscode').Uri;
   expect(fileUri.path).toBe('/shared-project-2.1.0.iar/process/hello.p.json');
   expect(Buffer.from((await fsProvider.readFile(fileUri)) as Uint8Array).toString('utf8')).toBe('{"name":"IAR process"}');
-  expect(fsProvider.readDirectory(iarDependency!.uri)).toEqual([['process', FileType.Directory], ['variables.yaml', FileType.File]]);
+  expect(fsProvider.readDirectory(iarDependency!.uri)).toEqual([
+    ['process', FileType.Directory],
+    ['variables.yaml', FileType.File]
+  ]);
   expect(() => fsProvider.writeFile(fileUri, new Uint8Array(), { create: true, overwrite: true })).toThrow();
   expect(workspaceProject?.kind).toBe('workspaceProject');
 });
