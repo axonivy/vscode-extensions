@@ -4,5 +4,17 @@
   "chat.disableAIFeatures": true,
   "axonivy.process.animation.animate": false,
   "redhat.telemetry.enabled": false,
-  "java.server.launchMode": "Standard"
+  "java.server.launchMode": "Standard",
+  "axonivy.workspaceValidation": {
+    "database": false,
+    "dataclass": false,
+    "form": false,
+    "process": false,
+    "restclient": false,
+    "role": false,
+    "variable": false,
+    "user": false,
+    "webserviceclient": false,
+    "xhtml": false
+  }
 }
