@@ -6,6 +6,7 @@ const rawMilestone = process.env.MILESTONE;
 const milestone = rawMilestone?.trim();
 const packageJsonPath = new URL('../extension/package.json', import.meta.url);
 const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf8'));
+const isPublish = process.argv.includes('--publish');
 
 if (!milestone) {
   delete packageJson.milestone;
@@ -13,5 +14,8 @@ if (!milestone) {
   throw new Error(`Invalid MILESTONE '${rawMilestone}'. It must be a positive integer.`);
 } else {
   packageJson.milestone = milestone;
+}
+if (isPublish) {
+  packageJson.preview = false;
 }
 await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
