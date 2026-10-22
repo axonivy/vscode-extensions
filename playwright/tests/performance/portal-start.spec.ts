@@ -18,8 +18,8 @@ test.describe('Portal performance', () => {
   test('Portal home', async ({ wsPage, electronApp }) => {
     await wsPage.statusMessageContains('Axon Ivy: Success - Deploying project');
     const editor = new ProcessEditor(wsPage, 'PortalStart.p.json');
-    await editor.open();
     await wsPage.executeCommand('View: Hide Panel');
+    await editor.open();
     const start = editor.elementByPID('1549F58C18A6C562-f28');
     const vscodeBrowser = await VsCodeBrowser.openBrowser(() => editor.startProcessAndAssertExecuted(start, start), { electronApp });
     await expect(vscodeBrowser.browserPage.locator('span.default-welcome-image')).toBeVisible();
