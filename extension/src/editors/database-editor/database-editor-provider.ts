@@ -2,6 +2,7 @@ import type { CustomTextEditorProvider, ExtensionContext, TextDocument, WebviewP
 import { window } from 'vscode';
 import { messenger } from '../..';
 import { registerOpenConfigEditorCmd } from '../command-helper';
+import type { EditorConnection } from '../editor-connection';
 import { createWebViewContent } from '../webview-helper';
 import { setupCommunication } from './webview-communication';
 
@@ -10,17 +11,17 @@ export class DatabaseEditorProvider implements CustomTextEditorProvider {
 
   private constructor(
     readonly context: ExtensionContext,
-    readonly websocketUrl: URL
+    readonly connection: EditorConnection
   ) {}
 
-  static register(context: ExtensionContext, websocketUrl: URL) {
+  static register(context: ExtensionContext, connection: EditorConnection) {
     registerOpenConfigEditorCmd('ivyEditor.openDatabaseEditor', context, 'databases.yaml');
-    const provider = new DatabaseEditorProvider(context, websocketUrl);
+    const provider = new DatabaseEditorProvider(context, connection);
     return window.registerCustomEditorProvider(DatabaseEditorProvider.viewType, provider);
   }
 
   resolveCustomTextEditor(document: TextDocument, webviewPanel: WebviewPanel) {
-    setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
+    void setupCommunication(this.connection, messenger, webviewPanel, document);
     webviewPanel.webview.options = { enableScripts: true };
     webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'database-editor');
   }

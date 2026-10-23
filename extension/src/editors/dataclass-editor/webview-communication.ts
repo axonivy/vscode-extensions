@@ -5,6 +5,7 @@ import { commands, Uri } from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
 import { updateTextDocumentContent } from '../content-writer';
+import { resolveEditorContext, type EditorConnection, type EditorContext } from '../editor-connection';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import { JavaProvider } from '../java-provider';
 import {
@@ -20,13 +21,14 @@ import {
 
 const DataClassWebSocketMessage: NotificationType<unknown> = { method: 'dataclassWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+export const setupCommunication = async (connection: EditorConnection, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+  const context = await resolveEditorContext(connection, document.fileName);
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new DataClassEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new DataClassEditorWebSocketForwarder(connection, messenger, messageParticipant, document, context),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, context),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
@@ -38,8 +40,8 @@ class DataClassEditorWebSocketForwarder extends EditorWebSocketForwarder {
 
   readonly javaCompletion: JavaProvider;
 
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument) {
-    super(websocketUrl, 'ivy-data-class-lsp', messenger, messageParticipant, DataClassWebSocketMessage, document);
+  constructor(connection: EditorConnection, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument, context: EditorContext) {
+    super(connection, 'ivy-data-class-lsp', messenger, messageParticipant, DataClassWebSocketMessage, document, context);
     this.javaCompletion = new JavaProvider(document.uri);
   }
 

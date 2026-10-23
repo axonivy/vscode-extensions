@@ -12,7 +12,7 @@ import { initTranslation } from './i18n';
 declare function acquireVsCodeApi(): VsCodeApi;
 const messenger = new Messenger(acquireVsCodeApi());
 
-export async function start({ app = '', project = '', file, readOnly = false }: InitializeConnection) {
+export async function start({ workspaceId = '', projectId = '', file, readOnly = false }: InitializeConnection) {
   const connection = toConnection(messenger, 'roleWebSocketMessage');
   const client = await RoleClientJsonRpc.startClient(connection);
   const queryClient = initQueryClient();
@@ -21,7 +21,7 @@ export async function start({ app = '', project = '', file, readOnly = false }: 
     throw new Error('Root element not found');
   }
   initTranslation();
-  const context = { app, project, file };
+  const context = { workspaceId, projectId, file } as unknown as Parameters<typeof client.initialize>[0];
   await client.initialize(context);
   createRoot(rootElement).render(
     <React.StrictMode>

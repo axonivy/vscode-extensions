@@ -2,36 +2,37 @@ import type { TypeSearchRequest } from '@axonivy/process-editor-inscription-prot
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import type { ColorTheme, CustomDocument, WebviewPanel } from 'vscode';
 import {
-  ColorThemeKind,
-  commands,
-  MarkdownString,
-  SnippetString,
-  CompletionItem as VSCodeCompletionItem,
-  CompletionItemKind as VSCodeCompletionItemKind,
-  Position as VSCodePosition,
-  Range as VSCodeRange,
-  window
+    ColorThemeKind,
+    commands,
+    MarkdownString,
+    SnippetString,
+    CompletionItem as VSCodeCompletionItem,
+    CompletionItemKind as VSCodeCompletionItemKind,
+    Position as VSCodePosition,
+    Range as VSCodeRange,
+    window
 } from 'vscode';
 import {
-  CompletionItem,
-  CompletionItemKind,
-  CompletionItemTag,
-  type CompletionList,
-  type CompletionParams,
-  CompletionRequest,
-  DidChangeTextDocumentNotification,
-  type DidChangeTextDocumentParams,
-  DidOpenTextDocumentNotification,
-  type DidOpenTextDocumentParams,
-  type MarkupContent,
-  Position,
-  Range,
-  TextEdit
+    CompletionItem,
+    CompletionItemKind,
+    CompletionItemTag,
+    type CompletionList,
+    type CompletionParams,
+    CompletionRequest,
+    DidChangeTextDocumentNotification,
+    type DidChangeTextDocumentParams,
+    DidOpenTextDocumentNotification,
+    type DidOpenTextDocumentParams,
+    type MarkupContent,
+    Position,
+    Range,
+    TextEdit
 } from 'vscode-languageclient';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType, RequestType } from 'vscode-messenger-common';
 import { IvyBrowserViewProvider } from '../../views/browser/ivy-browser-view-provider';
+import type { EditorConnection } from '../editor-connection';
 import { JavaProvider } from '../java-provider';
 import { isAllTypesSearchRequest, isSearchResult } from '../notification-helper';
 import { WebSocketForwarder } from '../websocket-forwarder';
@@ -49,7 +50,7 @@ const InscriptionWebSocketMessage: NotificationType<unknown> = { method: 'inscri
 const IvyScriptWebSocketMessage: NotificationType<unknown> = { method: 'ivyScriptWebSocketMessage' };
 
 export const setupCommunication = (
-  websocketUrl: URL,
+  connection: EditorConnection,
   messenger: Messenger,
   webviewPanel: WebviewPanel,
   document: CustomDocument,
@@ -59,8 +60,8 @@ export const setupCommunication = (
     return;
   }
   const toDispose = new DisposableCollection(
-    new InscriptionWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
-    new IvyScriptWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new InscriptionWebSocketForwarder(connection, messenger, messageParticipant, document),
+    new IvyScriptWebSocketForwarder(connection, messenger, messageParticipant, document),
     messenger.onNotification(WebviewConnectionReadyNotification, () => handleWebviewReadyNotification(messenger, messageParticipant), {
       sender: messageParticipant
     }),
@@ -98,8 +99,8 @@ class InscriptionWebSocketForwarder extends WebSocketForwarder {
 
   readonly javaCompletion: JavaProvider;
 
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: CustomDocument) {
-    super(websocketUrl, 'ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
+  constructor(connection: EditorConnection, messenger: Messenger, messageParticipant: MessageParticipant, document: CustomDocument) {
+    super(connection, 'ivy-inscription-lsp', messenger, messageParticipant, InscriptionWebSocketMessage);
     this.sendInscriptionNotification = (type: string) =>
       this.messenger.sendNotification(this.notificationType, this.messageParticipant, JSON.stringify({ method: type }));
     this.javaCompletion = new JavaProvider(document.uri);
@@ -141,8 +142,8 @@ class IvyScriptWebSocketForwarder extends WebSocketForwarder {
     | undefined;
   readonly javaCompletion: JavaProvider;
 
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: CustomDocument) {
-    super(websocketUrl, 'ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage);
+  constructor(connection: EditorConnection, messenger: Messenger, messageParticipant: MessageParticipant, document: CustomDocument) {
+    super(connection, 'ivy-script-lsp', messenger, messageParticipant, IvyScriptWebSocketMessage);
     this.javaCompletion = new JavaProvider(document.uri);
   }
 

@@ -4,6 +4,7 @@ import type { WebviewPanel } from 'vscode';
 import { commands, Uri } from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
+import { resolveEditorContext, type EditorConnection, type EditorContext } from '../editor-connection';
 import {
   InitializeConnectionRequest,
   isAction,
@@ -15,13 +16,14 @@ import { WebSocketForwarder } from '../websocket-forwarder';
 
 const CmsWebSocketMessage: NotificationType<unknown> = { method: 'cmsWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, projectPath: string) => {
+export const setupCommunication = async (connection: EditorConnection, messenger: Messenger, webviewPanel: WebviewPanel, projectPath: string) => {
+  const context = await resolveEditorContext(connection, projectPath);
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new CmsEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, projectPath),
+    new CmsEditorWebSocketForwarder(connection, messenger, messageParticipant, projectPath, context),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: projectPath }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, context),
       { sender: messageParticipant }
     )
   );
@@ -30,12 +32,13 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
 
 class CmsEditorWebSocketForwarder extends WebSocketForwarder {
   constructor(
-    websocketUrl: URL,
+    connection: EditorConnection,
     messenger: Messenger,
     messageParticipant: MessageParticipant,
-    readonly projectPath: string
+    readonly projectPath: string,
+    context: EditorContext
   ) {
-    super(websocketUrl, 'ivy-cms-lsp', messenger, messageParticipant, CmsWebSocketMessage);
+    super(connection, 'ivy-cms-lsp', messenger, messageParticipant, CmsWebSocketMessage);
   }
 
   protected override handleClientMessage(message: unknown) {

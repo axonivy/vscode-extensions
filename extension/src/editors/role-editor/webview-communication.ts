@@ -4,6 +4,7 @@ import type { TextDocument, WebviewPanel } from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
 import { updateTextDocumentContent } from '../content-writer';
+import { resolveEditorContext, type EditorConnection, type EditorContext } from '../editor-connection';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import {
   hasEditorFileContent,
@@ -16,13 +17,24 @@ import {
 
 const RoleWebSocketMessage: NotificationType<unknown> = { method: 'roleWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+export const setupCommunication = async (
+  connection: EditorConnection,
+  messenger: Messenger,
+  webviewPanel: WebviewPanel,
+  document: TextDocument
+) => {
+  const context = await resolveEditorContext(connection, document.fileName);
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new RoleEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new RoleEditorWebSocketForwarder(connection, messenger, messageParticipant, document, context),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () =>
+        messenger.sendNotification(InitializeConnectionRequest, messageParticipant, {
+          workspaceId: connection.workspaceId,
+          projectId: context.projectId,
+          file: context.file
+        }),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
@@ -30,8 +42,14 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
 };
 
 class RoleEditorWebSocketForwarder extends EditorWebSocketForwarder {
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument) {
-    super(websocketUrl, 'ivy-role-lsp', messenger, messageParticipant, RoleWebSocketMessage, document);
+  constructor(
+    connection: EditorConnection,
+    messenger: Messenger,
+    messageParticipant: MessageParticipant,
+    document: TextDocument,
+    context: EditorContext
+  ) {
+    super(connection, 'ivy-role-lsp', messenger, messageParticipant, RoleWebSocketMessage, document, context);
   }
 
   protected override handleClientMessage(message: unknown) {

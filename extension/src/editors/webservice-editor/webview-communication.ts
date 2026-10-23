@@ -1,9 +1,9 @@
 import type {
-  FilePickRequest,
-  WebServiceActionArgs,
-  WsGeneratorConfig,
-  WsGeneratorResult,
-  WsInfo
+    FilePickRequest,
+    WebServiceActionArgs,
+    WsGeneratorConfig,
+    WsGeneratorResult,
+    WsInfo
 } from '@axonivy/webservice-editor-protocol';
 import { DisposableCollection } from '@eclipse-glsp/vscode-integration';
 import { promises } from 'fs';
@@ -14,30 +14,32 @@ import type { MessageParticipant, NotificationType } from 'vscode-messenger-comm
 import { runJavaProjectConfigurationUpdate } from '../../base/java-extension-api';
 import { logErrorMessage, logInformationMessage } from '../../base/logging-util';
 import { updateTextDocumentContent } from '../content-writer';
+import { resolveEditorContext, type EditorConnection, type EditorContext } from '../editor-connection';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import { pickFile } from '../file-picker';
 import {
-  createJsonRpcSuccessResponse,
-  hasEditorFileContent,
-  InitializeConnectionRequest,
-  isAction,
-  isIntegrationRequest,
-  noUnknownAction,
-  noUnknownIntegrationMethod,
-  openUrlExternally,
-  WebviewReadyNotification
+    createJsonRpcSuccessResponse,
+    hasEditorFileContent,
+    InitializeConnectionRequest,
+    isAction,
+    isIntegrationRequest,
+    noUnknownAction,
+    noUnknownIntegrationMethod,
+    openUrlExternally,
+    WebviewReadyNotification
 } from '../notification-helper';
 import { runMavenCommand } from '../restclient-editor/maven-runner';
 
 const WebServiceClientWebSocketMessage: NotificationType<unknown> = { method: 'webServiceClientWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+export const setupCommunication = async (connection: EditorConnection, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+  const context = await resolveEditorContext(connection, document.fileName);
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new WebServiceClientWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new WebServiceClientWebSocketForwarder(connection, messenger, messageParticipant, document, context),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.fileName }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, context),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
@@ -45,8 +47,8 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
 };
 
 class WebServiceClientWebSocketForwarder extends EditorWebSocketForwarder {
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument) {
-    super(websocketUrl, 'ivy-webservice-lsp', messenger, messageParticipant, WebServiceClientWebSocketMessage, document);
+  constructor(connection: EditorConnection, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument, context: EditorContext) {
+    super(connection, 'ivy-webservice-lsp', messenger, messageParticipant, WebServiceClientWebSocketMessage, document, context);
   }
 
   protected override handleClientMessage(message: unknown) {

@@ -3,6 +3,7 @@ import { l10n, window } from 'vscode';
 import { logErrorMessage } from '../../base/logging-util';
 import { IvyProjectExplorer } from '../../project-explorer/ivy-project-explorer';
 import { treeUriToProjectPath } from '../../project-explorer/tree-selection';
+import type { EditorConnection } from '../editor-connection';
 import { registerOpenCmsEditorCmd, revealExistingPanel, setupWebviewPanel } from './open-cms-editor-cmd';
 
 export class CmsEditorProvider implements CustomTextEditorProvider {
@@ -10,12 +11,12 @@ export class CmsEditorProvider implements CustomTextEditorProvider {
 
   private constructor(
     readonly context: ExtensionContext,
-    readonly websocketUrl: URL
+    readonly connection: EditorConnection
   ) {}
 
-  static register(context: ExtensionContext, websocketUrl: URL) {
-    registerOpenCmsEditorCmd(context, websocketUrl);
-    const provider = new CmsEditorProvider(context, websocketUrl);
+  static register(context: ExtensionContext, connection: EditorConnection) {
+    registerOpenCmsEditorCmd(context, connection);
+    const provider = new CmsEditorProvider(context, connection);
     return window.registerCustomEditorProvider(CmsEditorProvider.viewType, provider);
   }
 
@@ -29,6 +30,6 @@ export class CmsEditorProvider implements CustomTextEditorProvider {
       webviewPanel.dispose();
       return;
     }
-    setupWebviewPanel(this.context, this.websocketUrl, projectPath, webviewPanel);
+    setupWebviewPanel(this.context, this.connection, projectPath, webviewPanel);
   }
 }

@@ -1,12 +1,13 @@
 import {
-  GlspEditorProvider,
-  GlspVscodeConnector,
-  SocketGlspVscodeServer,
-  configureDefaultCommands
+    GlspEditorProvider,
+    GlspVscodeConnector,
+    SocketGlspVscodeServer,
+    configureDefaultCommands
 } from '@eclipse-glsp/vscode-integration';
 import type { CancellationToken, CustomDocument, ExtensionContext, WebviewPanel } from 'vscode';
 import { window } from 'vscode';
 import { messenger } from '../..';
+import type { EditorConnection } from '../editor-connection';
 import { createWebViewContent } from '../webview-helper';
 import { breakpointSnapshot, remapBreakpoints } from './process-breakpoint-handler';
 import { ProcessVscodeConnector } from './process-vscode-connector';
@@ -19,7 +20,7 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
   private constructor(
     protected readonly extensionContext: ExtensionContext,
     protected override readonly glspVscodeConnector: GlspVscodeConnector,
-    readonly websocketUrl: URL
+    readonly connection: EditorConnection
   ) {
     super(glspVscodeConnector);
   }
@@ -27,7 +28,7 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
   async setUpWebview(document: CustomDocument, webviewPanel: WebviewPanel, _token: CancellationToken, clientId: string): Promise<void> {
     const client = this.glspVscodeConnector['clientMap'].get(clientId);
     setupCommunication(
-      this.websocketUrl,
+      this.connection,
       this.glspVscodeConnector.messenger,
       webviewPanel,
       document,
@@ -43,12 +44,12 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
     await remapBreakpoints(document.uri, breakpoints);
   }
 
-  static register(context: ExtensionContext, websocketUrl: URL) {
+  static register(context: ExtensionContext, connection: EditorConnection) {
     const workflowServer = new SocketGlspVscodeServer({
       clientId: 'ivy-glsp-web-ide-process-editor',
       clientName: 'ivy-glsp-web-ide-process-editor',
       connectionOptions: {
-        webSocketAddress: new URL('ivy-glsp-web-ide-process-editor', websocketUrl).toString()
+        webSocketAddress: new URL('ivy-glsp-web-ide-process-editor', connection.websocketUrl).toString()
       }
     });
 
@@ -61,7 +62,7 @@ export default class ProcessEditorProvider extends GlspEditorProvider {
 
     const customEditorProvider = window.registerCustomEditorProvider(
       ProcessEditorProvider.viewType,
-      new ProcessEditorProvider(context, ivyVscodeConnector, websocketUrl),
+      new ProcessEditorProvider(context, ivyVscodeConnector, connection),
       {
         webviewOptions: { retainContextWhenHidden: true },
         supportsMultipleEditorsPerDocument: false

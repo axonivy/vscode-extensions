@@ -2,6 +2,7 @@ import type { CustomTextEditorProvider, ExtensionContext, TextDocument, WebviewP
 import { window } from 'vscode';
 import { messenger } from '../..';
 import { registerOpenConfigEditorCmd } from '../command-helper';
+import type { EditorConnection } from '../editor-connection';
 import { createWebViewContent } from '../webview-helper';
 import { setupCommunication } from './webview-communication';
 
@@ -10,18 +11,18 @@ export class VariableEditorProvider implements CustomTextEditorProvider {
 
   private constructor(
     readonly context: ExtensionContext,
-    readonly websocketUrl: URL
+    readonly connection: EditorConnection
   ) {}
 
-  static register(context: ExtensionContext, websocketUrl: URL) {
+  static register(context: ExtensionContext, connection: EditorConnection) {
     registerOpenConfigEditorCmd('ivyEditor.openVariableEditor', context, 'variables.yaml');
-    const provider = new VariableEditorProvider(context, websocketUrl);
+    const provider = new VariableEditorProvider(context, connection);
     const providerRegistration = window.registerCustomEditorProvider(VariableEditorProvider.viewType, provider);
     return providerRegistration;
   }
 
   resolveCustomTextEditor(document: TextDocument, webviewPanel: WebviewPanel) {
-    setupCommunication(this.websocketUrl, messenger, webviewPanel, document);
+    void setupCommunication(this.connection, messenger, webviewPanel, document);
     webviewPanel.webview.options = { enableScripts: true };
     webviewPanel.webview.html = createWebViewContent(this.context, webviewPanel.webview, 'variable-editor');
   }

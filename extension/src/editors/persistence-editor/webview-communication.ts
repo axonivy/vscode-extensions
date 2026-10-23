@@ -4,25 +4,27 @@ import type { TextDocument, WebviewPanel } from 'vscode';
 import { Messenger } from 'vscode-messenger';
 import type { MessageParticipant, NotificationType } from 'vscode-messenger-common';
 import { updateTextDocumentContent } from '../content-writer';
+import { resolveEditorContext, type EditorConnection, type EditorContext } from '../editor-connection';
 import { EditorWebSocketForwarder } from '../editor-websocket-forwarder';
 import {
-  hasEditorFileContent,
-  InitializeConnectionRequest,
-  isAction,
-  noUnknownAction,
-  openUrlExternally,
-  WebviewReadyNotification
+    hasEditorFileContent,
+    InitializeConnectionRequest,
+    isAction,
+    noUnknownAction,
+    openUrlExternally,
+    WebviewReadyNotification
 } from '../notification-helper';
 
 const PersistenceWebSocketMessage: NotificationType<unknown> = { method: 'persistenceWebSocketMessage' };
 
-export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+export const setupCommunication = async (connection: EditorConnection, messenger: Messenger, webviewPanel: WebviewPanel, document: TextDocument) => {
+  const context = await resolveEditorContext(connection, document.fileName);
   const messageParticipant = messenger.registerWebviewPanel(webviewPanel);
   const toDispose = new DisposableCollection(
-    new PersistenceEditorWebSocketForwarder(websocketUrl, messenger, messageParticipant, document),
+    new PersistenceEditorWebSocketForwarder(connection, messenger, messageParticipant, document, context),
     messenger.onNotification(
       WebviewReadyNotification,
-      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, { file: document.uri.fsPath }),
+      () => messenger.sendNotification(InitializeConnectionRequest, messageParticipant, context),
       { sender: messageParticipant }
     ),
     webviewPanel.onDidDispose(() => toDispose.dispose())
@@ -30,8 +32,8 @@ export const setupCommunication = (websocketUrl: URL, messenger: Messenger, webv
 };
 
 class PersistenceEditorWebSocketForwarder extends EditorWebSocketForwarder {
-  constructor(websocketUrl: URL, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument) {
-    super(websocketUrl, 'ivy-persistence-lsp', messenger, messageParticipant, PersistenceWebSocketMessage, document);
+  constructor(connection: EditorConnection, messenger: Messenger, messageParticipant: MessageParticipant, document: TextDocument, context: EditorContext) {
+    super(connection, 'ivy-persistence-lsp', messenger, messageParticipant, PersistenceWebSocketMessage, document, context);
   }
 
   protected override handleClientMessage(message: unknown) {
