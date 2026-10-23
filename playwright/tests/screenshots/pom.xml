@@ -6,7 +6,7 @@
 
   <groupId>ch.ivyteam.vscode</groupId>
   <artifactId>vscode-designer-screenshots</artifactId>
-  <version>14.0.1-SNAPSHOT</version>
+  <version>14.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <distributionManagement>

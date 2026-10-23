@@ -1,12 +1,12 @@
 {
   "name": "@axonivy/vscode-webview-webservice-editor",
-  "version": "14.0.1",
+  "version": "14.0.2",
   "private": true,
   "dependencies": {
     "@axonivy/ui-components": "next-14.0.1",
     "@axonivy/vscode-webview-common": "workspace:~",
-    "@tanstack/react-query": "^5.101.4",
     "@axonivy/webservice-editor": "next-14.0.1",
+    "@tanstack/react-query": "^5.101.4",
     "i18next": "26.4.6",
     "vscode-messenger-webview": "0.4.5"
   },
