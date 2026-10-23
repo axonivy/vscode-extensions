@@ -3,8 +3,8 @@
   "version": "14.0.2",
   "private": true,
   "dependencies": {
-    "@axonivy/cms-editor": "next-14.0.1",
-    "@axonivy/ui-components": "next-14.0.1",
+    "@axonivy/cms-editor": "next-14.0.2",
+    "@axonivy/ui-components": "next-14.0.2",
     "@axonivy/vscode-webview-common": "workspace:~",
     "@tanstack/react-query": "^5.101.4",
     "i18next": "26.4.6",
